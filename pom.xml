@@ -17,14 +17,23 @@
 
     <dependencies>
         <!-- Compile Dependencies -->
+        <dependency>
+            <!-- Required if you're using the HttpResource or HttpClientBuilder -->
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <optional>true</optional>
+        </dependency>
 
         <!-- Provided Dependencies -->
 
         <!-- Runtime Dependencies -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+        </dependency>
 
         <!-- Test Dependencies -->
-
-        <!-- Managed Dependencies -->
+        
     </dependencies>
     
 </project>
