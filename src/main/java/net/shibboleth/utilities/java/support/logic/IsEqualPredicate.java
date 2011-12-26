@@ -17,22 +17,28 @@
 
 package net.shibboleth.utilities.java.support.logic;
 
+import net.shibboleth.utilities.java.support.primitive.ObjectSupport;
+
 /**
- * First-order logic concept of a predicate, that is a function that when applied to an argument produces a boolean
- * result.
- * 
- * @param <Input> type of arguments upon which the predicate acts
+ * Predicate that checks if the given argument is equal to a target object. Equality is checked by means of the
+ * {@link ObjectSupport#equals(Object)} method.
  */
-public interface Predicate<Input> {
+public class IsEqualPredicate implements Predicate {
+
+    /** Target against which the argument is checked. */
+    private final Object target;
 
     /**
-     * Applies this predicate to the given argument.
+     * Constructor.
      * 
-     * @param argument the predicate argument
-     * 
-     * @return true if the argument meets the predicate, false otherwise
-     * 
-     * @throws EvaluationException thrown if there is a problem evaluating the argument
+     * @param targetObject target against which the predicate argument is checked
      */
-    public boolean apply(Input argument) throws EvaluationException;
+    public IsEqualPredicate(final Object targetObject) {
+        target = targetObject;
+    }
+
+    /** {@inheritDoc} */
+    public boolean apply(Object argument) {
+        return ObjectSupport.equals(argument, target);
+    }
 }

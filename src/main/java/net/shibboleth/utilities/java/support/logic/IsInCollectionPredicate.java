@@ -17,22 +17,25 @@
 
 package net.shibboleth.utilities.java.support.logic;
 
-/**
- * First-order logic concept of a predicate, that is a function that when applied to an argument produces a boolean
- * result.
- * 
- * @param <Input> type of arguments upon which the predicate acts
- */
-public interface Predicate<Input> {
+import java.util.Collection;
+
+/** Predicate that checks if the given argument is contained within a target collection. */
+public class IsInCollectionPredicate implements Predicate {
+
+    /** Target against which the argument is checked. */
+    private final Collection target;
 
     /**
-     * Applies this predicate to the given argument.
+     * Constructor.
      * 
-     * @param argument the predicate argument
-     * 
-     * @return true if the argument meets the predicate, false otherwise
-     * 
-     * @throws EvaluationException thrown if there is a problem evaluating the argument
+     * @param targetCollection target against which the predicate argument is checked
      */
-    public boolean apply(Input argument) throws EvaluationException;
+    public IsInCollectionPredicate(final Collection targetCollection) {
+        target = targetCollection;
+    }
+
+    /** {@inheritDoc} */
+    public boolean apply(Object argument) {
+        return target.contains(argument);
+    }
 }

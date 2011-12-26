@@ -15,24 +15,35 @@
  * limitations under the License.
  */
 
-package net.shibboleth.utilities.java.support.logic;
+package net.shibboleth.utilities.java.support.resolver;
 
-/**
- * First-order logic concept of a predicate, that is a function that when applied to an argument produces a boolean
- * result.
- * 
- * @param <Input> type of arguments upon which the predicate acts
- */
-public interface Predicate<Input> {
+import net.shibboleth.utilities.java.support.collection.ClassIndexedSet;
+
+/** This class holds instances of {@link Criterion} which are used in resolution or evaluation operations. */
+public class CriteriaSet extends ClassIndexedSet<Criterion> implements Criterion {
+
+    /** Constructor. */
+    public CriteriaSet() {
+        super();
+    }
 
     /**
-     * Applies this predicate to the given argument.
+     * A convenience constructor for constructing and adding criteria.
      * 
-     * @param argument the predicate argument
-     * 
-     * @return true if the argument meets the predicate, false otherwise
-     * 
-     * @throws EvaluationException thrown if there is a problem evaluating the argument
+     * @param criteria criteria to add, may be null or contain null values
      */
-    public boolean apply(Input argument) throws EvaluationException;
+    public CriteriaSet(Criterion... criteria) {
+        super();
+
+        if (criteria == null || criteria.length == 0) {
+            return;
+        }
+
+        for (Criterion criterion : criteria) {
+            if (criterion == null) {
+                continue;
+            }
+            add(criterion);
+        }
+    }
 }

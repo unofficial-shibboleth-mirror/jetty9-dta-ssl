@@ -227,6 +227,37 @@ public final class Assert {
 
         return collection;
     }
+    
+    /**
+     * Checks that the array does not contain any null elements.
+     * 
+     * @param <T> type of elements in the array
+     * @param array array to check
+     * 
+     * @return the given array
+     */
+    public static <T> T[] noNullItems(final T[] array){
+        return noNullItems(array, null);
+    }
+    
+    /**
+     * Checks that the array does not contain any null elements.
+     * 
+     * @param <T> type of elements in the array
+     * @param array array to check
+     * @param message message used in the {@link IllegalArgumentException}
+     * 
+     * @return the given array
+     */
+    public static <T> T[] noNullItems(final T[] array, String message){
+        for(T element : array){
+            if(element == null){
+                throw new IllegalArgumentException(message);
+            }
+        }
+        
+        return array;
+    }
 
     /**
      * Checks that the given object is not null. If the object is null an {@link IllegalArgumentException} is thrown.

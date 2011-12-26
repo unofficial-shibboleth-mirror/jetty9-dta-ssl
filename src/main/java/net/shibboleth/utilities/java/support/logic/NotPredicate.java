@@ -17,22 +17,29 @@
 
 package net.shibboleth.utilities.java.support.logic;
 
-/**
- * First-order logic concept of a predicate, that is a function that when applied to an argument produces a boolean
- * result.
+import net.shibboleth.utilities.java.support.annotation.constraint.NotNull;
+
+/** 
+ * Predicate which negates the result of another predicate. 
  * 
- * @param <Input> type of arguments upon which the predicate acts
+ * @param <Input> type of input upon which this predicate operates
  */
-public interface Predicate<Input> {
+public class NotPredicate<Input> implements Predicate<Input> {
+
+    /** Wrapped predicate whose result is negated by this predicate. */
+    private final Predicate<Input> predicate;
 
     /**
-     * Applies this predicate to the given argument.
+     * Constructor.
      * 
-     * @param argument the predicate argument
-     * 
-     * @return true if the argument meets the predicate, false otherwise
-     * 
-     * @throws EvaluationException thrown if there is a problem evaluating the argument
+     * @param negatedPredicate predicate whose result is negated by this predicate
      */
-    public boolean apply(Input argument) throws EvaluationException;
+    public NotPredicate(@NotNull final Predicate<Input> negatedPredicate) {
+        predicate = Assert.isNull(negatedPredicate, "Negated predicate can not be null");
+    }
+
+    /** {@inheritDoc} */
+    public boolean apply(Input argument) {
+        return !predicate.apply(argument);
+    }
 }

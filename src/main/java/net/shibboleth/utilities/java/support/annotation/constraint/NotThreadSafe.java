@@ -15,24 +15,14 @@
  * limitations under the License.
  */
 
-package net.shibboleth.utilities.java.support.logic;
+package net.shibboleth.utilities.java.support.annotation.constraint;
 
-/**
- * First-order logic concept of a predicate, that is a function that when applied to an argument produces a boolean
- * result.
- * 
- * @param <Input> type of arguments upon which the predicate acts
- */
-public interface Predicate<Input> {
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
 
-    /**
-     * Applies this predicate to the given argument.
-     * 
-     * @param argument the predicate argument
-     * 
-     * @return true if the argument meets the predicate, false otherwise
-     * 
-     * @throws EvaluationException thrown if there is a problem evaluating the argument
-     */
-    public boolean apply(Input argument) throws EvaluationException;
+/** Indicates that the annotated class is not thread-safe. */
+@DocumentedConstraint
+@Target(ElementType.TYPE)
+public @interface NotThreadSafe {
+
 }

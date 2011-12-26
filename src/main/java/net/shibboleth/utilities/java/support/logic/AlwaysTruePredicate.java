@@ -17,22 +17,14 @@
 
 package net.shibboleth.utilities.java.support.logic;
 
-/**
- * First-order logic concept of a predicate, that is a function that when applied to an argument produces a boolean
- * result.
- * 
- * @param <Input> type of arguments upon which the predicate acts
- */
-public interface Predicate<Input> {
+/** A predicate which always evaluates to true. */
+public class AlwaysTruePredicate implements Predicate {
+    
+    /** A singleton instance of this predicate. */
+    public static final AlwaysTruePredicate INSTANCE = new AlwaysTruePredicate();
 
-    /**
-     * Applies this predicate to the given argument.
-     * 
-     * @param argument the predicate argument
-     * 
-     * @return true if the argument meets the predicate, false otherwise
-     * 
-     * @throws EvaluationException thrown if there is a problem evaluating the argument
-     */
-    public boolean apply(Input argument) throws EvaluationException;
+    /** {@inheritDoc} */
+    public boolean apply(Object argument) {
+        return true;
+    }
 }

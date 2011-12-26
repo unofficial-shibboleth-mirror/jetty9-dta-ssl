@@ -15,24 +15,6 @@
  * limitations under the License.
  */
 
-package net.shibboleth.utilities.java.support.logic;
+/** Interfaces for searching over data. */
 
-/**
- * First-order logic concept of a predicate, that is a function that when applied to an argument produces a boolean
- * result.
- * 
- * @param <Input> type of arguments upon which the predicate acts
- */
-public interface Predicate<Input> {
-
-    /**
-     * Applies this predicate to the given argument.
-     * 
-     * @param argument the predicate argument
-     * 
-     * @return true if the argument meets the predicate, false otherwise
-     * 
-     * @throws EvaluationException thrown if there is a problem evaluating the argument
-     */
-    public boolean apply(Input argument) throws EvaluationException;
-}
+package net.shibboleth.utilities.java.support.resolver;

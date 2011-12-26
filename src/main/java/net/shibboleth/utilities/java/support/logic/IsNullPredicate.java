@@ -17,22 +17,14 @@
 
 package net.shibboleth.utilities.java.support.logic;
 
-/**
- * First-order logic concept of a predicate, that is a function that when applied to an argument produces a boolean
- * result.
- * 
- * @param <Input> type of arguments upon which the predicate acts
- */
-public interface Predicate<Input> {
+/** Predicate that checks if the given argument is null. */
+public class IsNullPredicate implements Predicate {
 
-    /**
-     * Applies this predicate to the given argument.
-     * 
-     * @param argument the predicate argument
-     * 
-     * @return true if the argument meets the predicate, false otherwise
-     * 
-     * @throws EvaluationException thrown if there is a problem evaluating the argument
-     */
-    public boolean apply(Input argument) throws EvaluationException;
+    /** A singleton instance of this predicate. */
+    public static final IsNullPredicate INSTANCE = new IsNullPredicate();
+
+    /** {@inheritDoc} */
+    public boolean apply(Object argument) {
+        return argument == null;
+    }
 }

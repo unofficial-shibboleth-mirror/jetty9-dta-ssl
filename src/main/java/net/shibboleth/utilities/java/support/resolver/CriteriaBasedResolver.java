@@ -15,24 +15,16 @@
  * limitations under the License.
  */
 
-package net.shibboleth.utilities.java.support.logic;
+package net.shibboleth.utilities.java.support.resolver;
 
 /**
- * First-order logic concept of a predicate, that is a function that when applied to an argument produces a boolean
- * result.
+ * A resolver that takes a {@link Criterion} and selects data based on upon it.
  * 
- * @param <Input> type of arguments upon which the predicate acts
+ * Note because selection is based upon the {@link Criterion} received, the resolver must understand the various
+ * {@link Criterion} implementations which may be passed in.
+ * 
+ * @param <ProductType> the type of objects produced by this resolver
  */
-public interface Predicate<Input> {
+public interface CriteriaBasedResolver<ProductType> extends Resolver<ProductType, Criterion> {
 
-    /**
-     * Applies this predicate to the given argument.
-     * 
-     * @param argument the predicate argument
-     * 
-     * @return true if the argument meets the predicate, false otherwise
-     * 
-     * @throws EvaluationException thrown if there is a problem evaluating the argument
-     */
-    public boolean apply(Input argument) throws EvaluationException;
 }
