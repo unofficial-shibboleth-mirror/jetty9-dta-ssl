@@ -23,9 +23,12 @@ import java.util.Random;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.GreaterThan;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotNull;
-import net.shibboleth.utilities.java.support.codec.ByteBlockEncoder;
-import net.shibboleth.utilities.java.support.codec.HexEncoder;
 import net.shibboleth.utilities.java.support.logic.Assert;
+
+import org.apache.commons.codec.BinaryEncoder;
+import org.apache.commons.codec.EncoderException;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.binary.StringUtils;
 
 /**
  * Generates a random number of bytes via a {@link Random} source and encodes them into a string using a
@@ -40,7 +43,7 @@ public class RandomIdentifierGenerationStrategy implements IdentifierGenerationS
     private final int sizeOfIdentifier;
 
     /** Encoder used to convert the random bytes in to a string. */
-    private final ByteBlockEncoder<String> encoder;
+    private final BinaryEncoder encoder;
 
     /**
      * Constructor. Initializes the random number source to a new {@link SecureRandom}, size of identifier is set to 16
@@ -50,7 +53,7 @@ public class RandomIdentifierGenerationStrategy implements IdentifierGenerationS
         try {
             random = SecureRandom.getInstance("SHA1PRNG");
             sizeOfIdentifier = 16;
-            encoder = new HexEncoder();
+            encoder = new Hex();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("SHA1PRNG is required to be supported by the JVM but is not", e);
         }
@@ -68,7 +71,7 @@ public class RandomIdentifierGenerationStrategy implements IdentifierGenerationS
             sizeOfIdentifier =
                     (int) Assert.isGreaterThan(0, identifierSize,
                             "Number of bytes in the identifier must be greater than 0");
-            encoder = new HexEncoder();
+            encoder = new Hex();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("SHA1PRNG is required to be supported by the JVM but is not", e);
         }
@@ -82,7 +85,7 @@ public class RandomIdentifierGenerationStrategy implements IdentifierGenerationS
      * @param identifierEncoder encoder used to convert random bytes to string identifier
      */
     public RandomIdentifierGenerationStrategy(@NotNull final Random source, @GreaterThan(0) final int identifierSize,
-            @NotNull final ByteBlockEncoder<String> identifierEncoder) {
+            @NotNull final BinaryEncoder identifierEncoder) {
         random = Assert.isNotNull(source, "Random number source can not be null");
         sizeOfIdentifier =
                 (int) Assert.isGreaterThan(0, identifierSize,
@@ -94,6 +97,10 @@ public class RandomIdentifierGenerationStrategy implements IdentifierGenerationS
     public String generateIdentifier() {
         byte[] buf = new byte[sizeOfIdentifier];
         random.nextBytes(buf);
-        return encoder.apply(buf);
+        try {
+            return StringUtils.newStringUsAscii(encoder.encode(buf));
+        } catch (EncoderException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -65,7 +65,7 @@ public class Stopwatch {
      * @return time that elapsed while the stopwatch was running, 0 if the stopwatch has not yet been stopped
      */
     public long elapsedTime(@NotNull final TimeUnit unit) {
-        return TimeUnit.MILLISECONDS.convert(elapsedTime, unit);
+        return unit.convert(elapsedTime, TimeUnit.MILLISECONDS);
     }
 
     /**

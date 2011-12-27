@@ -20,6 +20,8 @@ package net.shibboleth.utilities.java.support.collection;
 import java.util.Collection;
 import java.util.Iterator;
 
+import net.shibboleth.utilities.java.support.annotation.constraint.NotNull;
+import net.shibboleth.utilities.java.support.annotation.constraint.Null;
 import net.shibboleth.utilities.java.support.logic.Assert;
 
 /** Set of helper methods for working with collections. */
@@ -34,16 +36,47 @@ public final class CollectionSupport {
      * 
      * @param <T> type of the collection elements
      * @param collection collection to which the element is added
-     * @param element element to be added to the collection, may be null
+     * @param element element to be added to the collection
      * 
      * @return true if this operation resulted in a change to the collection, false otherwise
      */
-    public static <T> boolean nonNullAdd(final Collection<T> collection, final T element) {
+    public static <T> boolean nonNullAdd(@NotNull final Collection<T> collection, @Null final T element) {
+        Assert.isNotNull(collection, "Collection can not be null");
+        
         if (element == null) {
             return false;
         }
 
         return collection.add(element);
+    }
+    
+    /**
+     * Copies all the non-null elements from the source collection to the target collection in iteration order. If
+     * either the source or target collection is <code>null</code> this method simply returns.
+     * 
+     * @param <CollectionType> type of the target collection
+     * @param <T> type of elements
+     * @param source source collection, may be null
+     * @param target target collection, may be null
+     * 
+     * @return the target collection
+     */
+    @NotNull public static <CollectionType extends Collection<T>, T> CollectionType nonNullAdd(
+            @NotNull final Collection<? extends T> source, final CollectionType target) {
+        if (source == null || source.isEmpty() || target == null) {
+            return target;
+        }
+
+        T element;
+        final Iterator<? extends T> srcItr = source.iterator();
+        while (srcItr.hasNext()) {
+            element = srcItr.next();
+            if (element != null) {
+                target.add(element);
+            }
+        }
+
+        return target;
     }
 
     /**
@@ -82,35 +115,6 @@ public final class CollectionSupport {
         for (T element : source) {
             nonNullAdd(target, element);
         }
-    }
-
-    /**
-     * Copies all the non-null elements from the source collection to the target collection in iteration order. If
-     * either the source or target collection is <code>null</code> this method simply returns.
-     * 
-     * @param <CollectionType> type of the target collection
-     * @param <T> type of elements
-     * @param source source collection, may be null
-     * @param target target collection, may be null
-     * 
-     * @return the target collection
-     */
-    public static <CollectionType extends Collection<T>, T> CollectionType addNonNull(
-            final Collection<? extends T> source, final CollectionType target) {
-        if (source == null || source.isEmpty() || target == null) {
-            return target;
-        }
-
-        T element;
-        final Iterator<? extends T> srcItr = source.iterator();
-        while (srcItr.hasNext()) {
-            element = srcItr.next();
-            if (element != null) {
-                target.add(element);
-            }
-        }
-
-        return target;
     }
 
     /**
