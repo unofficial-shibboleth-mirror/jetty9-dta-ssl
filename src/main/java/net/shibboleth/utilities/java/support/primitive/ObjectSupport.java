@@ -17,7 +17,6 @@
 
 package net.shibboleth.utilities.java.support.primitive;
 
-import com.google.common.base.Objects;
 
 /** Helper methods for working with Objects. */
 public final class ObjectSupport {
@@ -40,28 +39,5 @@ public final class ObjectSupport {
         }
 
         return o.hashCode();
-    }
-
-    // submitted as REF 845 for google quava
-    /**
-     * Null-safe check to determine if the given object is equal to any of a list of objects.
-     * 
-     * @param o1 object to check if it's equal to any object in a list
-     * @param objects list of objects
-     * 
-     * @return true of the given object is equal to any object in the given list
-     */
-    public static boolean equalsAny(final Object o1, final Object... objects) {
-        if (o1 == null || objects == null) {
-            return o1 == objects;
-        }
-
-        for (Object object : objects) {
-            if (Objects.equal(o1, object)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
