@@ -19,7 +19,7 @@ package net.shibboleth.utilities.java.support.security;
 
 import java.util.UUID;
 
-import net.shibboleth.utilities.java.support.annotation.constraint.ThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
 
 /** Generates a type 4 UUID as an identifier. */
 @ThreadSafe

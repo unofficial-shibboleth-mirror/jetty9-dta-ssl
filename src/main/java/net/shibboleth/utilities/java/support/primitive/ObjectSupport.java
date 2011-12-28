@@ -17,6 +17,8 @@
 
 package net.shibboleth.utilities.java.support.primitive;
 
+import com.google.common.base.Objects;
+
 /** Helper methods for working with Objects. */
 public final class ObjectSupport {
 
@@ -24,6 +26,7 @@ public final class ObjectSupport {
     private ObjectSupport() {
     }
 
+    //submitted as RFE 846 for google guava
     /**
      * Performs a safe (null-aware) {@link Object#hashCode()}.
      * 
@@ -39,22 +42,7 @@ public final class ObjectSupport {
         return o.hashCode();
     }
 
-    /**
-     * Performs a safe (null-aware) {@link Object#equals(Object)} check.
-     * 
-     * @param o1 first object, may be null
-     * @param o2 second object, may be null
-     * 
-     * @return true of the objects are equal or both null, false otherwise
-     */
-    public static boolean equals(final Object o1, final Object o2) {
-        if (o1 == null || o2 == null) {
-            return o1 == o2;
-        }
-
-        return o1.equals(o2);
-    }
-
+    // submitted as REF 845 for google quava
     /**
      * Null-safe check to determine if the given object is equal to any of a list of objects.
      * 
@@ -69,7 +57,7 @@ public final class ObjectSupport {
         }
 
         for (Object object : objects) {
-            if (equals(o1, object)) {
+            if (Objects.equal(o1, object)) {
                 return true;
             }
         }

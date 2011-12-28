@@ -22,11 +22,12 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.jcip.annotations.NotThreadSafe;
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
-import net.shibboleth.utilities.java.support.annotation.constraint.NotNull;
-import net.shibboleth.utilities.java.support.annotation.constraint.Null;
 import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.resource.Resource;
@@ -79,7 +80,7 @@ public class HttpResource implements Resource {
      * @param client client used to fetch the remote resource data
      * @param url URL of the remote resource data
      */
-    public HttpResource(@NotNull final HttpClient client, @NotNull @NotEmpty final String url) {
+    public HttpResource(@Nonnull final HttpClient client, @Nonnull @NotEmpty final String url) {
         httpClient = Assert.isNotNull(client, "HTTP client may not be null");
         resourceUrl = Assert.isNotNull(StringSupport.trimOrNull(url), "Resource URL may not be null or empty");
     }
@@ -89,7 +90,7 @@ public class HttpResource implements Resource {
      * 
      * @return strategy used customize the {@link HttpGet} used to fetch the resource
      */
-    @Null public HttpGetCustomizationStrategy getHttpGetCustomizationStrategy() {
+    @Nullable public HttpGetCustomizationStrategy getHttpGetCustomizationStrategy() {
         return httpGetCustomizationStrategy;
     }
 
@@ -98,7 +99,7 @@ public class HttpResource implements Resource {
      * 
      * @param strategy strategy used customize the {@link HttpGet} used to fetch the resource
      */
-    public void setHttpGetCustomizationStrategy(@Null final HttpGetCustomizationStrategy strategy) {
+    public void setHttpGetCustomizationStrategy(@Nullable final HttpGetCustomizationStrategy strategy) {
         httpGetCustomizationStrategy = strategy;
     }
 
@@ -116,7 +117,7 @@ public class HttpResource implements Resource {
      * 
      * @param strategy strategy used to customize the {@link HttpResponse} before its content is returned
      */
-    public void setHttpResponseCustomizationStrategy(@Null final HttpResponseCustomizationStrategy strategy) {
+    public void setHttpResponseCustomizationStrategy(@Nullable final HttpResponseCustomizationStrategy strategy) {
         httpResponseCustomizationStrategy = strategy;
     }
 
@@ -245,7 +246,7 @@ public class HttpResource implements Resource {
          * 
          * @return the customized {@link HttpGet}
          */
-        public HttpGet customize(@NotNull final HttpGet httpGet);
+        public HttpGet customize(@Nonnull final HttpGet httpGet);
     }
 
     /**
@@ -262,6 +263,6 @@ public class HttpResource implements Resource {
          * 
          * @return the customized {@link HttpResponse}
          */
-        public HttpResponse customize(@NotNull final HttpResponse httpResponse);
+        public HttpResponse customize(@Nonnull final HttpResponse httpResponse);
     }
 }

@@ -24,12 +24,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.shibboleth.utilities.java.support.annotation.constraint.NoNullElements;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotLive;
-import net.shibboleth.utilities.java.support.annotation.constraint.NotNull;
-import net.shibboleth.utilities.java.support.annotation.constraint.Null;
-import net.shibboleth.utilities.java.support.annotation.constraint.NullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
@@ -47,7 +48,7 @@ public interface ResourceCache {
      * @return whether a cache entry exists for a resource at that location, returns false if the given location was
      *         null or empty
      */
-    public boolean contains(@Null String location);
+    public boolean contains(@Nullable String location);
 
     /**
      * Gets the cache entry for the resource at the given location.
@@ -56,7 +57,7 @@ public interface ResourceCache {
      * 
      * @return the cache entry if one exists or null if it doesn't exist or the given location was null or empty
      */
-    @Null public CachedResource get(@Null String location);
+    @Nullable public CachedResource get(@Nullable String location);
 
     /**
      * Adds a cache entry.
@@ -65,7 +66,7 @@ public interface ResourceCache {
      * 
      * @return the cache entry replaced by this entry
      */
-    @Null public CachedResource put(@NotNull CachedResource resource);
+    @Nullable public CachedResource put(@Nonnull CachedResource resource);
 
     /**
      * Removes the given cache entry.
@@ -74,7 +75,7 @@ public interface ResourceCache {
      * 
      * @return the removed entry or null if no entry existed for the given location
      */
-    @Null public CachedResource remove(String location);
+    @Nullable public CachedResource remove(String location);
 
     /** An entry for a cached {@link Resource}. */
     public static class CachedResource implements Resource, Serializable {
@@ -101,9 +102,9 @@ public interface ResourceCache {
          * @param resourceContent the content of the resource
          * @param resourceProperties properties associated with the resource
          */
-        public CachedResource(@NotNull @NotEmpty final String resourceLocation,
-                @NotNull @NotLive final byte[] resourceContent,
-                @Null @NullElements final Map<String, String> resourceProperties) {
+        public CachedResource(@Nonnull @NotEmpty final String resourceLocation,
+                @Nonnull @NotLive final byte[] resourceContent,
+                @Nullable @NullableElements final Map<String, String> resourceProperties) {
             creationInstant = System.currentTimeMillis();
 
             location =
@@ -160,7 +161,7 @@ public interface ResourceCache {
          * 
          * @return the properties associated with this resource
          */
-        @NotLive @Unmodifiable @NotNull @NoNullElements public Map<String, String> getProperties() {
+        @NotLive @Unmodifiable @Nonnull @NonnullElements public Map<String, String> getProperties() {
             return properties;
         }
     }

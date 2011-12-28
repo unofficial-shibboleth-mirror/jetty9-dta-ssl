@@ -19,9 +19,11 @@ package net.shibboleth.utilities.java.support.chrono;
 
 import java.util.concurrent.TimeUnit;
 
-import net.shibboleth.utilities.java.support.annotation.constraint.NotNull;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
 
 /** A stopwatch with millisecond precision. */
+@NotThreadSafe
 public class Stopwatch {
 
     /** Time the stopwatch was started. */
@@ -64,7 +66,7 @@ public class Stopwatch {
      * 
      * @return time that elapsed while the stopwatch was running, 0 if the stopwatch has not yet been stopped
      */
-    public long elapsedTime(@NotNull final TimeUnit unit) {
+    public long elapsedTime(@Nonnull final TimeUnit unit) {
         return unit.convert(elapsedTime, TimeUnit.MILLISECONDS);
     }
 

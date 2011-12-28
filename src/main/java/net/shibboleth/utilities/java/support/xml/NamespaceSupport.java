@@ -18,7 +18,6 @@
 package net.shibboleth.utilities.java.support.xml;
 
 import net.shibboleth.utilities.java.support.logic.Assert;
-import net.shibboleth.utilities.java.support.primitive.ObjectSupport;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.w3c.dom.DOMException;
@@ -26,6 +25,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import com.google.common.base.Objects;
 
 /** Set of helper methods for working with DOM namespaces. */
 public final class NamespaceSupport {
@@ -97,13 +98,13 @@ public final class NamespaceSupport {
             for (int i = 0; i < length; i++) {
                 attr = map.item(i);
                 value = attr.getNodeValue();
-                if (ObjectSupport.equals(attr.getNamespaceURI(), XmlConstants.XMLNS_NS)) {
+                if (Objects.equal(attr.getNamespaceURI(), XmlConstants.XMLNS_NS)) {
                     // at this point we are dealing with DOM Level 2 nodes only
-                    if (ObjectSupport.equals(prefix, XmlConstants.XMLNS_PREFIX)) {
+                    if (Objects.equal(prefix, XmlConstants.XMLNS_PREFIX)) {
                         // default namespace
                         return value;
-                    } else if (ObjectSupport.equals(attr.getPrefix(), XmlConstants.XMLNS_PREFIX)
-                            && ObjectSupport.equals(attr, prefix)) {
+                    } else if (Objects.equal(attr.getPrefix(), XmlConstants.XMLNS_PREFIX)
+                            && Objects.equal(attr, prefix)) {
                         // non default namespace
                         return value;
                     }
@@ -164,15 +165,15 @@ public final class NamespaceSupport {
             String foundNamespace;
             for (int i = 0; i < length; i++) {
                 attr = map.item(i);
-                if (ObjectSupport.equals(attr.getNamespaceURI(), XmlConstants.XMLNS_NS)) {
+                if (Objects.equal(attr.getNamespaceURI(), XmlConstants.XMLNS_NS)) {
                     // DOM Level 2 nodes
-                    if (ObjectSupport.equals(attr.getNodeName(), XmlConstants.XMLNS_PREFIX)
-                            || (ObjectSupport.equals(attr.getPrefix(), XmlConstants.XMLNS_PREFIX))
-                            && ObjectSupport.equals(attr.getNodeValue(), namespaceURI)) {
+                    if (Objects.equal(attr.getNodeName(), XmlConstants.XMLNS_PREFIX)
+                            || (Objects.equal(attr.getPrefix(), XmlConstants.XMLNS_PREFIX))
+                            && Objects.equal(attr.getNodeValue(), namespaceURI)) {
 
                         localName = attr.getLocalName();
                         foundNamespace = startingElement.lookupNamespaceURI(localName);
-                        if (ObjectSupport.equals(foundNamespace, namespaceURI)) {
+                        if (Objects.equal(foundNamespace, namespaceURI)) {
                             return localName;
                         }
                     }
@@ -276,8 +277,8 @@ public final class NamespaceSupport {
                 continue;
             }
 
-            namespacePrefix = attributeNode.getPrefix();
-            if (!StringSupport.isNullOrEmpty(namespacePrefix)) {
+            namespacePrefix = StringSupport.trimOrNull(attributeNode.getPrefix());
+            if (namespacePrefix == null) {
                 // If it's the "xmlns" prefix then it is the namespace declaration,
                 // don't try to look it up and redeclare it
                 if (namespacePrefix.equals(XmlConstants.XMLNS_PREFIX)

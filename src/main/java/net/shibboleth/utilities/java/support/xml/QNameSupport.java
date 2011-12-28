@@ -71,14 +71,14 @@ public final class QNameSupport {
      * @return the QName
      */
     public static QName constructQName(final String namespaceURI, final String localName, final String prefix) {
-        Assert.isNotNull(localName, "Local name may not be null");
-        if (StringSupport.isNullOrEmpty(prefix)) {
-            return new QName(namespaceURI, localName);
-        } else if (StringSupport.isNullOrEmpty(namespaceURI)) {
-            return new QName(localName);
-        }
+        String trimmedLocalName = Assert.isNotNull(StringSupport.trimOrNull(localName), "Local name may not be null");
+        String trimmedPrefix = StringSupport.trimOrNull(prefix);
 
-        return new QName(namespaceURI, localName, prefix);
+        if (trimmedPrefix == null) {
+            return new QName(StringSupport.trimOrNull(namespaceURI), trimmedLocalName);
+        } else {
+            return new QName(StringSupport.trimOrNull(namespaceURI), trimmedLocalName, trimmedPrefix);
+        }
     }
 
     /**

@@ -26,7 +26,6 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import net.shibboleth.utilities.java.support.logic.Assert;
-import net.shibboleth.utilities.java.support.primitive.ObjectSupport;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.w3c.dom.Document;
@@ -34,6 +33,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+
+import com.google.common.base.Objects;
 
 /** Set of helper methods for working with DOM Elements. */
 public final class ElementSupport {
@@ -134,11 +135,7 @@ public final class ElementSupport {
             qualifiedName = StringSupport.trimOrNull(trimmedLocalName);
         }
 
-        if (!StringSupport.isNullOrEmpty(namespaceURI)) {
-            return document.createElementNS(namespaceURI, qualifiedName);
-        } else {
-            return document.createElementNS(null, qualifiedName);
-        }
+        return document.createElementNS(StringSupport.trimOrNull(namespaceURI), qualifiedName);
     }
 
     /**
@@ -203,7 +200,7 @@ public final class ElementSupport {
             childNode = childNodes.item(i);
             if (childNode.getNodeType() == Node.ELEMENT_NODE) {
                 e = (Element) childNode;
-                if (ObjectSupport.equals(e.getLocalName(), localName)) {
+                if (Objects.equal(e.getLocalName(), localName)) {
                     children.add(e);
                 }
             }
@@ -237,8 +234,7 @@ public final class ElementSupport {
             childNode = childNodes.item(i);
             if (childNode.getNodeType() == Node.ELEMENT_NODE) {
                 e = (Element) childNode;
-                if (ObjectSupport.equals(e.getNamespaceURI(), namespaceURI)
-                        && ObjectSupport.equals(e.getLocalName(), localName)) {
+                if (Objects.equal(e.getNamespaceURI(), namespaceURI) && Objects.equal(e.getLocalName(), localName)) {
                     children.add(e);
                 }
             }
@@ -425,8 +421,7 @@ public final class ElementSupport {
      * @return true iff the element's local name and namespace match the parameters
      */
     public static boolean isElementNamed(final Element e, final String ns, final String localName) {
-        return e != null && ObjectSupport.equals(ns, e.getNamespaceURI())
-                && ObjectSupport.equals(localName, e.getLocalName());
+        return e != null && Objects.equal(ns, e.getNamespaceURI()) && Objects.equal(localName, e.getLocalName());
     }
 
     /**

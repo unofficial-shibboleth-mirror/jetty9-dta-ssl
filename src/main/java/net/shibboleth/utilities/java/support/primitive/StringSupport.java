@@ -22,27 +22,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import net.shibboleth.utilities.java.support.logic.Assert;
+
 /** String utility methods. */
 public final class StringSupport {
 
     /** Constructor. */
     private StringSupport() {
-    }
-
-    /**
-     * Checks if the given string is null or empty (containing only whitespace).
-     * 
-     * @param s the string to check, may be null
-     * 
-     * @return true if the given string is null or empty, false if not
-     */
-    public static boolean isNullOrEmpty(final String s) {
-        String temp = trimOrNull(s);
-        if (temp == null) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -54,9 +40,7 @@ public final class StringSupport {
      * @return delimited string of values
      */
     public static String listToStringValue(final List<String> values, final String delimiter) {
-        if (delimiter == null) {
-            throw new IllegalArgumentException("String delimiter may not be null");
-        }
+        Assert.isNotNull(delimiter, "String delimiter may not be null");
 
         final StringBuilder stringValue = new StringBuilder();
         final Iterator<String> valueItr = values.iterator();
@@ -70,20 +54,6 @@ public final class StringSupport {
         return stringValue.toString();
     }
 
-    /**
-     * Returns an empty string if the given string is null or the given string if it is not.
-     * 
-     * @param s string to check
-     * 
-     * @return an empty string if the given string is null or the given string if it is not
-     */
-    public static String nullToEmpty(final String s) {
-        if (s == null) {
-            return "";
-        }
-
-        return s;
-    }
 
     /**
      * Converts a delimited string into a list.
@@ -95,9 +65,7 @@ public final class StringSupport {
      * @return the list of values or an empty list if the given string is null or empty
      */
     public static List<String> stringToList(final String string, final String delimiter) {
-        if (delimiter == null) {
-            throw new IllegalArgumentException("String delimiter may not be null");
-        }
+        Assert.isNotNull(delimiter, "String delimiter may not be null");
 
         final ArrayList<String> values = new ArrayList<String>();
 

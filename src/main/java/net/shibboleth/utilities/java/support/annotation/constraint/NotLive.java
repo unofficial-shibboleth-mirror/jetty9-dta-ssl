@@ -17,6 +17,7 @@
 
 package net.shibboleth.utilities.java.support.annotation.constraint;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
@@ -25,7 +26,7 @@ import java.lang.annotation.Target;
  * and vice versa. For example, if applied to a collection instance this would generally mean that the method will make
  * a defensive copy of the given information.
  */
-@DocumentedConstraint
+@Documented
 @Target({ElementType.FIELD, ElementType.LOCAL_VARIABLE, ElementType.METHOD, ElementType.PARAMETER})
 public @interface NotLive {
 

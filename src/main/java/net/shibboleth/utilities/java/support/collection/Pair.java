@@ -17,7 +17,7 @@
 
 package net.shibboleth.utilities.java.support.collection;
 
-import net.shibboleth.utilities.java.support.primitive.ObjectSupport;
+import com.google.common.base.Objects;
 
 /**
  * Container for a pair of objects.
@@ -81,16 +81,14 @@ public class Pair<T1, T2> {
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("unchecked")
-    public boolean equals(Object o) {
-        if(o == this){
+    @SuppressWarnings("unchecked") public boolean equals(Object o) {
+        if (o == this) {
             return true;
         }
-        
+
         if (o instanceof Pair) {
             final Pair<T1, T2> otherPair = (Pair<T1, T2>) o;
-            return ObjectSupport.equals(getFirst(), otherPair.getFirst())
-                    && ObjectSupport.equals(getSecond(), otherPair.getSecond());
+            return Objects.equal(getFirst(), otherPair.getFirst()) && Objects.equal(getSecond(), otherPair.getSecond());
         }
 
         return false;

@@ -19,7 +19,8 @@ package net.shibboleth.utilities.java.support.net;
 
 import java.util.Map;
 
-import net.shibboleth.utilities.java.support.annotation.constraint.NotNull;
+import javax.annotation.Nonnull;
+
 import net.shibboleth.utilities.java.support.net.HttpResource.HttpGetCustomizationStrategy;
 import net.shibboleth.utilities.java.support.net.HttpResource.HttpResponseCustomizationStrategy;
 import net.shibboleth.utilities.java.support.resource.CachingResourceDecorator;
@@ -49,7 +50,7 @@ public class CachingHttpResourceDecorator extends CachingResourceDecorator {
      * @param resource the resource to be wrapped
      * @param cache the cache used to store resource data
      */
-    public CachingHttpResourceDecorator(@NotNull final HttpResource resource, @NotNull final ResourceCache cache) {
+    public CachingHttpResourceDecorator(@Nonnull final HttpResource resource, @Nonnull final ResourceCache cache) {
         super(resource, cache);
         resource.setHttpGetCustomizationStrategy(new ConnditionalHttpGetStrategy());
         resource.setHttpResponseCustomizationStrategy(new CachedResponseStrategy());
@@ -59,7 +60,7 @@ public class CachingHttpResourceDecorator extends CachingResourceDecorator {
     private class ConnditionalHttpGetStrategy implements HttpGetCustomizationStrategy {
 
         /** {@inheritDoc} */
-        public HttpGet customize(@NotNull final HttpGet httpGet) {
+        public HttpGet customize(@Nonnull final HttpGet httpGet) {
             final CachedResource cacheEntry = getResourceCache().get(getBackingResource().getLocation());
             if (cacheEntry != null) {
                 final Map<String, String> entryProperties = cacheEntry.getProperties();

@@ -15,16 +15,15 @@
  * limitations under the License.
  */
 
-package net.shibboleth.utilities.java.support.logic;
+package net.shibboleth.utilities.java.support.annotation.constraint;
 
-/** Predicate that checks if the given argument is null. */
-public class IsNullPredicate implements Predicate {
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
 
-    /** A singleton instance of this predicate. */
-    public static final IsNullPredicate INSTANCE = new IsNullPredicate();
+/** Indicates that the annotated collection may contain null elements. */
+@Documented
+@Target({ElementType.FIELD, ElementType.LOCAL_VARIABLE, ElementType.METHOD, ElementType.PARAMETER})
+public @interface NullableElements {
 
-    /** {@inheritDoc} */
-    public boolean apply(Object argument) {
-        return argument == null;
-    }
 }

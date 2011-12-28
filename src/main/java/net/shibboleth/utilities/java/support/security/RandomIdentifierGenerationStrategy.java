@@ -21,8 +21,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Random;
 
-import net.shibboleth.utilities.java.support.annotation.constraint.GreaterThan;
-import net.shibboleth.utilities.java.support.annotation.constraint.NotNull;
+import javax.annotation.Nonnull;
+
 import net.shibboleth.utilities.java.support.logic.Assert;
 
 import org.apache.commons.codec.BinaryEncoder;
@@ -65,7 +65,7 @@ public class RandomIdentifierGenerationStrategy implements IdentifierGenerationS
      * 
      * @param identifierSize number of random bytes in identifier
      */
-    public RandomIdentifierGenerationStrategy(@GreaterThan(0) final int identifierSize) {
+    public RandomIdentifierGenerationStrategy(final int identifierSize) {
         try {
             random = SecureRandom.getInstance("SHA1PRNG");
             sizeOfIdentifier =
@@ -84,8 +84,8 @@ public class RandomIdentifierGenerationStrategy implements IdentifierGenerationS
      * @param identifierSize number of random bytes in the identifier
      * @param identifierEncoder encoder used to convert random bytes to string identifier
      */
-    public RandomIdentifierGenerationStrategy(@NotNull final Random source, @GreaterThan(0) final int identifierSize,
-            @NotNull final BinaryEncoder identifierEncoder) {
+    public RandomIdentifierGenerationStrategy(@Nonnull final Random source, final int identifierSize,
+            @Nonnull final BinaryEncoder identifierEncoder) {
         random = Assert.isNotNull(source, "Random number source can not be null");
         sizeOfIdentifier =
                 (int) Assert.isGreaterThan(0, identifierSize,

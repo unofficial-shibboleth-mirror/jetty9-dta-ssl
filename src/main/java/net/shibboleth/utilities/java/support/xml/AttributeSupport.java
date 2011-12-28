@@ -211,11 +211,7 @@ public final class AttributeSupport {
             qualifiedName = StringSupport.trimOrNull(trimmedLocalName);
         }
 
-        if (StringSupport.isNullOrEmpty(namespaceURI)) {
-            return document.createAttributeNS(null, qualifiedName);
-        } else {
-            return document.createAttributeNS(namespaceURI, qualifiedName);
-        }
+        return document.createAttributeNS(StringSupport.trimOrNull(namespaceURI), qualifiedName);
     }
 
     /**
@@ -232,10 +228,8 @@ public final class AttributeSupport {
             return null;
         }
 
-        if (StringSupport.isNullOrEmpty(attributeName.getNamespaceURI())) {
-            return element.getAttributeNodeNS(null, attributeName.getLocalPart());
-        }
-        return element.getAttributeNodeNS(attributeName.getNamespaceURI(), attributeName.getLocalPart());
+        return element.getAttributeNodeNS(StringSupport.trimOrNull(attributeName.getNamespaceURI()),
+                attributeName.getLocalPart());
     }
 
     /**
@@ -247,10 +241,8 @@ public final class AttributeSupport {
      * @return the value of the attribute or null if the element does not have such an attribute
      */
     public static String getAttributeValue(final Element element, final QName attributeName) {
-        if (StringSupport.isNullOrEmpty(attributeName.getNamespaceURI())) {
-            return getAttributeValue(element, null, attributeName.getLocalPart());
-        }
-        return getAttributeValue(element, attributeName.getNamespaceURI(), attributeName.getLocalPart());
+        return getAttributeValue(element, StringSupport.trimOrNull(attributeName.getNamespaceURI()),
+                attributeName.getLocalPart());
     }
 
     /**
@@ -321,11 +313,15 @@ public final class AttributeSupport {
      * @return a QName from an attributes value, or null if the given attribute is null
      */
     public static QName getAttributeValueAsQName(final Attr attribute) {
-        if (attribute == null || StringSupport.isNullOrEmpty(attribute.getValue())) {
+        if (attribute == null) {
             return null;
         }
 
-        final String attributeValue = attribute.getTextContent();
+        final String attributeValue = StringSupport.trimOrNull(attribute.getTextContent());
+        if(attributeValue == null){
+            return null;
+        }
+        
         final String[] valueComponents = attributeValue.split(":");
         if (valueComponents.length == 1) {
             return QNameSupport.constructQName(attribute.lookupNamespaceURI(null), valueComponents[0], null);
@@ -471,11 +467,7 @@ public final class AttributeSupport {
             return false;
         }
 
-        if (StringSupport.isNullOrEmpty(name.getNamespaceURI())) {
-            return element.hasAttributeNS(null, name.getLocalPart());
-        }
-
-        return element.hasAttributeNS(name.getNamespaceURI(), name.getLocalPart());
+        return element.hasAttributeNS(StringSupport.trimOrNull(name.getNamespaceURI()), name.getLocalPart());
     }
 
     /**
@@ -489,12 +481,8 @@ public final class AttributeSupport {
      */
     public static boolean removeAttribute(final Element element, final QName attributeName) {
         if (hasAttribute(element, attributeName)) {
-            if (StringSupport.isNullOrEmpty(attributeName.getNamespaceURI())) {
-                element.removeAttributeNS(null, attributeName.getLocalPart());
-            } else {
-                element.removeAttributeNS(attributeName.getNamespaceURI(), attributeName.getLocalPart());
-            }
-
+            element.removeAttributeNS(StringSupport.trimOrNull(attributeName.getNamespaceURI()),
+                    attributeName.getLocalPart());
             return true;
         }
 

@@ -17,7 +17,7 @@
 
 package net.shibboleth.utilities.java.support.resolver;
 
-import net.shibboleth.utilities.java.support.logic.Predicate;
+import com.google.common.base.Predicate;
 
 /**
  * A resolver that searches over a collection of data and selects items based on a given {@link Predicate}.

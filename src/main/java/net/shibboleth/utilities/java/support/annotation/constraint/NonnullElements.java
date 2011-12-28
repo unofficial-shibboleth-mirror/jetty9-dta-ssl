@@ -15,33 +15,15 @@
  * limitations under the License.
  */
 
-package net.shibboleth.utilities.java.support.io;
+package net.shibboleth.utilities.java.support.annotation.constraint;
 
-import java.io.Closeable;
-import java.io.IOException;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
 
-/** Utility for closing {@link Closeable}s. */
-public final class CloseableSupport {
+/** Indicates that the annotated collection does not contain any null elements. */
+@Documented
+@Target({ElementType.FIELD, ElementType.LOCAL_VARIABLE, ElementType.METHOD, ElementType.PARAMETER})
+public @interface NonnullElements {
 
-    /** Constructor. */
-    private CloseableSupport() {
-    }
-
-    /**
-     * Closes a stream and swallows any thrown {@link IOException}.
-     * 
-     * @param closebale the stream to be closed
-     */
-    public static void closeQuietly(final Closeable closebale) {
-        if(closebale == null){
-            return;
-        }
-        
-        try {
-            closebale.close();
-        } catch (IOException e) {
-            // swallow error
-            return;
-        }
-    }
 }

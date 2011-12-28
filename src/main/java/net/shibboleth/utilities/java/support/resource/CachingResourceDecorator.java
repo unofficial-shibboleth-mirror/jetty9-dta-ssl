@@ -19,9 +19,10 @@ package net.shibboleth.utilities.java.support.resource;
 
 import java.io.InputStream;
 
+import javax.annotation.Nonnull;
+
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
-import net.shibboleth.utilities.java.support.annotation.constraint.NotNull;
 import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.resource.ResourceCache.CachedResource;
 
@@ -42,13 +43,13 @@ public class CachingResourceDecorator implements CachingResource {
      * @param cache the resource cache used to cache responses from the given resource
      * 
      */
-    public CachingResourceDecorator(@NotNull final Resource resource, @NotNull final ResourceCache cache) {
+    public CachingResourceDecorator(@Nonnull final Resource resource, @Nonnull final ResourceCache cache) {
         backingResource = Assert.isNotNull(resource, "Given Resource can not be null");
         resourceCache = Assert.isNotNull(cache, "Given ResourceCache can not be null");
     }
 
     /** {@inheritDoc} */
-    @NotNull @NotEmpty public String getLocation() {
+    @Nonnull @NotEmpty public String getLocation() {
         return backingResource.getLocation();
     }
 
@@ -64,7 +65,7 @@ public class CachingResourceDecorator implements CachingResource {
     }
 
     /** {@inheritDoc} */
-    @NotNull public InputStream getInputStream() throws ResourceException {
+    @Nonnull public InputStream getInputStream() throws ResourceException {
         return getCachedResource(true).getInputStream();
     }
 
@@ -99,7 +100,7 @@ public class CachingResourceDecorator implements CachingResource {
      * 
      * @return resource wrapped by this decorator
      */
-    @NotNull protected Resource getBackingResource() {
+    @Nonnull protected Resource getBackingResource() {
         return backingResource;
     }
 
@@ -108,7 +109,7 @@ public class CachingResourceDecorator implements CachingResource {
      * 
      * @return cache used to cache resource content
      */
-    @NotNull protected ResourceCache getResourceCache() {
+    @Nonnull protected ResourceCache getResourceCache() {
         return resourceCache;
     }
 
