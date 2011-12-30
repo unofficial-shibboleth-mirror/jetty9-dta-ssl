@@ -23,8 +23,12 @@ import javax.annotation.Nonnull;
 
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentValidationException;
 import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.resource.ResourceCache.CachedResource;
+
+//TODO finish
 
 /** A decorator that may be used to wrap a {@link Resource} in order to add content caching. */
 @ThreadSafe
@@ -126,5 +130,35 @@ public class CachingResourceDecorator implements CachingResource {
     protected synchronized CachedResource getCachedResource(boolean fetchIfNecessary) throws ResourceException {
         // TODO
         return null;
+    }
+
+    /** {@inheritDoc} */
+    public boolean isDestroyed() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    /** {@inheritDoc} */
+    public void destroy() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /** {@inheritDoc} */
+    public boolean isInitialized() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    /** {@inheritDoc} */
+    public void initialize() throws ComponentInitializationException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /** {@inheritDoc} */
+    public void validate() throws ComponentValidationException {
+        // TODO Auto-generated method stub
+        
     }
 }

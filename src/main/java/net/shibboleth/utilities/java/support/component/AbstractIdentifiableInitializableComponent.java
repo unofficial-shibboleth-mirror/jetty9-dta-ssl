@@ -41,19 +41,18 @@ public abstract class AbstractIdentifiableInitializableComponent extends Abstrac
         if (isInitialized()) {
             return;
         }
-        
+
         id = StringSupport.trimOrNull(componentId);
     }
 
     /**
-     * Performs the initialization of the component. This method is executed within the lock on the object being
-     * initialized.
+     * This method checks to ensure that the component ID is not null.
      * 
-     * The default implementation of this method is a no-op.
-     * 
-     * @throws ComponentInitializationException thrown if there is a problem initializing the component
+     * {@inheritDoc}
      */
     protected void doInitialize() throws ComponentInitializationException {
+        super.doInitialize();
+        
         if (getId() == null) {
             throw new ComponentInitializationException("Component identifier can not be null");
         }

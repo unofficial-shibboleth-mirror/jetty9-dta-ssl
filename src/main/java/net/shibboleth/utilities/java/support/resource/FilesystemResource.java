@@ -26,7 +26,7 @@ import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /** An {@link Resource} that reads data from a fileystem file. */
-public class FilesystemResource implements Resource {
+public class FilesystemResource extends AbstractResource {
 
     /** Filesytem file read by this resource. */
     private final File resourceFile;
@@ -40,15 +40,16 @@ public class FilesystemResource implements Resource {
         resourceFile =
                 new File(Assert.isNotNull(StringSupport.trimOrNull(resourcePath),
                         "Resource file path may not be null or empty"));
+        setLocation(resourceFile.getAbsolutePath());
     }
 
     /** {@inheritDoc} */
-    public boolean exists() throws ResourceException {
+    protected boolean doExists() throws ResourceException {
         return resourceFile.exists();
     }
 
     /** {@inheritDoc} */
-    public InputStream getInputStream() throws ResourceException {
+    protected InputStream doGetInputStream() throws ResourceException {
         try {
             return new FileInputStream(resourceFile);
         } catch (FileNotFoundException e) {
@@ -57,12 +58,7 @@ public class FilesystemResource implements Resource {
     }
 
     /** {@inheritDoc} */
-    public long getLastModifiedTime() throws ResourceException {
+    protected long doGetLastModifiedTime() throws ResourceException {
         return resourceFile.lastModified();
-    }
-
-    /** {@inheritDoc} */
-    public String getLocation() {
-        return resourceFile.getAbsolutePath();
     }
 }

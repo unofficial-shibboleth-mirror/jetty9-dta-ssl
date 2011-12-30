@@ -20,6 +20,8 @@ package net.shibboleth.utilities.java.support.net;
 import java.io.File;
 import java.io.InputStream;
 
+import net.shibboleth.utilities.java.support.component.DestroyedComponentException;
+import net.shibboleth.utilities.java.support.component.UninitializedComponentException;
 import net.shibboleth.utilities.java.support.net.HttpClientBuilder;
 import net.shibboleth.utilities.java.support.net.HttpResource;
 import net.shibboleth.utilities.java.support.resource.ResourceException;
@@ -39,10 +41,10 @@ public class HttpResourceTest {
 
     private File propFile;
 
-    @BeforeTest
-    public void testSetUp() {
+    @BeforeTest public void testSetUp() {
+        // Be sure to keep connection pooling enabled. TestNG runs its tests in parallel
+        // and so without connection pooling one test might clobber the connection of another
         HttpClientBuilder clientBuilder = new HttpClientBuilder();
-        clientBuilder.setConnectionPooling(false);
         httpClient = clientBuilder.buildClient();
 
         backupFile = new File(System.getProperty("java.io.tmpdir") + File.separator + "index");
@@ -56,8 +58,7 @@ public class HttpResourceTest {
         }
     }
 
-    @AfterMethod
-    public void postMethod() {
+    @AfterMethod public void postMethod() {
         if (backupFile.exists()) {
             backupFile.delete();
         }
@@ -67,8 +68,7 @@ public class HttpResourceTest {
         }
     }
 
-    @Test
-    public void testInvalidInstantiation() {
+    @Test public void testInvalidInstantiation() {
         try {
             new HttpResource(null, "http://example.org");
             Assert.fail();
@@ -84,12 +84,71 @@ public class HttpResourceTest {
         }
 
     }
+    
+    @Test public void testInitialization() throws Exception {
+        HttpResource resource = new HttpResource(httpClient, "http://shibboleth.net");
+        Assert.assertFalse(resource.isInitialized());
+        
+        try{
+            resource.exists();
+            Assert.fail();
+        }catch(UninitializedComponentException e){
+            //expected this
+        }
+        
+        try{
+            resource.getInputStream();
+            Assert.fail();
+        }catch(UninitializedComponentException e){
+            //expected this
+        }
+        
+        try{
+            resource.getLastModifiedTime();
+            Assert.fail();
+        }catch(UninitializedComponentException e){
+            //expected this
+        }
+        
+        resource.initialize();
+        Assert.assertTrue(resource.isInitialized());
+    }
+    
+    @Test public void testDestruction() throws Exception{
+        HttpClient client = new HttpClientBuilder().buildClient();
+        HttpResource resource = new HttpResource(client, "http://shibboleth.net");
+        Assert.assertFalse(resource.isDestroyed());
+        
+        resource.destroy();
+        Assert.assertTrue(resource.isDestroyed());
+        
+        try{
+            resource.exists();
+            Assert.fail();
+        }catch(DestroyedComponentException e){
+            //expected this
+        }
+        
+        try{
+            resource.getInputStream();
+            Assert.fail();
+        }catch(DestroyedComponentException e){
+            //expected this
+        }
+        
+        try{
+            resource.getLastModifiedTime();
+            Assert.fail();
+        }catch(DestroyedComponentException e){
+            //expected this
+        }
+    }
 
-    @Test
-    public void testValidUrl() throws Exception {
+    @Test public void testValidUrl() throws Exception {
         String url = "http://shibboleth.net";
 
         HttpResource resource = new HttpResource(httpClient, url);
+        resource.initialize();
         Assert.assertEquals(resource.getLocation(), url);
 
         Assert.assertTrue(resource.exists());
@@ -97,19 +156,20 @@ public class HttpResourceTest {
         InputStream ins = resource.getInputStream();
         Assert.assertNotNull(ins);
         Assert.assertTrue(ins.available() > 0);
+        ins.close();
     }
 
-    @Test
-    public void testInvalidUrl() throws Exception {
+    @Test public void testInvalidUrl() throws Exception {
         String url = "http://shibboleth.net/lkjeiocjkljn";
 
         HttpResource resource = new HttpResource(httpClient, url);
+        resource.initialize();
         Assert.assertEquals(resource.getLocation(), url);
 
         Assert.assertFalse(resource.exists());
 
         try {
-            resource.getInputStream();
+            resource.getInputStream().close();
             Assert.fail();
         } catch (ResourceException e) {
             // expected this

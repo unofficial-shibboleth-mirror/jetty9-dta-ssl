@@ -18,8 +18,8 @@
 package net.shibboleth.utilities.java.support.component;
 
 /**
- * A marker interface for components that may be put in an unmodifiable state and if a modification occurs afterwards
- * the unchecked exception {@link UnmodifiableComponentException}.
+ * A marker interface for components that may be put in to an unmodifiable state and, if a modification is attempted
+ * afterwards, throws {@link UnmodifiableComponentException}.
  */
 public interface UnmodifiableComponent extends Component {
 

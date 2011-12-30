@@ -78,16 +78,13 @@ public interface ResourceCache {
     @Nullable public CachedResource remove(String location);
 
     /** An entry for a cached {@link Resource}. */
-    public static class CachedResource implements Resource, Serializable {
+    public static class CachedResource extends AbstractResource implements Serializable {
 
         /** Serial version UID. */
         private static final long serialVersionUID = -5945597373788593911L;
 
         /** The instant this entry was created. */
         private final long creationInstant;
-
-        /** The location of the resource. */
-        private final String location;
 
         /** The cached content of the resource. */
         private final byte[] content;
@@ -107,9 +104,8 @@ public interface ResourceCache {
                 @Nullable @NullableElements final Map<String, String> resourceProperties) {
             creationInstant = System.currentTimeMillis();
 
-            location =
-                    Assert.isNotNull(StringSupport.trimOrNull(resourceLocation),
-                            "Resource location can not be null or empty");
+            setLocation(Assert.isNotNull(StringSupport.trimOrNull(resourceLocation),
+                    "Resource location can not be null or empty"));
 
             Assert.isNotNull(resourceContent, "Resource content can not be null");
             content = new byte[resourceContent.length];
@@ -137,22 +133,17 @@ public interface ResourceCache {
         }
 
         /** {@inheritDoc} */
-        public String getLocation() {
-            return location;
-        }
-
-        /** {@inheritDoc} */
-        public boolean exists() {
+        protected boolean doExists() {
             return true;
         }
 
         /** {@inheritDoc} */
-        public InputStream getInputStream() {
+        protected InputStream doGetInputStream() {
             return new ByteArrayInputStream(content);
         }
 
         /** {@inheritDoc} */
-        public long getLastModifiedTime() {
+        protected long doGetLastModifiedTime() {
             return creationInstant;
         }
 

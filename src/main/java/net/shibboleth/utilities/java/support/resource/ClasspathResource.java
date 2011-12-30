@@ -25,7 +25,7 @@ import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /** A resource which reads data from the classpath. */
-public class ClasspathResource implements Resource {
+public class ClasspathResource extends AbstractResource {
 
     /** URL to the classpath resource. */
     private final URL classpathResource;
@@ -47,22 +47,22 @@ public class ClasspathResource implements Resource {
      * @param classLoader class loader used to locate the resource
      */
     public ClasspathResource(final String resourcePath, final ClassLoader classLoader) {
-        final String trimmedPath =
-                Assert.isNotNull(StringSupport.trimOrNull(resourcePath), "Resource path may not be null or empty");
+        setLocation(Assert.isNotNull(StringSupport.trimOrNull(resourcePath), "Resource path may not be null or empty"));
 
         Assert.isNotNull(classLoader, "Resource class loader may not be null");
 
-        classpathResource = classLoader.getResource(trimmedPath);
-        Assert.isNotNull(classpathResource, "Resource " + resourcePath + " does not exist on the classpath");
+        classpathResource =
+                Assert.isNotNull(classLoader.getResource(getLocation()), "Resource " + resourcePath
+                        + " does not exist on the classpath");
     }
 
     /** {@inheritDoc} */
-    public boolean exists() throws ResourceException {
+    protected boolean doExists() throws ResourceException {
         return true;
     }
 
     /** {@inheritDoc} */
-    public InputStream getInputStream() throws ResourceException {
+    protected InputStream doGetInputStream() throws ResourceException {
         try {
             return classpathResource.openStream();
         } catch (IOException e) {
@@ -71,12 +71,7 @@ public class ClasspathResource implements Resource {
     }
 
     /** {@inheritDoc} */
-    public long getLastModifiedTime() throws ResourceException {
+    protected long doGetLastModifiedTime() throws ResourceException {
         return 0;
-    }
-
-    /** {@inheritDoc} */
-    public String getLocation() {
-        return classpathResource.toString();
     }
 }

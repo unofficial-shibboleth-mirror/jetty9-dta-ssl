@@ -28,7 +28,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-
 import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
@@ -46,9 +45,10 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.HttpParams;
+
+//TODO retry attempts, keep alive strategy
 
 /** Builder used to construct {@link HttpClient} objects configured with particular settings. */
 public class HttpClientBuilder {
@@ -72,9 +72,6 @@ public class HttpClientBuilder {
 
     /** Whether the SSL certificates used by the responder should be ignored. Default value: false */
     private boolean connectionDisregardSslCertificate;
-
-    /** Determines whether to pool connections to a host. Default value: true */
-    private boolean connectionPooling;
 
     /**
      * Whether to check a connection for staleness before using. This can be an expensive operation. Default value: true
@@ -117,7 +114,6 @@ public class HttpClientBuilder {
         socketBufferSize = 8192;
         connectionTimeout = 5000;
         connectionDisregardSslCertificate = false;
-        connectionPooling = true;
         connectionStalecheck = true;
         connectionsMaxTotal = 20;
         connectionsMaxPerRoute = 2;
@@ -232,24 +228,6 @@ public class HttpClientBuilder {
      */
     public void setConnectionDisregardSslCertificate(final boolean disregard) {
         connectionDisregardSslCertificate = disregard;
-    }
-
-    /**
-     * Gets whether connections with the same route (destination plus proxy(ies)) should be pooled and reused.
-     * 
-     * @return whether connections with the same route should be pooled and reused
-     */
-    public boolean isConnectionPooling() {
-        return connectionPooling;
-    }
-
-    /**
-     * Sets whether connections with the same route (destination plus proxy(ies)) should be pooled and reused.
-     * 
-     * @param pooling whether connections with the same route should be pooled and reused
-     */
-    public void setConnectionPooling(final boolean pooling) {
-        connectionPooling = pooling;
     }
 
     /**
@@ -468,8 +446,7 @@ public class HttpClientBuilder {
     }
 
     /**
-     * Builds the connection manager used by the HTTP client. If {@link #connectionPooling} is false then the
-     * {@link SingleClientConnManager} is used. Otherwise the {@link ThreadSafeClientConnManager} is used with
+     * Builds the connection manager used by the HTTP client. A {@link ThreadSafeClientConnManager} is used with
      * {@link ThreadSafeClientConnManager#setDefaultMaxPerRoute(int)} set to {@link #connectionsMaxPerRoute} and
      * {@link ThreadSafeClientConnManager#setMaxTotalConnections(int)} set to {@link #connectionsMaxTotal}.
      * 
@@ -477,15 +454,10 @@ public class HttpClientBuilder {
      */
     private ClientConnectionManager buildConnectionManager() {
         final SchemeRegistry registry = buildSchemeRegistry();
-
-        if (!connectionPooling) {
-            return new SingleClientConnManager(registry);
-        } else {
-            final ThreadSafeClientConnManager manager = new ThreadSafeClientConnManager(registry);
-            manager.setDefaultMaxPerRoute(connectionsMaxPerRoute);
-            manager.setMaxTotal(connectionsMaxTotal);
-            return manager;
-        }
+        final ThreadSafeClientConnManager manager = new ThreadSafeClientConnManager(registry);
+        manager.setDefaultMaxPerRoute(connectionsMaxPerRoute);
+        manager.setMaxTotal(connectionsMaxTotal);
+        return manager;
     }
 
     /**

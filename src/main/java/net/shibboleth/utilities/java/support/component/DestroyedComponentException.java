@@ -17,25 +17,25 @@
 
 package net.shibboleth.utilities.java.support.component;
 
-/** Exception thrown if a component has not been initialized and needs to be in order to perform the operation. */
-public class UninitializedComponentException extends RuntimeException {
+/** Exception thrown if a component has been destroyed and an attempt was made to use it. */
+public class DestroyedComponentException extends RuntimeException {
 
     /** Serial version UID. */
-    private static final long serialVersionUID = -3451363632449131551L;
+    private static final long serialVersionUID = -2254557697221898493L;
 
     /** Constructor. */
-    public UninitializedComponentException() {
+    public DestroyedComponentException() {
         super();
     }
-    
+
     /**
      * Constructor. This method constructs the exception message by prepending the output of {@link Object#toString()}
-     * to the string <code>has not been initialized</code>.
+     * to the string <code>has been destroyed</code>.
      * 
-     * @param uninitializedComponent the component that was not initialzied
+     * @param destroyedComponent the component that was destroyed
      */
-    public UninitializedComponentException(final Object uninitializedComponent) {
-        super(uninitializedComponent.toString() + " has not been initialized");
+    public DestroyedComponentException(final Object destroyedComponent) {
+        super(destroyedComponent.toString() + " has been destroyed");
     }
 
     /**
@@ -43,7 +43,7 @@ public class UninitializedComponentException extends RuntimeException {
      * 
      * @param message exception message
      */
-    public UninitializedComponentException(final String message) {
+    public DestroyedComponentException(final String message) {
         super(message);
     }
 
@@ -52,7 +52,7 @@ public class UninitializedComponentException extends RuntimeException {
      * 
      * @param wrappedException exception to be wrapped by this one
      */
-    public UninitializedComponentException(final Exception wrappedException) {
+    public DestroyedComponentException(final Exception wrappedException) {
         super(wrappedException);
     }
 
@@ -62,7 +62,7 @@ public class UninitializedComponentException extends RuntimeException {
      * @param message exception message
      * @param wrappedException exception to be wrapped by this one
      */
-    public UninitializedComponentException(final String message, final Exception wrappedException) {
+    public DestroyedComponentException(final String message, final Exception wrappedException) {
         super(message, wrappedException);
     }
 }

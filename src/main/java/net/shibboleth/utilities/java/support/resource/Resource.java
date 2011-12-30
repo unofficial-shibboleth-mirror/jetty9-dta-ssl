@@ -19,15 +19,21 @@ package net.shibboleth.utilities.java.support.resource;
 
 import java.io.InputStream;
 
+import javax.annotation.Nonnull;
+
+import net.shibboleth.utilities.java.support.component.DestructableComponent;
+import net.shibboleth.utilities.java.support.component.InitializableComponent;
+import net.shibboleth.utilities.java.support.component.ValidatableComponent;
+
 /** An interface representing an data resource. */
-public interface Resource {
+public interface Resource extends DestructableComponent, InitializableComponent, ValidatableComponent {
 
     /**
      * Gets resource location information. Examples might be filesystem path, URL, etc.
      * 
      * @return resource location information
      */
-    public String getLocation();
+    @Nonnull public String getLocation();
 
     /**
      * Checks whether the resource exists.
@@ -45,7 +51,7 @@ public interface Resource {
      * 
      * @throws ResourceException thrown if an input stream can not be created for the resource
      */
-    public InputStream getInputStream() throws ResourceException;
+    @Nonnull public InputStream getInputStream() throws ResourceException;
 
     /**
      * Gets the time, in milliseconds since the epoch, when the resource was last modified.
