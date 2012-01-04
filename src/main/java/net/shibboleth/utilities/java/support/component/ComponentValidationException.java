@@ -17,6 +17,8 @@
 
 package net.shibboleth.utilities.java.support.component;
 
+import javax.annotation.Nullable;
+
 /** Exception thrown if there is a problem validating a component. */
 public class ComponentValidationException extends Exception {
 
@@ -33,7 +35,7 @@ public class ComponentValidationException extends Exception {
      * 
      * @param message exception message
      */
-    public ComponentValidationException(final String message) {
+    public ComponentValidationException(@Nullable final String message) {
         super(message);
     }
 
@@ -42,7 +44,7 @@ public class ComponentValidationException extends Exception {
      * 
      * @param wrappedException exception to be wrapped by this one
      */
-    public ComponentValidationException(final Exception wrappedException) {
+    public ComponentValidationException(@Nullable final Exception wrappedException) {
         super(wrappedException);
     }
 
@@ -52,7 +54,7 @@ public class ComponentValidationException extends Exception {
      * @param message exception message
      * @param wrappedException exception to be wrapped by this one
      */
-    public ComponentValidationException(final String message, final Exception wrappedException) {
+    public ComponentValidationException(@Nullable final String message, @Nullable final Exception wrappedException) {
         super(message, wrappedException);
     }
 }

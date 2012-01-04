@@ -17,6 +17,8 @@
 
 package net.shibboleth.utilities.java.support.component;
 
+import javax.annotation.Nullable;
+
 /** Support class for working with {@link Component} objects. */
 public final class ComponentSupport {
 
@@ -30,7 +32,7 @@ public final class ComponentSupport {
      * 
      * @param obj object to destroy, may be null
      */
-    public static void destroy(final Object obj) {
+    public static void destroy(@Nullable final Object obj) {
         if (obj == null) {
             return;
         }
@@ -48,7 +50,7 @@ public final class ComponentSupport {
      * 
      * @throws ComponentInitializationException thrown if there is a problem initializing the object
      */
-    public static void initialize(final Object obj) throws ComponentInitializationException {
+    public static void initialize(@Nullable final Object obj) throws ComponentInitializationException {
         if (obj == null) {
             return;
         }
@@ -66,7 +68,7 @@ public final class ComponentSupport {
      * 
      * @throws ComponentValidationException thrown if there is a problem validating the object
      */
-    public static void validate(final Object obj) throws ComponentValidationException {
+    public static void validate(@Nullable final Object obj) throws ComponentValidationException {
         if (obj == null) {
             return;
         }

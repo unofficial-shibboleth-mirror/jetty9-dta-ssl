@@ -17,6 +17,8 @@
 
 package net.shibboleth.utilities.java.support.xml;
 
+import javax.annotation.Nullable;
+
 /**
  * An exception thrown when there is a problem creating an XML parser or parsing XML with on.
  */
@@ -39,7 +41,7 @@ public class XMLParserException extends Exception {
      * 
      * @param message exception message
      */
-    public XMLParserException(final String message) {
+    public XMLParserException(@Nullable final String message) {
         super(message);
     }
 
@@ -48,7 +50,7 @@ public class XMLParserException extends Exception {
      * 
      * @param wrappedException exception to be wrapped by this one
      */
-    public XMLParserException(final Exception wrappedException) {
+    public XMLParserException(@Nullable final Exception wrappedException) {
         super(wrappedException);
     }
 
@@ -58,7 +60,7 @@ public class XMLParserException extends Exception {
      * @param message exception message
      * @param wrappedException exception to be wrapped by this one
      */
-    public XMLParserException(final String message, final Exception wrappedException) {
+    public XMLParserException(@Nullable final String message, @Nullable final Exception wrappedException) {
         super(message, wrappedException);
     }
 }

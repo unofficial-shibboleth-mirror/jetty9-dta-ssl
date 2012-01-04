@@ -19,7 +19,15 @@ package net.shibboleth.utilities.java.support.logic;
 
 import java.util.Collection;
 
-/** Utility class for checking constraints on various parameters. */
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+/**
+ * This builds upon the Java <code>assert</code> functionality by offering a compare-and-assign functionality. Because
+ * it uses the Java <code>assert</code> functionality the JVM is still informed that the constraint check has been made
+ * and could, if it was so inclined, track this to avoid multiple overlapping checks over the lifetime of the checked
+ * object.
+ */
 public final class Assert {
 
     /** Constructor. */
@@ -27,89 +35,90 @@ public final class Assert {
     }
 
     /**
-     * Checks that the given collection is empty. If the collection is not empty an {@link IllegalArgumentException} is
-     * thrown.
+     * Checks that the given collection is empty. If the collection is not empty an {@link AssertionError} is thrown.
      * 
      * @param <T> type of items in the collection
      * @param collection collection check
      * 
      * @return the checked input
      */
-    public static <T> Collection<T> isEmpty(final Collection<T> collection) {
-        return isEmpty(collection, null);
+    @Nonnull public static <T> Collection<T> isEmpty(@Nonnull final Collection<T> collection) {
+        assert collection != null && collection.isEmpty();
+        return collection;
     }
 
     /**
-     * Checks that the given collection is empty. If the collection is not empty an {@link IllegalArgumentException} is
-     * thrown.
+     * Checks that the given collection is empty. If the collection is not empty an {@link AssertionError} is thrown.
      * 
      * @param <T> type of items in the collection
      * @param collection collection check
-     * @param message message used in the {@link IllegalArgumentException}
+     * @param message message used in the {@link AssertionError}
      * 
      * @return the checked input
      */
-    public static <T> Collection<T> isEmpty(final Collection<T> collection, final String message) {
-        if (collection.isEmpty()) {
-            return collection;
-        }
-        throw new IllegalArgumentException(message);
+    @Nonnull public static <T> Collection<T> isEmpty(@Nonnull final Collection<T> collection,
+            @Nonnull final String message) {
+        assert collection != null && collection.isEmpty();
+        return collection;
     }
 
     /**
-     * Checks that the given boolean is false. If not an {@link IllegalArgumentException} is thrown.
+     * Checks that the given boolean is false. If not an {@link AssertionError} is thrown.
      * 
      * @param b boolean to check
+     * 
+     * @return the checked boolean
      */
-    public static void isFalse(final boolean b) {
-        isFalse(b, null);
+    public static boolean isFalse(final boolean b) {
+        assert !b;
+        return b;
     }
 
     /**
-     * Checks that the given boolean is false. If not an {@link IllegalArgumentException} is thrown.
+     * Checks that the given boolean is false. If not an {@link AssertionError} is thrown.
      * 
      * @param b boolean to check
-     * @param message message used in {@link IllegalArgumentException}
+     * @param message message used in {@link AssertionError}
+     * 
+     * @return the checked boolean
      */
-    public static void isFalse(final boolean b, final String message) {
-        if (b) {
-            throw new IllegalArgumentException(message);
-        }
+    public static boolean isFalse(final boolean b, @Nonnull final String message) {
+        assert !b : message;
+        return b;
     }
 
     /**
      * Checks that the given number is greater than a given threshold. If the number is not greater than the threshold
-     * an {@link IllegalArgumentException} is thrown.
+     * an {@link AssertionError} is thrown.
      * 
      * @param threshold the threshold
      * @param number the number to be checked
      * 
      * @return the checked input
      */
-    public static long isGreaterThan(final long threshold, final long number) {
-        return isGreaterThan(threshold, number, null);
+    public static long isGreaterThan(final long threshold, @Nonnull final long number) {
+        assert number > threshold;
+        return number;
     }
 
     /**
      * Checks that the given number is greater than a given threshold. If the number is not greater than the threshold
-     * an {@link IllegalArgumentException} is thrown.
+     * an {@link AssertionError} is thrown.
      * 
      * @param threshold the threshold
      * @param number the number to be checked
-     * @param message message used in the {@link IllegalArgumentException}
+     * @param message message used in the {@link AssertionError}
      * 
      * @return the checked input
      */
-    public static long isGreaterThan(final long threshold, final long number, final String message) {
-        if (number > threshold) {
-            return number;
-        }
-        throw new IllegalArgumentException(message);
+    public static long isGreaterThan(final long threshold, final long number, @Nonnull final String message) {
+        assert number > threshold : message;
+        return number;
     }
 
     /**
      * Checks that the given number is greater than, or equal to, a given threshold. If the number is not greater than,
-     * or equal to, the threshold an {@link IllegalArgumentException} is thrown.
+     * or equal to, the threshold an {@link AssertionError} is thrown.
      * 
      * @param threshold the threshold
      * @param number the number to be checked
@@ -117,29 +126,28 @@ public final class Assert {
      * @return the checked input
      */
     public static long isGreaterThanOrEqual(final long threshold, final long number) {
-        return isGreaterThanOrEqual(threshold, number, null);
+        assert number >= threshold;
+        return number;
     }
 
     /**
      * Checks that the given number is greater than, or equal to, a given threshold. If the number is not greater than,
-     * or equal to, the threshold an {@link IllegalArgumentException} is thrown.
+     * or equal to, the threshold an {@link AssertionError} is thrown.
      * 
      * @param threshold the threshold
      * @param number the number to be checked
-     * @param message message used in the {@link IllegalArgumentException}
+     * @param message message used in the {@link AssertionError}
      * 
      * @return the checked input
      */
-    public static long isGreaterThanOrEqual(final long threshold, final long number, final String message) {
-        if (number >= threshold) {
-            return number;
-        }
-        throw new IllegalArgumentException(message);
+    public static long isGreaterThanOrEqual(final long threshold, final long number, @Nonnull final String message) {
+        assert number >= threshold : message;
+        return number;
     }
 
     /**
      * Checks that the given number is less than a given threshold. If the number is not less than the threshold an
-     * {@link IllegalArgumentException} is thrown.
+     * {@link AssertionError} is thrown.
      * 
      * @param threshold the threshold
      * @param number the number to be checked
@@ -147,29 +155,28 @@ public final class Assert {
      * @return the checked input
      */
     public static long isLessThan(final long threshold, final long number) {
-        return isLessThan(threshold, number, null);
+        assert number < threshold;
+        return number;
     }
 
     /**
      * Checks that the given number is less than a given threshold. If the number is not less than the threshold an
-     * {@link IllegalArgumentException} is thrown.
+     * {@link AssertionError} is thrown.
      * 
      * @param threshold the threshold
      * @param number the number to be checked
-     * @param message message used in the {@link IllegalArgumentException}
+     * @param message message used in the {@link AssertionError}
      * 
      * @return the checked input
      */
-    public static long isLessThan(final long threshold, final long number, final String message) {
-        if (number < threshold) {
-            return number;
-        }
-        throw new IllegalArgumentException(message);
+    public static long isLessThan(final long threshold, final long number, @Nonnull final String message) {
+        assert number < threshold : message;
+        return number;
     }
 
     /**
      * Checks that the given number is less than, or equal to, a given threshold. If the number is not less than, or
-     * equal to, the threshold an {@link IllegalArgumentException} is thrown.
+     * equal to, the threshold an {@link AssertionError} is thrown.
      * 
      * @param threshold the threshold
      * @param number the number to be checked
@@ -177,168 +184,174 @@ public final class Assert {
      * @return the checked input
      */
     public static long isLessThanOrEqual(final long threshold, final long number) {
-        return isLessThanOrEqual(threshold, number, null);
+        assert number <= threshold;
+        return number;
     }
 
     /**
      * Checks that the given number is less than, or equal to, a given threshold. If the number is not less than, or
-     * equal to, the threshold an {@link IllegalArgumentException} is thrown.
+     * equal to, the threshold an {@link AssertionError} is thrown.
      * 
      * @param threshold the threshold
      * @param number the number to be checked
-     * @param message message used in the {@link IllegalArgumentException}
+     * @param message message used in the {@link AssertionError}
      * 
      * @return the checked input
      */
-    public static long isLessThanOrEqual(final long threshold, final long number, final String message) {
-        if (number <= threshold) {
-            return number;
-        }
-        throw new IllegalArgumentException(message);
+    public static long isLessThanOrEqual(final long threshold, final long number, @Nonnull final String message) {
+        assert number <= threshold : message;
+        return number;
     }
 
     /**
-     * Checks that the given collection is not empty. If the collection is empty an {@link IllegalArgumentException} is
-     * thrown.
+     * Checks that the given collection is not empty. If the collection is empty an {@link AssertionError} is thrown.
      * 
      * @param <T> type of items in the collection
      * @param collection collection check
      * 
      * @return the checked input
      */
-    public static <T> Collection<T> isNotEmpty(final Collection<T> collection) {
-        return isNotEmpty(collection, null);
-    }
-
-    /**
-     * Checks that the given collection is not empty. If the collection is empty an {@link IllegalArgumentException} is
-     * thrown.
-     * 
-     * @param <T> type of items in the collection
-     * @param collection collection check
-     * @param message message used in the {@link IllegalArgumentException}
-     * 
-     * @return the checked input
-     */
-    public static <T> Collection<T> isNotEmpty(final Collection<T> collection, final String message) {
-        if (collection == null || collection.isEmpty()) {
-            throw new IllegalArgumentException(message);
-        }
-
+    @Nonnull public static <T> Collection<T> isNotEmpty(@Nonnull final Collection<T> collection) {
+        assert collection != null && !collection.isEmpty();
         return collection;
     }
-    
+
     /**
-     * Checks that the array does not contain any null elements.
+     * Checks that the given collection is not empty. If the collection is empty an {@link AssertionError} is thrown.
      * 
-     * @param <T> type of elements in the array
-     * @param array array to check
+     * @param <T> type of items in the collection
+     * @param collection collection check
+     * @param message message used in the {@link AssertionError}
      * 
-     * @return the given array
+     * @return the checked input
      */
-    public static <T> T[] noNullItems(final T[] array){
-        return noNullItems(array, null);
+    @Nonnull public static <T> Collection<T> isNotEmpty(@Nonnull final Collection<T> collection,
+            @Nonnull final String message) {
+        assert collection != null && !collection.isEmpty() : message;
+        return collection;
     }
-    
+
+    /**
+     * Checks that the given object is not null. If the object is null an {@link AssertionError} is thrown.
+     * 
+     * @param <T> object type
+     * @param obj object to check
+     * 
+     * @return the checked input
+     */
+    @Nonnull public static <T> T isNotNull(@Nullable final T obj) {
+        assert obj != null;
+        return obj;
+    }
+
+    /**
+     * Checks that the given object is not null. If the object is null an {@link AssertionError} is thrown.
+     * 
+     * @param <T> object type
+     * @param obj object to check
+     * @param message message used in {@link AssertionError}
+     * 
+     * @return the checked input
+     */
+    @Nonnull public static <T> T isNotNull(@Nullable final T obj, @Nonnull final String message) {
+        assert obj != null : message;
+        return obj;
+    }
+
+    /**
+     * Checks that the given object is null. If the object is not null an {@link AssertionError} is thrown.
+     * 
+     * @param <T> object type
+     * @param obj object to check
+     * 
+     * @return the checked input
+     */
+    @Nullable public static <T> T isNull(@Nullable final T obj) {
+        assert obj == null;
+        return obj;
+
+    }
+
+    /**
+     * Checks that the given object is null. If the object is not null an {@link AssertionError} is thrown.
+     * 
+     * @param <T> object type
+     * @param obj object to check
+     * @param message message used in {@link AssertionError}
+     * 
+     * @return the checked input
+     */
+    @Nullable public static <T> T isNull(@Nullable final T obj, @Nonnull final String message) {
+        assert obj != null : message;
+        return obj;
+
+    }
+
+    /**
+     * Checks that the given boolean is true. If not an {@link AssertionError} is thrown.
+     * 
+     * @param b boolean to check
+     * 
+     * @return the checked boolean
+     */
+    public static boolean isTrue(final boolean b) {
+        assert b;
+        return b;
+    }
+
+    /**
+     * Checks that the given boolean is true. If not an {@link AssertionError} is thrown.
+     * 
+     * @param b boolean to check
+     * @param message message used in {@link AssertionError}
+     * 
+     * @return the checked boolean
+     */
+    public static boolean isTrue(final boolean b, @Nonnull final String message) {
+        assert b : message;
+        return b;
+    }
+
     /**
      * Checks that the array does not contain any null elements.
      * 
      * @param <T> type of elements in the array
      * @param array array to check
-     * @param message message used in the {@link IllegalArgumentException}
      * 
      * @return the given array
      */
-    public static <T> T[] noNullItems(final T[] array, String message){
-        for(T element : array){
-            if(element == null){
-                throw new IllegalArgumentException(message);
-            }
+    @Nonnull public static <T> T[] noNullItems(@Nonnull final T[] array) {
+        assert array != null;
+
+        for (T element : array) {
+            assert element != null;
         }
-        
+
         return array;
     }
 
     /**
-     * Checks that the given object is not null. If the object is null an {@link IllegalArgumentException} is thrown.
+     * Checks that the array does not contain any null elements.
      * 
-     * @param <T> object type
-     * @param obj object to check
+     * @param <T> type of elements in the array
+     * @param array array to check
+     * @param message message used in the {@link AssertionError}
      * 
-     * @return the checked input
+     * @return the given array
      */
-    public static <T> T isNotNull(final T obj) {
-        return isNotNull(obj, null);
-    }
+    @Nonnull public static <T> T[] noNullItems(@Nonnull final T[] array, @Nonnull String message) {
+        assert array != null;
 
-    /**
-     * Checks that the given object is not null. If the object is null an {@link IllegalArgumentException} is thrown.
-     * 
-     * @param <T> object type
-     * @param obj object to check
-     * @param message message used in {@link IllegalArgumentException}
-     * 
-     * @return the checked input
-     */
-    public static <T> T isNotNull(final T obj, final String message) {
-        if (obj != null) {
-            return obj;
+        for (T element : array) {
+            assert element != null : message;
         }
-        throw new IllegalArgumentException(message);
-    }
 
-    /**
-     * Checks that the given object is null. If the object is not null an {@link IllegalArgumentException} is thrown.
-     * 
-     * @param <T> object type
-     * @param obj object to check
-     * 
-     * @return the checked input
-     */
-    public static <T> T isNull(final T obj) {
-        return isNull(obj, null);
-    }
-
-    /**
-     * Checks that the given object is null. If the object is not null an {@link IllegalArgumentException} is thrown.
-     * 
-     * @param <T> object type
-     * @param obj object to check
-     * @param message message used in {@link IllegalArgumentException}
-     * 
-     * @return the checked input
-     */
-    public static <T> T isNull(final T obj, final String message) {
-        if (obj == null) {
-            return obj;
-        }
-        throw new IllegalArgumentException(message);
-    }
-
-    /**
-     * Checks that the given boolean is true. If not an {@link IllegalArgumentException} is thrown.
-     * 
-     * @param b boolean to check
-     */
-    public static void isTrue(final boolean b) {
-        isTrue(b, null);
-    }
-
-    /**
-     * Checks that the given boolean is true. If not an {@link IllegalArgumentException} is thrown.
-     * 
-     * @param b boolean to check
-     * @param message message used in {@link IllegalArgumentException}
-     */
-    public static void isTrue(final boolean b, final String message) {
-        if (!b) {
-            throw new IllegalArgumentException(message);
-        }
+        return array;
     }
 
     /**
      * Checks that the given number is in the exclusive range. If the number is not in the range an
-     * {@link IllegalArgumentException} is thrown.
+     * {@link AssertionError} is thrown.
      * 
      * @param lowerTheshold lower bound of the range
      * @param upperThreshold upper bound of the range
@@ -347,31 +360,30 @@ public final class Assert {
      * @return the checked input
      */
     public static long numberInRangeExclusive(final long lowerTheshold, final long upperThreshold, final long number) {
-        return numberInRangeExclusive(lowerTheshold, upperThreshold, number, null);
+        assert number > lowerTheshold && number < upperThreshold;
+        return number;
     }
 
     /**
      * Checks that the given number is in the exclusive range. If the number is not in the range an
-     * {@link IllegalArgumentException} is thrown.
+     * {@link AssertionError} is thrown.
      * 
      * @param lowerTheshold lower bound of the range
      * @param upperThreshold upper bound of the range
      * @param number number to check
-     * @param message message used in the {@link IllegalArgumentException}
+     * @param message message used in the {@link AssertionError}
      * 
      * @return the checked input
      */
     public static long numberInRangeExclusive(final long lowerTheshold, final long upperThreshold, final long number,
-            final String message) {
-        if (number > lowerTheshold && number < upperThreshold) {
-            return number;
-        }
-        throw new IllegalArgumentException(message);
+            @Nonnull final String message) {
+        assert number > lowerTheshold && number < upperThreshold : message;
+        return number;
     }
 
     /**
      * Checks that the given number is in the inclusive range. If the number is not in the range an
-     * {@link IllegalArgumentException} is thrown.
+     * {@link AssertionError} is thrown.
      * 
      * @param lowerTheshold lower bound of the range
      * @param upperThreshold upper bound of the range
@@ -380,26 +392,24 @@ public final class Assert {
      * @return the checked input
      */
     public static long numberInRangeInclusive(final long lowerTheshold, final long upperThreshold, final long number) {
-        return numberInRangeInclusive(lowerTheshold, upperThreshold, number, null);
+        assert number >= lowerTheshold && number <= upperThreshold;
+        return number;
     }
 
     /**
      * Checks that the given number is in the inclusive range. If the number is not in the range an
-     * {@link IllegalArgumentException} is thrown.
+     * {@link AssertionError} is thrown.
      * 
      * @param lowerTheshold lower bound of the range
      * @param upperThreshold upper bound of the range
      * @param number number to check
-     * @param message message used in the {@link IllegalArgumentException}
+     * @param message message used in the {@link AssertionError}
      * 
      * @return the checked input
      */
     public static long numberInRangeInclusive(final long lowerTheshold, final long upperThreshold, final long number,
-            final String message) {
-        if (number >= lowerTheshold && number <= upperThreshold) {
-            return number;
-        }
-
-        throw new IllegalArgumentException(message);
+            @Nonnull final String message) {
+        assert number >= lowerTheshold && number <= upperThreshold : message;
+        return number;
     }
 }

@@ -94,7 +94,7 @@ public class RandomIdentifierGenerationStrategy implements IdentifierGenerationS
     }
 
     /** {@inheritDoc} */
-    public String generateIdentifier() {
+    @Nonnull public String generateIdentifier() {
         byte[] buf = new byte[sizeOfIdentifier];
         random.nextBytes(buf);
         try {

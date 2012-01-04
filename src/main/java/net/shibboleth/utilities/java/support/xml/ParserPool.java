@@ -20,16 +20,16 @@ package net.shibboleth.utilities.java.support.xml;
 import java.io.InputStream;
 import java.io.Reader;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.validation.Schema;
+
+import net.shibboleth.utilities.java.support.component.DestructableComponent;
 
 import org.w3c.dom.Document;
 
-//TODO needs to implement destructable and verifiable component
-//TODO may need to implement initializable component
-
 /** A pool of XML parsers. */
-public interface ParserPool {
+public interface ParserPool extends DestructableComponent {
 
     /**
      * Gets a builder from the pool.
@@ -38,14 +38,14 @@ public interface ParserPool {
      * 
      * @throws XMLParserException thrown if the document builder factory is misconfigured
      */
-    public DocumentBuilder getBuilder() throws XMLParserException;
+    @Nonnull public DocumentBuilder getBuilder() throws XMLParserException;
 
     /**
      * Returns a builder to the pool.
      * 
      * @param builder the builder to return
      */
-    public void returnBuilder(DocumentBuilder builder);
+    public void returnBuilder(@Nullable DocumentBuilder builder);
 
     /**
      * Convenience method for creating a new document with a pooled builder.
@@ -54,7 +54,7 @@ public interface ParserPool {
      * 
      * @throws XMLParserException thrown if there is a problem retrieving a builder
      */
-    public Document newDocument() throws XMLParserException;
+    @Nonnull public Document newDocument() throws XMLParserException;
 
     /**
      * Convenience method for parsing an XML file using a pooled builder.
@@ -66,7 +66,7 @@ public interface ParserPool {
      * @throws XMLParserException thrown if there is a problem retrieving a builder, the input stream can not be read,
      *             or the XML was invalid
      */
-    public Document parse(final InputStream input) throws XMLParserException;
+    @Nonnull public Document parse(@Nonnull final InputStream input) throws XMLParserException;
 
     /**
      * Convenience method for parsing an XML file using a pooled builder.
@@ -78,20 +78,5 @@ public interface ParserPool {
      * @throws XMLParserException thrown if there is a problem retrieving a builder, the input stream can not be read,
      *             or the XML was invalid
      */
-    public Document parse(final Reader input) throws XMLParserException;
-
-    /**
-     * Gets the schema builders use to validate.
-     * 
-     * @return the schema builders use to validate
-     */
-    public Schema getSchema();
-
-    /**
-     * Sets the schema builders use to validate.
-     * 
-     * @param newSchema the schema builders use to validate
-     */
-    public void setSchema(final Schema newSchema);
-
+    @Nonnull public Document parse(@Nonnull final Reader input) throws XMLParserException;
 }

@@ -17,6 +17,8 @@
 
 package net.shibboleth.utilities.java.support.component;
 
+import javax.annotation.Nullable;
+
 /** Exception thrown if a component has not been initialized and needs to be in order to perform the operation. */
 public class UninitializedComponentException extends RuntimeException {
 
@@ -43,7 +45,7 @@ public class UninitializedComponentException extends RuntimeException {
      * 
      * @param message exception message
      */
-    public UninitializedComponentException(final String message) {
+    public UninitializedComponentException(@Nullable final String message) {
         super(message);
     }
 
@@ -52,7 +54,7 @@ public class UninitializedComponentException extends RuntimeException {
      * 
      * @param wrappedException exception to be wrapped by this one
      */
-    public UninitializedComponentException(final Exception wrappedException) {
+    public UninitializedComponentException(@Nullable final Exception wrappedException) {
         super(wrappedException);
     }
 
@@ -62,7 +64,7 @@ public class UninitializedComponentException extends RuntimeException {
      * @param message exception message
      * @param wrappedException exception to be wrapped by this one
      */
-    public UninitializedComponentException(final String message, final Exception wrappedException) {
+    public UninitializedComponentException(@Nullable final String message, @Nullable final Exception wrappedException) {
         super(message, wrappedException);
     }
 }

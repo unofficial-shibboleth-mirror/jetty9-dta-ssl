@@ -17,6 +17,8 @@
 
 package net.shibboleth.utilities.java.support.component;
 
+import javax.annotation.Nullable;
+
 /** A {@link Component} which can be assigned a unique identifier. */
 public interface IdentifiableComponent extends Component {
 
@@ -25,5 +27,5 @@ public interface IdentifiableComponent extends Component {
      * 
      * @return ID of this component, never null
      */
-    public String getId();
+    @Nullable public String getId();
 }

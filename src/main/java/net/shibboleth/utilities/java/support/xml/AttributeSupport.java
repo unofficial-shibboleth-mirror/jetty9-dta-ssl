@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.xml.namespace.QName;
 
 import net.shibboleth.utilities.java.support.logic.Assert;
@@ -44,7 +46,7 @@ public final class AttributeSupport {
      * @param element the element to which to add the attribute
      * @param base the base value
      */
-    public static void addXMLBase(final Element element, final String base) {
+    public static void addXMLBase(@Nonnull final Element element, @Nonnull final String base) {
         Assert.isNotNull(element, "Element may not be null");
         Assert.isNotNull(base, "base attribute value may not be null");
 
@@ -59,7 +61,7 @@ public final class AttributeSupport {
      * @param element the element to which to add the attribute
      * @param id the Id value
      */
-    public static void addXMLId(final Element element, final String id) {
+    public static void addXMLId(@Nonnull final Element element, @Nonnull final String id) {
         Assert.isNotNull(element, "Element may not be null");
         Assert.isNotNull(id, "id attribute value may not be null");
 
@@ -74,7 +76,7 @@ public final class AttributeSupport {
      * @param element the element to which to add the attribute
      * @param lang the lang value
      */
-    public static void addXMLLang(final Element element, final String lang) {
+    public static void addXMLLang(@Nonnull final Element element, @Nonnull final String lang) {
         Assert.isNotNull(element, "Element may not be null");
         Assert.isNotNull(lang, "lang attribute value may not be null");
 
@@ -89,7 +91,7 @@ public final class AttributeSupport {
      * @param element the element to which to add the attribute
      * @param space the space value
      */
-    public static void addXMLSpace(final Element element, final XmlSpace space) {
+    public static void addXMLSpace(@Nonnull final Element element, @Nonnull final XmlSpace space) {
         Assert.isNotNull(element, "Element may not be null");
         Assert.isNotNull(space, "space attribute value may not be null");
 
@@ -108,7 +110,7 @@ public final class AttributeSupport {
      * @param isIDAttribute flag indicating whether the attribute being marshalled should be handled as an ID-typed
      *            attribute
      */
-    public static void appendAttribute(final Element element, final QName attributeName,
+    public static void appendAttribute(@Nonnull final Element element, @Nonnull final QName attributeName,
             final List<String> attributeValues, final boolean isIDAttribute) {
         appendAttribute(element, attributeName, StringSupport.listToStringValue(attributeValues, " "), isIDAttribute);
     }
@@ -121,7 +123,8 @@ public final class AttributeSupport {
      * @param attributeValue the attribute values
      * @param element the target element to which to marshall
      */
-    public static void appendAttribute(final Element element, final QName attributeName, final String attributeValue) {
+    public static void appendAttribute(@Nonnull final Element element, @Nonnull final QName attributeName,
+            @Nonnull final String attributeValue) {
         appendAttribute(element, attributeName, attributeValue, false);
     }
 
@@ -135,8 +138,8 @@ public final class AttributeSupport {
      * @param isIDAttribute flag indicating whether the attribute being marshalled should be handled as an ID-typed
      *            attribute
      */
-    public static void appendAttribute(final Element element, final QName attributeName, final String attributeValue,
-            final boolean isIDAttribute) {
+    public static void appendAttribute(@Nonnull final Element element, @Nonnull final QName attributeName,
+            @Nonnull final String attributeValue, final boolean isIDAttribute) {
         Assert.isNotNull(element, "Element may not be null");
         Assert.isNotNull(attributeName, "Attribute name may not be null");
         Assert.isNotNull(attributeValue, "Attribute value may not be null");
@@ -158,7 +161,8 @@ public final class AttributeSupport {
      * @param attributeName name of the attribute, not null
      * @param duration duration, in milliseconds, must be greater than 0
      */
-    public static void appendDateTimeAttribute(final Element element, final QName attributeName, long duration) {
+    public static void appendDateTimeAttribute(@Nonnull final Element element, @Nonnull final QName attributeName,
+            long duration) {
         appendAttribute(element, attributeName, DomTypeSupport.longToDateTime(duration));
     }
 
@@ -169,7 +173,8 @@ public final class AttributeSupport {
      * @param attributeName name of the attribute, not null
      * @param duration duration, in milliseconds, must be greater than 0
      */
-    public static void appendDurationAttribute(final Element element, final QName attributeName, long duration) {
+    public static void appendDurationAttribute(@Nonnull final Element element, @Nonnull final QName attributeName,
+            long duration) {
         appendAttribute(element, attributeName, DomTypeSupport.longToDuration(duration));
     }
 
@@ -181,7 +186,9 @@ public final class AttributeSupport {
      * 
      * @return the constructed attribute
      */
-    public static Attr constructAttribute(final Document owningDocument, final QName attributeName) {
+    @Nonnull public static Attr constructAttribute(@Nonnull final Document owningDocument,
+            @Nonnull final QName attributeName) {
+        Assert.isNotNull(attributeName, "Attribute name can not be null");
         return constructAttribute(owningDocument, attributeName.getNamespaceURI(), attributeName.getLocalPart(),
                 attributeName.getPrefix());
     }
@@ -196,8 +203,8 @@ public final class AttributeSupport {
      * 
      * @return the constructed attribute
      */
-    public static Attr constructAttribute(final Document document, final String namespaceURI, final String localName,
-            final String prefix) {
+    @Nonnull public static Attr constructAttribute(@Nonnull final Document document,
+            @Nullable final String namespaceURI, @Nonnull final String localName, @Nullable final String prefix) {
         Assert.isNotNull(document, "Document may not null");
 
         final String trimmedLocalName =
@@ -223,7 +230,7 @@ public final class AttributeSupport {
      * @return the attribute or null if the given element or attribute was null or the given attribute did not contain
      *         an attribute with the given name
      */
-    public static Attr getAttribute(final Element element, final QName attributeName) {
+    @Nonnull public static Attr getAttribute(@Nullable final Element element, @Nullable final QName attributeName) {
         if (element == null || attributeName == null) {
             return null;
         }
@@ -240,7 +247,12 @@ public final class AttributeSupport {
      * 
      * @return the value of the attribute or null if the element does not have such an attribute
      */
-    public static String getAttributeValue(final Element element, final QName attributeName) {
+    @Nullable public static String getAttributeValue(@Nullable final Element element,
+            @Nullable final QName attributeName) {
+        if (element == null || attributeName == null) {
+            return null;
+        }
+
         return getAttributeValue(element, StringSupport.trimOrNull(attributeName.getNamespaceURI()),
                 attributeName.getLocalPart());
     }
@@ -254,9 +266,9 @@ public final class AttributeSupport {
      * 
      * @return the value of the attribute or null if the element does not have such an attribute
      */
-    public static String getAttributeValue(final Element element, final String namespace,
-            final String attributeLocalName) {
-        if (element == null) {
+    @Nullable public static String getAttributeValue(@Nullable final Element element, @Nullable final String namespace,
+            @Nullable final String attributeLocalName) {
+        if (element == null || attributeLocalName == null) {
             return null;
         }
 
@@ -276,7 +288,7 @@ public final class AttributeSupport {
      * 
      * @return boolean value of the attribute or null
      */
-    public static Boolean getAttributeValueAsBoolean(final Attr attribute) {
+    @Nullable public static Boolean getAttributeValueAsBoolean(@Nullable final Attr attribute) {
         if (attribute == null) {
             return null;
         }
@@ -298,7 +310,7 @@ public final class AttributeSupport {
      * 
      * @return list of values, never null
      */
-    public static List<String> getAttributeValueAsList(final Attr attribute) {
+    @Nonnull public static List<String> getAttributeValueAsList(@Nullable final Attr attribute) {
         if (attribute == null) {
             return Collections.emptyList();
         }
@@ -312,16 +324,16 @@ public final class AttributeSupport {
      * 
      * @return a QName from an attributes value, or null if the given attribute is null
      */
-    public static QName getAttributeValueAsQName(final Attr attribute) {
+    @Nullable public static QName getAttributeValueAsQName(@Nullable final Attr attribute) {
         if (attribute == null) {
             return null;
         }
 
         final String attributeValue = StringSupport.trimOrNull(attribute.getTextContent());
-        if(attributeValue == null){
+        if (attributeValue == null) {
             return null;
         }
-        
+
         final String[] valueComponents = attributeValue.split(":");
         if (valueComponents.length == 1) {
             return QNameSupport.constructQName(attribute.lookupNamespaceURI(null), valueComponents[0], null);
@@ -338,7 +350,7 @@ public final class AttributeSupport {
      * 
      * @return date/time in millisecond since the epoch, or null if the attribute was null
      */
-    public static Long getDateTimeAttributeAsLong(final Attr attribute) {
+    @Nullable public static Long getDateTimeAttributeAsLong(@Nullable final Attr attribute) {
         if (attribute == null) {
             return null;
         }
@@ -353,7 +365,7 @@ public final class AttributeSupport {
      * 
      * @return duration, in millisecond, or null if the attribute was null
      */
-    public static Long getDurationAttributeValueAsLong(final Attr attribute) {
+    @Nullable public static Long getDurationAttributeValueAsLong(@Nullable final Attr attribute) {
         if (attribute == null) {
             return null;
         }
@@ -368,7 +380,7 @@ public final class AttributeSupport {
      * 
      * @return the ID attribute or null if there isn't one
      */
-    public static Attr getIdAttribute(final Element element) {
+    @Nullable public static Attr getIdAttribute(@Nullable final Element element) {
         if (element == null || !element.hasAttributes()) {
             return null;
         }
@@ -392,7 +404,7 @@ public final class AttributeSupport {
      * 
      * @return the value of the xml:base attribute, or null if not present
      */
-    public static String getXMLBase(final Element element) {
+    @Nullable public static String getXMLBase(@Nullable final Element element) {
         return getAttributeValue(element, XmlConstants.XML_BASE_ATTRIB_NAME);
     }
 
@@ -403,7 +415,7 @@ public final class AttributeSupport {
      * 
      * @return the value of the xml:id attribute, or null if not present
      */
-    public static String getXMLId(final Element element) {
+    @Nullable public static String getXMLId(@Nullable final Element element) {
         return getAttributeValue(element, XmlConstants.XML_ID_ATTRIB_NAME);
     }
 
@@ -414,7 +426,7 @@ public final class AttributeSupport {
      * 
      * @return the value of the xml:lang attribute, or null if not present
      */
-    public static String getXMLLang(final Element element) {
+    @Nullable public static String getXMLLang(@Nullable final Element element) {
         return getAttributeValue(element, XmlConstants.XML_LANG_ATTRIB_NAME);
     }
 
@@ -427,7 +439,7 @@ public final class AttributeSupport {
      * 
      * @return the active local of the element
      */
-    public static Locale getXMLLangAsLocale(final Element element) {
+    @Nullable public static Locale getXMLLangAsLocale(@Nullable final Element element) {
         if (element == null) {
             return null;
         }
@@ -450,7 +462,7 @@ public final class AttributeSupport {
      * 
      * @return the value of the xml:space attribute, or null if not present
      */
-    public static XmlSpace getXMLSpace(final Element element) {
+    @Nullable public static XmlSpace getXMLSpace(@Nullable final Element element) {
         return XmlSpace.valueOf(getAttributeValue(element, XmlConstants.XML_SPACE_ATTRIB_NAME));
     }
 
@@ -462,7 +474,7 @@ public final class AttributeSupport {
      * 
      * @return true if the element has an attribute with the given name, false otherwise
      */
-    public static boolean hasAttribute(final Element element, final QName name) {
+    public static boolean hasAttribute(@Nullable final Element element, @Nullable final QName name) {
         if (element == name || name == null) {
             return false;
         }
@@ -479,7 +491,7 @@ public final class AttributeSupport {
      * @return true if the element contained the attribute and it was removed, false if the element did not contain such
      *         an attribute
      */
-    public static boolean removeAttribute(final Element element, final QName attributeName) {
+    public static boolean removeAttribute(@Nullable final Element element, @Nullable final QName attributeName) {
         if (hasAttribute(element, attributeName)) {
             element.removeAttributeNS(StringSupport.trimOrNull(attributeName.getNamespaceURI()),
                     attributeName.getLocalPart());

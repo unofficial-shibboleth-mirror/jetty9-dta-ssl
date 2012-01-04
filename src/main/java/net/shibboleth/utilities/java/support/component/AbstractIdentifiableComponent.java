@@ -17,7 +17,9 @@
 
 package net.shibboleth.utilities.java.support.component;
 
-import net.shibboleth.utilities.java.support.logic.Assert;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /**
@@ -36,7 +38,7 @@ public abstract class AbstractIdentifiableComponent implements IdentifiableCompo
      * 
      * @return unique identifier for this component
      */
-    public String getId() {
+    @Nonnull public String getId() {
         return id;
     }
 
@@ -45,7 +47,7 @@ public abstract class AbstractIdentifiableComponent implements IdentifiableCompo
      * 
      * @param componentId unique identifier for this component, can not be null or empty
      */
-    protected void setId(final String componentId) {
-        id = Assert.isNotNull(StringSupport.trimOrNull(componentId), "Component ID can not be null or empty");
+    protected void setId(@Nullable final String componentId) {
+        id = StringSupport.trimOrNull(componentId);
     }
 }

@@ -17,6 +17,8 @@
 
 package net.shibboleth.utilities.java.support.component;
 
+import javax.annotation.Nullable;
+
 /** Exception thrown if there is a problem initializing a component. */
 public class ComponentInitializationException extends Exception {
 
@@ -33,7 +35,7 @@ public class ComponentInitializationException extends Exception {
      * 
      * @param message exception message
      */
-    public ComponentInitializationException(final String message) {
+    public ComponentInitializationException(@Nullable final String message) {
         super(message);
     }
 
@@ -42,7 +44,7 @@ public class ComponentInitializationException extends Exception {
      * 
      * @param wrappedException exception to be wrapped by this one
      */
-    public ComponentInitializationException(final Exception wrappedException) {
+    public ComponentInitializationException(@Nullable final Exception wrappedException) {
         super(wrappedException);
     }
 
@@ -52,7 +54,7 @@ public class ComponentInitializationException extends Exception {
      * @param message exception message
      * @param wrappedException exception to be wrapped by this one
      */
-    public ComponentInitializationException(final String message, final Exception wrappedException) {
+    public ComponentInitializationException(@Nullable final String message, @Nullable final Exception wrappedException) {
         super(message, wrappedException);
     }
 }

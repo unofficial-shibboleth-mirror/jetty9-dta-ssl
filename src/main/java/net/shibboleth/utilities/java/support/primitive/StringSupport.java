@@ -22,6 +22,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.shibboleth.utilities.java.support.logic.Assert;
 
 /** String utility methods. */
@@ -39,7 +42,9 @@ public final class StringSupport {
      * 
      * @return delimited string of values
      */
-    public static String listToStringValue(final List<String> values, final String delimiter) {
+    @Nonnull public static String
+            listToStringValue(@Nonnull final List<String> values, @Nonnull final String delimiter) {
+        Assert.isNotNull(values, "List of values can not be null");
         Assert.isNotNull(delimiter, "String delimiter may not be null");
 
         final StringBuilder stringValue = new StringBuilder();
@@ -54,7 +59,6 @@ public final class StringSupport {
         return stringValue.toString();
     }
 
-
     /**
      * Converts a delimited string into a list.
      * 
@@ -64,7 +68,8 @@ public final class StringSupport {
      * 
      * @return the list of values or an empty list if the given string is null or empty
      */
-    public static List<String> stringToList(final String string, final String delimiter) {
+    @Nonnull public static List<String> stringToList(@Nonnull final String string, @Nonnull final String delimiter) {
+        Assert.isNull(string, "String data can not be null");
         Assert.isNotNull(delimiter, "String delimiter may not be null");
 
         final ArrayList<String> values = new ArrayList<String>();
@@ -87,7 +92,7 @@ public final class StringSupport {
      * 
      * @return the trimmed string or null if the given string was null
      */
-    public static String trim(final String s) {
+    @Nullable public static String trim(@Nullable final String s) {
         if (s == null) {
             return null;
         }
@@ -102,7 +107,7 @@ public final class StringSupport {
      * 
      * @return the trimmed string or null if the given string was null or the trimmed string was empty
      */
-    public static String trimOrNull(final String s) {
+    @Nullable public static String trimOrNull(@Nullable final String s) {
         final String temp = trim(s);
         if (temp == null || temp.length() == 0) {
             return null;

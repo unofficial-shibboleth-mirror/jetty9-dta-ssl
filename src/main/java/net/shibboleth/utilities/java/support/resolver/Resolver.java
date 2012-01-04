@@ -17,6 +17,9 @@
 
 package net.shibboleth.utilities.java.support.resolver;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * Generic interface for resolvers which process specified criteria and produce some implementation-specific
  * result information.
@@ -31,10 +34,12 @@ public interface Resolver<ProductType, CriteriaType> {
      * which satisfy the criteria.
      * 
      * @param criteria the criteria to evaluate or process
+     * 
      * @return instances which satisfy the criteria
+     * 
      * @throws ResolverException thrown if there is an error processing the specified criteria
      */
-    Iterable<ProductType> resolve(CriteriaType criteria) throws ResolverException;
+    @Nonnull Iterable<ProductType> resolve(@Nullable CriteriaType criteria) throws ResolverException;
     
     /**
      * Process the specified criteria and return a single instance of the product type
@@ -44,8 +49,10 @@ public interface Resolver<ProductType, CriteriaType> {
      * return is implementation-dependent.
      * 
      * @param criteria the criteria to evaluate or process
+     * 
      * @return instances which satisfy the criteria
+     * 
      * @throws ResolverException thrown if there is an error processing the specified criteria
      */
-    ProductType resolveSingle(CriteriaType criteria) throws ResolverException;
+    @Nullable ProductType resolveSingle(@Nullable CriteriaType criteria) throws ResolverException;
 }

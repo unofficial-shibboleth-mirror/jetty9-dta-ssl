@@ -17,6 +17,8 @@
 
 package net.shibboleth.utilities.java.support.resolver;
 
+import javax.annotation.Nullable;
+
 /**
  * Base exception for resolver related errors.
  */
@@ -37,7 +39,7 @@ public class ResolverException extends Exception {
      * 
      * @param message exception message
      */
-    public ResolverException(String message) {
+    public ResolverException(@Nullable String message) {
         super(message);
     }
 
@@ -46,7 +48,7 @@ public class ResolverException extends Exception {
      * 
      * @param wrappedException exception to be wrapped by this one
      */
-    public ResolverException(Exception wrappedException) {
+    public ResolverException(@Nullable Exception wrappedException) {
         super(wrappedException);
     }
 
@@ -56,7 +58,7 @@ public class ResolverException extends Exception {
      * @param message exception message
      * @param wrappedException exception to be wrapped by this one
      */
-    public ResolverException(String message, Exception wrappedException) {
+    public ResolverException(@Nullable String message, @Nullable Exception wrappedException) {
         super(message, wrappedException);
     }
 }

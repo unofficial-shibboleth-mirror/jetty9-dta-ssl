@@ -23,6 +23,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.shibboleth.utilities.java.support.logic.Assert;
 
 /**
@@ -49,7 +52,7 @@ public class ClassIndexedSet<T> extends AbstractSet<T> implements Set<T> {
     }
 
     /** {@inheritDoc} */
-    public boolean add(final T o) {
+    public boolean add(@Nonnull final T o) {
         return add(o, false);
     }
 
@@ -61,7 +64,7 @@ public class ClassIndexedSet<T> extends AbstractSet<T> implements Set<T> {
      * 
      * @return true if object was added
      */
-    public boolean add(final T o, final boolean replace) {
+    public boolean add(@Nonnull final T o, final boolean replace) {
         Assert.isNotNull(o, "Null elements are not allowed");
 
         boolean replacing = false;
@@ -88,9 +91,8 @@ public class ClassIndexedSet<T> extends AbstractSet<T> implements Set<T> {
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("unchecked")
-    public boolean remove(final Object o) {
-        if (set.contains(o)) {
+    @SuppressWarnings("unchecked") public boolean remove(@Nullable final Object o) {
+        if (o != null && set.contains(o)) {
             removeFromIndex((T) o);
             set.remove(o);
             return true;
@@ -99,7 +101,7 @@ public class ClassIndexedSet<T> extends AbstractSet<T> implements Set<T> {
     }
 
     /** {@inheritDoc} */
-    public Iterator<T> iterator() {
+    @Nonnull public Iterator<T> iterator() {
         return new ClassIndexedSetIterator(this, set.iterator());
     }
 
@@ -114,7 +116,7 @@ public class ClassIndexedSet<T> extends AbstractSet<T> implements Set<T> {
      * @param clazz the class to check
      * @return true if set contains an instance of the specified class, false otherwise
      */
-    public boolean contains(final Class<? extends T> clazz) {
+    public boolean contains(@Nullable final Class<? extends T> clazz) {
         return get(clazz) != null;
     }
 
@@ -123,11 +125,10 @@ public class ClassIndexedSet<T> extends AbstractSet<T> implements Set<T> {
      * 
      * @param <X> generic parameter which eliminates need for casting by the caller
      * @param clazz the class to whose instance is to be retrieved
-     * @return the element whose class is of the type specified, or null
      * 
+     * @return the element whose class is of the type specified
      */
-    @SuppressWarnings("unchecked")
-    public <X extends T> X get(final Class<X> clazz) {
+    @Nullable public <X extends T> X get(@Nullable final Class<X> clazz) {
         return (X) index.get(clazz);
     }
 
@@ -138,8 +139,8 @@ public class ClassIndexedSet<T> extends AbstractSet<T> implements Set<T> {
      * @param o the object whose class index to determine
      * @return the class index value associated with the object instance
      */
-    @SuppressWarnings("unchecked")
-    protected Class<? extends T> getIndexClass(final Object o) {
+    @Nonnull protected Class<? extends T> getIndexClass(@Nonnull final Object o) {
+        Assert.isNotNull(o);
         return (Class<? extends T>) o.getClass();
     }
 

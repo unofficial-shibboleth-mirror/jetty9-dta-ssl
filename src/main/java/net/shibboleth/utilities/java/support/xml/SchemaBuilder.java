@@ -22,12 +22,16 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
+import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
+import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.resource.Resource;
 import net.shibboleth.utilities.java.support.resource.ResourceException;
 
@@ -86,13 +90,18 @@ public final class SchemaBuilder {
      * 
      * @throws SAXException thrown if there is a problem converting the schema sources in to a schema
      */
-    public static Schema buildSchema(final SchemaLanguage lang, final String... schemaFilesOrDirectories)
-            throws SAXException {
-        if (schemaFilesOrDirectories == null || schemaFilesOrDirectories.length == 0) {
-            return null;
+    @Nonnull public static Schema buildSchema(@Nonnull final SchemaLanguage lang,
+            @Nonnull @NotEmpty @NullableElements final String... schemaFilesOrDirectories) throws SAXException {
+        Assert.isNotNull(schemaFilesOrDirectories, "Schema source files paths can not be null");
+
+        ArrayList<File> sourceFiles = new ArrayList<File>();
+        for (String file : schemaFilesOrDirectories) {
+            if (file != null) {
+                sourceFiles.add(new File(file));
+            }
         }
 
-        return buildSchema(lang, schemaFilesOrDirectories);
+        return buildSchema(lang, sourceFiles.toArray(new File[sourceFiles.size()]));
     }
 
     /**
@@ -105,99 +114,87 @@ public final class SchemaBuilder {
      * 
      * @throws SAXException thrown if there is a problem converting the schema sources in to a schema
      */
-    public static Schema buildSchema(final SchemaLanguage lang, final File... schemaFilesOrDirectories)
-            throws SAXException {
-        if (schemaFilesOrDirectories == null || schemaFilesOrDirectories.length == 0) {
-            return null;
-        }
+    @Nonnull public static Schema buildSchema(@Nonnull final SchemaLanguage lang,
+            @Nonnull @NotEmpty @NullableElements final File... schemaFilesOrDirectories) throws SAXException {
+        Assert.isNotNull(schemaFilesOrDirectories, "Schema source files can not be null");
 
         final ArrayList<File> schemaFiles = new ArrayList<File>();
         getSchemaFiles(lang, schemaFiles, schemaFilesOrDirectories);
 
-        if (schemaFiles.isEmpty()) {
-            return null;
-        }
-
         final ArrayList<Source> schemaSources = new ArrayList<Source>();
         for (File schemaFile : schemaFiles) {
-            schemaSources.add(new StreamSource(schemaFile));
+            if (schemaFile != null) {
+                schemaSources.add(new StreamSource(schemaFile));
+            }
         }
-        return buildSchema(lang, schemaSources.toArray(new Source[] {}));
+
+        return buildSchema(lang, schemaSources);
     }
 
     /**
      * Builds a schema from the given schema sources.
      * 
-     * @param lang schema language, must not be null
+     * @param lang schema language
      * @param schemaSources schema source resources
      * 
      * @return the constructed schema
      * 
      * @throws SAXException thrown if there is a problem converting the schema sources in to a schema
      */
-    public static Schema buildSchema(final SchemaLanguage lang, final Resource... schemaSources) throws SAXException {
-        if (schemaSources == null || schemaSources.length == 0) {
-            return null;
-        }
+    @Nonnull public static Schema buildSchema(@Nonnull final SchemaLanguage lang,
+            @Nonnull @NotEmpty @NullableElements final Resource... schemaSources) throws SAXException {
+        Assert.isNotNull(schemaSources, "Schema source resources can not be null");
 
         final ArrayList<Source> sourceStreams = new ArrayList<Source>();
         for (Resource schemaSource : schemaSources) {
             try {
-                sourceStreams.add(new StreamSource(schemaSource.getInputStream(), schemaSource.getLocation()));
+                if (schemaSource != null) {
+                    sourceStreams.add(new StreamSource(schemaSource.getInputStream(), schemaSource.getLocation()));
+                }
             } catch (ResourceException e) {
                 throw new SAXException("Unable to read schema resource " + schemaSource.getLocation(), e);
             }
         }
-        return buildSchema(lang, sourceStreams.toArray(new Source[sourceStreams.size()]));
+
+        return buildSchema(lang, sourceStreams);
     }
 
     /**
      * Builds a schema from the given schema sources.
      * 
-     * @param lang schema language, must not be null
+     * @param lang schema language
      * @param schemaSources schema sources
      * 
      * @return the constructed schema
      * 
      * @throws SAXException thrown if there is a problem converting the schema sources in to a schema
      */
-    public static Schema buildSchema(final SchemaLanguage lang, final InputStream... schemaSources) throws SAXException {
-        if (schemaSources == null || schemaSources.length == 0) {
-            return null;
-        }
+    @Nonnull public static Schema buildSchema(@Nonnull final SchemaLanguage lang,
+            @Nonnull @NotEmpty @NullableElements final InputStream... schemaSources) throws SAXException {
+        Assert.isNotNull(schemaSources, "Schema source inputstreams can not be null");
 
         final ArrayList<StreamSource> sources = new ArrayList<StreamSource>();
         for (InputStream schemaSource : schemaSources) {
-            if (schemaSource == null) {
-                continue;
+            if (schemaSource != null) {
+                sources.add(new StreamSource(schemaSource));
             }
-            sources.add(new StreamSource(schemaSource));
         }
 
-        if (sources.isEmpty()) {
-            return null;
-        }
-
-        return buildSchema(lang, sources.toArray(new Source[] {}));
+        return buildSchema(lang, sources);
     }
 
     /**
      * Gets all of the schema files in the given set of readable files, directories or subdirectories.
      * 
-     * @param lang schema language, must not be null
+     * @param lang schema language
      * @param schemaFilesOrDirectories files and directories which may contain schema files
      * @param accumulatedSchemaFiles list that accumulates the schema files
      */
-    protected static void getSchemaFiles(final SchemaLanguage lang, final List<File> accumulatedSchemaFiles,
-            final File... schemaFilesOrDirectories) {
-
-        if (lang == null) {
-            throw new IllegalArgumentException("Schema language may not be null");
-        }
-
-        if (schemaFilesOrDirectories == null || schemaFilesOrDirectories.length == 0) {
-            return;
-        }
+    private static void getSchemaFiles(@Nonnull final SchemaLanguage lang,
+            @Nonnull final List<File> accumulatedSchemaFiles, @Nonnull final File... schemaFilesOrDirectories) {
+        Assert.isNotNull(lang, "Schema language identifier can not be null");
+        Assert.isNotNull(accumulatedSchemaFiles, "Accumulated schema file collection can not be null");
+        Assert.isNotNull(schemaFilesOrDirectories, "Schema file or directory can not be null");
 
         for (File handle : schemaFilesOrDirectories) {
             if (handle == null) {
@@ -222,21 +219,25 @@ public final class SchemaBuilder {
     /**
      * Builds a schema from the given schema sources.
      * 
-     * @param lang schema language, must not be null
-     * @param schemaSources schema sources, must not be null
+     * @param lang schema language
+     * @param schemaSources schema sources
      * 
      * @return the constructed schema
      * 
      * @throws SAXException thrown if there is a problem converting the schema sources in to a schema
      */
-    protected static Schema buildSchema(final SchemaLanguage lang, final Source... schemaSources) throws SAXException {
-        if (lang == null) {
-            throw new IllegalArgumentException("Schema language may not be null");
-        }
+    @Nonnull private static Schema buildSchema(@Nonnull final SchemaLanguage lang,
+            @Nonnull @NotEmpty @NullableElements final List<? extends Source> schemaSources) throws SAXException {
+        Assert.isNotNull(lang, "Schema language identifier can not be null");
 
-        if (schemaSources == null) {
-            throw new IllegalArgumentException("Schema sources may not be null");
+        Assert.isNotNull(schemaSources, "Schema source files can not be null");
+        ArrayList<Source> sources = new ArrayList<Source>();
+        for (Source source : schemaSources) {
+            if (source != null) {
+                sources.add(source);
+            }
         }
+        assert !sources.isEmpty() : "No schema source specified";
 
         final SchemaFactory schemaFactory;
         if (lang == SchemaLanguage.XML) {
@@ -246,6 +247,6 @@ public final class SchemaBuilder {
         }
 
         schemaFactory.setErrorHandler(new LoggingErrorHandler(LoggerFactory.getLogger(SchemaBuilder.class)));
-        return schemaFactory.newSchema(schemaSources);
+        return schemaFactory.newSchema(sources.toArray(new Source[sources.size()]));
     }
 }

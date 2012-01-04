@@ -19,6 +19,8 @@ package net.shibboleth.utilities.java.support.xml;
 
 import java.util.StringTokenizer;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.xml.namespace.QName;
 
 import net.shibboleth.utilities.java.support.logic.Assert;
@@ -42,7 +44,7 @@ public final class QNameSupport {
      * 
      * @return the QName respresented by the string
      */
-    public static QName constructQName(final Element owningElement, final String qname) {
+    @Nonnull public static QName constructQName(@Nonnull final Element owningElement, @Nonnull final String qname) {
         Assert.isNotNull(owningElement, "Owning element may not be null");
         Assert.isNotNull(qname, "Name may not be null");
 
@@ -70,7 +72,8 @@ public final class QNameSupport {
      * 
      * @return the QName
      */
-    public static QName constructQName(final String namespaceURI, final String localName, final String prefix) {
+    @Nonnull public static QName constructQName(@Nullable final String namespaceURI, @Nonnull final String localName,
+            @Nullable final String prefix) {
         String trimmedLocalName = Assert.isNotNull(StringSupport.trimOrNull(localName), "Local name may not be null");
         String trimmedPrefix = StringSupport.trimOrNull(prefix);
 
@@ -88,12 +91,12 @@ public final class QNameSupport {
      * 
      * @return the QName for the element or null if the element was null
      */
-    public static QName getNodeQName(final Node domNode) {
-        if (domNode != null) {
-            return constructQName(domNode.getNamespaceURI(), domNode.getLocalName(), domNode.getPrefix());
+    @Nullable public static QName getNodeQName(@Nullable final Node domNode) {
+        if (domNode == null) {
+            return null;
         }
 
-        return null;
+        return constructQName(domNode.getNamespaceURI(), domNode.getLocalName(), domNode.getPrefix());
     }
 
     /**
@@ -103,7 +106,7 @@ public final class QNameSupport {
      * 
      * @return the string value of the QName
      */
-    public static String qnameToContentString(final QName qname) {
+    @Nonnull public static String qnameToContentString(@Nonnull final QName qname) {
         Assert.isNotNull(qname, "QName may not be null");
 
         final StringBuffer buf = new StringBuffer();

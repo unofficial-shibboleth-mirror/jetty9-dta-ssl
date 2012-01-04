@@ -22,6 +22,8 @@ import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -50,7 +52,7 @@ public final class DomTypeSupport {
      * 
      * @return the date/time expressed as milliseconds since the epoch
      */
-    public static long dateTimeToLong(final String dateTime) {
+    public static long dateTimeToLong(@Nonnull final String dateTime) {
         String trimmedString =
                 Assert.isNotNull(StringSupport.trimOrNull(dateTime), "Lexical dateTime may not be null or empty");
 
@@ -85,7 +87,7 @@ public final class DomTypeSupport {
      * 
      * @return the type or null
      */
-    public static QName getXSIType(final Element e) {
+    @Nullable public static QName getXSIType(@Nullable final Element e) {
         if (hasXSIType(e)) {
             final Attr attribute = e.getAttributeNodeNS(XmlConstants.XSI_NS, "type");
             final String attributeValue = attribute.getTextContent().trim();
@@ -112,7 +114,7 @@ public final class DomTypeSupport {
      * 
      * @return true if there is a type, false if not
      */
-    public static boolean hasXSIType(final Element e) {
+    public static boolean hasXSIType(@Nullable final Element e) {
         if (e != null) {
             if (e.getAttributeNodeNS(XmlConstants.XSI_NS, "type") != null) {
                 return true;
@@ -130,7 +132,7 @@ public final class DomTypeSupport {
      * 
      * @return the lexical representation of the date/time
      */
-    public static String longToDateTime(final long dateTime) {
+    @Nonnull public static String longToDateTime(final long dateTime) {
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
         calendar.setTimeInMillis(dateTime);
@@ -145,7 +147,7 @@ public final class DomTypeSupport {
      * 
      * @return the lexical representation
      */
-    public static String longToDuration(final long duration) {
+    @Nonnull public static String longToDuration(final long duration) {
         return dataTypeFactory.newDuration(duration).toString();
     }
 

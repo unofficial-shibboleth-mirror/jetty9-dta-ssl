@@ -17,6 +17,8 @@
 
 package net.shibboleth.utilities.java.support.resolver;
 
+import javax.annotation.Nullable;
+
 import net.shibboleth.utilities.java.support.collection.ClassIndexedSet;
 
 /** This class holds instances of {@link Criterion} which are used in resolution or evaluation operations. */
@@ -32,7 +34,7 @@ public class CriteriaSet extends ClassIndexedSet<Criterion> implements Criterion
      * 
      * @param criteria criteria to add, may be null or contain null values
      */
-    public CriteriaSet(Criterion... criteria) {
+    public CriteriaSet(@Nullable Criterion... criteria) {
         super();
 
         if (criteria == null || criteria.length == 0) {

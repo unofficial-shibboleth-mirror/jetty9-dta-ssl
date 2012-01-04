@@ -17,6 +17,9 @@
 
 package net.shibboleth.utilities.java.support.xml;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
@@ -43,7 +46,7 @@ public final class NamespaceSupport {
      * @param prefix the prefix for the namespace
      */
     public static void
-            appendNamespaceDeclaration(final Element element, final String namespaceURI, final String prefix) {
+            appendNamespaceDeclaration(@Nonnull final Element element, @Nullable final String namespaceURI, @Nullable final String prefix) {
         Assert.isNotNull(element, "Element may not be null");
 
         final String nsURI = StringSupport.trimOrNull(namespaceURI);
@@ -85,7 +88,7 @@ public final class NamespaceSupport {
      * 
      * @return the namespace URI for the given prefer or null
      */
-    public static String lookupNamespaceURI(final Element startingElement, final Element stopingElement,
+    @Nullable public static String lookupNamespaceURI(@Nonnull final Element startingElement, @Nullable final Element stopingElement,
             final String prefix) {
         Assert.isNotNull(startingElement, "Starting element may not be null");
 
@@ -134,7 +137,7 @@ public final class NamespaceSupport {
      * 
      * @return the namespace URI for the given prefix
      */
-    public static String lookupNamespaceURI(final Element startingElement, final String prefix) {
+    @Nullable public static String lookupNamespaceURI(@Nonnull final Element startingElement, @Nullable final String prefix) {
         return lookupNamespaceURI(startingElement, null, prefix);
     }
 
@@ -152,8 +155,8 @@ public final class NamespaceSupport {
      * 
      * @return the prefix for the given namespace URI
      */
-    public static String lookupPrefix(final Element startingElement, final Element stopingElement,
-            final String namespaceURI) {
+    @Nullable public static String lookupPrefix(@Nonnull final Element startingElement, @Nullable final Element stopingElement,
+            @Nullable final String namespaceURI) {
         Assert.isNotNull(startingElement, "Starting element may not be null");
 
         // This code is a modified version of the lookup code within Xerces
@@ -204,7 +207,7 @@ public final class NamespaceSupport {
      * 
      * @return the prefix for the given namespace URI
      */
-    public static String lookupPrefix(final Element startingElement, final String namespaceURI) {
+    @Nullable public static String lookupPrefix(@Nonnull final Element startingElement, @Nullable final String namespaceURI) {
         return lookupPrefix(startingElement, null, namespaceURI);
     }
 
@@ -216,7 +219,7 @@ public final class NamespaceSupport {
      * 
      * @param domElement the element to act as the root of the namespace declarations
      */
-    public static void rootNamespaces(final Element domElement) {
+    public static void rootNamespaces(@Nullable final Element domElement) {
         rootNamespaces(domElement, domElement);
     }
 
@@ -227,7 +230,11 @@ public final class NamespaceSupport {
      * @param domElement the Element
      * @param upperNamespaceSearchBound the "root" element of the fragment where namespaces may be rooted
      */
-    private static void rootNamespaces(final Element domElement, final Element upperNamespaceSearchBound) {
+    private static void rootNamespaces(@Nullable final Element domElement, @Nullable final Element upperNamespaceSearchBound) {
+        if(domElement == null){
+            return;
+        }
+        
         String namespaceURI = null;
         String namespacePrefix = domElement.getPrefix();
 

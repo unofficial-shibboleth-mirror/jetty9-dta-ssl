@@ -19,6 +19,7 @@ package net.shibboleth.utilities.java.support.security;
 
 import java.util.UUID;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 /** Generates a type 4 UUID as an identifier. */
@@ -26,7 +27,7 @@ import javax.annotation.concurrent.ThreadSafe;
 public class Type4UuidIdentifierGenerationStrategy implements IdentifierGenerationStrategy {
 
     /** {@inheritDoc} */
-    public String generateIdentifier() {
+    @Nonnull public String generateIdentifier() {
         return UUID.randomUUID().toString();
     }
 }

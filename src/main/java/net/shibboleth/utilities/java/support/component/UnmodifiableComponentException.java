@@ -17,6 +17,8 @@
 
 package net.shibboleth.utilities.java.support.component;
 
+import javax.annotation.Nullable;
+
 /** Exception thrown if a component is in an unmodifiable state and a modification is attempted. */
 public class UnmodifiableComponentException extends RuntimeException {
 
@@ -33,7 +35,7 @@ public class UnmodifiableComponentException extends RuntimeException {
      * 
      * @param message exception message
      */
-    public UnmodifiableComponentException(final String message) {
+    public UnmodifiableComponentException(@Nullable final String message) {
         super(message);
     }
 
@@ -42,7 +44,7 @@ public class UnmodifiableComponentException extends RuntimeException {
      * 
      * @param wrappedException exception to be wrapped by this one
      */
-    public UnmodifiableComponentException(final Exception wrappedException) {
+    public UnmodifiableComponentException(@Nullable final Exception wrappedException) {
         super(wrappedException);
     }
 
@@ -52,7 +54,7 @@ public class UnmodifiableComponentException extends RuntimeException {
      * @param message exception message
      * @param wrappedException exception to be wrapped by this one
      */
-    public UnmodifiableComponentException(final String message, final Exception wrappedException) {
+    public UnmodifiableComponentException(@Nullable final String message, @Nullable final Exception wrappedException) {
         super(message, wrappedException);
     }
 }

@@ -23,15 +23,26 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.lang.ref.SoftReference;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.validation.Schema;
 
-import net.shibboleth.utilities.java.support.collection.LazyMap;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
+import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.InitializableComponent;
+import net.shibboleth.utilities.java.support.component.UninitializedComponentException;
+import net.shibboleth.utilities.java.support.component.UnmodifiableComponent;
+import net.shibboleth.utilities.java.support.component.UnmodifiableComponentException;
+import net.shibboleth.utilities.java.support.logic.Assert;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +52,9 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import com.google.common.base.Predicates;
+import com.google.common.collect.Maps;
 
 /**
  * A pool of JAXP 1.3 {@link DocumentBuilder}s.
@@ -57,7 +71,8 @@ import org.xml.sax.SAXException;
  * 
  * This implementation of {@link ParserPool} does not allow its properties to be modified once it has been initialized.
  */
-public class BasicParserPool implements ParserPool {
+@ThreadSafe
+public class BasicParserPool implements ParserPool, InitializableComponent, UnmodifiableComponent {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(BasicParserPool.class);
@@ -115,10 +130,10 @@ public class BasicParserPool implements ParserPool {
         initialized = false;
         maxPoolSize = 5;
         builderPool = new Stack<SoftReference<DocumentBuilder>>();
-        builderAttributes = new LazyMap<String, Object>();
+        builderAttributes = Collections.emptyMap();
         coalescing = true;
         expandEntityReferences = true;
-        builderFeatures = new LazyMap<String, Boolean>();
+        builderFeatures = Collections.emptyMap();
         ignoreComments = true;
         ignoreElementContentWhitespace = true;
         namespaceAware = true;
@@ -132,14 +147,42 @@ public class BasicParserPool implements ParserPool {
     /**
      * Initialize the pool.
      * 
-     * @throws XMLParserException thrown if pool can not be initialized, or if it is already initialized
+     * @throws ComponentInitializationException thrown if pool can not be initialized, or if it is already initialized
      * 
      **/
-    public synchronized void initialize() throws XMLParserException {
+    public synchronized void initialize() throws ComponentInitializationException {
         if (initialized) {
-            throw new XMLParserException("Parser pool was already initialized");
+            throw new ComponentInitializationException("Parser pool was already initialized");
         }
-        initializeFactory();
+
+        try {
+            final DocumentBuilderFactory newFactory = DocumentBuilderFactory.newInstance();
+
+            for (Map.Entry<String, Object> attribute : builderAttributes.entrySet()) {
+                newFactory.setAttribute(attribute.getKey(), attribute.getValue());
+            }
+
+            for (Map.Entry<String, Boolean> feature : builderFeatures.entrySet()) {
+                if (feature.getKey() != null) {
+                    newFactory.setFeature(feature.getKey(), feature.getValue().booleanValue());
+                }
+            }
+
+            newFactory.setCoalescing(coalescing);
+            newFactory.setExpandEntityReferences(expandEntityReferences);
+            newFactory.setIgnoringComments(ignoreComments);
+            newFactory.setIgnoringElementContentWhitespace(ignoreElementContentWhitespace);
+            newFactory.setNamespaceAware(namespaceAware);
+            newFactory.setSchema(schema);
+            newFactory.setValidating(dtdValidating);
+            newFactory.setXIncludeAware(xincludeAware);
+
+            builderFactory = newFactory;
+
+        } catch (ParserConfigurationException e) {
+            throw new ComponentInitializationException("Unable to configure builder factory", e);
+        }
+
         initialized = true;
     }
 
@@ -151,14 +194,25 @@ public class BasicParserPool implements ParserPool {
     public synchronized boolean isInitialized() {
         return initialized;
     }
+    
+    /** {@inheritDoc} */
+    public boolean isDestroyed() {
+        return !initialized;
+    }
 
     /** {@inheritDoc} */
-    public DocumentBuilder getBuilder() throws XMLParserException {
-        DocumentBuilder builder = null;
+    public synchronized void destroy() {
+        builderPool.clear();
+        initialized = false;
+    }
 
+    /** {@inheritDoc} */
+    @Nonnull public DocumentBuilder getBuilder() throws XMLParserException {
         if (!initialized) {
-            throw new XMLParserException("Parser pool has not been initialized");
+            throw new UninitializedComponentException("Parser pool has not been initialized");
         }
+
+        DocumentBuilder builder = null;
 
         synchronized (builderPool) {
             if (!builderPool.isEmpty()) {
@@ -180,8 +234,12 @@ public class BasicParserPool implements ParserPool {
     }
 
     /** {@inheritDoc} */
-    public void returnBuilder(final DocumentBuilder builder) {
-        if (!(builder instanceof DocumentBuilderProxy)) {
+    public void returnBuilder(@Nullable final DocumentBuilder builder) {
+        if (!initialized) {
+            throw new UninitializedComponentException("Parser pool has not been initialized");
+        }
+
+        if (builder == null || !(builder instanceof DocumentBuilderProxy)) {
             return;
         }
 
@@ -214,15 +272,32 @@ public class BasicParserPool implements ParserPool {
     }
 
     /** {@inheritDoc} */
-    public Document newDocument() throws XMLParserException {
-        DocumentBuilder builder = getBuilder();
-        Document document = builder.newDocument();
-        returnBuilder(builder);
+    @Nonnull public Document newDocument() throws XMLParserException {
+        if (!initialized) {
+            throw new UninitializedComponentException("Parser pool has not been initialized");
+        }
+
+        DocumentBuilder builder = null;
+        final Document document;
+
+        try {
+            builder = getBuilder();
+            document = builder.newDocument();
+        } finally {
+            returnBuilder(builder);
+        }
+
         return document;
     }
 
     /** {@inheritDoc} */
-    public Document parse(final InputStream input) throws XMLParserException {
+    @Nonnull public Document parse(@Nonnull final InputStream input) throws XMLParserException {
+        if (!initialized) {
+            throw new UninitializedComponentException("Parser pool has not been initialized");
+        }
+
+        Assert.isNotNull(input, "Input stream can not be null");
+
         final DocumentBuilder builder = getBuilder();
         try {
             final Document document = builder.parse(input);
@@ -237,7 +312,13 @@ public class BasicParserPool implements ParserPool {
     }
 
     /** {@inheritDoc} */
-    public Document parse(final Reader input) throws XMLParserException {
+    @Nonnull public Document parse(@Nonnull final Reader input) throws XMLParserException {
+        if (!initialized) {
+            throw new UninitializedComponentException("Parser pool has not been initialized");
+        }
+
+        Assert.isNotNull(input, "Input reader can not be null");
+
         final DocumentBuilder builder = getBuilder();
         try {
             final Document document = builder.parse(new InputSource(input));
@@ -265,8 +346,10 @@ public class BasicParserPool implements ParserPool {
      * 
      * @param newSize max number of builders the pool will hold
      */
-    public void setMaxPoolSize(final int newSize) {
-        checkValidModifyState();
+    public synchronized void setMaxPoolSize(final int newSize) {
+        if (initialized) {
+            throw new UnmodifiableComponentException("Pool is already initialized, max pool size can not be changed");
+        };
         maxPoolSize = newSize;
     }
 
@@ -275,7 +358,7 @@ public class BasicParserPool implements ParserPool {
      * 
      * @return builder attributes used when creating builders
      */
-    public Map<String, Object> getBuilderAttributes() {
+    @Nonnull @NonnullElements public Map<String, Object> getBuilderAttributes() {
         return Collections.unmodifiableMap(builderAttributes);
     }
 
@@ -284,9 +367,17 @@ public class BasicParserPool implements ParserPool {
      * 
      * @param newAttributes builder attributes used when creating builders
      */
-    public void setBuilderAttributes(final Map<String, Object> newAttributes) {
-        checkValidModifyState();
-        builderAttributes = newAttributes;
+    public synchronized void setBuilderAttributes(@Nullable @NullableElements final Map<String, Object> newAttributes) {
+        if (initialized) {
+            throw new UnmodifiableComponentException(
+                    "Pool is already initialized, builder attributes can not be changed");
+        }
+
+        if (newAttributes == null) {
+            builderAttributes = Collections.emptyMap();
+        } else {
+            builderAttributes = new HashMap<String, Object>(Maps.filterKeys(newAttributes, Predicates.notNull()));
+        }
     }
 
     /**
@@ -303,8 +394,12 @@ public class BasicParserPool implements ParserPool {
      * 
      * @param isCoalescing whether the builders are coalescing
      */
-    public void setCoalescing(final boolean isCoalescing) {
-        checkValidModifyState();
+    public synchronized void setCoalescing(final boolean isCoalescing) {
+        if (initialized) {
+            throw new UnmodifiableComponentException(
+                    "Pool is already initialized, coalescing parser option can not be changed");
+        }
+
         coalescing = isCoalescing;
     }
 
@@ -322,8 +417,12 @@ public class BasicParserPool implements ParserPool {
      * 
      * @param expand whether builders expand entity references
      */
-    public void setExpandEntityReferences(final boolean expand) {
-        checkValidModifyState();
+    public synchronized void setExpandEntityReferences(final boolean expand) {
+        if (initialized) {
+            throw new UnmodifiableComponentException(
+                    "Pool is already initialized, entity expansion option can not be changed");
+        }
+
         expandEntityReferences = expand;
     }
 
@@ -332,7 +431,7 @@ public class BasicParserPool implements ParserPool {
      * 
      * @return the builders' features
      */
-    public Map<String, Boolean> getBuilderFeatures() {
+    @Nonnull @NonnullElements public Map<String, Boolean> getBuilderFeatures() {
         return Collections.unmodifiableMap(builderFeatures);
     }
 
@@ -341,9 +440,16 @@ public class BasicParserPool implements ParserPool {
      * 
      * @param newFeatures the builders' features
      */
-    public void setBuilderFeatures(final Map<String, Boolean> newFeatures) {
-        checkValidModifyState();
-        builderFeatures = newFeatures;
+    public synchronized void setBuilderFeatures(@Nullable @NullableElements final Map<String, Boolean> newFeatures) {
+        if (initialized) {
+            throw new UnmodifiableComponentException("Pool is already initialized, parser features can not be changed");
+        }
+
+        if (newFeatures == null) {
+            builderFeatures = Collections.emptyMap();
+        } else {
+            builderFeatures = new HashMap<String, Boolean>(Maps.filterKeys(newFeatures, Predicates.notNull()));
+        }
     }
 
     /**
@@ -360,8 +466,12 @@ public class BasicParserPool implements ParserPool {
      * 
      * @param ignore The ignoreComments to set.
      */
-    public void setIgnoreComments(final boolean ignore) {
-        checkValidModifyState();
+    public synchronized void setIgnoreComments(final boolean ignore) {
+        if (initialized) {
+            throw new UnmodifiableComponentException(
+                    "Pool is already initialized, ignore comments option can not be changed");
+        }
+
         ignoreComments = ignore;
     }
 
@@ -379,8 +489,12 @@ public class BasicParserPool implements ParserPool {
      * 
      * @param ignore whether the builders ignore element content whitespace
      */
-    public void setIgnoreElementContentWhitespace(final boolean ignore) {
-        checkValidModifyState();
+    public synchronized void setIgnoreElementContentWhitespace(final boolean ignore) {
+        if (initialized) {
+            throw new UnmodifiableComponentException(
+                    "Pool is already initialized, ignore element whitespace option can not be changed");
+        }
+
         ignoreElementContentWhitespace = ignore;
     }
 
@@ -398,21 +512,28 @@ public class BasicParserPool implements ParserPool {
      * 
      * @param isNamespaceAware whether the builders are namespace aware
      */
-    public void setNamespaceAware(final boolean isNamespaceAware) {
-        checkValidModifyState();
+    public synchronized void setNamespaceAware(final boolean isNamespaceAware) {
+        if (initialized) {
+            throw new UnmodifiableComponentException(
+                    "Pool is already initialized, namspace aware option can not be changed");
+        }
+
         namespaceAware = isNamespaceAware;
     }
 
     /** {@inheritDoc} */
-    public Schema getSchema() {
+    @NullableElements public Schema getSchema() {
         return schema;
     }
 
     /** {@inheritDoc} */
-    public synchronized void setSchema(final Schema newSchema) {
-        // Note this method is synchronized because it is more than just an atomic assignment.
+    public synchronized void setSchema(@Nullable final Schema newSchema) {
+        if (initialized) {
+            throw new UnmodifiableComponentException("Pool is already initialized, XML schema can not be changed");
+        }
+
+        // Note this method is also synchronized because it is more than just an atomic assignment.
         // Don't want inconsistent data in the factory via initializeFactory(), also synchronized.
-        checkValidModifyState();
         schema = newSchema;
         if (schema != null) {
             setNamespaceAware(true);
@@ -435,8 +556,12 @@ public class BasicParserPool implements ParserPool {
      * 
      * @param isValidating whether the builders are validating
      */
-    public void setDTDValidating(final boolean isValidating) {
-        checkValidModifyState();
+    public synchronized void setDTDValidating(final boolean isValidating) {
+        if (initialized) {
+            throw new UnmodifiableComponentException(
+                    "Pool is already initialized, DTD validation option can not be changed");
+        }
+
         dtdValidating = isValidating;
     }
 
@@ -454,8 +579,11 @@ public class BasicParserPool implements ParserPool {
      * 
      * @param isXIncludeAware whether the builders are XInclude aware
      */
-    public void setXincludeAware(final boolean isXIncludeAware) {
-        checkValidModifyState();
+    public synchronized void setXincludeAware(final boolean isXIncludeAware) {
+        if (initialized) {
+            throw new UnmodifiableComponentException("Pool is already initialized, xinclude support can not be changed");
+        }
+
         xincludeAware = isXIncludeAware;
     }
 
@@ -466,50 +594,6 @@ public class BasicParserPool implements ParserPool {
      */
     protected int getPoolSize() {
         return builderPool.size();
-    }
-
-    /**
-     * Check that pool is in a valid state to be modified.
-     */
-    protected void checkValidModifyState() {
-        if (initialized) {
-            throw new IllegalStateException("Pool is already initialized, property changes not allowed");
-        }
-    }
-
-    /**
-     * Initializes the pool with a new set of configuration options.
-     * 
-     * @throws XMLParserException thrown if there is a problem initialzing the pool
-     */
-    protected synchronized void initializeFactory() throws XMLParserException {
-        try {
-            final DocumentBuilderFactory newFactory = DocumentBuilderFactory.newInstance();
-
-            for (Map.Entry<String, Object> attribute : builderAttributes.entrySet()) {
-                newFactory.setAttribute(attribute.getKey(), attribute.getValue());
-            }
-
-            for (Map.Entry<String, Boolean> feature : builderFeatures.entrySet()) {
-                if (feature.getKey() != null) {
-                    newFactory.setFeature(feature.getKey(), feature.getValue().booleanValue());
-                }
-            }
-
-            newFactory.setCoalescing(coalescing);
-            newFactory.setExpandEntityReferences(expandEntityReferences);
-            newFactory.setIgnoringComments(ignoreComments);
-            newFactory.setIgnoringElementContentWhitespace(ignoreElementContentWhitespace);
-            newFactory.setNamespaceAware(namespaceAware);
-            newFactory.setSchema(schema);
-            newFactory.setValidating(dtdValidating);
-            newFactory.setXIncludeAware(xincludeAware);
-
-            builderFactory = newFactory;
-
-        } catch (ParserConfigurationException e) {
-            throw new XMLParserException("Unable to configure builder factory", e);
-        }
     }
 
     /**

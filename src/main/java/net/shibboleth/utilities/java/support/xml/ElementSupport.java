@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.xml.namespace.QName;
 
 import net.shibboleth.utilities.java.support.logic.Assert;
@@ -49,7 +51,7 @@ public final class ElementSupport {
      * @param adoptee the element to be adopted
      * @param adopter the document into which the element is adopted
      */
-    public static void adoptElement(final Document adopter, final Element adoptee) {
+    public static void adoptElement(@Nonnull final Document adopter, @Nonnull final Element adoptee) {
         Assert.isNotNull(adoptee, "Adoptee Element may not be null");
         Assert.isNotNull(adopter, "Adopter Element may not be null");
 
@@ -68,7 +70,7 @@ public final class ElementSupport {
      * @param parentElement the parent Element
      * @param childElement the child Element
      */
-    public static void appendChildElement(final Element parentElement, final Element childElement) {
+    public static void appendChildElement(@Nonnull final Element parentElement, @Nullable final Element childElement) {
         if (childElement == null) {
             return;
         }
@@ -88,7 +90,7 @@ public final class ElementSupport {
      * @param element the element to recieve the text node
      * @param textContent the content for the text node
      */
-    public static void appendTextContent(final Element element, final String textContent) {
+    public static void appendTextContent(@Nonnull final Element element, @Nullable final String textContent) {
         if (textContent == null) {
             return;
         }
@@ -105,7 +107,8 @@ public final class ElementSupport {
      * 
      * @return the element
      */
-    public static Element constructElement(final Document document, final QName elementName) {
+    public static Element constructElement(@Nonnull final Document document, @Nonnull final QName elementName) {
+        Assert.isNotNull(elementName, "Element name can not be null");
         return constructElement(document, elementName.getNamespaceURI(), elementName.getLocalPart(),
                 elementName.getPrefix());
     }
@@ -120,8 +123,8 @@ public final class ElementSupport {
      * 
      * @return the element
      */
-    public static Element constructElement(final Document document, final String namespaceURI, final String localName,
-            final String prefix) {
+    public static Element constructElement(@Nonnull final Document document, @Nullable final String namespaceURI,
+            @Nonnull final String localName, @Nullable final String prefix) {
         Assert.isNotNull(document, "Document may not be null");
 
         final String trimmedLocalName =
@@ -145,11 +148,9 @@ public final class ElementSupport {
      * 
      * @return list of child elements
      */
-    public static List<Element> getChildElements(final Node root) {
+    @Nonnull public static List<Element> getChildElements(@Nullable final Node root) {
+
         final ArrayList<Element> children = new ArrayList<Element>();
-        if (root == null) {
-            return null;
-        }
 
         final NodeList childNodes = root.getChildNodes();
         final int numOfNodes = childNodes.getLength();
@@ -173,7 +174,11 @@ public final class ElementSupport {
      * 
      * @return list of child elements, never null
      */
-    public static List<Element> getChildElements(final Node root, final QName name) {
+    @Nonnull public static List<Element> getChildElements(@Nullable final Node root, @Nullable final QName name) {
+        if (name == null) {
+            return Collections.emptyList();
+        }
+
         return getChildElementsByTagNameNS(root, name.getNamespaceURI(), name.getLocalPart());
     }
 
@@ -186,11 +191,13 @@ public final class ElementSupport {
      * 
      * @return list of child elements, never null
      */
-    public static List<Element> getChildElementsByTagName(final Node root, final String localName) {
-        final ArrayList<Element> children = new ArrayList<Element>();
+    @Nonnull public static List<Element> getChildElementsByTagName(@Nullable final Node root,
+            @Nullable final String localName) {
         if (root == null) {
-            return null;
+            return Collections.emptyList();
         }
+
+        final ArrayList<Element> children = new ArrayList<Element>();
 
         final NodeList childNodes = root.getChildNodes();
         final int numOfNodes = childNodes.getLength();
@@ -219,12 +226,13 @@ public final class ElementSupport {
      * 
      * @return list of child elements, never null
      */
-    public static List<Element> getChildElementsByTagNameNS(final Node root, final String namespaceURI,
-            final String localName) {
-        final ArrayList<Element> children = new ArrayList<Element>();
-        if (root == null) {
-            return null;
+    @Nonnull public static List<Element> getChildElementsByTagNameNS(@Nullable final Node root,
+            @Nullable final String namespaceURI, @Nullable final String localName) {
+        if (root == null || localName == null) {
+            return Collections.emptyList();
         }
+
+        final ArrayList<Element> children = new ArrayList<Element>();
 
         final NodeList childNodes = root.getChildNodes();
         final int numOfNodes = childNodes.getLength();
@@ -250,7 +258,7 @@ public final class ElementSupport {
      * 
      * @return the ancestral element node of the current node, or null
      */
-    public static Element getElementAncestor(final Node currentNode) {
+    @Nullable public static Element getElementAncestor(@Nullable final Node currentNode) {
         if (currentNode == null) {
             return null;
         }
@@ -273,7 +281,7 @@ public final class ElementSupport {
      * 
      * @return list of values, never null
      */
-    public static List<String> getElementContentAsList(final Element element) {
+    @Nonnull public static List<String> getElementContentAsList(@Nullable final Element element) {
         if (element == null) {
             return Collections.emptyList();
         }
@@ -287,7 +295,7 @@ public final class ElementSupport {
      * 
      * @return a QName from an element's value, or null if the given element is empty
      */
-    public static QName getElementContentAsQName(final Element element) {
+    @Nullable public static QName getElementContentAsQName(@Nullable final Element element) {
         if (element == null) {
             return null;
         }
@@ -322,7 +330,7 @@ public final class ElementSupport {
      * @param n The parent in which to search for children
      * @return The first child Element of n, or null if none
      */
-    public static Element getFirstChildElement(final Node n) {
+    @Nullable public static Element getFirstChildElement(@Nullable final Node n) {
         if (n == null) {
             return null;
         }
@@ -346,11 +354,12 @@ public final class ElementSupport {
      * 
      * @return child elements indexed by namespace qualifed tag name, never null
      */
-    public static Map<QName, List<Element>> getIndexedChildElements(final Element root) {
-        final Map<QName, List<Element>> children = new HashMap<QName, List<Element>>();
+    @Nonnull public static Map<QName, List<Element>> getIndexedChildElements(@Nonnull final Element root) {
         if (root == null) {
-            return children;
+            return Collections.emptyMap();
         }
+
+        final Map<QName, List<Element>> children = new HashMap<QName, List<Element>>();
 
         final NodeList childNodes = root.getChildNodes();
         final int numOfNodes = childNodes.getLength();
@@ -383,7 +392,7 @@ public final class ElementSupport {
      * @param n The sibling to start with
      * @return The next sibling Element of n, or null if none
      */
-    public static Element getNextSiblingElement(final Node n) {
+    @Nonnull public static Element getNextSiblingElement(@Nullable final Node n) {
         if (n == null) {
             return null;
         }
@@ -408,7 +417,11 @@ public final class ElementSupport {
      * 
      * @return true if the element has the given name, false otherwise
      */
-    public static boolean isElementNamed(final Element e, final QName name) {
+    public static boolean isElementNamed(@Nullable final Element e, @Nullable final QName name) {
+        if (name == null) {
+            return false;
+        }
+
         return isElementNamed(e, name.getNamespaceURI(), name.getLocalPart());
     }
 
@@ -420,7 +433,8 @@ public final class ElementSupport {
      * @param localName A local name to compare
      * @return true iff the element's local name and namespace match the parameters
      */
-    public static boolean isElementNamed(final Element e, final String ns, final String localName) {
+    public static boolean isElementNamed(@Nullable final Element e, @Nullable final String ns,
+            @Nullable final String localName) {
         return e != null && Objects.equal(ns, e.getNamespaceURI()) && Objects.equal(localName, e.getLocalName());
     }
 
@@ -431,7 +445,7 @@ public final class ElementSupport {
      * @param document document whose root element will be set
      * @param element element that will be the new root element
      */
-    public static void setDocumentElement(final Document document, final Element element) {
+    public static void setDocumentElement(@Nonnull final Document document, @Nonnull final Element element) {
         Assert.isNotNull(document, "Document may not be null");
         Assert.isNotNull(element, "Element may not be null");
 

@@ -15,21 +15,5 @@
  * limitations under the License.
  */
 
-package net.shibboleth.utilities.java.support.security;
-
-import javax.annotation.Nonnull;
-
-/**
- * Interface for identifier generators. This identifier can be used for things like digital signature identifiers,
- * opaque principal identifiers, etc.
- */
-public interface IdentifierGenerationStrategy {
-
-    /**
-     * Generates an identifier.
-     * 
-     * @return the identifier
-     */
-    @Nonnull public String generateIdentifier();
-
-}
+/** A set of helper functions for encoding/decoding data to/from different formats. */
+package net.shibboleth.utilities.java.support.codec;

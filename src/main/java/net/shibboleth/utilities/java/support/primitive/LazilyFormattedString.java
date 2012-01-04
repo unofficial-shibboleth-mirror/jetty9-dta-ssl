@@ -18,6 +18,7 @@
 package net.shibboleth.utilities.java.support.primitive;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import net.shibboleth.utilities.java.support.logic.Assert;
 
@@ -40,7 +41,7 @@ public class LazilyFormattedString {
      * @param stringTemplate the {@link java.util.Formatter} template string
      * @param templateArguments the arguments to the template
      */
-    public LazilyFormattedString(@Nonnull final String stringTemplate, final Object... templateArguments) {
+    public LazilyFormattedString(@Nonnull final String stringTemplate, @Nullable final Object... templateArguments) {
         template = Assert.isNotNull(stringTemplate, "String template can not be null");
         arguments = templateArguments;
     }

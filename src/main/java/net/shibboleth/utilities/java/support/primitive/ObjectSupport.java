@@ -17,6 +17,8 @@
 
 package net.shibboleth.utilities.java.support.primitive;
 
+import javax.annotation.Nullable;
+
 
 /** Helper methods for working with Objects. */
 public final class ObjectSupport {
@@ -25,7 +27,6 @@ public final class ObjectSupport {
     private ObjectSupport() {
     }
 
-    //submitted as RFE 846 for google guava
     /**
      * Performs a safe (null-aware) {@link Object#hashCode()}.
      * 
@@ -33,7 +34,7 @@ public final class ObjectSupport {
      * 
      * @return the hash code for the object of 0 if the given object is null
      */
-    public static int hashCode(final Object o) {
+    public static int hashCode(@Nullable final Object o) {
         if (o == null) {
             return 0;
         }
