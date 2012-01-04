@@ -17,6 +17,7 @@
 
 package net.shibboleth.utilities.java.support.component;
 
+import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /**
@@ -42,7 +43,7 @@ public abstract class AbstractIdentifiableInitializableComponent extends Abstrac
             return;
         }
 
-        id = StringSupport.trimOrNull(componentId);
+        id = Assert.isNotNull(StringSupport.trimOrNull(componentId), "Component ID can not be null or empty");
     }
 
     /**
