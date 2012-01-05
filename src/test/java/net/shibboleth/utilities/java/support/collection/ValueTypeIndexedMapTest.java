@@ -112,5 +112,31 @@ public class ValueTypeIndexedMapTest {
         Assert.assertEquals(map.subMap(String.class).size(), 1);
         Assert.assertEquals(map.subMap(null).size(), 2);
     }
+    
+    /* Test equals and hashcode */
+    @Test
+    public void testEqualsHashCode() {
+        ValueTypeIndexedMap<String, Object> other = new ValueTypeIndexedMap<String, Object>();
+        other.setTypes(Arrays.asList(new Class[] {Integer.class}));
+        other.rebuildIndex();
+
+        Assert.assertEquals(map, other, "Empty maps should be the same");
+        Assert.assertEquals(map.hashCode(), other.hashCode(), "Empty maps have same hash code");
+        
+        map.put("i1", Integer.parseInt("4"));
+        map.put("s1", "first string");
+        map.put("s2", "second string");
+        other.put("i1", Integer.parseInt("4"));
+        
+        Assert.assertNotSame(map,  other, "Different maps should differ");
+        Assert.assertNotSame(map.hashCode(),  other.hashCode(), "Different maps should have different hash codes");
+        
+        map.remove("s1");
+        other.put("s2", "second string");
+        
+        Assert.assertEquals(map,  other, "Similar maps should be equals");
+        Assert.assertEquals(map.hashCode(),  other.hashCode(), "Similar maps should have the same hash codes");
+        
+    }
 
 }

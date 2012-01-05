@@ -214,7 +214,7 @@ public class ValueTypeIndexedMap<KeyType, ValueType> implements Map<KeyType, Val
      * 
      * @param <SubType> type of values to include in the returned map
      * @param type type of values to return
-     * @return sub map of entries whose value is of type SubType or null if the specified type is not a valid type for
+     * @return sub map of entries whose value is of type SubType or empty if the specified type is not a valid type for
      *         this map.
      */
     @SuppressWarnings("unchecked")
@@ -230,6 +230,24 @@ public class ValueTypeIndexedMap<KeyType, ValueType> implements Map<KeyType, Val
         }
     }
 
+    /** {@inheritDoc} */
+    public int hashCode() {
+        return map.hashCode();
+    }
+
+    /** {@inheritDoc} */
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || this.getClass() != obj.getClass()) {
+            return false;
+        }
+
+        return map.equals(((ValueTypeIndexedMap<?,?>) obj).map);
+    }
+    
     /** {@inheritDoc} */
     public String toString() {
         return map.toString();
