@@ -26,15 +26,10 @@ public class TestPair {
     private final static String STRING_1 = "StringOne";
 
     private final static String STRING_2 = "StringTwo";
-
-    private final static String STRING_3 = "StringThree";
     
     private final static Integer INTEGER_1 = new Integer(-6); 
 
     private final static Integer INTEGER_2 = new Integer(0); 
-
-    private final static Integer INTEGER_3 = new Integer(2); 
-
     
     @Test
     public void testPair() {
@@ -59,8 +54,10 @@ public class TestPair {
         Assert.assertEquals(pair1.getFirst(), INTEGER_2, "Should find " + INTEGER_2);
         Assert.assertEquals(pair1.getSecond(), STRING_2, "Should find " + STRING_2);
         
-        Assert.assertEquals(pair1, pair4, "Same contebts");
+        Assert.assertEquals(pair1, pair4, "Same contents");
+        Assert.assertEquals(pair1.hashCode(), pair4.hashCode(), "Same contents, same hashcode");
         Assert.assertEquals(pair2, pair3, "null pairs are equal");
+        Assert.assertEquals(pair2.hashCode(), pair3.hashCode(), "null pairs have equal hashcode");
         Assert.assertNotSame(pair1, pair3);
         
         pair3.setFirst(STRING_2);pair3.setSecond(INTEGER_2); 
