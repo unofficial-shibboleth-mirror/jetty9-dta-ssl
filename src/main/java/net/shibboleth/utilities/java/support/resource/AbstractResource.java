@@ -72,11 +72,11 @@ public abstract class AbstractResource extends AbstractInitializableComponent im
      */
     public final void validate() throws ComponentValidationException {
         if (isDestroyed()) {
-            throw new ComponentValidationException(toString() + " has not been initialzied");
+            throw new ComponentValidationException(toString() + " has been destroyed");
         }
 
         if (!isInitialized()) {
-            throw new ComponentValidationException(toString() + " has not been initialzied");
+            throw new ComponentValidationException(toString() + " has not been initialized");
         }
 
         doValidate();
