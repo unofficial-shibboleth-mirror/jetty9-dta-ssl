@@ -152,6 +152,29 @@ public class ClassIndexedSet<T> extends AbstractSet<T> implements Set<T> {
     private void removeFromIndex(final T o) {
         index.remove(getIndexClass(o));
     }
+    
+    /** {@inheritDoc} */
+    public String toString() {
+        return set.toString();
+    }
+    
+    /** {@inheritDoc} */
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || this.getClass() != obj.getClass()) {
+            return false;
+        }
+
+        return set.equals(((ClassIndexedSet<?>) obj).set);
+    }
+    
+    /** {@inheritDoc} */
+    public int hashCode() {
+        return set.hashCode();
+    }
 
     /**
      * Iterator for set implementation {@link ClassIndexedSet}.

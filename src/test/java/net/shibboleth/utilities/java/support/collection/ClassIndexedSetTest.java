@@ -244,6 +244,27 @@ public class ClassIndexedSetTest {
             // do nothing, should fail
         }
     }
+    
+    @Test
+    public void testEqualsHash() {
+        memberSet = new ClassIndexedSet<Member>();
+        ClassIndexedSet<Member> other = new ClassIndexedSet<Member>();
+        Assert.assertEquals(memberSet, other, "Empty sets are equal");
+        Assert.assertEquals(memberSet.hashCode(), other.hashCode(), "Empty sets have equal hashes");
+
+        A memberA = new A("owner");
+        B memberB = new B("algorithm");
+        memberSet.add(memberB);
+        memberSet.add(memberA);
+        Assert.assertNotSame(memberSet, other, "Different sets should differ");
+        Assert.assertNotSame(memberSet.hashCode(), other.hashCode(), "Different sets should have different hashes ");
+        
+        other.add(memberA);
+        other.add(memberB);
+        Assert.assertEquals(memberSet, other, "Equal sets are equal");
+        Assert.assertEquals(memberSet.hashCode(), other.hashCode(), "Equal sets have equal hashes");
+
+    }
 
     /* Classes used for testing. */
 
