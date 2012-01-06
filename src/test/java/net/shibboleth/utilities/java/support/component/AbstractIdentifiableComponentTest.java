@@ -18,6 +18,7 @@
 package net.shibboleth.utilities.java.support.component;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -26,44 +27,25 @@ import org.testng.annotations.Test;
 public class AbstractIdentifiableComponentTest {
 
     private static final String STRING1 = "s1";
+
     private static final String STRING2 = "string2";
-    
-    protected static void testNullAssignment(SettableIdentifiableComponent component) {
-        Assert.assertNull(component.getId());
-        boolean thrown = false;
-        try {
-            component.setId(null);
-        } catch (Exception e) {
-            thrown = true;
-        }
-        Assert.assertTrue(thrown, "Setting a null ID should throw");
-        
-        thrown = false;
-        try {
-            component.setId("");
-        } catch (Exception e) {
-            thrown = true;
-        }
-        Assert.assertTrue(thrown, "Setting en empty ID should throw");        
+
+    private InternalComponent component;
+
+    @BeforeMethod public void setup() {
+        component = new InternalComponent();
     }
-    
-    @Test
-    public void abstractIdentifiableComponentTest() {
-        
-        SettableIdentifiableComponent component = new InternalComponent();
-        
-        testNullAssignment(component);
+
+    @Test public void abstractIdentifiableComponentTest() {
+
         component.setId(STRING1);
         Assert.assertEquals(component.getId(), STRING1, "Should be what was set");
         component.setId(STRING2);
         Assert.assertNotSame(component.getId(), STRING1, "Should not be what was originally set");
         Assert.assertEquals(component.getId(), STRING2, "Should be what was set");
-        
+
     }
-    
-    private class InternalComponent extends AbstractIdentifiableComponent implements SettableIdentifiableComponent {
-        public void setId(final String componentId) {
-            super.setId(componentId);
-        }
+
+    private class InternalComponent extends AbstractIdentifiableComponent {
     }
 }

@@ -22,8 +22,6 @@ import java.io.InputStream;
 
 import net.shibboleth.utilities.java.support.component.DestroyedComponentException;
 import net.shibboleth.utilities.java.support.component.UninitializedComponentException;
-import net.shibboleth.utilities.java.support.net.HttpClientBuilder;
-import net.shibboleth.utilities.java.support.net.HttpResource;
 import net.shibboleth.utilities.java.support.resource.ResourceException;
 
 import org.apache.http.client.HttpClient;
@@ -72,14 +70,14 @@ public class HttpResourceTest {
         try {
             new HttpResource(null, "http://example.org");
             Assert.fail();
-        } catch (IllegalArgumentException e) {
+        } catch (AssertionError e) {
             // expected this
         }
 
         try {
             new HttpResource(httpClient, null);
             Assert.fail();
-        } catch (IllegalArgumentException e) {
+        } catch (AssertionError e) {
             // expected this
         }
 
