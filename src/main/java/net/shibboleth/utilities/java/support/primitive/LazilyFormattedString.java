@@ -25,7 +25,7 @@ import net.shibboleth.utilities.java.support.logic.Assert;
 /**
  * An object that represents a string containing a {@link java.util.Formatter} string and a set of values. When
  * {@link #toString()} is called the format string is filled in with the given values. This allows for lazy evaluation
- * of the value objects which may be expensive.
+ * of the value objects formatting function which may be expensive.
  */
 public class LazilyFormattedString {
 

@@ -60,13 +60,14 @@ public final class StringSupport {
     }
 
     /**
-     * Converts a delimited string into a list.
+     * Converts a delimited string into a list.  We cannot user an ungarnished tokenizer since it doesn't add a empty
+     * String if end of the input String was the delimiter.  Hence we have to explicitly check.
      * 
      * @param string the string to be split into a list
      * @param delimiter the delimiter between values. This string may contain multiple delimiter characters, as allowed
      *            by {@link StringTokenizer}
      * 
-     * @return the list of values or an empty list if the given string is null or empty
+     * @return the list of values or an empty list if the given string is empty
      */
     @Nonnull public static List<String> stringToList(@Nonnull final String string, @Nonnull final String delimiter) {
         Assert.isNull(string, "String data can not be null");
@@ -79,6 +80,9 @@ public final class StringSupport {
             final StringTokenizer tokens = new StringTokenizer(trimmedString, delimiter);
             while (tokens.hasMoreTokens()) {
                 values.add(tokens.nextToken());
+            }
+            if (string.endsWith(delimiter)) {
+                values.add("");
             }
         }
 
