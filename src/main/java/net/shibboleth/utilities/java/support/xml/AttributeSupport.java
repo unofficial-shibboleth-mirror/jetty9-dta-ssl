@@ -463,7 +463,7 @@ public final class AttributeSupport {
      * @return the value of the xml:space attribute, or null if not present
      */
     @Nullable public static XmlSpace getXMLSpace(@Nullable final Element element) {
-        return XmlSpace.valueOf(getAttributeValue(element, XmlConstants.XML_SPACE_ATTRIB_NAME));
+        return XmlSpace.parseValue(getAttributeValue(element, XmlConstants.XML_SPACE_ATTRIB_NAME));
     }
 
     /**
