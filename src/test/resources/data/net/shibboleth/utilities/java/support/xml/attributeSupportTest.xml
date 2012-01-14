@@ -1,0 +1,43 @@
+<myns:container  xmlns:myns="http://example.org/NameSpace" >
+    <myns:GoodBaseIdSpaceLang
+        xmlns:xml="http://www.w3.org/XML/1998/namespace"
+        xml:space="default"
+        ID = "ident"
+        xml:id="identifierGoodBaseIdSpaceLang"
+        xml:lang="fr-ca"
+        xml:base="http://example.org/base"
+        />
+    <myns:NoBaseIdSpaceLang
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:xml="http://www.w3.org/XML/1998/namespace"
+        xsi:type="xs:string"
+        />
+    <myns:BadSpace
+        xmlns:xml="http://www.w3.org/XML/1998/namespace"
+        xml:space="wibble"
+        xml:id="identifierBadSpace"
+    />
+    <myns:PreserveSpace
+        xmlns:xml="http://www.w3.org/XML/1998/namespace"
+        xml:space="pReSerVe"
+        xml:id="identifierPreserveSpace"
+    />
+    
+    <myns:AttributeTest
+        myns:testAttrEmpty=""
+        myns:testAttrZero="0"
+        myns:testAttrOne="1"
+        myns:testAttrTwo="2"
+        myns:testAttrTrue="true"
+        myns:testAttrTrueCaps="TRUE"
+        myns:testAttrFalse="false"
+        myns:testAttrList="0 1  2  3    4
+        5 6"
+        myns:testAttrQName="myns:testAttributeName"
+        myns:testAttrEpochPlusOneSec="1970-01-01T00:00:01Z"
+        myns:testAttrMinusOneDay="-P1D"
+        
+        
+    />
+
+</myns:container>

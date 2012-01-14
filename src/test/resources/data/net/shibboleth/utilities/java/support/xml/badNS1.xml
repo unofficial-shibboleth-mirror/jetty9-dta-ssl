@@ -1,0 +1,11 @@
+<myns:container  xmlns:myns="http://example.org/NameSpace" >
+
+    
+    <myns:OtherBaseIdSpaceLang
+        xmlns:xol="http://www.w3.org/XML/1998/namespace"
+        xol:space="preserve"
+        xol:id="id"
+        xol:lang="fr-ca"
+        xol:base="http://example.org/base"
+        />
+</myns:container>
