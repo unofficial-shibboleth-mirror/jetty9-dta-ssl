@@ -351,7 +351,7 @@ public final class AttributeSupport {
      * @return date/time in millisecond since the epoch, or null if the attribute was null
      */
     @Nullable public static Long getDateTimeAttributeAsLong(@Nullable final Attr attribute) {
-        if (attribute == null) {
+        if (attribute == null || StringSupport.trimOrNull(attribute.getValue()) == null) {
             return null;
         }
 
@@ -366,7 +366,7 @@ public final class AttributeSupport {
      * @return duration, in millisecond, or null if the attribute was null
      */
     @Nullable public static Long getDurationAttributeValueAsLong(@Nullable final Attr attribute) {
-        if (attribute == null) {
+        if (attribute == null || StringSupport.trimOrNull(attribute.getValue()) == null)  {
             return null;
         }
 
@@ -470,10 +470,9 @@ public final class AttributeSupport {
         if (null == value) {
             return null;
         }
-        try { 
+        try {
             return XmlSpace.parseValue(value);
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             // No match to the type
             return null;
         }
