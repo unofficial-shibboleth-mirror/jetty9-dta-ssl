@@ -146,10 +146,14 @@ public final class ElementSupport {
      * 
      * @param root element to get the child elements of
      * 
-     * @return list of child elements
+     * @return list of child elements or an empty list if the root is null.
      */
     @Nonnull public static List<Element> getChildElements(@Nullable final Node root) {
 
+        if (root == null) {
+            return Collections.emptyList();
+        }
+        
         final ArrayList<Element> children = new ArrayList<Element>();
 
         final NodeList childNodes = root.getChildNodes();
@@ -175,7 +179,7 @@ public final class ElementSupport {
      * @return list of child elements, never null
      */
     @Nonnull public static List<Element> getChildElements(@Nullable final Node root, @Nullable final QName name) {
-        if (name == null) {
+        if (name == null  || name == null) {
             return Collections.emptyList();
         }
 
@@ -254,7 +258,7 @@ public final class ElementSupport {
     /**
      * Gets the ancestor element node to the given node.
      * 
-     * @param currentNode the node to retrive the ancestor for
+     * @param currentNode the node to retrieve the ancestor for
      * 
      * @return the ancestral element node of the current node, or null
      */
@@ -315,13 +319,15 @@ public final class ElementSupport {
             return null;
         }
 
+        QName result = null;
         final String[] valueComponents = elementContent.split(":");
         if (valueComponents.length == 1) {
-            return QNameSupport.constructQName(element.lookupNamespaceURI(null), valueComponents[0], null);
-        } else {
-            return QNameSupport.constructQName(element.lookupNamespaceURI(valueComponents[0]), valueComponents[1],
+            result = QNameSupport.constructQName(element.lookupNamespaceURI(null), valueComponents[0], null);
+        } else if (valueComponents.length == 2) {
+            result = QNameSupport.constructQName(element.lookupNamespaceURI(valueComponents[0]), valueComponents[1],
                     valueComponents[0]);
-        }
+        } 
+        return result;
     }
 
     /**
@@ -392,7 +398,7 @@ public final class ElementSupport {
      * @param n The sibling to start with
      * @return The next sibling Element of n, or null if none
      */
-    @Nonnull public static Element getNextSiblingElement(@Nullable final Node n) {
+    @Nullable public static Element getNextSiblingElement(@Nullable final Node n) {
         if (n == null) {
             return null;
         }
