@@ -277,6 +277,36 @@ public final class ElementSupport {
         }
         return null;
     }
+    
+    /**
+     * Gets the text content for this Element only.  Whereas {@link Node#getTextContent()} will return all text for this
+     * element and all children, this just grabs the text for this element (which may be spread over multiple lines).  
+     * 
+     * @param element The element to look at.
+     * @return The text content, or "" if there is none, never null.
+     * 
+     */
+    @Nonnull public static String getElementContentAsString(@Nullable final Element element){
+        if (element == null) {
+            return "";
+        }
+        StringBuilder builder = new StringBuilder();
+
+        final NodeList nodeList = element.getChildNodes();
+        Node node;
+        boolean first = true;
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            node = nodeList.item(i);
+            if (node.getNodeType() == Node.TEXT_NODE) {
+                if (!first) {
+                    builder.append(XmlConstants.LIST_DELIMITERS.charAt(0));
+                }
+                String s = ((Text) node).getWholeText();
+                builder.append(s);
+            }
+        }
+        return builder.toString();
+    }
 
     /**
      * Gets the value of a list-type element as a list.
@@ -289,7 +319,7 @@ public final class ElementSupport {
         if (element == null) {
             return Collections.emptyList();
         }
-        return StringSupport.stringToList(element.getTextContent(), XmlConstants.LIST_DELIMITERS);
+        return StringSupport.stringToList(getElementContentAsString(element), XmlConstants.LIST_DELIMITERS);
     }
 
     /**
@@ -303,17 +333,7 @@ public final class ElementSupport {
         if (element == null) {
             return null;
         }
-
-        final NodeList nodeList = element.getChildNodes();
-        String elementContent = null;
-        Node node;
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            node = nodeList.item(i);
-            if (node.getNodeType() == Node.TEXT_NODE) {
-                elementContent = StringSupport.trimOrNull(((Text) node).getWholeText());
-                break;
-            }
-        }
+        String elementContent = StringSupport.trimOrNull(getElementContentAsString(element));
 
         if (elementContent == null) {
             return null;

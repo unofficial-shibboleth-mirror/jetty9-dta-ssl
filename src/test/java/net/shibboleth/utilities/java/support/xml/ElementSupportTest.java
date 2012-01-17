@@ -160,10 +160,29 @@ public class ElementSupportTest {
         Assert.assertEquals(ElementSupport.getElementAncestor(grandChild), child, "getElementAncestor for grand child");
 
     }
+    
+    @Test(dependsOnMethods = {"testGetChildElementsByTagName"}) public void testGetElementContentAsString() {
+        Assert.assertTrue(ElementSupport.getElementContentAsString(null).isEmpty(),
+                "getElementContentAsList: Null element should provide empty result");
+        
+        Assert.assertTrue(StringSupport.trim(ElementSupport.getElementContentAsString(rootElement)).isEmpty(),
+                "getElementContentAsList: Empty element should provide empty result");
+
+        Element interesting =
+                ElementSupport.getChildElementsByTagName(
+                        ElementSupport.getChildElementsByTagName(rootElement, "Element4").get(0), "Element1").get(0);
+
+        Assert.assertEquals(ElementSupport.getElementContentAsString(interesting),
+                "Some Random" +"\n" + "test");
+    }
+
 
     @Test(dependsOnMethods = {"testGetChildElementsByTagName"}) public void testGetElementContentAsList() {
         Assert.assertTrue(ElementSupport.getElementContentAsList(null).isEmpty(),
                 "getElementContentAsList: Null element should provide empty result");
+        
+        Assert.assertTrue(ElementSupport.getElementContentAsList(rootElement).isEmpty(),
+                "getElementContentAsList: Empty element should provide empty result");
 
         Element interesting =
                 ElementSupport.getChildElementsByTagName(
@@ -185,7 +204,7 @@ public class ElementSupportTest {
 
         Assert.assertEquals(ElementSupport.getElementContentAsQName(children.get(0)), new QName(OTHER_NS, "localname"));
         Assert.assertNull(ElementSupport.getElementContentAsQName(children.get(1)),
-                "getElementContentAsQName: invalid qname shiuld return null");
+                "getElementContentAsQName: invalid qname shuld return null");
     }
 
     @Test(dependsOnMethods = {"testIsElementNamed"}) public void testGetChildAndNext() {
