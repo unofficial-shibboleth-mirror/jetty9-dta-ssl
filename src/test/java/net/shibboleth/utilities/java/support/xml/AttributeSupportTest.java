@@ -72,7 +72,7 @@ public class AttributeSupportTest {
     // Reset before each method.
     private Document document;
 
-    private BasicParserPool parserPool = new BasicParserPool();
+    private BasicParserPool parserPool;
 
     @BeforeTest public void setUp() throws XMLParserException, ComponentInitializationException, SAXException,
             IOException, ResourceException {

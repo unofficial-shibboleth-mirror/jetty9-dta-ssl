@@ -360,7 +360,7 @@ public final class ElementSupport {
      * 
      * @return child elements indexed by namespace qualifed tag name, never null
      */
-    @Nonnull public static Map<QName, List<Element>> getIndexedChildElements(@Nonnull final Element root) {
+    @Nonnull public static Map<QName, List<Element>> getIndexedChildElements(@Nullable final Element root) {
         if (root == null) {
             return Collections.emptyMap();
         }

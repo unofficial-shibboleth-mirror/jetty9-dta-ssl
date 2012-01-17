@@ -1,0 +1,23 @@
+<myns:Container  xmlns:myns="http://example.org/NameSpace" xmlns:mynsagain="http://example.org/NameSpace" xmlns:otherns="http://example.org/OtherSpace" >
+    <myns:Element1
+        />
+    <myns:Element1
+        />
+    <myns:Element2
+        />
+    <mynsagain:Element1
+        />
+    <otherns:Element1
+        />
+    <otherns:Element1
+        />
+    <otherns:Element2
+        />
+    <myns:Element4
+    >
+        <myns:Element1>Some Random
+        test</myns:Element1>
+        <myns:QName>otherns:localname</myns:QName>
+        <myns:QName>myns:text:text</myns:QName>
+    </myns:Element4>
+</myns:Container>
