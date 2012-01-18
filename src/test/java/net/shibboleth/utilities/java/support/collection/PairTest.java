@@ -21,7 +21,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /** Test for {@link Pair} */
-public class TestPair {
+public class PairTest {
 
     private final static String STRING_1 = "StringOne";
 
