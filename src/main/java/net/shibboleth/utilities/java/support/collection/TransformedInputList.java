@@ -62,13 +62,7 @@ public class TransformedInputList<E> extends ForwardingList<E> {
 
     /** {@inheritDoc} */
     public boolean add(@Nullable E element) {
-        Optional<? extends E> processedElement = transform.apply(element);
-
-        if (processedElement.isPresent()) {
-            return delegate().add(processedElement.get());
-        }
-
-        return false;
+        return standardAdd(element);
     }
 
     /** {@inheritDoc} */
@@ -82,30 +76,17 @@ public class TransformedInputList<E> extends ForwardingList<E> {
 
     /** {@inheritDoc} */
     public boolean addAll(@Nullable @NullableElements Collection<? extends E> collection) {
-        if (collection == null) {
-            return false;
-        }
-
-        boolean collectionChanged = false;
-        for (E element : collection) {
-            if (add(element)) {
-                collectionChanged = true;
-            }
-        }
-
-        return collectionChanged;
+        return standardAddAll(collection);
     }
 
     /** {@inheritDoc} */
     public boolean addAll(int index, Collection<? extends E> elements) {
-        // TODO
-        return false;
+        return standardAddAll(index, elements);
     }
 
     /** {@inheritDoc} */
     public boolean retainAll(Collection<?> collection) {
-        // TODO Auto-generated method stub
-        return false;
+        return standardRetainAll(collection);
     }
 
     /** {@inheritDoc} */
@@ -117,6 +98,11 @@ public class TransformedInputList<E> extends ForwardingList<E> {
         }
 
         return null;
+    }
+
+    /** {@inheritDoc} */
+    public List<E> subList(int fromIndex, int toIndex) {
+        return standardSubList(fromIndex, toIndex);
     }
 
     /** {@inheritDoc} */

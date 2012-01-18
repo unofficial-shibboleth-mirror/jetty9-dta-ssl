@@ -73,24 +73,12 @@ public class TransformedInputSet<E> extends ForwardingSet<E> {
 
     /** {@inheritDoc} */
     public boolean addAll(@Nullable @NullableElements Collection<? extends E> collection) {
-        if (collection == null) {
-            return false;
-        }
-
-        boolean collectionChanged = false;
-        for (E element : collection) {
-            if (add(element)) {
-                collectionChanged = true;
-            }
-        }
-
-        return collectionChanged;
+        return standardAddAll(collection);
     }
 
     /** {@inheritDoc} */
     public boolean retainAll(Collection<?> collection) {
-        // TODO Auto-generated method stub
-        return false;
+        return standardRetainAll(collection);
     }
 
     /** {@inheritDoc} */

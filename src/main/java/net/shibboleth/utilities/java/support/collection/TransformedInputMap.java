@@ -87,13 +87,7 @@ public class TransformedInputMap<K, V> extends ForwardingMap<K, V> {
 
     /** {@inheritDoc} */
     public void putAll(Map<? extends K, ? extends V> map) {
-        if (map == null) {
-            return;
-        }
-
-        for (Entry<? extends K, ? extends V> entry : map.entrySet()) {
-            put(entry.getKey(), entry.getValue());
-        }
+       standardPutAll(map);
     }
 
     /**
