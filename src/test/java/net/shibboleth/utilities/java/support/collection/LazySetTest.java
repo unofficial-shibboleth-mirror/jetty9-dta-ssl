@@ -31,7 +31,6 @@ public class LazySetTest {
      */
     @Test 
     public void testSimple() {
-        CollectionTestSupport.testSimpleCollection(new HashSet<String>(), false);
         CollectionTestSupport.testSimpleCollection(new LazySet<String>(), false);
     }
 
@@ -40,7 +39,6 @@ public class LazySetTest {
      */
     @Test 
     public void testArray() {
-        CollectionTestSupport.testArrayCollection(new HashSet<String>(), new HashSet<String>());
         CollectionTestSupport.testArrayCollection(new LazySet<String>(), new HashSet<String>());
     }
     
