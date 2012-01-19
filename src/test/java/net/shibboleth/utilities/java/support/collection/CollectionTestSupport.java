@@ -17,6 +17,7 @@
 
 package net.shibboleth.utilities.java.support.collection;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -24,6 +25,7 @@ import java.util.Iterator;
 import net.shibboleth.utilities.java.support.logic.TransformAndCheckFunction;
 
 import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
@@ -34,7 +36,7 @@ import com.google.common.base.Predicates;
  * Helper class for testing {@link TransformedInputList} and {@link TransformedInputSet}
  * 
  */
-public class CollectionTestSupport<E> {
+public class CollectionTestSupport {
 
     private final static String STRING_1 = "StringOne";
 
@@ -42,8 +44,18 @@ public class CollectionTestSupport<E> {
 
     private final static String STRING_3 = "StringThree";
 
-    protected static Function<String, Optional<? extends String>> function = new TransformAndCheckFunction(
-            Functions.identity(), Predicates.isNull(), false);
+    public static final Function<String, Optional<? extends String>> nullRemoveFunction =
+            new TransformAndCheckFunction(Functions.identity(), Predicates.notNull(), false);
+
+    @Test public void verifyTests() {
+        CollectionTestSupport.testSimpleCollection(new ArrayList<String>(), true);
+        CollectionTestSupport.testArrayCollection(new ArrayList<String>(), new ArrayList<String>());
+        CollectionTestSupport.testIteratorCollection(new LazyList<String>(), new ArrayList<String>());
+
+        CollectionTestSupport.testSimpleCollection(new HashSet<String>(), false);
+        CollectionTestSupport.testArrayCollection(new HashSet<String>(), new HashSet<String>());
+        CollectionTestSupport.testIteratorCollection(new HashSet<String>(), new HashSet<String>());
+    }
 
     protected static void
             testArrayCollection(Collection<String> testCollection, Collection<String> knownGoodCollection) {
@@ -89,50 +101,6 @@ public class CollectionTestSupport<E> {
 
     }
 
-    protected void testArrayCollectionimpl(Collection<E> testCollection, Collection<E> knownGoodCollection,
-            E[] testValues) {
-        HashSet<E> set = new HashSet(2);
-
-        Object[] testArray1 = testCollection.toArray();
-        Object[] knownGood1 = knownGoodCollection.toArray();
-        Assert.assertEquals(testArray1, knownGood1, "Results should be the same (modulo ordering issues)");
-
-        E[] testArray2 = testCollection.toArray(testValues);
-        E[] knownGood2 = knownGoodCollection.toArray(testArray2);
-        Assert.assertEquals(testArray2, knownGood2, "Results should be the same (modulo ordering issues)");
-
-        set.add(testValues[1]);
-        testCollection.addAll(set);
-        knownGoodCollection.addAll(set);
-
-        testArray1 = testCollection.toArray();
-        knownGood1 = knownGoodCollection.toArray();
-        Assert.assertEquals(testArray1, knownGood1, "Results should be the same (modulo ordering issues)");
-
-        testArray2 = testCollection.toArray(testValues);
-        knownGood2 = knownGoodCollection.toArray(testArray2);
-        Assert.assertEquals(testArray2, knownGood2, "Results should be the same (modulo ordering issues)");
-
-        testCollection.add(testValues[1]);
-        testCollection.add(testValues[3]);
-        testCollection.addAll(set);
-
-        knownGoodCollection.add(testValues[1]);
-        knownGoodCollection.add(testValues[3]);
-        knownGoodCollection.addAll(set);
-
-        testArray1 = testCollection.toArray();
-        knownGood1 = knownGoodCollection.toArray();
-
-        Assert.assertEquals(testArray1, knownGood1, "Results should be the same (modulo ordering issues)");
-
-        testArray2 = testCollection.toArray(testValues);
-        knownGood2 = knownGoodCollection.toArray(testArray2);
-
-        Assert.assertEquals(testArray2, knownGood2, "Results should be the same (modulo ordering issues)");
-
-    }
-
     /**
      * Test the iterator.
      * 
@@ -147,20 +115,17 @@ public class CollectionTestSupport<E> {
         testCollection.add(STRING_1);
         iterator = testCollection.iterator();
         Assert.assertTrue(iterator.hasNext(), "Singleton set should have an iterator.next");
-        Assert.assertEquals(iterator.next(), STRING_1,
-                "Singleton set should have the correct contents");
+        Assert.assertEquals(iterator.next(), STRING_1, "Singleton set should have the correct contents");
         Assert.assertFalse(iterator.hasNext(), "Singleton set should not have a second iterator.next");
 
         testCollection.add(STRING_2);
         iterator = testCollection.iterator();
         Assert.assertTrue(iterator.hasNext(), "Pair set should have an iterator.next");
         String s1 = iterator.next();
-        Assert.assertTrue(STRING_1.equals(s1) || STRING_2.equals(s1),
-                "Pair set should have the correct contents");
+        Assert.assertTrue(STRING_1.equals(s1) || STRING_2.equals(s1), "Pair set should have the correct contents");
         Assert.assertTrue(iterator.hasNext(), "Pair set should have a second iterator.next");
         String s2 = iterator.next();
-        Assert.assertTrue(STRING_1.equals(s2) || STRING_2.equals(s2),
-                "Pair set should have the correct contents");
+        Assert.assertTrue(STRING_1.equals(s2) || STRING_2.equals(s2), "Pair set should have the correct contents");
         Assert.assertNotSame(s1, s2, "Pair set should have the correct contents");
         Assert.assertFalse(iterator.hasNext(), "Pair set should not have a third iterator.next");
 
@@ -199,8 +164,7 @@ public class CollectionTestSupport<E> {
         Assert.assertFalse(collection.isEmpty(), "Non empty if filled");
         Assert.assertEquals(collection.size(), 2, "Two Elements after filling up");
 
-        Assert.assertEquals(collection.add(STRING_2), allowDuplicates,
-                "Only add if duplicates allowed");
+        Assert.assertEquals(collection.add(STRING_2), allowDuplicates, "Only add if duplicates allowed");
         Assert.assertFalse(collection.isEmpty(), "Non empty if filled");
         if (allowDuplicates) {
             Assert.assertEquals(collection.size(), 3, "Three Elements after filling up (allowing for duplicates)");
@@ -246,8 +210,7 @@ public class CollectionTestSupport<E> {
         Assert.assertTrue(collection.retainAll(set), "Should be remove something with first retain");
         Assert.assertEquals(collection.size(), 1, "Contain only one element after retainall");
         Assert.assertFalse(collection.retainAll(set), "Second retainall should make no difference");
-        Assert.assertTrue(collection.contains(STRING_1),
-                "After retain should just contain the intersection");
+        Assert.assertTrue(collection.contains(STRING_1), "After retain should just contain the intersection");
 
         collection.clear();
         Assert.assertTrue(collection.addAll(set), "Should be allowed to add");

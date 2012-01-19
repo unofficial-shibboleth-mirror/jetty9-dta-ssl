@@ -17,9 +17,12 @@
 
 package net.shibboleth.utilities.java.support.collection;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  *
@@ -28,9 +31,13 @@ public class ListTestSupport {
 
     private final static String [] TEST_ARRAY = {"Zero", "One", "Two", "Three"};
     private final static String TEST_VALUE = "tWO";
+    
+    @Test public void verifyTests() {
+        testListFunctions(new ArrayList<String>());
+        testListIterator(new ArrayList<String>());
+    }
     /**
      * Test those things that distinguish the {@link List} API from the {@link Collection} one. 
-     * Generic function to allow us to test the test with an ArrayList
      */
     public static void testListFunctions(List<String> list) {
         boolean thrown = false;
@@ -170,11 +177,65 @@ public class ListTestSupport {
         for (int i = 0; i < TEST_ARRAY.length; i++) {
             list.add(TEST_ARRAY[i]);
         }
+        Assert.assertEquals(list.indexOf(TEST_VALUE), -1, "Should not find this element");
+        Assert.assertEquals(list.lastIndexOf(TEST_VALUE), -1, "Should not find this element");
         for (int i = 0; i < TEST_ARRAY.length; i++) {
-            Assert.assertEquals(list.indexOf(TEST_VALUE), -1, "Should not find this element");
-            Assert.assertEquals(list.lastIndexOf(TEST_VALUE), -1, "Should not find this element");
             Assert.assertEquals(list.indexOf(TEST_ARRAY[i]), i, "Should find this element");
             Assert.assertEquals(list.lastIndexOf(TEST_ARRAY[i]), i + 2*TEST_ARRAY.length, "Should find this element");
+        }
+    }
+    
+    public static void testListIterator(List<String> list) {
+        list.clear();
+        int i;
+        for (i = 0; i < TEST_ARRAY.length; i++) {
+            list.add(TEST_ARRAY[i]);
+        }
+        ListIterator<String> listIterator = list.listIterator();
+        
+        listIterator.next();
+        listIterator.add(TEST_VALUE);
+        Assert.assertEquals(list.get(0), TEST_ARRAY[0], "Iterator insert");
+        Assert.assertEquals(list.get(1), TEST_VALUE, "Iterator insert");
+        for (i = 1; i < TEST_ARRAY.length; i++) {
+            Assert.assertEquals(list.get(i+1), TEST_ARRAY[i], "Iterator insert");
+        }
+        
+        list.clear();
+        for (i = 0; i < TEST_ARRAY.length; i++) {
+            list.add(TEST_ARRAY[i]);
+        }
+        listIterator = list.listIterator(1);
+        
+        listIterator.add(TEST_VALUE);
+        Assert.assertEquals(list.get(0), TEST_ARRAY[0], "Iterator insert");
+        Assert.assertEquals(list.get(1), TEST_VALUE, "Iterator insert");
+        for (i = 1; i < TEST_ARRAY.length; i++) {
+            Assert.assertEquals(list.get(i+1), TEST_ARRAY[i], "Iterator insert");
+        }
+
+        for (i = 0; i < list.size(); i++) {
+            list.set(i, TEST_VALUE);
+        }
+        listIterator = list.listIterator();
+        i = 0;
+        while (listIterator.hasNext()) {
+            Assert.assertEquals(listIterator.next(), TEST_VALUE, "Iterator next");
+            if (i < TEST_ARRAY.length) {
+                listIterator.set(TEST_ARRAY[i++]);
+            }
+        }
+        for (i = 1; i < TEST_ARRAY.length; i++) {
+            Assert.assertEquals(list.get(i), TEST_ARRAY[i], "Iterator set");
+        }
+        Assert.assertEquals(list.get(list.size()-1), TEST_VALUE, "Iterator set");
+        i = 0;
+        while (listIterator.hasPrevious()) {
+            listIterator.previous();
+            listIterator.set(TEST_VALUE);
+        }
+        for (i = 0; i < list.size(); i++) {
+            Assert.assertEquals(list.get(i), TEST_VALUE, "Iterator set");
         }
     }
     

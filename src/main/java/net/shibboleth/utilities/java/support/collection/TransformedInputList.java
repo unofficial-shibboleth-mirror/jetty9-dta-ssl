@@ -19,6 +19,7 @@ package net.shibboleth.utilities.java.support.collection;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.ListIterator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,6 +30,7 @@ import net.shibboleth.utilities.java.support.logic.Assert;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.ForwardingList;
+import com.google.common.collect.ForwardingListIterator;
 
 //TODO(lajoie) think about Java serialization, can we mark this as serializable? what happens if the function/delegate aren't?
 
@@ -99,6 +101,17 @@ public class TransformedInputList<E> extends ForwardingList<E> {
 
         return null;
     }
+    
+    /** {@inheritDoc} */
+    public ListIterator<E> listIterator() {
+        return standardListIterator();
+    }
+    
+    /** {@inheritDoc} */
+    public ListIterator<E> listIterator(int index) {
+        return new DelegatingListIterator(index);
+    }
+
 
     /** {@inheritDoc} */
     public List<E> subList(int fromIndex, int toIndex) {
@@ -119,5 +132,51 @@ public class TransformedInputList<E> extends ForwardingList<E> {
      */
     protected void addToDelegate(@Nullable E element) {
         delegate.add(element);
+    }
+
+    /**
+     * We need to implement a list iterator to override add and set.
+     */
+    protected class DelegatingListIterator extends ForwardingListIterator<E> {
+
+        
+        /**
+         * The delegated ListIterator.
+         */
+        private final ListIterator<E> innerDelegate;
+        
+        /**
+         * Constructor.
+         *
+         * @param index where in the outer class to start the iterator.
+         */
+        protected DelegatingListIterator(int index) {
+            innerDelegate = delegate.listIterator(index);
+        }
+        
+        /** {@inheritDoc} */
+        protected ListIterator<E> delegate() {
+            return innerDelegate;
+        }
+        
+        @Override
+        public void add(E element) {
+            Optional<? extends E> processedElement = transform.apply(element);
+
+            if (processedElement.isPresent()) {
+                delegate().add(processedElement.get());
+            }
+        }
+        
+        @Override
+        public void set(E element) {
+            Optional<? extends E> processedElement = transform.apply(element);
+
+            if (processedElement.isPresent()) {
+                delegate().set(element);
+            }
+        }
+
+
     }
 }
