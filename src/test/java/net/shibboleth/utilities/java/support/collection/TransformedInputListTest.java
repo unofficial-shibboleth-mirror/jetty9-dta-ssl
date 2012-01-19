@@ -19,13 +19,15 @@ package net.shibboleth.utilities.java.support.collection;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 import java.util.ListIterator;
+
+import net.shibboleth.utilities.java.support.logic.TransformAndCheckFunction;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import com.google.common.base.Predicates;
 
 /**
  * Tests for {@link TransformedInputList}. We extend the basic tests done for the LazySet.
@@ -39,38 +41,26 @@ public class TransformedInputListTest {
             CollectionTestSupport.nullRemoveFunction);
     }
 
-    /**
-     * Test the test method with a known good List and then with a LazyList
-     */
     @Test public void testSimple() {
         CollectionTestSupport.testSimpleCollection(testList, true);
     }
 
-    /**
-     * Test The array function.
-     */
     @Test public void testArray() {
         CollectionTestSupport.testArrayCollection(testList, new ArrayList<String>());
     }
 
-    /**
-     * Test the iterator part of a collection.
-     */
     @Test public void testIterator() {
         CollectionTestSupport.testIteratorCollection(testList, new ArrayList<String>());
     }
 
-    /**
-     * Test those things that distinguish the {@link List} API from the {@link Collection} one.
-     */
     @Test public void testListFunctions() {
         ListTestSupport.testListFunctions(testList);
     }
 
     /**
-     * Test the transform bits
+     * Test the predicate bits
      */
-    @Test public void testTransforms() {
+    @Test public void testPredicate() {
         Assert.assertTrue(testList.isEmpty(), "Initial state");
         testList.add(null);
         Assert.assertTrue(testList.isEmpty(), "Add null");
@@ -125,4 +115,42 @@ public class TransformedInputListTest {
         testList.remove(1);
         Assert.assertEquals(testList.get(1), "NEWone", "allAll test2");
     }
+    
+    @Test public void testTransform() {
+        testList = new TransformedInputList<String>(new ArrayList<String>(),
+                new TransformAndCheckFunction(new CollectionTestSupport.UpcaseFunction(), Predicates.alwaysTrue(), false));
+
+        Assert.assertTrue(testList.isEmpty(), "Initial state");
+        
+        testList.add("one");
+        testList.add("two");
+        Assert.assertEquals(testList.size(), 2, "Add test");
+        Assert.assertEquals(testList.get(0), "ONE", "Add test");
+        Assert.assertEquals(testList.get(1), "TWO", "Add test");
+        
+        testList.set(1, "one");
+        testList.set(0, "zero");
+        Assert.assertEquals(testList.size(), 2, "Set test");
+        Assert.assertEquals(testList.get(0), "ZERO", "Set test");
+        Assert.assertEquals(testList.get(1), "ONE", "Set test");
+        
+        testList.addAll(1, Arrays.asList("Onea", "Oneb"));
+        Assert.assertEquals(testList.size(), 4, "AddAll test");
+        Assert.assertEquals(testList.get(1), "ONEA", "AddAll test");
+        Assert.assertEquals(testList.get(2), "ONEB", "AddAll test");
+        Assert.assertEquals(testList.get(3), "ONE", "AddAll test");
+        
+        testList.listIterator(3).add("onec");
+        Assert.assertEquals(testList.size(), 5, "ListIterator Add test");
+        Assert.assertEquals(testList.get(3), "ONEC", "ListIterator Add test");
+        
+        ListIterator<String> le = testList.listIterator(3);
+        le.next();
+        le.set("new");
+        Assert.assertEquals(testList.size(), 5, "ListIterator Set test");
+        Assert.assertEquals(testList.get(3), "NEW", "ListIterator Add test");
+        
+        
+    }
+
 }

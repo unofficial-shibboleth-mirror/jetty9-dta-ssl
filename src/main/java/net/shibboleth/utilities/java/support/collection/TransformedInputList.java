@@ -173,7 +173,7 @@ public class TransformedInputList<E> extends ForwardingList<E> {
             Optional<? extends E> processedElement = transform.apply(element);
 
             if (processedElement.isPresent()) {
-                delegate().set(element);
+                delegate().set(processedElement.get());
             }
         }
 

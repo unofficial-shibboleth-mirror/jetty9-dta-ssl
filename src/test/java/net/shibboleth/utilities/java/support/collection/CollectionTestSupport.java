@@ -239,4 +239,16 @@ public class CollectionTestSupport {
 
     }
 
+    public static class UpcaseFunction implements Function<String, String>
+    {
+
+        /** {@inheritDoc} */
+        public String apply(String input) {
+            if (null == input) {
+                return null;
+            }
+            return input.toUpperCase();
+        }
+        
+    }
 }
