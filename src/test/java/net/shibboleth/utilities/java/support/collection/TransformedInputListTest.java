@@ -21,13 +21,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ListIterator;
 
-import net.shibboleth.utilities.java.support.logic.TransformAndCheckFunction;
-
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import com.google.common.base.Predicates;
 
 /**
  * Tests for {@link TransformedInputList}. We extend the basic tests done for the LazySet.
@@ -38,23 +34,23 @@ public class TransformedInputListTest {
 
     @BeforeMethod public void setup() {
         testList = new TransformedInputList<String>(new ArrayList<String>(),
-            CollectionTestSupport.nullRemoveFunction);
+            CollectionTest.nullRemoveFunction);
     }
 
     @Test public void testSimple() {
-        CollectionTestSupport.testSimpleCollection(testList, true);
+        CollectionTest.testSimpleCollection(testList, true);
     }
 
     @Test public void testArray() {
-        CollectionTestSupport.testArrayCollection(testList, new ArrayList<String>());
+        CollectionTest.testArrayCollection(testList, new ArrayList<String>());
     }
 
     @Test public void testIterator() {
-        CollectionTestSupport.testIteratorCollection(testList, new ArrayList<String>());
+        CollectionTest.testIteratorCollection(testList, new ArrayList<String>());
     }
 
     @Test public void testListFunctions() {
-        ListTestSupport.testListFunctions(testList);
+        ListTest.testListFunctions(testList);
     }
 
     /**
@@ -117,8 +113,7 @@ public class TransformedInputListTest {
     }
     
     @Test public void testTransform() {
-        testList = new TransformedInputList<String>(new ArrayList<String>(),
-                new TransformAndCheckFunction(new CollectionTestSupport.UpcaseFunction(), Predicates.alwaysTrue(), false));
+        testList = new TransformedInputList<String>(new ArrayList<String>(), CollectionTest.upcaseNotNull);
 
         Assert.assertTrue(testList.isEmpty(), "Initial state");
         

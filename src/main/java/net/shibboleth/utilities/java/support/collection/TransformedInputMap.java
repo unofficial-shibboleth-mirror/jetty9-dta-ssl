@@ -98,7 +98,7 @@ public class TransformedInputMap<K, V> extends ForwardingMap<K, V> {
      * @param key key added to the delegate
      * @param value value added to the delegate
      */
-    protected void addToDelegate(K key, V value) {
+    protected void putToDelegate(K key, V value) {
         delegate.put(key, value);
     }
 }

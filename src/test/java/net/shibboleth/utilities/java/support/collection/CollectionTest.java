@@ -33,10 +33,10 @@ import com.google.common.base.Optional;
 import com.google.common.base.Predicates;
 
 /**
- * Helper class for testing {@link TransformedInputList} and {@link TransformedInputSet}
+ * Generic {@link Collection} tester
  * 
  */
-public class CollectionTestSupport {
+public class CollectionTest {
 
     private final static String STRING_1 = "StringOne";
 
@@ -47,14 +47,17 @@ public class CollectionTestSupport {
     public static final Function<String, Optional<? extends String>> nullRemoveFunction =
             new TransformAndCheckFunction(Functions.identity(), Predicates.notNull(), false);
 
-    @Test public void verifyTests() {
-        CollectionTestSupport.testSimpleCollection(new ArrayList<String>(), true);
-        CollectionTestSupport.testArrayCollection(new ArrayList<String>(), new ArrayList<String>());
-        CollectionTestSupport.testIteratorCollection(new LazyList<String>(), new ArrayList<String>());
+    public static final Function<String, Optional<? extends String>> upcaseNotNull = new TransformAndCheckFunction(
+            new UpcaseFunction(), Predicates.notNull(), false);
 
-        CollectionTestSupport.testSimpleCollection(new HashSet<String>(), false);
-        CollectionTestSupport.testArrayCollection(new HashSet<String>(), new HashSet<String>());
-        CollectionTestSupport.testIteratorCollection(new HashSet<String>(), new HashSet<String>());
+    @Test public void verifyTests() {
+        CollectionTest.testSimpleCollection(new ArrayList<String>(), true);
+        CollectionTest.testArrayCollection(new ArrayList<String>(), new ArrayList<String>());
+        CollectionTest.testIteratorCollection(new LazyList<String>(), new ArrayList<String>());
+
+        CollectionTest.testSimpleCollection(new HashSet<String>(), false);
+        CollectionTest.testArrayCollection(new HashSet<String>(), new HashSet<String>());
+        CollectionTest.testIteratorCollection(new HashSet<String>(), new HashSet<String>());
     }
 
     protected static void
@@ -239,8 +242,7 @@ public class CollectionTestSupport {
 
     }
 
-    public static class UpcaseFunction implements Function<String, String>
-    {
+    public static class UpcaseFunction implements Function<String, String> {
 
         /** {@inheritDoc} */
         public String apply(String input) {
@@ -249,6 +251,6 @@ public class CollectionTestSupport {
             }
             return input.toUpperCase();
         }
-        
+
     }
 }

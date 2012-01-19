@@ -20,13 +20,9 @@ package net.shibboleth.utilities.java.support.collection;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import net.shibboleth.utilities.java.support.logic.TransformAndCheckFunction;
-
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import com.google.common.base.Predicates;
 
 /**
  * Tests for {@Link TransformedInputSet}.
@@ -37,28 +33,27 @@ public class TransformedInputSetTest {
 
     @BeforeMethod public void setup() {
         testSet = new TransformedInputSet<String>(new HashSet<String>(),
-            CollectionTestSupport.nullRemoveFunction);
+            CollectionTest.nullRemoveFunction);
     }
 
     @Test 
     public void testSimple() {
-        CollectionTestSupport.testSimpleCollection(testSet, false);
+        CollectionTest.testSimpleCollection(testSet, false);
     }
 
     @Test 
     public void testArray() {
-        CollectionTestSupport.testArrayCollection(testSet, new HashSet<String>());
+        CollectionTest.testArrayCollection(testSet, new HashSet<String>());
     }
     
     @Test
     public void testIterator() {
-        CollectionTestSupport.testIteratorCollection(testSet, new HashSet<String>());
+        CollectionTest.testIteratorCollection(testSet, new HashSet<String>());
     }
 
     @Test
     public void testPredictateAndTransform() {
-        testSet = new TransformedInputSet<String>(new HashSet<String>(),
-                new TransformAndCheckFunction(new CollectionTestSupport.UpcaseFunction(), Predicates.notNull(), false));
+        testSet = new TransformedInputSet<String>(new HashSet<String>(), CollectionTest.upcaseNotNull);
         Assert.assertTrue(testSet.isEmpty(), "Initial state");
         testSet.add(null);
         Assert.assertTrue(testSet.isEmpty(), "Add null");

@@ -33,7 +33,7 @@ public class LazyListTest {
      */
     @Test 
     public void testSimple() {
-        CollectionTestSupport.testSimpleCollection(new LazyList<String>(), true);
+        CollectionTest.testSimpleCollection(new LazyList<String>(), true);
     }
 
     /**
@@ -41,7 +41,7 @@ public class LazyListTest {
      */
     @Test 
     public void testArray() {
-        CollectionTestSupport.testArrayCollection(new LazyList<String>(), new ArrayList<String>());
+        CollectionTest.testArrayCollection(new LazyList<String>(), new ArrayList<String>());
     }
     
     /**
@@ -49,7 +49,7 @@ public class LazyListTest {
      */
     @Test
     public void testIterator() {
-        CollectionTestSupport.testIteratorCollection(new LazyList<String>(), new ArrayList<String>());
+        CollectionTest.testIteratorCollection(new LazyList<String>(), new ArrayList<String>());
     }
     
      /**
@@ -57,7 +57,7 @@ public class LazyListTest {
      */
     @Test
     public void testListFunctions() {
-        ListTestSupport.testListFunctions(new LazyList<String>());
+        ListTest.testListFunctions(new LazyList<String>());
     }
 
 }

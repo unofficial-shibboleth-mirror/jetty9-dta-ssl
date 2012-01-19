@@ -31,7 +31,7 @@ public class LazySetTest {
      */
     @Test 
     public void testSimple() {
-        CollectionTestSupport.testSimpleCollection(new LazySet<String>(), false);
+        CollectionTest.testSimpleCollection(new LazySet<String>(), false);
     }
 
     /**
@@ -39,7 +39,7 @@ public class LazySetTest {
      */
     @Test 
     public void testArray() {
-        CollectionTestSupport.testArrayCollection(new LazySet<String>(), new HashSet<String>());
+        CollectionTest.testArrayCollection(new LazySet<String>(), new HashSet<String>());
     }
     
     /**
@@ -47,7 +47,7 @@ public class LazySetTest {
      */
     @Test
     public void testIterator() {
-        CollectionTestSupport.testIteratorCollection(new LazySet<String>(), new HashSet<String>());
+        CollectionTest.testIteratorCollection(new LazySet<String>(), new HashSet<String>());
     }
 
 }

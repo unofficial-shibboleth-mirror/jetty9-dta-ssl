@@ -25,9 +25,9 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- *
+ * Generic code to to test {@link List}
  */
-public class ListTestSupport {
+public class ListTest {
 
     private final static String [] TEST_ARRAY = {"Zero", "One", "Two", "Three"};
     private final static String TEST_VALUE = "tWO";
