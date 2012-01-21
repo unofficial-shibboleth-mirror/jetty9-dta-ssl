@@ -239,7 +239,7 @@ public class TransformedInputMapBuilder<K, V> {
         TransformedInputMap<K, V> map = new TransformedInputMap(new HashMap<K, V>(), keyTransform, valueTransform);
 
         for (Pair<K, V> entry : entries) {
-            map.addToDelegate(entry.getFirst(), entry.getSecond());
+            map.putToDelegate(entry.getFirst(), entry.getSecond());
         }
 
         return map;
