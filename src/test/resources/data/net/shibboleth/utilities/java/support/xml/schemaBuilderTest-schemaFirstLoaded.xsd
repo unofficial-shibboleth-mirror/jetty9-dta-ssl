@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="https://www.example.org/Example2" xmlns:me="https://www.example.org/Example2">
+<simpleType name="childType">
+   <restriction base="string">
+      <maxLength value="1024"/>
+   </restriction>
+</simpleType>
+<element name="Child1" type="me:childType"/>
+<element name="Child2" type="me:childType"/>
+
+</schema>
+
+
+
+

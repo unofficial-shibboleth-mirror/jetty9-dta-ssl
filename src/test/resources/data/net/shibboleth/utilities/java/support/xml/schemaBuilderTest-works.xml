@@ -1,0 +1,4 @@
+<Parent xmlns="https://www.example.org/Example">
+ <Child1 xmlns="https://www.example.org/Example2"/>
+ <Child2 xmlns="https://www.example.org/Example2"/>
+</Parent>

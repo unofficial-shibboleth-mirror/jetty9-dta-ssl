@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="https://www.example.org/Example" xmlns:me="https://www.example.org/Example" xmlns:child="https://www.example.org/Example2">
+
+<import namespace="https://www.example.org/Example2" />
+
+<complexType name="parentType">
+    <sequence>
+        <element ref="child:Child1" minOccurs="0"/>
+        <element ref="child:Child2" minOccurs="0"/>
+    </sequence>
+    <attribute name="foo" type="string" use="optional"/>
+</complexType>
+
+<element name="Parent" type="me:parentType"/>
+</schema>
+
+
+
+
