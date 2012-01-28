@@ -40,7 +40,9 @@ public abstract class AbstractDestrucableIdentifiableInitializableComponent exte
 
     /** {@inheritDoc} */
     protected synchronized void setId(@Nonnull @NotEmpty String componentId) {
-        checkDestroyed();
+        ifInitializedThrowUnmodifiabledComponentException(id);
+        ifDestroyedThrowDestroyedComponentException(id);
+        
         id = Assert.isNotNull(StringSupport.trimOrNull(componentId), "Component ID can not be null or empty");
     }
 }

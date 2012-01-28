@@ -349,7 +349,7 @@ public class BasicParserPool implements ParserPool, InitializableComponent, Unmo
     public synchronized void setMaxPoolSize(final int newSize) {
         if (initialized) {
             throw new UnmodifiableComponentException("Pool is already initialized, max pool size can not be changed");
-        };
+        }
         maxPoolSize = newSize;
     }
 
