@@ -17,42 +17,30 @@
 
 package net.shibboleth.utilities.java.support.component;
 
+import javax.annotation.Nonnull;
+
+import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
+import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
+
 /**
  * Base class for components implementing {@link DestructableComponent}, {@link IdentifiableComponent} and
  * {@link InitializableComponent}.
  */
 public abstract class AbstractDestrucableIdentifiableInitializableComponent extends
-        AbstractIdentifiableInitializableComponent implements DestructableComponent {
+        AbstractDestructableInitializableComponent implements IdentifiableComponent {
 
-    /** Whether this component has been destroyed. */
-    private boolean isDestroyed;
+    /** ID of this component. */
+    private String id;
 
     /** {@inheritDoc} */
-    protected synchronized void setId(String componentId) {
-        if (isDestroyed) {
-            throw new DestroyedComponentException();
-        }
-
-        super.setId(componentId);
+    public String getId() {
+        return id;
     }
 
     /** {@inheritDoc} */
-    public final boolean isDestroyed() {
-        return isDestroyed;
-    }
-
-    /** {@inheritDoc} */
-    public final synchronized void destroy() {
-        if (isDestroyed) {
-            return;
-        }
-
-        doDestroy();
-        isDestroyed = true;
-    }
-
-    /** Performs component specific destruction logic. Default implementation of this method is a no-op. */
-    protected void doDestroy() {
-
+    protected synchronized void setId(@Nonnull @NotEmpty String componentId) {
+        checkDestroyed();
+        id = Assert.isNotNull(StringSupport.trimOrNull(componentId), "Component ID can not be null or empty");
     }
 }

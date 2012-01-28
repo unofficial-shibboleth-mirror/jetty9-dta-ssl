@@ -17,11 +17,20 @@
 
 package net.shibboleth.utilities.java.support.component;
 
-/** Base class for things that implement {@link InitializableComponent}. */
-public abstract class AbstractInitializableComponent implements InitializableComponent {
+/** Base class for things that implement {@link DestructableComponent} and {@link InitializableComponent}. */
+public abstract class AbstractDestructableInitializableComponent implements DestructableComponent,
+        InitializableComponent {
+
+    /** Whether this component has been destroyed. */
+    private boolean isDestroyed;
 
     /** Whether this component has been initialized. */
     private boolean isInitialized;
+
+    /** {@inheritDoc} */
+    public final boolean isDestroyed() {
+        return isDestroyed;
+    }
 
     /** {@inheritDoc} */
     public boolean isInitialized() {
@@ -29,13 +38,30 @@ public abstract class AbstractInitializableComponent implements InitializableCom
     }
 
     /** {@inheritDoc} */
+    public final synchronized void destroy() {
+        if (isDestroyed) {
+            return;
+        }
+
+        doDestroy();
+        isDestroyed = true;
+    }
+
+    /** {@inheritDoc} */
     public final synchronized void initialize() throws ComponentInitializationException {
         if (isInitialized()) {
             return;
         }
-        
+
         doInitialize();
         isInitialized = true;
+    }
+
+    /** Checks if this component is destroyed and, if so, throws a {@link DestroyedComponentException}. */
+    protected void checkDestroyed() {
+        if (isDestroyed) {
+            throw new DestroyedComponentException();
+        }
     }
     
     /** 
@@ -45,6 +71,17 @@ public abstract class AbstractInitializableComponent implements InitializableCom
         if(!isInitialized){
             throw new UninitializedComponentException();
         }
+    }
+
+    /** Performs {@link #checkInitialized()} and then {@link #checkDestroyed()}. */
+    protected void readyCheck() {
+        checkInitialized();
+        checkDestroyed();
+    }
+
+    /** Performs component specific destruction logic. Default implementation of this method is a no-op. */
+    protected void doDestroy() {
+
     }
 
     /**
