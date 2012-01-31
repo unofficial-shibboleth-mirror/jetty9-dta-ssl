@@ -43,24 +43,35 @@ public final class NamespaceSupport {
      * 
      * @param element the element to add the attribute to
      * @param namespaceURI the URI of the namespace
-     * @param prefix the prefix for the namespace
+     * @param prefix the prefix for the namespace. If this is null this is the default namespace being added.
      */
-    public static void
-            appendNamespaceDeclaration(@Nonnull final Element element, @Nullable final String namespaceURI, @Nullable final String prefix) {
+    public static void appendNamespaceDeclaration(@Nonnull final Element element, @Nullable final String namespaceURI,
+            @Nullable final String prefix) {
         Assert.isNotNull(element, "Element may not be null");
 
         final String nsURI = StringSupport.trimOrNull(namespaceURI);
         final String nsPrefix = StringSupport.trimOrNull(prefix);
 
-        // This results in xmlns="" being emitted, which seems wrong.
+        // This results in xmlns="" being omitted, which seems wrong.
         if (nsURI == null && nsPrefix == null) {
             return;
         }
 
         String attributeName;
         if (nsPrefix == null) {
+            if (null == element.getPrefix()) {
+                //
+                // We cannot change this so complain.
+                //
+                throw new DOMException(DOMException.INVALID_ACCESS_ERR, 
+                        "Cannot replace an element's default namespace");
+            }
             attributeName = XmlConstants.XMLNS_PREFIX;
         } else {
+            if (nsPrefix.equals(element.getPrefix())) {
+                throw new DOMException(DOMException.INVALID_ACCESS_ERR,
+                        "Cannot replace an element's default namespace");
+            }
             attributeName = XmlConstants.XMLNS_PREFIX + ":" + nsPrefix;
         }
 
@@ -76,20 +87,20 @@ public final class NamespaceSupport {
 
     /**
      * Looks up the namespace URI associated with the given prefix starting at the given element. This method differs
-     * from the {@link Node#lookupNamespaceURI(java.lang.String)} in that it only those namespaces declared by an xmlns
-     * attribute are inspected. The Node method also checks the namespace a particular node was created in by way of a
-     * call like {@link org.w3c.dom.Document#createElementNS(java.lang.String, java.lang.String)} even if the resulting
-     * element doesn't have an namespace delcaration attribute.
+     * from the {@link Node#lookupNamespaceURI(java.lang.String)} in that it only returns those namespaces declared by
+     * an xmlns attribute are inspected. The Node method also checks the namespace a particular node was created in by
+     * way of a call like {@link org.w3c.dom.Document#createElementNS(java.lang.String, java.lang.String)} even if the
+     * resulting element doesn't have an namespace declaration attribute.
      * 
      * @param startingElement the starting element
-     * @param stopingElement the ancestor of the starting element that serves as the upper-bound, inclusive, for the
+     * @param stoppingElement the ancestor of the starting element that serves as the upper-bound, inclusive, for the
      *            search
-     * @param prefix the prefix to look up
+     * @param prefix the prefix to look up. If null then the default namespace is returned.
      * 
      * @return the namespace URI for the given prefer or null
      */
-    @Nullable public static String lookupNamespaceURI(@Nonnull final Element startingElement, @Nullable final Element stopingElement,
-            final String prefix) {
+    @Nullable public static String lookupNamespaceURI(@Nonnull final Element startingElement,
+            @Nullable final Element stoppingElement, @Nonnull final String prefix) {
         Assert.isNotNull(startingElement, "Starting element may not be null");
 
         // This code is a modified version of the lookup code within Xerces
@@ -103,11 +114,11 @@ public final class NamespaceSupport {
                 value = attr.getNodeValue();
                 if (Objects.equal(attr.getNamespaceURI(), XmlConstants.XMLNS_NS)) {
                     // at this point we are dealing with DOM Level 2 nodes only
-                    if (Objects.equal(prefix, XmlConstants.XMLNS_PREFIX)) {
+                    if (Objects.equal(attr.getLocalName(), XmlConstants.XMLNS_PREFIX) && prefix == null) {
                         // default namespace
                         return value;
                     } else if (Objects.equal(attr.getPrefix(), XmlConstants.XMLNS_PREFIX)
-                            && Objects.equal(attr, prefix)) {
+                            && Objects.equal(attr.getLocalName(), prefix)) {
                         // non default namespace
                         return value;
                     }
@@ -115,10 +126,10 @@ public final class NamespaceSupport {
             }
         }
 
-        if (startingElement != stopingElement) {
+        if (startingElement != stoppingElement) {
             final Element ancestor = ElementSupport.getElementAncestor(startingElement);
             if (ancestor != null) {
-                return lookupNamespaceURI(ancestor, stopingElement, prefix);
+                return lookupNamespaceURI(ancestor, stoppingElement, prefix);
             }
         }
 
@@ -137,7 +148,8 @@ public final class NamespaceSupport {
      * 
      * @return the namespace URI for the given prefix
      */
-    @Nullable public static String lookupNamespaceURI(@Nonnull final Element startingElement, @Nullable final String prefix) {
+    @Nullable public static String lookupNamespaceURI(@Nonnull final Element startingElement,
+            @Nullable final String prefix) {
         return lookupNamespaceURI(startingElement, null, prefix);
     }
 
@@ -147,17 +159,24 @@ public final class NamespaceSupport {
      * attribute are inspected. The Node method also checks the namespace a particular node was created in by way of a
      * call like {@link org.w3c.dom.Document#createElementNS(java.lang.String, java.lang.String)} even if the resulting
      * element doesn't have an namespace delcaration attribute.
+     * <p>
+     * <em>Note:</em>The prefix returned may not necessarily refer to the corresponding namespace within this element
+     * (if, for instance the prefix is associated with a namespaces at different points of the hierarchy.
      * 
      * @param startingElement the starting element
      * @param stopingElement the ancestor of the starting element that serves as the upper-bound, inclusive, for the
      *            search
      * @param namespaceURI the uri to look up
      * 
-     * @return the prefix for the given namespace URI
+     * @return the prefix for the given namespace URI or null if non exists or the the URI is for the default namespace.
      */
-    @Nullable public static String lookupPrefix(@Nonnull final Element startingElement, @Nullable final Element stopingElement,
-            @Nullable final String namespaceURI) {
+    @Nullable public static String lookupPrefix(@Nonnull final Element startingElement,
+            @Nullable final Element stopingElement, @Nullable final String namespaceURI) {
         Assert.isNotNull(startingElement, "Starting element may not be null");
+
+        if (null == namespaceURI) {
+            return null;
+        }
 
         // This code is a modified version of the lookup code within Xerces
         if (startingElement.hasAttributes()) {
@@ -170,8 +189,8 @@ public final class NamespaceSupport {
                 attr = map.item(i);
                 if (Objects.equal(attr.getNamespaceURI(), XmlConstants.XMLNS_NS)) {
                     // DOM Level 2 nodes
-                    if (Objects.equal(attr.getNodeName(), XmlConstants.XMLNS_PREFIX)
-                            || (Objects.equal(attr.getPrefix(), XmlConstants.XMLNS_PREFIX))
+                    String s = attr.getNodeName();
+                    if ((Objects.equal(attr.getPrefix(), XmlConstants.XMLNS_PREFIX))
                             && Objects.equal(attr.getNodeValue(), namespaceURI)) {
 
                         localName = attr.getLocalName();
@@ -197,17 +216,21 @@ public final class NamespaceSupport {
 
     /**
      * Looks up the namespace prefix associated with the given URI starting at the given element. This method differs
-     * from the {@link Node#lookupPrefix(java.lang.String)} in that it only those namespaces declared by an xmlns
-     * attribute are inspected. The Node method also checks the namespace a particular node was created in by way of a
-     * call like {@link org.w3c.dom.Document#createElementNS(java.lang.String, java.lang.String)} even if the resulting
-     * element doesn't have an namespace delcaration attribute.
+     * from the {@link Node#lookupPrefix(java.lang.String)} in that it only returns those namespaces declared by an
+     * xmlns attribute are inspected. The Node method also checks the namespace a particular node was created in by way
+     * of a call like {@link org.w3c.dom.Document#createElementNS(java.lang.String, java.lang.String)} even if the
+     * resulting element doesn't have an namespace declaration attribute.
+     * <p>
+     * <em>Note:</em>The prefix returned may not necessarily refer to the corresponding namespace within this element
+     * (if, for instance the prefix is associated with a namespaces at different points of the hierarchy. *
      * 
      * @param startingElement the starting element
      * @param namespaceURI the uri to look up
      * 
-     * @return the prefix for the given namespace URI
+     * @return the prefix for the given namespace URI or null if non exists or the the URI is for the default namespace.
      */
-    @Nullable public static String lookupPrefix(@Nonnull final Element startingElement, @Nullable final String namespaceURI) {
+    @Nullable public static String lookupPrefix(@Nonnull final Element startingElement,
+            @Nullable final String namespaceURI) {
         return lookupPrefix(startingElement, null, namespaceURI);
     }
 
@@ -230,11 +253,12 @@ public final class NamespaceSupport {
      * @param domElement the Element
      * @param upperNamespaceSearchBound the "root" element of the fragment where namespaces may be rooted
      */
-    private static void rootNamespaces(@Nullable final Element domElement, @Nullable final Element upperNamespaceSearchBound) {
-        if(domElement == null){
+    private static void rootNamespaces(@Nullable final Element domElement,
+            @Nullable final Element upperNamespaceSearchBound) {
+        if (domElement == null) {
             return;
         }
-        
+
         String namespaceURI = null;
         String namespacePrefix = domElement.getPrefix();
 
@@ -247,7 +271,7 @@ public final class NamespaceSupport {
         }
 
         if (!nsDeclaredOnElement) {
-            // Namspace for element was not declared on the element itself, see if the namespace is declared on
+            // Namespace for element was not declared on the element itself, see if the namespace is declared on
             // an ancestral element within the subtree where namespaces much be rooted
             namespaceURI = lookupNamespaceURI(domElement, upperNamespaceSearchBound, namespacePrefix);
 
@@ -285,7 +309,7 @@ public final class NamespaceSupport {
             }
 
             namespacePrefix = StringSupport.trimOrNull(attributeNode.getPrefix());
-            if (namespacePrefix == null) {
+            if (namespacePrefix != null) {
                 // If it's the "xmlns" prefix then it is the namespace declaration,
                 // don't try to look it up and redeclare it
                 if (namespacePrefix.equals(XmlConstants.XMLNS_PREFIX)
@@ -298,8 +322,8 @@ public final class NamespaceSupport {
                 if (namespaceURI == null) {
                     namespaceURI = lookupNamespaceURI(upperNamespaceSearchBound, null, namespacePrefix);
                     if (namespaceURI == null) {
-                        throw new DOMException(DOMException.NAMESPACE_ERR, "Unable to resolve namespace prefix " + namespacePrefix
-                                + " found on attribute " + QNameSupport.getNodeQName(attributeNode)
+                        throw new DOMException(DOMException.NAMESPACE_ERR, "Unable to resolve namespace prefix "
+                                + namespacePrefix + " found on attribute " + QNameSupport.getNodeQName(attributeNode)
                                 + " found on element " + QNameSupport.getNodeQName(domElement));
                     }
 
