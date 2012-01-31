@@ -18,7 +18,6 @@
 package net.shibboleth.utilities.java.support.xml;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.xml.transform.stream.StreamSource;

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="https://www.example.org/Example" xmlns:me="https://www.example.org/Example">
+<simpleType name="childType">
+   <restriction base="string">
+      <maxLength value="1024"/>
+   </restriction>
+</simpleType>
+<element name="Child1" type="me:childType"/>
+<element name="Child2" type="me:childType"/>
+
+<complexType name="parentType">
+    <sequence>
+        <element ref="me:Child1" minOccurs="0"/>
+        <element ref="me:Child2" minOccurs="0"/>
+    </sequence>
+    <attribute name="foo" type="string" use="optional"/>
+</complexType>
+
+<element name="Parent" type="me:parentType"/>
+
+</schema>
+
+
+
+

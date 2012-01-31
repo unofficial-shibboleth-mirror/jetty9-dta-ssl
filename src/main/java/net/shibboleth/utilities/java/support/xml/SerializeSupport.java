@@ -108,14 +108,7 @@ public final class SerializeSupport {
         Assert.isNotNull(node, "Node may not be null");
         Assert.isNotNull(output, "Outputstream may not be null");
 
-        final DOMImplementation domImpl;
-        if (node instanceof Document) {
-            domImpl = ((Document) node).getImplementation();
-        } else {
-            domImpl = node.getOwnerDocument().getImplementation();
-        }
-
-        final DOMImplementationLS domImplLS = (DOMImplementationLS) domImpl.getFeature("LS", "3.0");
+        final DOMImplementationLS domImplLS = getDomLsImplementation(node); 
         final LSSerializer serializer = domImplLS.createLSSerializer();
         serializer.setFilter(new LSSerializerFilter() {
 
