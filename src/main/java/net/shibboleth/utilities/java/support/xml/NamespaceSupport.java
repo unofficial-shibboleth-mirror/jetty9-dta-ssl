@@ -52,11 +52,6 @@ public final class NamespaceSupport {
         final String nsURI = StringSupport.trimOrNull(namespaceURI);
         final String nsPrefix = StringSupport.trimOrNull(prefix);
 
-        // This results in xmlns="" being omitted, which seems wrong.
-        if (nsURI == null && nsPrefix == null) {
-            return;
-        }
-
         String attributeName;
         if (nsPrefix == null) {
             if (null == element.getPrefix()) {
@@ -189,7 +184,6 @@ public final class NamespaceSupport {
                 attr = map.item(i);
                 if (Objects.equal(attr.getNamespaceURI(), XmlConstants.XMLNS_NS)) {
                     // DOM Level 2 nodes
-                    String s = attr.getNodeName();
                     if ((Objects.equal(attr.getPrefix(), XmlConstants.XMLNS_PREFIX))
                             && Objects.equal(attr.getNodeValue(), namespaceURI)) {
 
