@@ -50,8 +50,6 @@ import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.google.common.collect.UnmodifiableIterator;
-
 /**
  * Tests for {@link NamespaceSupport}
  */

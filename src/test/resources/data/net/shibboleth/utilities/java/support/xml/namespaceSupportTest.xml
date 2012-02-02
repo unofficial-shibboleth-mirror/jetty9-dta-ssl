@@ -1,0 +1,18 @@
+<Parent
+xmlns="http://example.org/DefaultSpace1"
+xmlns:myns1="http://example.org/NameSpace1" 
+xmlns:myns2="http://example.org/NameSpace2" 
+xmlns:myns3="http://example.org/NameSpace3" 
+ >
+    <Child
+        xmlns:myns1="http://example.org/NameSpace2" 
+        xmlns:myns4="http://example.org/NameSpace4"
+    >
+        <myns3:GrandChild
+            xmlns="http://example.org/DefaultSpace2"
+            myns2:flib="flob"
+        />
+        
+    </Child>
+</Parent>
+    

@@ -1,0 +1,12 @@
+<parns:Parent 
+xmlns="http://example.org/DefaultSpace"
+xmlns:parns="http://example.org/ParentSpace" 
+xmlns:myns1="http://example.org/NameSpace1" 
+xmlns:myns2="http://example.org/NameSpace2" 
+ >
+    <Child1 xmlns="http://example.org/ChildDefault"
+        xmlns:myns1="http://example.org/Childpace2" 
+        myns1:foo="myns2:bar" />
+    <Child2 myns1:foo="myns2:bar" />
+</parns:Parent>
+    

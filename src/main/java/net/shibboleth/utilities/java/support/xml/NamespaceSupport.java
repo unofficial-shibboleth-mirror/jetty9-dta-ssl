@@ -42,42 +42,40 @@ public final class NamespaceSupport {
      * Adds a namespace declaration (xmlns:) attribute to the given element.
      * 
      * @param element the element to add the attribute to
-     * @param namespaceURI the URI of the namespace
+     * @param namespaceURI the URI of the namespace.  Cannot be null or empty (semantics would be undefined)
      * @param prefix the prefix for the namespace. If this is null this is the default namespace being added.
      */
-    public static void appendNamespaceDeclaration(@Nonnull final Element element, @Nullable final String namespaceURI,
+    public static void appendNamespaceDeclaration(@Nonnull final Element element, @Nonnull final String namespaceURI,
             @Nullable final String prefix) {
         Assert.isNotNull(element, "Element may not be null");
 
         final String nsURI = StringSupport.trimOrNull(namespaceURI);
         final String nsPrefix = StringSupport.trimOrNull(prefix);
+        
+        Assert.isNotNull(nsURI, "namespace may not be null or empty");
 
         String attributeName;
         if (nsPrefix == null) {
             if (null == element.getPrefix()) {
-                //
-                // We cannot change this so complain.
-                //
-                throw new DOMException(DOMException.INVALID_ACCESS_ERR, 
-                        "Cannot replace an element's default namespace");
+                
+                if (!namespaceURI.equals(element.getNamespaceURI())) {
+                    //
+                    // We cannot change this so complain.
+                    //
+                    throw new DOMException(DOMException.INVALID_ACCESS_ERR, 
+                            "Cannot replace an element's default namespace");
+                }
             }
             attributeName = XmlConstants.XMLNS_PREFIX;
         } else {
-            if (nsPrefix.equals(element.getPrefix())) {
+            if (nsPrefix.equals(element.getPrefix()) && !namespaceURI.equals(element.getNamespaceURI())) {
                 throw new DOMException(DOMException.INVALID_ACCESS_ERR,
                         "Cannot replace an element's default namespace");
             }
             attributeName = XmlConstants.XMLNS_PREFIX + ":" + nsPrefix;
         }
 
-        String attributeValue;
-        if (nsURI == null) {
-            attributeValue = "";
-        } else {
-            attributeValue = nsURI;
-        }
-
-        element.setAttributeNS(XmlConstants.XMLNS_NS, attributeName, attributeValue);
+        element.setAttributeNS(XmlConstants.XMLNS_NS, attributeName, nsURI);
     }
 
     /**
@@ -129,23 +127,6 @@ public final class NamespaceSupport {
         }
 
         return null;
-    }
-
-    /**
-     * Looks up the namespace URI associated with the given prefix starting at the given element. This method differs
-     * from the {@link Node#lookupNamespaceURI(java.lang.String)} in that it only those namespaces declared by an xmlns
-     * attribute are inspected. The Node method also checks the namespace a particular node was created in by way of a
-     * call like {@link org.w3c.dom.Document#createElementNS(java.lang.String, java.lang.String)} even if the resulting
-     * element doesn't have an namespace delcaration attribute.
-     * 
-     * @param startingElement the starting element
-     * @param prefix the prefix to look up
-     * 
-     * @return the namespace URI for the given prefix
-     */
-    @Nullable public static String lookupNamespaceURI(@Nonnull final Element startingElement,
-            @Nullable final String prefix) {
-        return lookupNamespaceURI(startingElement, null, prefix);
     }
 
     /**
@@ -206,26 +187,6 @@ public final class NamespaceSupport {
         }
 
         return null;
-    }
-
-    /**
-     * Looks up the namespace prefix associated with the given URI starting at the given element. This method differs
-     * from the {@link Node#lookupPrefix(java.lang.String)} in that it only returns those namespaces declared by an
-     * xmlns attribute are inspected. The Node method also checks the namespace a particular node was created in by way
-     * of a call like {@link org.w3c.dom.Document#createElementNS(java.lang.String, java.lang.String)} even if the
-     * resulting element doesn't have an namespace declaration attribute.
-     * <p>
-     * <em>Note:</em>The prefix returned may not necessarily refer to the corresponding namespace within this element
-     * (if, for instance the prefix is associated with a namespaces at different points of the hierarchy. *
-     * 
-     * @param startingElement the starting element
-     * @param namespaceURI the uri to look up
-     * 
-     * @return the prefix for the given namespace URI or null if non exists or the the URI is for the default namespace.
-     */
-    @Nullable public static String lookupPrefix(@Nonnull final Element startingElement,
-            @Nullable final String namespaceURI) {
-        return lookupPrefix(startingElement, null, namespaceURI);
     }
 
     /**
