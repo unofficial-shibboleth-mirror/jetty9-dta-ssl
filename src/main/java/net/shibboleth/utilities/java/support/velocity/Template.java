@@ -38,8 +38,6 @@ import org.apache.velocity.runtime.resource.util.StringResourceRepository;
 import com.google.common.base.Charsets;
 import com.google.common.base.Objects;
 
-//TODO(lajoie) see if we can validate the template at construction time
-
 /**
  * This is a helper class that wraps a velocity engine and template information into a single object. It provides
  * methods, {@link #fromTemplate()}, for evaluating literal templates as well as named templates. It also ensures that
@@ -142,6 +140,12 @@ public final class Template {
                     "Velocity engine is not configured to load templates from the default StringResourceRepository");
         }
 
+        try {
+            engine.getTemplate(templateName);
+        } catch (VelocityException e) {
+            throw new VelocityException("The following template is not valid:\n" + trimmedTemplate, e);
+        }
+
         return new Template(engine, templateName, encoding.name());
     }
 
@@ -185,6 +189,12 @@ public final class Template {
         if (!engine.resourceExists(name)) {
             throw new VelocityException("No template with the name " + trimmedName
                     + " is available to the velocity engine");
+        }
+
+        try {
+            engine.getTemplate(trimmedName);
+        } catch (VelocityException e) {
+            throw new VelocityException("Template '" + trimmedName + "' is not a valid template", e);
         }
 
         return new Template(engine, trimmedName, encoding.name());
