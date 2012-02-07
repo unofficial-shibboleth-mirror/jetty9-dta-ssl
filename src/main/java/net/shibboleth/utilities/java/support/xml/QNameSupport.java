@@ -52,14 +52,14 @@ public final class QNameSupport {
         String name;
         if (qname.indexOf(":") > -1) {
             final StringTokenizer qnameTokens = new StringTokenizer(qname, ":");
-            nsPrefix = qnameTokens.nextToken();
+            nsPrefix = StringSupport.trim(qnameTokens.nextToken());
             name = qnameTokens.nextToken();
         } else {
-            nsPrefix = "";
+            nsPrefix = null;
             name = qname;
         }
 
-        final String nsURI = NamespaceSupport.lookupNamespaceURI(owningElement, nsPrefix);
+        final String nsURI = owningElement.lookupNamespaceURI(nsPrefix);
         return constructQName(nsURI, name, nsPrefix);
     }
 
@@ -110,7 +110,8 @@ public final class QNameSupport {
         Assert.isNotNull(qname, "QName may not be null");
 
         final StringBuffer buf = new StringBuffer();
-        if (qname.getPrefix() != null) {
+        final String s = StringSupport.trimOrNull(qname.getPrefix());
+        if (s != null) {
             buf.append(qname.getPrefix());
             buf.append(":");
         }

@@ -19,7 +19,6 @@ package net.shibboleth.utilities.java.support.xml;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.StringTokenizer;
 import java.util.TimeZone;
 
 import javax.annotation.Nonnull;
@@ -91,19 +90,8 @@ public final class DomTypeSupport {
         if (hasXSIType(e)) {
             final Attr attribute = e.getAttributeNodeNS(XmlConstants.XSI_NS, "type");
             final String attributeValue = attribute.getTextContent().trim();
-            final StringTokenizer tokenizer = new StringTokenizer(attributeValue, ":");
-            String prefix = null;
-            String localPart;
-            if (tokenizer.countTokens() > 1) {
-                prefix = tokenizer.nextToken();
-                localPart = tokenizer.nextToken();
-            } else {
-                localPart = tokenizer.nextToken();
-            }
-
-            return QNameSupport.constructQName(e.lookupNamespaceURI(prefix), localPart, prefix);
+            return QNameSupport.constructQName(e, attributeValue);
         }
-
         return null;
     }
 
