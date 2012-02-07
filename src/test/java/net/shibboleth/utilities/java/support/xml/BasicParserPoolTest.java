@@ -290,7 +290,7 @@ public class BasicParserPoolTest {
         } catch (ComponentInitializationException e) {
             thrown = true;
         }
-        Assert.assertTrue(thrown, "double initialize after init");
+        Assert.assertFalse(thrown, "double initialize after init");
 
         basicParserPool.destroy();
     }

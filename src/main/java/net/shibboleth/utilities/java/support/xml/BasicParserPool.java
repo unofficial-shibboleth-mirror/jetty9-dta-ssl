@@ -37,12 +37,9 @@ import javax.xml.validation.Schema;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
+import net.shibboleth.utilities.java.support.component.AbstractDestructableInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.DestroyedComponentException;
-import net.shibboleth.utilities.java.support.component.InitializableComponent;
-import net.shibboleth.utilities.java.support.component.UninitializedComponentException;
-import net.shibboleth.utilities.java.support.component.UnmodifiableComponent;
-import net.shibboleth.utilities.java.support.component.UnmodifiableComponentException;
 import net.shibboleth.utilities.java.support.logic.Assert;
 
 import org.slf4j.Logger;
@@ -73,16 +70,10 @@ import com.google.common.collect.Maps;
  * This implementation of {@link ParserPool} does not allow its properties to be modified once it has been initialized.
  */
 @ThreadSafe
-public class BasicParserPool implements ParserPool, InitializableComponent, UnmodifiableComponent {
+public class BasicParserPool extends AbstractDestructableInitializableComponent implements ParserPool {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(BasicParserPool.class);
-
-    /** Flag to track whether pool is in the initialized state. */
-    private boolean initialized;
-
-    /** Flag to track whether pool is in the destroyed state. */
-    private boolean destroyed;
 
     /** Factory used to create new builders. */
     private DocumentBuilderFactory builderFactory;
@@ -131,7 +122,7 @@ public class BasicParserPool implements ParserPool, InitializableComponent, Unmo
 
     /** Constructor. */
     public BasicParserPool() {
-        initialized = false;
+        super();
         maxPoolSize = 5;
         builderPool = new Stack<SoftReference<DocumentBuilder>>();
         builderAttributes = Collections.emptyMap();
@@ -150,18 +141,13 @@ public class BasicParserPool implements ParserPool, InitializableComponent, Unmo
 
     /**
      * Initialize the pool.
+     * @return 
      * 
      * @throws ComponentInitializationException thrown if pool can not be initialized, or if it is already initialized
-     * 
+     * {@inheritDoc}
      **/
-    public synchronized void initialize() throws ComponentInitializationException {
-        if (initialized) {
-            throw new ComponentInitializationException("Parser pool was already initialized");
-        }
-        if (destroyed) {
-            throw new DestroyedComponentException("Parser pool has been destroyed");
-        }
-
+    public void doInitialize() throws ComponentInitializationException {
+        super.doInitialize();
         try {
             final DocumentBuilderFactory newFactory = DocumentBuilderFactory.newInstance();
 
@@ -189,50 +175,27 @@ public class BasicParserPool implements ParserPool, InitializableComponent, Unmo
         } catch (ParserConfigurationException e) {
             throw new ComponentInitializationException("Unable to configure builder factory", e);
         }
-
-        initialized = true;
-    }
-
-    /**
-     * Return initialized state.
-     * 
-     * @return true if pool is initialized, false otherwise
-     */
-    public synchronized boolean isInitialized() {
-        return initialized;
     }
     
     /** {@inheritDoc} */
-    public boolean isDestroyed() {
-        return destroyed;
-    }
-
-    /** {@inheritDoc} */
-    public synchronized void destroy() {
+    public void doDestroy() {
         builderPool.clear();
-        destroyed = true;
+        super.doDestroy();
     }
-    
+
     /** Helper method to test class state. */
     private void checkInitializedNotDestroyed() {
-        if (!initialized) {
-            throw new UninitializedComponentException("Parser pool has not been initialized");
-        }
-        if (destroyed) {
+        ifNotInitializedThrowUninitializedComponentException();
+        if (isDestroyed()) {
             throw new DestroyedComponentException("Parser pool has been destroyed");
         }        
     }
 
     /** Helper method to test class state.
-     * @param message helpful error;
      */
-    private void checkNotInitializedNotDestroyed(String message) {
-        if (initialized) {
-            throw new UnmodifiableComponentException("Parser pool has been initialized: " + message);
-        }
-        if (destroyed) {
-            throw new DestroyedComponentException("Parser pool has been destroyed" + message);
-        }        
+    private void checkNotInitializedNotDestroyed() {
+        ifInitializedThrowUnmodifiabledComponentException();
+        ifDestroyedThrowDestroyedComponentException();
     }
 
     /** {@inheritDoc} */
@@ -366,7 +329,7 @@ public class BasicParserPool implements ParserPool, InitializableComponent, Unmo
      * @param newSize max number of builders the pool will hold
      */
     public synchronized void setMaxPoolSize(final int newSize) {
-        checkNotInitializedNotDestroyed("max pool size can not be changed");
+        checkNotInitializedNotDestroyed();
         maxPoolSize = newSize;
     }
 
@@ -385,7 +348,7 @@ public class BasicParserPool implements ParserPool, InitializableComponent, Unmo
      * @param newAttributes builder attributes used when creating builders
      */
     public synchronized void setBuilderAttributes(@Nullable @NullableElements final Map<String, Object> newAttributes) {
-        checkNotInitializedNotDestroyed("builder attributes can not be changed");
+        checkNotInitializedNotDestroyed();
 
         if (newAttributes == null) {
             builderAttributes = Collections.emptyMap();
@@ -409,7 +372,7 @@ public class BasicParserPool implements ParserPool, InitializableComponent, Unmo
      * @param isCoalescing whether the builders are coalescing
      */
     public synchronized void setCoalescing(final boolean isCoalescing) {
-        checkNotInitializedNotDestroyed("coalescing parser option can not be changed");
+        checkNotInitializedNotDestroyed();
 
         coalescing = isCoalescing;
     }
@@ -429,7 +392,7 @@ public class BasicParserPool implements ParserPool, InitializableComponent, Unmo
      * @param expand whether builders expand entity references
      */
     public synchronized void setExpandEntityReferences(final boolean expand) {
-        checkNotInitializedNotDestroyed("entity expansion option can not be changed");
+        checkNotInitializedNotDestroyed();
         expandEntityReferences = expand;
     }
 
@@ -448,7 +411,7 @@ public class BasicParserPool implements ParserPool, InitializableComponent, Unmo
      * @param newFeatures the builders' features
      */
     public synchronized void setBuilderFeatures(@Nullable @NullableElements final Map<String, Boolean> newFeatures) {
-        checkNotInitializedNotDestroyed("parser features can not be changed");
+        checkNotInitializedNotDestroyed();
 
         if (newFeatures == null) {
             builderFeatures = Collections.emptyMap();
@@ -472,7 +435,7 @@ public class BasicParserPool implements ParserPool, InitializableComponent, Unmo
      * @param ignore The ignoreComments to set.
      */
     public synchronized void setIgnoreComments(final boolean ignore) {
-        checkNotInitializedNotDestroyed("ignore comments option can not be changed");
+        checkNotInitializedNotDestroyed();
 
         ignoreComments = ignore;
     }
@@ -492,7 +455,7 @@ public class BasicParserPool implements ParserPool, InitializableComponent, Unmo
      * @param ignore whether the builders ignore element content whitespace
      */
     public synchronized void setIgnoreElementContentWhitespace(final boolean ignore) {
-        checkNotInitializedNotDestroyed("ignore element whitespace option can not be changed");
+        checkNotInitializedNotDestroyed();
         
         ignoreElementContentWhitespace = ignore;
     }
@@ -512,7 +475,7 @@ public class BasicParserPool implements ParserPool, InitializableComponent, Unmo
      * @param isNamespaceAware whether the builders are namespace aware
      */
     public synchronized void setNamespaceAware(final boolean isNamespaceAware) {
-        checkNotInitializedNotDestroyed("namspace aware option can not be changed");
+        checkNotInitializedNotDestroyed();
 
         namespaceAware = isNamespaceAware;
     }
@@ -524,7 +487,7 @@ public class BasicParserPool implements ParserPool, InitializableComponent, Unmo
 
     /** {@inheritDoc} */
     public synchronized void setSchema(@Nullable final Schema newSchema) {
-        checkNotInitializedNotDestroyed("XML schema can not be changed");
+        checkNotInitializedNotDestroyed();
 
         // Note this method is also synchronized because it is more than just an atomic assignment.
         // Don't want inconsistent data in the factory via initializeFactory(), also synchronized.
@@ -551,7 +514,7 @@ public class BasicParserPool implements ParserPool, InitializableComponent, Unmo
      * @param isValidating whether the builders are validating
      */
     public synchronized void setDTDValidating(final boolean isValidating) {
-        checkNotInitializedNotDestroyed("DTD validation option can not be changed");
+        checkNotInitializedNotDestroyed();
 
         dtdValidating = isValidating;
     }
@@ -571,7 +534,7 @@ public class BasicParserPool implements ParserPool, InitializableComponent, Unmo
      * @param isXIncludeAware whether the builders are XInclude aware
      */
     public synchronized void setXincludeAware(final boolean isXIncludeAware) {
-        checkNotInitializedNotDestroyed("xinclude support can not be changed");
+        checkNotInitializedNotDestroyed();
 
         xincludeAware = isXIncludeAware;
     }

@@ -40,7 +40,7 @@ import org.xml.sax.SAXException;
  */
 public class SchemaBuilderTest {
 
-    private static final String TEST_DIR = "data/net/shibboleth/utilities/java/support/xml/";
+    private static final String TEST_DIR = "data/net/shibboleth/utilities/java/support/xml/schemaBuilderTestDir/";
 
     private static final String FILE_ROOT = "src/test/resources/";
 
