@@ -53,6 +53,7 @@ public abstract class AbstractDestructableInitializableComponent implements Dest
 
     /** {@inheritDoc} */
     public final synchronized void initialize() throws ComponentInitializationException {
+        ifDestroyedThrowDestroyedComponentException();
         if (isInitialized()) {
             return;
         }
