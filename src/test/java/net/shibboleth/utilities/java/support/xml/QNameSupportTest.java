@@ -44,26 +44,17 @@ public class QNameSupportTest {
     private static final String NAME_2 = "name2";
     
     private static final String NAME_3 = "name3";
-    
-    private static final String NAME_4 = "name4";
-    
+
     private static final String NAMESPACE_1 = "http://example.org/NameSpace1";
 
     private static final String NAMESPACE_2 = "http://example.org/NameSpace2";
 
-    private static final String NAMESPACE_3 = "http://example.org/NameSpace3";
-
-    private static final String NAMESPACE_4 = "http://example.org/NameSpace4";
 
     private static final String DEFAULT_NAMESPACE = "http://example.org/DefaultSpace";
 
     private static final String PREFIX_1 = "myns1";
 
     private static final String PREFIX_2 = "myns2";
-
-    private static final String PREFIX_3 = "myns3";
-
-    private static final String PREFIX_4 = "myns4";
 
     private ParserPool parserPool;
     private Element parent;

@@ -80,7 +80,7 @@ public abstract class AbstractDestructableInitializableComponent implements Dest
                 throw new DestroyedComponentException("Component '" + trimmedId
                         + "' has already been destroyed and can no longer be used.");
             } else {
-                throw new DestroyedComponentException();
+                throw new DestroyedComponentException(this);
             }
         }
     }
@@ -103,7 +103,7 @@ public abstract class AbstractDestructableInitializableComponent implements Dest
                 throw new UninitializedComponentException("Component '" + trimmedId
                         + "' has not yet been initialized and so can not be used.");
             } else {
-                throw new UninitializedComponentException();
+                throw new UninitializedComponentException(this);
             }
         }
     }

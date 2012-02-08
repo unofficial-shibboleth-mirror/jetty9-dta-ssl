@@ -39,7 +39,6 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElemen
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.component.AbstractDestructableInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.DestroyedComponentException;
 import net.shibboleth.utilities.java.support.logic.Assert;
 
 import org.slf4j.Logger;
@@ -186,9 +185,7 @@ public class BasicParserPool extends AbstractDestructableInitializableComponent 
     /** Helper method to test class state. */
     private void checkInitializedNotDestroyed() {
         ifNotInitializedThrowUninitializedComponentException();
-        if (isDestroyed()) {
-            throw new DestroyedComponentException("Parser pool has been destroyed");
-        }        
+        ifDestroyedThrowDestroyedComponentException();
     }
 
     /** Helper method to test class state.
