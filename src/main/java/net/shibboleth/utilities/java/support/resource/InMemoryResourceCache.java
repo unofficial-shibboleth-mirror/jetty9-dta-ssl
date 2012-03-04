@@ -50,4 +50,16 @@ public class InMemoryResourceCache implements ResourceCache {
     public CachedResource remove(String location) {
         return cacheStore.remove(location);
     }
+
+    /** {@inheritDoc} */
+    public boolean isDestroyed() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    /** {@inheritDoc} */
+    public void destroy() {
+        // TODO Auto-generated method stub
+        
+    }
 }

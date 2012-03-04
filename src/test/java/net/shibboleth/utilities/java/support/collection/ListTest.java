@@ -24,9 +24,7 @@ import java.util.ListIterator;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * Generic code to to test {@link List}
- */
+/** Generic code to to test {@link List} */
 public class ListTest {
 
     private final static String [] TEST_ARRAY = {"Zero", "One", "Two", "Three"};
@@ -37,7 +35,7 @@ public class ListTest {
         testListIterator(new ArrayList<String>());
     }
     /**
-     * Test those things that distinguish the {@link List} API from the {@link Collection} one. 
+     * Test those things that distinguish the {@link List} API from the {@link java.util.Collection} one. 
      */
     public static void testListFunctions(List<String> list) {
         boolean thrown = false;

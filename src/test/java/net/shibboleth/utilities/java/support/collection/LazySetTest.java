@@ -21,32 +21,27 @@ import java.util.HashSet;
 
 import org.testng.annotations.Test;
 
-/**
- * Tests for {@Link LazySet}.
- */
+/** Tests for {@link LazySet}. */
 public class LazySetTest {
 
     /**
      * test the test method with a known Set and then with a LazySet
      */
-    @Test 
-    public void testSimple() {
+    @Test public void testSimple() {
         CollectionTest.testSimpleCollection(new LazySet<String>(), false);
     }
 
     /**
      * Test The array function.
      */
-    @Test 
-    public void testArray() {
+    @Test public void testArray() {
         CollectionTest.testArrayCollection(new LazySet<String>(), new HashSet<String>());
     }
-    
+
     /**
      * Test the iterator part of a collection.
      */
-    @Test
-    public void testIterator() {
+    @Test public void testIterator() {
         CollectionTest.testIteratorCollection(new LazySet<String>(), new HashSet<String>());
     }
 

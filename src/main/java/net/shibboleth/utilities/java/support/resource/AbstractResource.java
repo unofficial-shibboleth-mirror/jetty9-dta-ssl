@@ -61,9 +61,7 @@ public abstract class AbstractResource extends AbstractInitializableComponent im
     }
 
     /**
-     * <p>
      * Checks whether this component is valid and ready to be used.
-     * </p>
      * <p>
      * This method delegates to {@link #doValidate()} if the component is not destroyed and is initialized.
      * </p>
@@ -83,9 +81,7 @@ public abstract class AbstractResource extends AbstractInitializableComponent im
     }
 
     /**
-     * <p>
      * Checks whether the resource exists.
-     * </p>
      * <p>
      * This method delegates to {@link #doExists()} if this component is not destroyed and is initialized.
      * </p>
@@ -107,9 +103,7 @@ public abstract class AbstractResource extends AbstractInitializableComponent im
     }
 
     /**
-     * <p>
      * Gets the input stream to the resource's data.
-     * </p>
      * <p>
      * This method delegates to {@link #doGetInputStream()} if this component is not destroyed and is initialized.
      * </p>
@@ -131,9 +125,7 @@ public abstract class AbstractResource extends AbstractInitializableComponent im
     }
 
     /**
-     * <p>
      * Gets the time, in milliseconds since the epoch, when the resource was last modified.
-     * </p>
      * <p>
      * This method delegates to {@link #doGetLastModifiedTime()} if this component is not destroyed and is initialized.
      * </p>
@@ -155,12 +147,7 @@ public abstract class AbstractResource extends AbstractInitializableComponent im
     }
 
     /**
-     * <p>
      * Gets resource location information. Examples might be filesystem path, URL, etc.
-     * </p>
-     * <p>
-     * This method delegates to {@link #doGetLocation()} if this component is not destroyed and is initialized.
-     * </p>
      * 
      * @return resource location information
      */
@@ -181,7 +168,7 @@ public abstract class AbstractResource extends AbstractInitializableComponent im
      * 
      * {@inheritDoc}
      */
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (obj == null) {
             return false;
         }

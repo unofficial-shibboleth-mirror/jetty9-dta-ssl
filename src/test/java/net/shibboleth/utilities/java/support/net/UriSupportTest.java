@@ -25,7 +25,7 @@ import net.shibboleth.utilities.java.support.net.UriSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/** Unit test for {@link HttpSupport}. */
+/** Unit test for {@link UriSupport}. */
 public class UriSupportTest {
 
     @Test

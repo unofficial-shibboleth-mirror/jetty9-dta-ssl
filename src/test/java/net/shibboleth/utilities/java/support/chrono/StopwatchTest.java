@@ -33,11 +33,48 @@ public class StopwatchTest {
         watch.start();
         Assert.assertTrue(watch.isRunning());
         Assert.assertEquals(watch.elapsedTime(), 0);
+        
+        watch.start();
+        Assert.assertTrue(watch.isRunning());
+        Assert.assertEquals(watch.elapsedTime(), 0);
 
         Thread.sleep(10);
         watch.stop();
         Assert.assertFalse(watch.isRunning());
         Assert.assertTrue(watch.elapsedTime() > 0);
+
+        watch.reset();
+        Assert.assertFalse(watch.isRunning());
+        Assert.assertEquals(watch.elapsedTime(), 0);
+
+        watch.stop();
+        Assert.assertFalse(watch.isRunning());
+        Assert.assertEquals(watch.elapsedTime(), 0);
+
+        watch.start();
+        watch.reset();
+        Assert.assertFalse(watch.isRunning());
+        Assert.assertEquals(watch.elapsedTime(), 0);
+    }
+
+    @Test public void testStopStartResetWithInitialTime() throws Exception {
+        Stopwatch watch = new Stopwatch(1000);
+        Assert.assertTrue(watch.isRunning());
+        Assert.assertEquals(watch.elapsedTime(), 0);
+
+        watch.start();
+        Assert.assertTrue(watch.isRunning());
+        Assert.assertEquals(watch.elapsedTime(), 0);
+        
+        watch.start();
+        Assert.assertTrue(watch.isRunning());
+        Assert.assertEquals(watch.elapsedTime(), 0);
+
+        Thread.sleep(10);
+        watch.stop();
+        Assert.assertFalse(watch.isRunning());
+        // should be about 1010ms less than current system time
+        Assert.assertTrue(watch.elapsedTime() < System.currentTimeMillis());
 
         watch.reset();
         Assert.assertFalse(watch.isRunning());

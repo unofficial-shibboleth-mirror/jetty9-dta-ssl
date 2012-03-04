@@ -22,9 +22,7 @@ import java.util.Formatter;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * Test for {@link LazyFormattedString}
- */
+/** Test for {@link LazilyFormattedString}. */
 public class LazilyFormattedStringTest {
 
     private final static String FORMAT = "%d--%o++%x";
@@ -37,10 +35,10 @@ public class LazilyFormattedStringTest {
 
         Assert.assertEquals(testString.toString(), formatter.out().toString(),
                 "Should be the same result regardless of whether lazily or actively formatted");
-        
+
     }
 
-    @Test public void testNullFormat()  {
+    @Test public void testNullFormat() {
         Formatter formatter = new Formatter();
         Object value = new Integer(78654321);
         formatter.format(FORMAT, null, value, null, value);

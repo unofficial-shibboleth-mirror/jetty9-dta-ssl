@@ -94,7 +94,7 @@ public class Stopwatch {
         // we take the current time before checking if the watch is running just to avoid
         // an latency that might show up in that call
         long currentTime = System.currentTimeMillis();
-        if (!isRunning() && elapsedTime == 0) {
+        if (!isRunning()) {
             startTime = currentTime;
         }
     }

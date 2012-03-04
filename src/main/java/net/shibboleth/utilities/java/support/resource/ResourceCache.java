@@ -32,13 +32,14 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotLive;
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
+import net.shibboleth.utilities.java.support.component.DestructableComponent;
 import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 //TODO need to deal with expiring cached resources
 
 /** A store which can be used to cache content fetched via a {@link Resource}. */
-public interface ResourceCache {
+public interface ResourceCache extends DestructableComponent {
 
     /**
      * Determines if a cache entry exists for the resource at the given location.

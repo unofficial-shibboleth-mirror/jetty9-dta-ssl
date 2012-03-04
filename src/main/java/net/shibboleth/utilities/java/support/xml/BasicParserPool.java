@@ -37,6 +37,7 @@ import javax.xml.validation.Schema;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.AbstractDestructableInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.logic.Assert;
@@ -51,7 +52,10 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+
+//TODO(lajoie) see if we can use either java.util.concurrent or Guava classes for the pool so we don't have to manage synchronicity
 
 /**
  * A pool of JAXP 1.3 {@link DocumentBuilder}s.
@@ -135,64 +139,6 @@ public class BasicParserPool extends AbstractDestructableInitializableComponent 
         dtdValidating = false;
         xincludeAware = false;
         errorHandler = new LoggingErrorHandler(log);
-
-    }
-
-    /**
-     * Initialize the pool.
-     * @return 
-     * 
-     * @throws ComponentInitializationException thrown if pool can not be initialized, or if it is already initialized
-     * {@inheritDoc}
-     **/
-    public void doInitialize() throws ComponentInitializationException {
-        super.doInitialize();
-        try {
-            final DocumentBuilderFactory newFactory = DocumentBuilderFactory.newInstance();
-
-            for (Map.Entry<String, Object> attribute : builderAttributes.entrySet()) {
-                newFactory.setAttribute(attribute.getKey(), attribute.getValue());
-            }
-
-            for (Map.Entry<String, Boolean> feature : builderFeatures.entrySet()) {
-                if (feature.getKey() != null) {
-                    newFactory.setFeature(feature.getKey(), feature.getValue().booleanValue());
-                }
-            }
-
-            newFactory.setCoalescing(coalescing);
-            newFactory.setExpandEntityReferences(expandEntityReferences);
-            newFactory.setIgnoringComments(ignoreComments);
-            newFactory.setIgnoringElementContentWhitespace(ignoreElementContentWhitespace);
-            newFactory.setNamespaceAware(namespaceAware);
-            newFactory.setSchema(schema);
-            newFactory.setValidating(dtdValidating);
-            newFactory.setXIncludeAware(xincludeAware);
-
-            builderFactory = newFactory;
-
-        } catch (ParserConfigurationException e) {
-            throw new ComponentInitializationException("Unable to configure builder factory", e);
-        }
-    }
-    
-    /** {@inheritDoc} */
-    public void doDestroy() {
-        builderPool.clear();
-        super.doDestroy();
-    }
-
-    /** Helper method to test class state. */
-    private void checkInitializedNotDestroyed() {
-        ifNotInitializedThrowUninitializedComponentException();
-        ifDestroyedThrowDestroyedComponentException();
-    }
-
-    /** Helper method to test class state.
-     */
-    private void checkNotInitializedNotDestroyed() {
-        ifInitializedThrowUnmodifiabledComponentException();
-        ifDestroyedThrowDestroyedComponentException();
     }
 
     /** {@inheritDoc} */
@@ -327,7 +273,8 @@ public class BasicParserPool extends AbstractDestructableInitializableComponent 
      */
     public synchronized void setMaxPoolSize(final int newSize) {
         checkNotInitializedNotDestroyed();
-        maxPoolSize = newSize;
+
+        maxPoolSize = (int) Assert.isGreaterThan(0, newSize, "New maximum pool size must be greater than 0");
     }
 
     /**
@@ -390,6 +337,7 @@ public class BasicParserPool extends AbstractDestructableInitializableComponent 
      */
     public synchronized void setExpandEntityReferences(final boolean expand) {
         checkNotInitializedNotDestroyed();
+
         expandEntityReferences = expand;
     }
 
@@ -398,8 +346,8 @@ public class BasicParserPool extends AbstractDestructableInitializableComponent 
      * 
      * @return the builders' features
      */
-    @Nonnull @NonnullElements public Map<String, Boolean> getBuilderFeatures() {
-        return Collections.unmodifiableMap(builderFeatures);
+    @Nonnull @NonnullElements @Unmodifiable public Map<String, Boolean> getBuilderFeatures() {
+        return builderFeatures;
     }
 
     /**
@@ -413,7 +361,7 @@ public class BasicParserPool extends AbstractDestructableInitializableComponent 
         if (newFeatures == null) {
             builderFeatures = Collections.emptyMap();
         } else {
-            builderFeatures = new HashMap<String, Boolean>(Maps.filterKeys(newFeatures, Predicates.notNull()));
+            builderFeatures = ImmutableMap.copyOf(Maps.filterKeys(newFeatures, Predicates.notNull()));
         }
     }
 
@@ -453,7 +401,7 @@ public class BasicParserPool extends AbstractDestructableInitializableComponent 
      */
     public synchronized void setIgnoreElementContentWhitespace(final boolean ignore) {
         checkNotInitializedNotDestroyed();
-        
+
         ignoreElementContentWhitespace = ignore;
     }
 
@@ -477,17 +425,23 @@ public class BasicParserPool extends AbstractDestructableInitializableComponent 
         namespaceAware = isNamespaceAware;
     }
 
-    /** {@inheritDoc} */
-    @NullableElements public Schema getSchema() {
+    /**
+     * Gets the schema used to validate the XML document during the parsing process.
+     * 
+     * @return schema used to validate the XML document during the parsing process
+     */
+    @Nullable public Schema getSchema() {
         return schema;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Sets the schema used to validate the XML document during the parsing process.
+     * 
+     * @param newSchema schema used to validate the XML document during the parsing process
+     */
     public synchronized void setSchema(@Nullable final Schema newSchema) {
         checkNotInitializedNotDestroyed();
 
-        // Note this method is also synchronized because it is more than just an atomic assignment.
-        // Don't want inconsistent data in the factory via initializeFactory(), also synchronized.
         schema = newSchema;
         if (schema != null) {
             setNamespaceAware(true);
@@ -552,7 +506,7 @@ public class BasicParserPool extends AbstractDestructableInitializableComponent 
      * 
      * @throws XMLParserException thrown if their is a configuration error with the builder factory
      */
-    protected DocumentBuilder createBuilder() throws XMLParserException {
+    @Nonnull protected DocumentBuilder createBuilder() throws XMLParserException {
         checkInitializedNotDestroyed();
 
         try {
@@ -574,8 +528,62 @@ public class BasicParserPool extends AbstractDestructableInitializableComponent 
     }
 
     /**
-     * A proxy that prevents the manages document builders retrieved from the parser pool.
+     * Initialize the pool.
+     * 
+     * @throws ComponentInitializationException thrown if pool can not be initialized, or if it is already initialized
+     *             {@inheritDoc}
      */
+    protected void doInitialize() throws ComponentInitializationException {
+        super.doInitialize();
+
+        try {
+            final DocumentBuilderFactory newFactory = DocumentBuilderFactory.newInstance();
+
+            for (Map.Entry<String, Object> attribute : builderAttributes.entrySet()) {
+                newFactory.setAttribute(attribute.getKey(), attribute.getValue());
+            }
+
+            for (Map.Entry<String, Boolean> feature : builderFeatures.entrySet()) {
+                if (feature.getKey() != null) {
+                    newFactory.setFeature(feature.getKey(), feature.getValue().booleanValue());
+                }
+            }
+
+            newFactory.setCoalescing(coalescing);
+            newFactory.setExpandEntityReferences(expandEntityReferences);
+            newFactory.setIgnoringComments(ignoreComments);
+            newFactory.setIgnoringElementContentWhitespace(ignoreElementContentWhitespace);
+            newFactory.setNamespaceAware(namespaceAware);
+            newFactory.setSchema(schema);
+            newFactory.setValidating(dtdValidating);
+            newFactory.setXIncludeAware(xincludeAware);
+
+            builderFactory = newFactory;
+
+        } catch (ParserConfigurationException e) {
+            throw new ComponentInitializationException("Unable to configure builder factory", e);
+        }
+    }
+
+    /** {@inheritDoc} */
+    protected void doDestroy() {
+        builderPool.clear();
+        super.doDestroy();
+    }
+
+    /** Helper method to test class state. */
+    private void checkInitializedNotDestroyed() {
+        ifNotInitializedThrowUninitializedComponentException();
+        ifDestroyedThrowDestroyedComponentException();
+    }
+
+    /** Helper method to test class state. */
+    private void checkNotInitializedNotDestroyed() {
+        ifInitializedThrowUnmodifiabledComponentException();
+        ifDestroyedThrowDestroyedComponentException();
+    }
+
+    /** A proxy that prevents the manages document builders retrieved from the parser pool. */
     protected class DocumentBuilderProxy extends DocumentBuilder {
 
         /** Builder being proxied. */

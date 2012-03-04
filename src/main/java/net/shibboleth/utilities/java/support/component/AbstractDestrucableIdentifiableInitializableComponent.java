@@ -38,7 +38,11 @@ public abstract class AbstractDestrucableIdentifiableInitializableComponent exte
         return id;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Sets the ID of this component.
+     * 
+     * @param componentId ID of the component
+     */
     protected synchronized void setId(@Nonnull @NotEmpty String componentId) {
         ifInitializedThrowUnmodifiabledComponentException(id);
         ifDestroyedThrowDestroyedComponentException(id);

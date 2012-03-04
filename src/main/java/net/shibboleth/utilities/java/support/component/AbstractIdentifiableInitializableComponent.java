@@ -17,6 +17,9 @@
 
 package net.shibboleth.utilities.java.support.component;
 
+import javax.annotation.Nonnull;
+
+import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
@@ -37,8 +40,12 @@ public abstract class AbstractIdentifiableInitializableComponent extends Abstrac
         return id;
     }
 
-    /** {@inheritDoc} */
-    protected synchronized void setId(final String componentId) {
+    /**
+     * Sets the ID of this component.
+     * 
+     * @param componentId ID of the component
+     */
+    protected synchronized void setId(@Nonnull @NotEmpty final String componentId) {
         if (isInitialized()) {
             return;
         }

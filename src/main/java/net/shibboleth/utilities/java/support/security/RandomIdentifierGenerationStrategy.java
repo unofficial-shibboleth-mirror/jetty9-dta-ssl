@@ -32,7 +32,7 @@ import org.apache.commons.codec.binary.StringUtils;
 
 /**
  * Generates a random number of bytes via a {@link Random} source and encodes them into a string using a
- * {@link ByteBlockEncoder}.
+ * {@link BinaryEncoder} ({@link Hex} by default).
  */
 public class RandomIdentifierGenerationStrategy implements IdentifierGenerationStrategy {
 
@@ -47,7 +47,7 @@ public class RandomIdentifierGenerationStrategy implements IdentifierGenerationS
 
     /**
      * Constructor. Initializes the random number source to a new {@link SecureRandom}, size of identifier is set to 16
-     * bytes, and the encoder is set to a {@link HexEncoder}.
+     * bytes, and the encoder is set to a {@link Hex}.
      */
     public RandomIdentifierGenerationStrategy() {
         try {
@@ -61,7 +61,7 @@ public class RandomIdentifierGenerationStrategy implements IdentifierGenerationS
 
     /**
      * Constructor. Initializes the random number source to a new {@link SecureRandom} and the encoder is set to a
-     * {@link HexEncoder}.
+     * {@link Hex}.
      * 
      * @param identifierSize number of random bytes in identifier
      */

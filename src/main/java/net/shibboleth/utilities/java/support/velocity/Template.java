@@ -40,11 +40,13 @@ import com.google.common.base.Objects;
 
 /**
  * This is a helper class that wraps a velocity engine and template information into a single object. It provides
- * methods, {@link #fromTemplate()}, for evaluating literal templates as well as named templates. It also ensures that
- * the given {@link VelocityEngine} is configured in such a way as to be able to use the literal or named template.
- * Note, this check occurs only at {@link Template} construction time so, if you're loading a named template from a file
- * and that file disappears before calling {@link #merge()} you'll still end up getting a
- * {@link org.apache.velocity.exception.ResourceNotFoundException}.
+ * methods, {@link #fromTemplate(VelocityEngine, String)} and {@link #fromTemplate(VelocityEngine, String, Charset)},
+ * for evaluating literal templates and {@link #fromTemplateName(VelocityEngine, String)} and
+ * {@link #fromTemplateName(VelocityEngine, String, Charset)} for evaluating templates referenced by name. It also
+ * ensures that the given {@link VelocityEngine} is configured in such a way as to be able to use the literal or named
+ * template. Note, this check occurs only at {@link Template} construction time so, if you're loading a named template
+ * from a file and that file disappears before calling {@link #merge(Context)} or {@link #merge(Context, Writer)} you'll
+ * still end up getting a {@link org.apache.velocity.exception.ResourceNotFoundException}.
  */
 public final class Template {
 
@@ -85,7 +87,8 @@ public final class Template {
      * 
      * @param engine engine that will be used to evaluate the template
      * @param template the literal Velocity template, <strong>NOT</strong> a template name see
-     *            {@link #fromTemplateName()} for that
+     *            {@link #fromTemplateName(VelocityEngine, String)} and
+     *            {@link #fromTemplateName(VelocityEngine, String, Charset)} for that
      * 
      * @return an instance of this class that can be used to evaluate the given template using the given engine
      * 
@@ -104,13 +107,15 @@ public final class Template {
      * template string being loaded in to the {@link StringResourceRepository} (each under its own unique ID).
      * 
      * <p>
-     * <strong>NOTE</strong>, in oder for subsequent calls to {@link #merge()} to be successful, the given
-     * {@link VelocityEngine} must be configured to look up templates from the {@link StringResourceLoader}.
+     * <strong>NOTE</strong>, in oder for subsequent calls to {@link #merge(Context)} or {@link #merge(Context, Writer)}
+     * to be successful, the given {@link VelocityEngine} must be configured to look up templates from the
+     * {@link StringResourceLoader}.
      * </p>
      * 
      * @param engine engine that will be used to evaluate the template
      * @param template the literal Velocity template, <strong>NOT</strong> a template name see
-     *            {@link #fromTemplateName()} for that
+     *            {@link #fromTemplateName(VelocityEngine, String)} or
+     *            {@link #fromTemplateName(VelocityEngine, String, Charset)} for that
      * @param encoding the encoding used by the template
      * 
      * @return an instance of this class that can be used to evaluate the given template using the given engine

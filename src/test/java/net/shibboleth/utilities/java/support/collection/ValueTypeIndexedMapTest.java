@@ -25,17 +25,14 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-/**
- * Tests the ValueTypeIndexedMap.
- */
+/** {@link ValueTypeIndexedMap} unit test. */
 public class ValueTypeIndexedMapTest {
 
     /** Instance used for testing. */
     private ValueTypeIndexedMap<String, Object> map;
 
-    /** {@inheritDoc} */
-    @BeforeMethod
-    public void setUp() {
+    /** Set up state for this test. */
+    @BeforeMethod public void setUp() {
         map = new ValueTypeIndexedMap<String, Object>();
         map.setTypes(Arrays.asList(new Class[] {Integer.class, String.class}));
         map.rebuildIndex();
@@ -44,8 +41,7 @@ public class ValueTypeIndexedMapTest {
     /**
      * Test basic functionality.
      */
-    @Test
-    public void testBasic() {
+    @Test public void testBasic() {
         map.put("i1", Integer.parseInt("4"));
         map.put("s1", "first string");
         map.put("s2", "second string");
@@ -63,8 +59,7 @@ public class ValueTypeIndexedMapTest {
     /**
      * Test null key support.
      */
-    @Test
-    public void testNullKeys() {
+    @Test public void testNullKeys() {
         map.put("i1", Integer.parseInt("2"));
         map.put(null, Integer.parseInt("3"));
         map.put("s1", "first string");
@@ -86,8 +81,7 @@ public class ValueTypeIndexedMapTest {
     /**
      * Test null value support.
      */
-    @Test
-    public void testNullValues() {
+    @Test public void testNullValues() {
         map.getTypes().add(null);
         map.rebuildIndex();
 
@@ -112,31 +106,30 @@ public class ValueTypeIndexedMapTest {
         Assert.assertEquals(map.subMap(String.class).size(), 1);
         Assert.assertEquals(map.subMap(null).size(), 2);
     }
-    
+
     /* Test equals and hashcode */
-    @Test
-    public void testEqualsHashCode() {
+    @Test public void testEqualsHashCode() {
         ValueTypeIndexedMap<String, Object> other = new ValueTypeIndexedMap<String, Object>();
         other.setTypes(Arrays.asList(new Class[] {Integer.class}));
         other.rebuildIndex();
 
         Assert.assertEquals(map, other, "Empty maps should be the same");
         Assert.assertEquals(map.hashCode(), other.hashCode(), "Empty maps have same hash code");
-        
+
         map.put("i1", Integer.parseInt("4"));
         map.put("s1", "first string");
         map.put("s2", "second string");
         other.put("i1", Integer.parseInt("4"));
-        
-        Assert.assertNotSame(map,  other, "Different maps should differ");
-        Assert.assertNotSame(map.hashCode(),  other.hashCode(), "Different maps should have different hash codes");
-        
+
+        Assert.assertNotSame(map, other, "Different maps should differ");
+        Assert.assertNotSame(map.hashCode(), other.hashCode(), "Different maps should have different hash codes");
+
         map.remove("s1");
         other.put("s2", "second string");
-        
-        Assert.assertEquals(map,  other, "Similar maps should be equals");
-        Assert.assertEquals(map.hashCode(),  other.hashCode(), "Similar maps should have the same hash codes");
-        
+
+        Assert.assertEquals(map, other, "Similar maps should be equals");
+        Assert.assertEquals(map.hashCode(), other.hashCode(), "Similar maps should have the same hash codes");
+
     }
 
 }
