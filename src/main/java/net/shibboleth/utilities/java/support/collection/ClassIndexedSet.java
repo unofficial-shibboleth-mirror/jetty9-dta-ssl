@@ -91,12 +91,13 @@ public class ClassIndexedSet<T> extends AbstractSet<T> implements Set<T> {
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("unchecked") public boolean remove(@Nullable final Object o) {
+    public boolean remove(@Nullable final Object o) {
         if (o != null && set.contains(o)) {
             removeFromIndex((T) o);
             set.remove(o);
             return true;
         }
+        
         return false;
     }
 

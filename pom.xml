@@ -31,7 +31,7 @@
             <artifactId>guava</artifactId>
         </dependency>
         <dependency>
-            <!-- Required if you're using the HttpResource or HttpClientBuilder -->
+            <!-- Required if you're using anything in the httpclient package -->
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <optional>true</optional>

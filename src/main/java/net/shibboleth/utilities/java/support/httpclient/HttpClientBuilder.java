@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package net.shibboleth.utilities.java.support.net;
+package net.shibboleth.utilities.java.support.httpclient;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -73,8 +73,12 @@ public class HttpClientBuilder {
     /** Whether the SSL certificates used by the responder should be ignored. Default value: false */
     private boolean connectionDisregardSslCertificate;
 
+    /** Whether to instruct the server to close the connection after it has sent its response. Default value: true */
+    private boolean connectionCloseAfterResponse;
+
     /**
-     * Whether to check a connection for staleness before using. This can be an expensive operation. Default value: true
+     * Whether to check a connection for staleness before using. This can be an expensive operation. Default value:
+     * false
      */
     private boolean connectionStalecheck;
 
@@ -114,7 +118,8 @@ public class HttpClientBuilder {
         socketBufferSize = 8192;
         connectionTimeout = 5000;
         connectionDisregardSslCertificate = false;
-        connectionStalecheck = true;
+        connectionCloseAfterResponse = true;
+        connectionStalecheck = false;
         connectionsMaxTotal = 20;
         connectionsMaxPerRoute = 2;
         connectionProxyHost = null;
@@ -231,6 +236,24 @@ public class HttpClientBuilder {
     }
 
     /**
+     * Gets whether to instruct the server to close the connection after it has sent its response.
+     * 
+     * @return whether to instruct the server to close the connection after it has sent its response
+     */
+    public boolean isConnectionCloseAfterResponse() {
+        return connectionCloseAfterResponse;
+    }
+
+    /**
+     * Sets whether to instruct the server to close the connection after it has sent its response.
+     * 
+     * @param close whether to instruct the server to close the connection after it has sent its response
+     */
+    public void setConnectionCloseAfterResponse(boolean close) {
+        connectionCloseAfterResponse = close;
+    }
+
+    /**
      * Gets whether reused connections are checked if they are closed before being used by the client.
      * 
      * @return whether reused connections are checked if they are closed before being used by the client
@@ -321,7 +344,7 @@ public class HttpClientBuilder {
      * 
      * @param port port of the default proxy used when making connection; must be greater than 0 and less than 65536
      */
-    public void setConnectionProxyPort(final int port) {        
+    public void setConnectionProxyPort(final int port) {
         connectionProxyPort =
                 (int) Assert
                         .numberInRangeExclusive(0, 65536, port, "Proxy port must be between 0 and 65536, exclusive");
@@ -406,7 +429,12 @@ public class HttpClientBuilder {
      */
     public HttpClient buildClient() {
         final DefaultHttpClient client = new DefaultHttpClient(buildConnectionManager());
+
         client.addRequestInterceptor(new RequestAcceptEncoding());
+        if (connectionCloseAfterResponse) {
+            client.addRequestInterceptor(new RequestConnectionClose());
+        }
+
         client.addResponseInterceptor(new ResponseContentEncoding());
 
         final HttpParams httpParams = client.getParams();
@@ -505,4 +533,5 @@ public class HttpClientBuilder {
 
         return registry;
     }
+
 }

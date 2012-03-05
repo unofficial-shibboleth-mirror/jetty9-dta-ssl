@@ -35,14 +35,12 @@ public class ClassIndexedSetTest {
     /** Set to use as target for tests. */
     private ClassIndexedSet<Member> memberSet;
 
-    @BeforeMethod
-    protected void setUp() throws Exception {
+    @BeforeMethod protected void setUp() throws Exception {
         memberSet = new ClassIndexedSet<Member>();
     }
 
     /** Test failure of adding a duplicate instance. */
-    @Test
-    public void testDupInstance() {
+    @Test public void testDupInstance() {
         A memberA = new A("owner");
         memberSet.add(memberA);
 
@@ -55,8 +53,7 @@ public class ClassIndexedSetTest {
     }
 
     /** Test failure of adding a duplicate member type. */
-    @Test
-    public void testDupType() {
+    @Test public void testDupType() {
         A memberA1 = new A("owner");
         A memberA2 = new A("owner#2");
         memberSet.add(memberA1);
@@ -70,8 +67,7 @@ public class ClassIndexedSetTest {
     }
 
     /** Test success of adding a duplicate member type with replacement. */
-    @Test
-    public void testDupTypeWithReplacement() {
+    @Test public void testDupTypeWithReplacement() {
         A memberA1 = new A("owner");
         A memberA2 = new A("owner#2");
         memberSet.add(memberA1);
@@ -90,8 +86,7 @@ public class ClassIndexedSetTest {
     /**
      * Test getting member instance from set by type.
      */
-    @Test
-    public void testGetType() {
+    @Test public void testGetType() {
         A memberA = new A("owner");
         memberSet.add(memberA);
         B memberB = new B("algorithm");
@@ -103,27 +98,39 @@ public class ClassIndexedSetTest {
     }
 
     /** Tests removing member from set by instance. */
-    @Test
-    public void testRemove() {
+    @Test public void testRemove() {
         A memberA = new A("owner");
         memberSet.add(memberA);
         B memberB = new B("algorithm");
         memberSet.add(memberB);
 
         Assert.assertEquals(memberSet.size(), 2, "Set had unexpected size");
-
+        Assert.assertTrue(memberSet.contains(A.class));
+        Assert.assertTrue(memberSet.contains(B.class));
+        
         memberSet.remove(memberB);
         Assert.assertEquals(memberSet.size(), 1, "Set had unexpected size");
+        Assert.assertTrue(memberSet.contains(A.class));
         Assert.assertNull(memberSet.get(B.class), "Set returned removed value");
 
+        memberSet.remove(null);
+        Assert.assertEquals(memberSet.size(), 1, "Set had unexpected size");
+        Assert.assertTrue(memberSet.contains(A.class));
+        Assert.assertNull(memberSet.get(B.class), "Set returned removed value");
+        
+        memberSet.remove(new C("foo"));
+        Assert.assertEquals(memberSet.size(), 1, "Set had unexpected size");
+        Assert.assertTrue(memberSet.contains(A.class));
+        Assert.assertNull(memberSet.get(B.class), "Set returned removed value");
+        
         memberSet.remove(memberA);
         Assert.assertEquals(memberSet.size(), 0, "Set had unexpected size");
         Assert.assertNull(memberSet.get(A.class), "Set returned removed value");
+        Assert.assertNull(memberSet.get(B.class), "Set returned removed value");
     }
 
     /** Tests clearing the set. */
-    @Test
-    public void testClear() {
+    @Test public void testClear() {
         A memberA = new A("owner");
         memberSet.add(memberA);
         B memberB = new B("algorithm");
@@ -139,8 +146,7 @@ public class ClassIndexedSetTest {
     }
 
     /** Tests proper iterator iterating behavior. */
-    @Test
-    public void testIterator() {
+    @Test public void testIterator() {
         A memberA = new A("owner");
         memberSet.add(memberA);
         B memberB = new B("algorithm");
@@ -176,8 +182,7 @@ public class ClassIndexedSetTest {
     }
 
     /** Tests proper iterator remove() behavior. */
-    @Test
-    public void testIteratorRemove() {
+    @Test public void testIteratorRemove() {
         memberSet = new ClassIndexedSet<Member>();
         A memberA = new A("owner");
         memberSet.add(memberA);
@@ -212,8 +217,7 @@ public class ClassIndexedSetTest {
     }
 
     /** Tests proper iterator remove() behavior when called illegally. */
-    @Test
-    public void testIteratorRemoveIllegal() {
+    @Test public void testIteratorRemoveIllegal() {
         memberSet = new ClassIndexedSet<Member>();
         A memberA = new A("owner");
         memberSet.add(memberA);
@@ -244,9 +248,8 @@ public class ClassIndexedSetTest {
             // do nothing, should fail
         }
     }
-    
-    @Test
-    public void testEqualsHash() {
+
+    @Test public void testEqualsHash() {
         memberSet = new ClassIndexedSet<Member>();
         ClassIndexedSet<Member> other = new ClassIndexedSet<Member>();
         Assert.assertEquals(memberSet, other, "Empty sets are equal");
@@ -258,7 +261,7 @@ public class ClassIndexedSetTest {
         memberSet.add(memberA);
         Assert.assertNotSame(memberSet, other, "Different sets should differ");
         Assert.assertNotSame(memberSet.hashCode(), other.hashCode(), "Different sets should have different hashes ");
-        
+
         other.add(memberA);
         other.add(memberB);
         Assert.assertEquals(memberSet, other, "Equal sets are equal");

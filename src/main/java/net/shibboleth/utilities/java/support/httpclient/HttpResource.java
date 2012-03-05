@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package net.shibboleth.utilities.java.support.net;
+package net.shibboleth.utilities.java.support.httpclient;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -15,13 +15,15 @@
  * limitations under the License.
  */
 
-package net.shibboleth.utilities.java.support.net;
+package net.shibboleth.utilities.java.support.httpclient;
 
 import java.io.File;
 import java.io.InputStream;
 
 import net.shibboleth.utilities.java.support.component.DestroyedComponentException;
 import net.shibboleth.utilities.java.support.component.UninitializedComponentException;
+import net.shibboleth.utilities.java.support.httpclient.HttpClientBuilder;
+import net.shibboleth.utilities.java.support.httpclient.HttpResource;
 import net.shibboleth.utilities.java.support.resource.ResourceException;
 
 import org.apache.http.client.HttpClient;

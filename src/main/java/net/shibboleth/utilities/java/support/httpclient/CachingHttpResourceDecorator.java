@@ -15,14 +15,14 @@
  * limitations under the License.
  */
 
-package net.shibboleth.utilities.java.support.net;
+package net.shibboleth.utilities.java.support.httpclient;
 
 import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import net.shibboleth.utilities.java.support.net.HttpResource.HttpGetCustomizationStrategy;
-import net.shibboleth.utilities.java.support.net.HttpResource.HttpResponseCustomizationStrategy;
+import net.shibboleth.utilities.java.support.httpclient.HttpResource.HttpGetCustomizationStrategy;
+import net.shibboleth.utilities.java.support.httpclient.HttpResource.HttpResponseCustomizationStrategy;
 import net.shibboleth.utilities.java.support.resource.CachingResourceDecorator;
 import net.shibboleth.utilities.java.support.resource.ResourceCache;
 import net.shibboleth.utilities.java.support.resource.ResourceCache.CachedResource;
