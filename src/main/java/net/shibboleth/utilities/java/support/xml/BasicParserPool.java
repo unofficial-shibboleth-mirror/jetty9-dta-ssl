@@ -40,6 +40,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NullableEleme
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.AbstractDestructableInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Assert;
 
 import org.slf4j.Logger;
@@ -573,14 +574,14 @@ public class BasicParserPool extends AbstractDestructableInitializableComponent 
 
     /** Helper method to test class state. */
     private void checkInitializedNotDestroyed() {
-        ifNotInitializedThrowUninitializedComponentException();
-        ifDestroyedThrowDestroyedComponentException();
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
     }
 
     /** Helper method to test class state. */
     private void checkNotInitializedNotDestroyed() {
-        ifInitializedThrowUnmodifiabledComponentException();
-        ifDestroyedThrowDestroyedComponentException();
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
     }
 
     /** A proxy that prevents the manages document builders retrieved from the parser pool. */

@@ -17,7 +17,10 @@
 
 package net.shibboleth.utilities.java.support.component;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /** Support class for working with {@link Component} objects. */
 public final class ComponentSupport {
@@ -75,6 +78,71 @@ public final class ComponentSupport {
 
         if (obj instanceof ValidatableComponent) {
             ((ValidatableComponent) obj).validate();
+        }
+    }
+
+    /**
+     * Checks if a component is destroyed and, if so, throws a {@link DestroyedComponentException}. If the component is
+     * also an instance of {@link IdentifiableComponent}, the component's ID is included in the error message.
+     * 
+     * @param component component to check
+     */
+    public static void ifDestroyedThrowDestroyedComponentException(@Nonnull DestructableComponent component) {
+        assert component != null : "Component can not be null";
+
+        if (component.isDestroyed()) {
+            if (component instanceof IdentifiableComponent) {
+                throw new DestroyedComponentException("Component '"
+                        + StringSupport.trimOrNull(((IdentifiableComponent) component).getId())
+                        + "' has already been destroyed and can no longer be used.");
+            } else {
+                throw new DestroyedComponentException("Component has already been destroy and can no longer be used");
+            }
+        }
+
+    }
+
+    /**
+     * Checks if a component has not been initialized and, if so, throws a {@link UninitializedComponentException}. If
+     * the component is also an instance of {@link IdentifiableComponent}, the component's ID is included in the error
+     * message.
+     * 
+     * @param component component to check
+     */
+    public static void ifNotInitializedThrowUninitializedComponentException(@Nonnull InitializableComponent component) {
+        assert component != null : "Component can not be null";
+
+        if (!component.isInitialized()) {
+            if (component instanceof IdentifiableComponent) {
+                throw new UninitializedComponentException("Component '"
+                        + StringSupport.trimOrNull(((IdentifiableComponent) component).getId())
+                        + "' has not yet been initialized and so can not be used.");
+            } else {
+                throw new UninitializedComponentException(
+                        "Component has not yet been initialized and so can not be used.");
+            }
+        }
+    }
+
+    /**
+     * Checks if a component has been initialized and, if so, throws a {@link UnmodifiableComponentException}. If the
+     * component is also an instance of {@link IdentifiableComponent}, the component's ID is included in the error
+     * message.
+     * 
+     * @param component component to check
+     */
+    public static void ifInitializedThrowUnmodifiabledComponentException(@Nullable InitializableComponent component) {
+        assert component != null : "Component can not be null";
+
+        if (component.isInitialized()) {
+            if (component instanceof IdentifiableComponent) {
+                throw new UnmodifiableComponentException("Component '"
+                        + StringSupport.trimOrNull(((IdentifiableComponent) component).getId())
+                        + "' has already been initialized and so can no longer be modified");
+            } else {
+                throw new UnmodifiableComponentException(
+                        "Component has already been initialized and so can no longer be modified");
+            }
         }
     }
 }

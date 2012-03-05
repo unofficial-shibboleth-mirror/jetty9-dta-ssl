@@ -37,15 +37,6 @@ public abstract class AbstractInitializableComponent implements InitializableCom
         doInitialize();
         isInitialized = true;
     }
-    
-    /** 
-     * Checks if this component has been initialized and, if not, throws an {@link UninitializedComponentException}. 
-     */
-    protected void checkInitialized(){
-        if(!isInitialized){
-            throw new UninitializedComponentException();
-        }
-    }
 
     /**
      * Performs the initialization of the component. This method is executed within the lock on the object being

@@ -20,37 +20,33 @@ package net.shibboleth.utilities.java.support.component;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * Test for {@link AbstractInitializableComponent}
- */
-public class AbstractInitializableComponentTest {
+/** {@link AbstractDestructableInitializableComponent} unit test. */
+public class AbstractDestructableInitializableComponentTest {
 
-    /** Tests initializing the component. */
     @Test public void testInitialization() throws Exception {
         MockComponent component = new MockComponent();
         Assert.assertFalse(component.isInitialized());
-        Assert.assertEquals(component.getInitCount(), 0);
 
         component.initialize();
         Assert.assertTrue(component.isInitialized());
-        Assert.assertEquals(component.getInitCount(), 1);
 
         component.initialize();
         Assert.assertTrue(component.isInitialized());
-        Assert.assertEquals(component.getInitCount(), 1);
     }
-    
-    public class MockComponent extends AbstractInitializableComponent {
-        private int initCount;
-        
-        protected int getInitCount() {
-            return initCount;
-        }
-        
-        /** {@inheritDoc} */
-        protected void doInitialize() throws ComponentInitializationException {
-            initCount++;
-            super.doInitialize();
-        }
+
+    @Test public void testDestruction() {
+        MockComponent component = new MockComponent();
+        Assert.assertFalse(component.isDestroyed());
+
+        component.destroy();
+        Assert.assertTrue(component.isDestroyed());
+
+        component.destroy();
+        Assert.assertTrue(component.isDestroyed());
+    }
+
+    /** Mock component. */
+    private class MockComponent extends AbstractDestructableInitializableComponent {
+
     }
 }

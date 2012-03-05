@@ -20,37 +20,42 @@ package net.shibboleth.utilities.java.support.component;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * Test for {@link AbstractInitializableComponent}
- */
-public class AbstractInitializableComponentTest {
+/** {@link AbstractDestrucableIdentifiableInitializableComponent} unit test. */
+public class AbstractDestrucableIdentifiableInitializableComponentTest {
 
-    /** Tests initializing the component. */
-    @Test public void testInitialization() throws Exception {
+    @Test public void testId() throws Exception {
         MockComponent component = new MockComponent();
-        Assert.assertFalse(component.isInitialized());
-        Assert.assertEquals(component.getInitCount(), 0);
-
+        
+        Assert.assertNull(component.getId());
+        
+        component.setId("foo");
+        Assert.assertEquals(component.getId(), "foo");
+        
         component.initialize();
-        Assert.assertTrue(component.isInitialized());
-        Assert.assertEquals(component.getInitCount(), 1);
-
-        component.initialize();
-        Assert.assertTrue(component.isInitialized());
-        Assert.assertEquals(component.getInitCount(), 1);
+        try{
+            component.setId("bar");
+            Assert.fail();
+        }catch(UnmodifiableComponentException e){
+            //expected this
+        }
+        Assert.assertEquals(component.getId(), "foo");
+        
+        component = new MockComponent();
+        component.destroy();
+        try{
+            component.setId("bar");
+            Assert.fail();
+        }catch(DestroyedComponentException e){
+            //expected this
+        }
     }
     
-    public class MockComponent extends AbstractInitializableComponent {
-        private int initCount;
-        
-        protected int getInitCount() {
-            return initCount;
-        }
+    /** A mock component. */
+    private class MockComponent extends AbstractDestrucableIdentifiableInitializableComponent{
         
         /** {@inheritDoc} */
-        protected void doInitialize() throws ComponentInitializationException {
-            initCount++;
-            super.doInitialize();
+        public synchronized void setId(String componentId) {
+            super.setId(componentId);
         }
     }
 }

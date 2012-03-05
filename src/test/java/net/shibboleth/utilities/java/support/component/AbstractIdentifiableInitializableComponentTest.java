@@ -18,99 +18,64 @@
 package net.shibboleth.utilities.java.support.component;
 
 import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-/**
- * Test for {@link AbstractIdentifiableInitializableComponent}
- */
+/** Test for {@link AbstractIdentifiableInitializableComponent}. */
 public class AbstractIdentifiableInitializableComponentTest {
 
-    private static final String STRING1 = "s1";
-
-    private static final String STRING2 = "string2";
-
-    private static final String STRING3 = "Three String";
-
-    private MyComponent component;
-
-    @BeforeMethod public void setup() {
-        component = new MyComponent();
-    }
-
-    @Test public void testNullAssignment() {
+    /** Test setting and retrieving the component's ID. */
+    @Test public void testId() throws Exception {
+        MockComponent component = new MockComponent();
         Assert.assertNull(component.getId());
-        boolean thrown = false;
+
         try {
             component.setId(null);
+            Assert.fail();
         } catch (AssertionError e) {
-            thrown = true;
+            // expected this
         }
-        Assert.assertTrue(thrown, "Setting a null ID should throw");
 
-        thrown = false;
         try {
             component.setId("");
+            Assert.fail();
         } catch (AssertionError e) {
-            thrown = true;
+            // expected this
         }
-        Assert.assertTrue(thrown, "Setting en empty ID should throw");
-    }
 
-    @Test public void abstractIdentifiableInitializableComponentTest() throws ComponentInitializationException {
-
-        Assert.assertFalse(component.isInitialized(), "New Component should not be initialized");
-        Assert.assertEquals(component.getInitCount(), 0, "New Component should have zero init count");
-
-        Assert.assertNull(component.getId());
-        boolean thrown = false;
         try {
-            component.setId(null);
+            component.setId("  ");
+            Assert.fail();
         } catch (AssertionError e) {
-            thrown = true;
+            // expected this
         }
-        Assert.assertTrue(thrown, "Setting a null ID should throw");
 
-        thrown = false;
-        try {
-            component.setId("");
-        } catch (AssertionError e) {
-            thrown = true;
-        }
-        Assert.assertTrue(thrown, "Setting en empty ID should throw");
-
-        component.setId(STRING1);
-        Assert.assertEquals(component.getId(), STRING1, "Should be what was set");
-        component.setId(STRING2);
-        Assert.assertNotSame(component.getId(), STRING1, "Should not be what was originally set");
-        Assert.assertEquals(component.getId(), STRING2, "Should be what was set");
+        component.setId(" foo ");
+        Assert.assertEquals(component.getId(), "foo");
 
         component.initialize();
-        Assert.assertTrue(component.isInitialized(), "Initialized Component should show initialized");
-        Assert.assertEquals(component.getInitCount(), 1, "Initialized Component should have init count of 1");
+        Assert.assertEquals(component.getId(), "foo");
 
-        component.initialize();
-        Assert.assertTrue(component.isInitialized(), "ReInitialized Component should show initialized");
-        Assert.assertEquals(component.getInitCount(), 1, "ReInitialized Component should have init count of 1");
-
-        component.setId(STRING3);
-        Assert.assertNotSame(component.getId(), STRING1, "Should not be what was originally set");
-        Assert.assertNotSame(component.getId(), STRING3, "Should not be what was set after initialized");
-        Assert.assertEquals(component.getId(), STRING2, "Should be what was set in last set before init");
-
+        component.setId("bar");
+        Assert.assertEquals(component.getId(), "foo");
     }
 
-    private class MyComponent extends AbstractIdentifiableInitializableComponent {
-        private int initCount;
+    /** Tests initializing the component. */
+    @Test public void testInitialization() throws Exception {
+        MockComponent component = new MockComponent();
+        Assert.assertFalse(component.isInitialized());
 
-        protected int getInitCount() {
-            return initCount;
+        try {
+            component.initialize();
+            Assert.fail("Initialized without an ID");
+        } catch (ComponentInitializationException e) {
+            // expected this
         }
 
-        /** {@inheritDoc} */
-        protected void doInitialize() throws ComponentInitializationException {
-            initCount++;
-            super.doInitialize();
-        }
+        component.setId("foo");
+        component.initialize();
+    }
+
+    /** Mock component. */
+    private class MockComponent extends AbstractIdentifiableInitializableComponent {
     }
 }
