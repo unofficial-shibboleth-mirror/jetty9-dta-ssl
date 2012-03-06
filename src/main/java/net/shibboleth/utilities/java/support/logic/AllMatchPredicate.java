@@ -24,9 +24,10 @@ import com.google.common.base.Predicate;
 
 /**
  * A {@link Predicate} that checks that all items in an {@link Iterable} match a given target predicate. If the given
- * {@link Iterable} is null this method will return <code>false</code>, otherwise it passes each {@link Iterable} value
- * to the target predicate, even if those values are <code>null</code>. The first <code>false</code> returned by the
- * target predicate stops evaluation and causes this predicate to return (i.e., it short-circuits the evaluation).
+ * {@link Iterable} is null or contains no items this method will return <code>false</code>, otherwise it passes each
+ * {@link Iterable} value to the target predicate, even if those values are <code>null</code>. The first
+ * <code>false</code> returned by the target predicate stops evaluation and causes this predicate to return (i.e., it
+ * short-circuits the evaluation).
  * 
  * @param <T> type of object upon which this predicate operates
  */
@@ -50,12 +51,15 @@ public class AllMatchPredicate<T> implements Predicate<Iterable<T>> {
             return false;
         }
 
+        boolean matchedAll = false;
         for (T input : inputs) {
             if (!predicate.apply(input)) {
                 return false;
+            } else {
+                matchedAll = true;
             }
         }
 
-        return true;
+        return matchedAll;
     }
 }
