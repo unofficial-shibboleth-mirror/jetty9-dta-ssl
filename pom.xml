@@ -37,6 +37,12 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- Required if you're using anything in the httpclient package -->
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient-cache</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <!-- Required if you're using classes from the velocity package -->
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity</artifactId>
@@ -57,7 +63,15 @@
             <artifactId>logback-classic</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>${spring.groupId}</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${spring.groupId}</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

@@ -20,16 +20,54 @@ package net.shibboleth.utilities.java.support.net;
 import java.util.List;
 
 import net.shibboleth.utilities.java.support.collection.Pair;
-import net.shibboleth.utilities.java.support.net.UriSupport;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /** Unit test for {@link UriSupport}. */
 public class UriSupportTest {
-
-    @Test
-    public void testGetRawQueryStringParameter() {
+    
+    @Test public void testBuildQuery(){
+        
+    }
+    
+    @Test public void testSetFragment(){
+        
+    }
+    
+    @Test public void testSetHost(){
+        
+    }
+    
+    @Test public void testSetPath(){
+        
+    }
+    
+    @Test public void testSetPort(){
+        
+    }
+    
+    @Test public void testSetQuery(){
+        
+    }
+    
+    @Test public void testSetScheme(){
+        
+    }
+    
+    @Test public void testTrimOrNullFragment(){
+        
+    }
+    
+    @Test public void testTrimOrNullPath(){
+        
+    }
+    
+    @Test public void testTrimOrNullQuery(){
+        
+    }
+    
+    @Test public void testGetRawQueryStringParameter() {
         String param = UriSupport.getRawQueryStringParameter(null, null);
         Assert.assertEquals(param, null);
 
@@ -66,8 +104,7 @@ public class UriSupportTest {
         Assert.assertEquals(param, "paramName2");
     }
 
-    @Test
-    public void testParseQueryString() {
+    @Test public void testParseQueryString() {
         List<Pair<String, String>> params = UriSupport.parseQueryString(null);
         Assert.assertTrue(params.isEmpty());
 

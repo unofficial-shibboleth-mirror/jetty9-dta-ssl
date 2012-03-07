@@ -22,7 +22,7 @@ import java.io.InputStream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.shibboleth.utilities.java.support.component.AbstractInitializableComponent;
+import net.shibboleth.utilities.java.support.component.AbstractDestructableInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentValidationException;
 import net.shibboleth.utilities.java.support.component.DestroyedComponentException;
 import net.shibboleth.utilities.java.support.component.UninitializedComponentException;
@@ -31,34 +31,10 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import com.google.common.base.Objects;
 
 /** Base class for resources. */
-public abstract class AbstractResource extends AbstractInitializableComponent implements Resource {
-
-    /** Whether this resource has been destroyed. */
-    private boolean isDestroyed;
+public abstract class AbstractResource extends AbstractDestructableInitializableComponent implements Resource {
 
     /** Location of the resource. */
     private String location;
-
-    /** {@inheritDoc} */
-    public final boolean isDestroyed() {
-        return isDestroyed;
-    }
-
-    /**
-     * This implementation checks to see if the component has already been destroyed. If it has, this method simply
-     * returns. If it hasn't, this method invoked {@link #doDestroy()} and then marks the component as destroyed.
-     * 
-     * {@inheritDoc}
-     */
-    public final synchronized void destroy() {
-        if (isDestroyed) {
-            return;
-        }
-
-        doDestroy();
-
-        isDestroyed = true;
-    }
 
     /**
      * Checks whether this component is valid and ready to be used.
@@ -204,21 +180,7 @@ public abstract class AbstractResource extends AbstractInitializableComponent im
     }
 
     /**
-     * <p>
-     * Performs the logic to destroy this component.
-     * </p>
-     * <p>
-     * This implementation sets the resource location to null
-     * </p>
-     */
-    protected void doDestroy() {
-        location = null;
-    }
-
-    /**
-     * <p>
      * Performs the logic to validate this component.
-     * </p>
      * <p>
      * This implementation checks that the resource exists via {@link #exists()}.
      * </p>
