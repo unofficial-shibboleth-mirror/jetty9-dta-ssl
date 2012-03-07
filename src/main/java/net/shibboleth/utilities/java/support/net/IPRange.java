@@ -169,7 +169,7 @@ public class IPRange {
     public static IPRange parseCIDRBlock(final String cidrBlock) {
         String block = StringSupport.trimOrNull(cidrBlock);
         if (block == null) {
-            throw new IllegalArgumentException("CIDR block definition may not be null");
+            throw new IllegalArgumentException("CIDR block definition can not be null or empty");
         }
 
         String[] blockParts = block.split("/");
