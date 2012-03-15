@@ -66,7 +66,7 @@ public final class CollectionSupport {
         assert target != null : "Target collection can not be null";
         assert predicate != null : "Element predicate can not be null";
 
-        if (element != null) {
+        if (element == null) {
             return false;
         }
 
