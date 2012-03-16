@@ -476,7 +476,7 @@ public class HttpClientBuilder {
     /**
      * Builds the connection manager used by the HTTP client. A {@link ThreadSafeClientConnManager} is used with
      * {@link ThreadSafeClientConnManager#setDefaultMaxPerRoute(int)} set to {@link #connectionsMaxPerRoute} and
-     * {@link ThreadSafeClientConnManager#setMaxTotalConnections(int)} set to {@link #connectionsMaxTotal}.
+     * {@link ThreadSafeClientConnManager#setMaxTotal(int)} set to {@link #connectionsMaxTotal}.
      * 
      * @return the connection manager used by the HTTP client
      */

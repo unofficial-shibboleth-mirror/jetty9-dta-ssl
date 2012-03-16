@@ -27,7 +27,7 @@ public class CriteriaSetTest {
         CriteriaSet set = new CriteriaSet();
         Assert.assertTrue(set.isEmpty());
 
-        set = new CriteriaSet(null);
+        set = new CriteriaSet((Criterion[])null);
         Assert.assertTrue(set.isEmpty());
 
         set = new CriteriaSet(new Criterion[] {});
