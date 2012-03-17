@@ -20,7 +20,7 @@ package net.shibboleth.utilities.java.support.component;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/** {@link AbstractDestrucableIdentifiableInitializableComponent} unit test. */
+/** {@link AbstractDestructableIdentifiableInitializableComponent} unit test. */
 public class AbstractDestrucableIdentifiableInitializableComponentTest {
 
     @Test public void testId() throws Exception {
@@ -51,7 +51,7 @@ public class AbstractDestrucableIdentifiableInitializableComponentTest {
     }
     
     /** A mock component. */
-    private class MockComponent extends AbstractDestrucableIdentifiableInitializableComponent{
+    private class MockComponent extends AbstractDestructableIdentifiableInitializableComponent{
         
         /** {@inheritDoc} */
         public synchronized void setId(String componentId) {

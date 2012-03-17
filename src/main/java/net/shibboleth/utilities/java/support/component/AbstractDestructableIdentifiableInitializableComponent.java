@@ -27,7 +27,7 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
  * Base class for components implementing {@link DestructableComponent}, {@link IdentifiableComponent} and
  * {@link InitializableComponent}.
  */
-public abstract class AbstractDestrucableIdentifiableInitializableComponent extends
+public abstract class AbstractDestructableIdentifiableInitializableComponent extends
         AbstractDestructableInitializableComponent implements IdentifiableComponent {
 
     /** ID of this component. */
