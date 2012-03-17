@@ -49,4 +49,13 @@ public abstract class AbstractDestrucableIdentifiableInitializableComponent exte
 
         id = Assert.isNotNull(StringSupport.trimOrNull(componentId), "Component ID can not be null or empty");
     }
+
+    /** {@inheritDoc} */
+    protected void doInitialize() throws ComponentInitializationException {
+        super.doInitialize();
+
+        if (id == null) {
+            throw new ComponentInitializationException("No component ID has not be set");
+        }
+    }
 }
