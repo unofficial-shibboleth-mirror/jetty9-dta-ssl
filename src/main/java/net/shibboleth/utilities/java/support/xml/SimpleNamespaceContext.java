@@ -1,0 +1,126 @@
+/*
+ * Licensed to the University Corporation for Advanced Internet Development, 
+ * Inc. (UCAID) under one or more contributor license agreements.  See the 
+ * NOTICE file distributed with this work for additional information regarding
+ * copyright ownership. The UCAID licenses this file to You under the Apache 
+ * License, Version 2.0 (the "License"); you may not use this file except in 
+ * compliance with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package net.shibboleth.utilities.java.support.xml;
+
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.annotation.Nullable;
+import javax.xml.XMLConstants;
+import javax.xml.namespace.NamespaceContext;
+
+import net.jcip.annotations.ThreadSafe;
+import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
+
+import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.ImmutableBiMap.Builder;
+
+/**
+ * Simple implementation of {@link NamespaceContext} based on a map from prefix values to corresponding URIs. This
+ * implementation only supports a single mapping for a given prefix, that is {@link #getPrefixes(String)} will always
+ * contain at most 1 element.
+ */
+@ThreadSafe
+public class SimpleNamespaceContext implements NamespaceContext {
+
+    /** Mappings between namespace prefixes and namespace URIs. */
+    private final ImmutableBiMap<String, String> mappings;
+
+    /** Constructor. */
+    public SimpleNamespaceContext() {
+        mappings = getMappingsBuilder().build();
+    }
+
+    /**
+     * Constructor.
+     * 
+     * @param prefixToUriMappings Maps prefix values to the corresponding namespace URIs.
+     */
+    public SimpleNamespaceContext(@Nullable @NullableElements final Map<String, String> prefixToUriMappings) {
+        Builder mappingBuilder = getMappingsBuilder();
+
+        if (prefixToUriMappings == null || prefixToUriMappings.isEmpty()) {
+            mappings = mappingBuilder.build();
+            return;
+        }
+
+        String trimmedPrefix;
+        String trimmedUri;
+        for (String key : prefixToUriMappings.keySet()) {
+            trimmedPrefix = StringSupport.trimOrNull(key);
+            if (trimmedPrefix == null) {
+                continue;
+            }
+
+            trimmedUri = StringSupport.trimOrNull(prefixToUriMappings.get(key));
+            if (trimmedUri != null) {
+                mappingBuilder.put(trimmedPrefix, trimmedUri);
+            }
+        }
+
+        mappings = mappingBuilder.build();
+    }
+
+    /** {@inheritDoc} */
+    @Nullable public String getNamespaceURI(String prefix) {
+        if (prefix == null) {
+            throw new IllegalArgumentException("Prefix can not be null");
+        }
+
+        String uri = mappings.get(prefix);
+        if (uri == null) {
+            return XMLConstants.NULL_NS_URI;
+        } else {
+            return uri;
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Nullable public String getPrefix(String namespaceURI) {
+        if (namespaceURI == null) {
+            throw new IllegalArgumentException("Namespace URI can not be null");
+        }
+
+        return mappings.inverse().get(namespaceURI);
+    }
+
+    /** {@inheritDoc} */
+    public Iterator<String> getPrefixes(String namespaceURI) {
+        if (namespaceURI == null) {
+            throw new IllegalArgumentException("Namespace URI can not be null");
+        }
+
+        String prefix = mappings.inverse().get(namespaceURI);
+        if (prefix == null) {
+            return Collections.<String> emptyList().iterator();
+        } else {
+            return Collections.singletonList(prefix).iterator();
+        }
+    }
+    
+    private Builder<String, String> getMappingsBuilder(){
+        Builder mappingBuilder = new Builder<String, String>();
+        
+        mappingBuilder.put(XmlConstants.XML_PREFIX, XmlConstants.XML_NS);
+        mappingBuilder.put(XmlConstants.XMLNS_PREFIX, XmlConstants.XMLNS_NS);
+        
+        return mappingBuilder;
+    }
+}
