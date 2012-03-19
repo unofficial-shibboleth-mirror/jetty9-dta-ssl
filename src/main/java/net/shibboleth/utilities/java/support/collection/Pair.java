@@ -17,6 +17,9 @@
 
 package net.shibboleth.utilities.java.support.collection;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.google.common.base.Objects;
 
 /**
@@ -33,15 +36,31 @@ public class Pair<T1, T2> {
     /** Second object in pair. */
     private T2 second;
 
+    /** Constructor. */
+    public Pair() {
+
+    }
+
     /**
      * Constructor.
      * 
      * @param newFirst first object in the pair
      * @param newSecond second object in the pair
      */
-    public Pair(final T1 newFirst, final T2 newSecond) {
+    public Pair(@Nullable final T1 newFirst, @Nullable final T2 newSecond) {
         first = newFirst;
         second = newSecond;
+    }
+
+    /**
+     * Copy constructor.
+     * 
+     * @param pair pair to be copied
+     */
+    public Pair(@Nonnull Pair<? extends T1, ? extends T2> pair) {
+        assert pair != null : "Pair to be copied can not be null";
+        first = pair.getFirst();
+        second = pair.getSecond();
     }
 
     /**
@@ -49,7 +68,7 @@ public class Pair<T1, T2> {
      * 
      * @return first object in the pair
      */
-    public T1 getFirst() {
+    @Nullable public T1 getFirst() {
         return first;
     }
 
@@ -58,7 +77,7 @@ public class Pair<T1, T2> {
      * 
      * @param newFirst first object in the pair
      */
-    public void setFirst(final T1 newFirst) {
+    public void setFirst(@Nullable final T1 newFirst) {
         first = newFirst;
     }
 
@@ -67,7 +86,7 @@ public class Pair<T1, T2> {
      * 
      * @return second object in the pair
      */
-    public T2 getSecond() {
+    @Nullable public T2 getSecond() {
         return second;
     }
 
@@ -76,12 +95,12 @@ public class Pair<T1, T2> {
      * 
      * @param newSecond second object in the pair
      */
-    public void setSecond(final T2 newSecond) {
+    public void setSecond(@Nullable final T2 newSecond) {
         second = newSecond;
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("unchecked") public boolean equals(Object o) {
+    public boolean equals(@Nullable final Object o) {
         if (o == this) {
             return true;
         }
@@ -100,7 +119,7 @@ public class Pair<T1, T2> {
     }
 
     /** {@inheritDoc} */
-    public String toString() {
-        return "(" + getFirst() + "," + getSecond() + ")";
+    @Nonnull public String toString() {
+        return Objects.toStringHelper(this).add("first", first).add("second", second).toString();
     }
 }
