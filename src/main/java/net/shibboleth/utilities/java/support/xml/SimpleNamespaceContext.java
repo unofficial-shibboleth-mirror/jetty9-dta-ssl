@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
@@ -79,7 +80,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
     }
 
     /** {@inheritDoc} */
-    @Nullable public String getNamespaceURI(String prefix) {
+    @Nullable public String getNamespaceURI(@Nonnull String prefix) {
         if (prefix == null) {
             throw new IllegalArgumentException("Prefix can not be null");
         }
@@ -93,7 +94,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
     }
 
     /** {@inheritDoc} */
-    @Nullable public String getPrefix(String namespaceURI) {
+    @Nullable public String getPrefix(@Nonnull String namespaceURI) {
         if (namespaceURI == null) {
             throw new IllegalArgumentException("Namespace URI can not be null");
         }
@@ -102,7 +103,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
     }
 
     /** {@inheritDoc} */
-    public Iterator<String> getPrefixes(String namespaceURI) {
+    @Nonnull public Iterator<String> getPrefixes(String namespaceURI) {
         if (namespaceURI == null) {
             throw new IllegalArgumentException("Namespace URI can not be null");
         }
@@ -115,7 +116,12 @@ public class SimpleNamespaceContext implements NamespaceContext {
         }
     }
     
-    private Builder<String, String> getMappingsBuilder(){
+    /**
+     * Build the initial set of mappings which contains entries for XML and XMLNS.
+     * 
+     * @return initial set of mappings
+     */
+    @Nonnull private Builder<String, String> getMappingsBuilder(){
         Builder mappingBuilder = new Builder<String, String>();
         
         mappingBuilder.put(XmlConstants.XML_PREFIX, XmlConstants.XML_NS);
