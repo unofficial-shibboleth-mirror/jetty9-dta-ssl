@@ -55,7 +55,7 @@ public abstract class AbstractDestructableIdentifiableInitializableComponent ext
         super.doInitialize();
 
         if (id == null) {
-            throw new ComponentInitializationException("No component ID has not be set");
+            throw new ComponentInitializationException("No component ID has been set");
         }
     }
 }
