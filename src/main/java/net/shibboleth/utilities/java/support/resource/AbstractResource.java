@@ -23,9 +23,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.shibboleth.utilities.java.support.component.AbstractDestructableInitializableComponent;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.component.ComponentValidationException;
-import net.shibboleth.utilities.java.support.component.DestroyedComponentException;
-import net.shibboleth.utilities.java.support.component.UninitializedComponentException;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import com.google.common.base.Objects;
@@ -45,13 +44,8 @@ public abstract class AbstractResource extends AbstractDestructableInitializable
      * @throws ComponentValidationException thrown if the component is not currently in a valid and usable state
      */
     public final void validate() throws ComponentValidationException {
-        if (isDestroyed()) {
-            throw new ComponentValidationException(toString() + " has been destroyed");
-        }
-
-        if (!isInitialized()) {
-            throw new ComponentValidationException(toString() + " has not been initialized");
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
 
         doValidate();
     }
@@ -67,13 +61,8 @@ public abstract class AbstractResource extends AbstractDestructableInitializable
      * @throws ResourceException thrown if there is a problem determining if the resource exists
      */
     @Nonnull public final boolean exists() throws ResourceException {
-        if (isDestroyed()) {
-            throw new DestroyedComponentException(this);
-        }
-
-        if (!isInitialized()) {
-            throw new UninitializedComponentException(this);
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
 
         return doExists();
     }
@@ -89,13 +78,8 @@ public abstract class AbstractResource extends AbstractDestructableInitializable
      * @throws ResourceException thrown if an input stream can not be created for the resource
      */
     @Nonnull public final InputStream getInputStream() throws ResourceException {
-        if (isDestroyed()) {
-            throw new DestroyedComponentException(this);
-        }
-
-        if (!isInitialized()) {
-            throw new UninitializedComponentException(this);
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
 
         return doGetInputStream();
     }
@@ -111,13 +95,8 @@ public abstract class AbstractResource extends AbstractDestructableInitializable
      * @throws ResourceException thrown if the last modified time can not be determined
      */
     @Nonnull public final long getLastModifiedTime() throws ResourceException {
-        if (isDestroyed()) {
-            throw new DestroyedComponentException(this);
-        }
-
-        if (!isInitialized()) {
-            throw new UninitializedComponentException(this);
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
 
         return doGetLastModifiedTime();
     }
@@ -128,13 +107,8 @@ public abstract class AbstractResource extends AbstractDestructableInitializable
      * @return resource location information
      */
     @Nonnull public final String getLocation() {
-        if (isDestroyed()) {
-            throw new DestroyedComponentException(this);
-        }
-
-        if (!isInitialized()) {
-            throw new UninitializedComponentException(this);
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
 
         return location;
     }

@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 import net.jcip.annotations.NotThreadSafe;
 import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
-import net.shibboleth.utilities.java.support.component.DestroyedComponentException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Assert;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.resource.AbstractResource;
@@ -98,10 +98,9 @@ public class HttpResource extends AbstractResource {
      * 
      * @param strategy strategy used customize the {@link HttpGet} used to fetch the resource
      */
-    public void setHttpGetCustomizationStrategy(@Nullable final HttpGetCustomizationStrategy strategy) {
-        if (isDestroyed()) {
-            throw new DestroyedComponentException();
-        }
+    public synchronized void setHttpGetCustomizationStrategy(@Nullable final HttpGetCustomizationStrategy strategy) {
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
 
         httpGetCustomizationStrategy = strategy;
     }
@@ -120,19 +119,18 @@ public class HttpResource extends AbstractResource {
      * 
      * @param strategy strategy used to customize the {@link HttpResponse} before its content is returned
      */
-    public void setHttpResponseCustomizationStrategy(@Nullable final HttpResponseCustomizationStrategy strategy) {
-        if (isDestroyed()) {
-            throw new DestroyedComponentException();
-        }
+    public synchronized void setHttpResponseCustomizationStrategy(
+            @Nullable final HttpResponseCustomizationStrategy strategy) {
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
 
         httpResponseCustomizationStrategy = strategy;
     }
 
     /** {@inheritDoc} */
     protected long doGetLastModifiedTime() throws ResourceException {
-        if (isDestroyed()) {
-            throw new DestroyedComponentException();
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
 
         try {
             final Header httpHeader = getResourceHeaders().getFirstHeader(HttpHeaders.LAST_MODIFIED);
@@ -152,9 +150,8 @@ public class HttpResource extends AbstractResource {
 
     /** {@inheritDoc} */
     protected boolean doExists() throws ResourceException {
-        if (isDestroyed()) {
-            throw new DestroyedComponentException();
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
 
         int statusCode = getResourceHeaders().getStatusLine().getStatusCode();
 
@@ -167,9 +164,8 @@ public class HttpResource extends AbstractResource {
 
     /** {@inheritDoc} */
     @Nonnull protected InputStream doGetInputStream() throws ResourceException {
-        if (isDestroyed()) {
-            throw new DestroyedComponentException();
-        }
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+        ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
 
         final HttpGet httpRequest = buildGetMethod();
 

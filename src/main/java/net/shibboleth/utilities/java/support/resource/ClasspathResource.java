@@ -47,11 +47,11 @@ public class ClasspathResource extends AbstractResource {
      * @param classLoader class loader used to locate the resource
      */
     public ClasspathResource(final String resourcePath, final ClassLoader classLoader) {
-        String myLocation = Assert.isNotNull(StringSupport.trimOrNull(resourcePath), "Resource path may not be null or empty");
+        String myLocation =
+                Assert.isNotNull(StringSupport.trimOrNull(resourcePath), "Resource path may not be null or empty");
         setLocation(myLocation);
 
-        Assert.isNotNull(classLoader, "Resource class loader may not be null");
-
+        assert classLoader != null : "Resource class loader may not be null";
         classpathResource =
                 Assert.isNotNull(classLoader.getResource(myLocation), "Resource " + resourcePath
                         + " does not exist on the classpath");
