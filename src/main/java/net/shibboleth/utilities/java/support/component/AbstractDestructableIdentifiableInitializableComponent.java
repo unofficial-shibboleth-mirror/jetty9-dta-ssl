@@ -43,7 +43,7 @@ public abstract class AbstractDestructableIdentifiableInitializableComponent ext
      * 
      * @param componentId ID of the component
      */
-    public synchronized void setId(@Nonnull @NotEmpty String componentId) {
+    protected synchronized void setId(@Nonnull @NotEmpty String componentId) {
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
 
