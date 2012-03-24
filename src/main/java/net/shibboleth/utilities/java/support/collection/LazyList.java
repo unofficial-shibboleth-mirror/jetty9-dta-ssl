@@ -25,7 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import net.jcip.annotations.NotThreadSafe;
+import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * A list that is lazy initialized. This list takes very little memory when storing zero or one item.

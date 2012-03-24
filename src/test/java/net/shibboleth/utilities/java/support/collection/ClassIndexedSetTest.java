@@ -21,8 +21,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import net.shibboleth.utilities.java.support.collection.ClassIndexedSet;
-
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

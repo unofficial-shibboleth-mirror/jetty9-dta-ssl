@@ -19,8 +19,6 @@ package net.shibboleth.utilities.java.support.collection;
 
 import java.util.Arrays;
 
-import net.shibboleth.utilities.java.support.collection.ValueTypeIndexedMap;
-
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

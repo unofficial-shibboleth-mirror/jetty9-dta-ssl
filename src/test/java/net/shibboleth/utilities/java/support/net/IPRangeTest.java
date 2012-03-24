@@ -3,8 +3,6 @@ package net.shibboleth.utilities.java.support.net;
 
 import java.net.InetAddress;
 
-import net.shibboleth.utilities.java.support.net.IPRange;
-
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

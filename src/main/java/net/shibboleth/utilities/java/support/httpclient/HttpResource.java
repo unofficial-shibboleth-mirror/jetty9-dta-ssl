@@ -24,9 +24,9 @@ import java.util.GregorianCalendar;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
 
-import net.jcip.annotations.NotThreadSafe;
-import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Assert;

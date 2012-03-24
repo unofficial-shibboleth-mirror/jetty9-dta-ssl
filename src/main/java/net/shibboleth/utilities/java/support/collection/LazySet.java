@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import net.jcip.annotations.NotThreadSafe;
+import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * A set that is lazy initialized. This set takes very little memory when storing zero or one item.

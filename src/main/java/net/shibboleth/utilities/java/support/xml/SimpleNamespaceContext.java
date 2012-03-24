@@ -23,10 +23,10 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 
-import net.jcip.annotations.ThreadSafe;
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
