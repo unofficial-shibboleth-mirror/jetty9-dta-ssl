@@ -19,11 +19,7 @@ package net.shibboleth.utilities.java.support.logic;
 
 import javax.annotation.Nullable;
 
-import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.component.ComponentValidationException;
-import net.shibboleth.utilities.java.support.component.DestructableComponent;
-import net.shibboleth.utilities.java.support.component.InitializableComponent;
-import net.shibboleth.utilities.java.support.component.ValidatableComponent;
+import net.shibboleth.utilities.java.support.component.CountingDestructableInitializableValidatableComponent;
 
 import com.google.common.base.Function;
 
@@ -31,20 +27,10 @@ import com.google.common.base.Function;
  * A function that counts the number of times {@link #destroy()}, {@link #initialize()} and {{@link #validate()} are
  * called.
  */
-public class CountingDestructableInitializableValidatableFunction<T> implements DestructableComponent,
-        InitializableComponent, ValidatableComponent, Function<Object, T> {
+public class CountingDestructableInitializableValidatableFunction<T> extends CountingDestructableInitializableValidatableComponent implements Function<Object, T> {
 
     /** Value returned by the function. */
     private T returnValue;
-
-    /** Number of times {@link #destroy()} was called. */
-    private int destroyCount;
-
-    /** Number of times {@link #initialize()} was called. */
-    private int initializeCount;
-
-    /** Number of times {@link #validate()} was called. */
-    private int validateCount;
 
     /**
      * Constructor.
@@ -58,57 +44,5 @@ public class CountingDestructableInitializableValidatableFunction<T> implements 
     /** {@inheritDoc} */
     public T apply(Object arg0) {
         return returnValue;
-    }
-
-    /** {@inheritDoc} */
-    public void destroy() {
-        destroyCount += 1;
-    }
-
-    /**
-     * Gets the number of times {@link #destroy()} was called.
-     * 
-     * @return number of times {@link #destroy()} was called
-     */
-    public int getDestroyCount() {
-        return destroyCount;
-    }
-
-    /**
-     * Gets the number of times {@link #initialize()} was called.
-     * 
-     * @return number of times {@link #initialize()} was called
-     */
-    public int getInitializeCount() {
-        return initializeCount;
-    }
-
-    /**
-     * Gets the number of times {@link #validate()} was called.
-     * 
-     * @return number of times {@link #validate()} was called
-     */
-    public int getValidateCount() {
-        return validateCount;
-    }
-
-    /** {@inheritDoc} */
-    public void initialize() throws ComponentInitializationException {
-        initializeCount += 1;
-    }
-
-    /** {@inheritDoc} */
-    public boolean isDestroyed() {
-        return destroyCount > 0;
-    }
-
-    /** {@inheritDoc} */
-    public boolean isInitialized() {
-        return initializeCount > 0;
-    }
-
-    /** {@inheritDoc} */
-    public void validate() throws ComponentValidationException {
-        validateCount += 1;
     }
 }
