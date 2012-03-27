@@ -58,6 +58,7 @@ public class LazyMap<KeyType, ValueType> implements Map<KeyType, ValueType>, Ser
 
     /** {@inheritDoc} */
     public Set<Entry<KeyType, ValueType>> entrySet() {
+        delegate = buildMap();
         return delegate.entrySet();
     }
 
@@ -73,6 +74,7 @@ public class LazyMap<KeyType, ValueType> implements Map<KeyType, ValueType>, Ser
 
     /** {@inheritDoc} */
     public Set<KeyType> keySet() {
+        delegate = buildMap();
         return delegate.keySet();
     }
 
@@ -106,6 +108,7 @@ public class LazyMap<KeyType, ValueType> implements Map<KeyType, ValueType>, Ser
 
     /** {@inheritDoc} */
     public Collection<ValueType> values() {
+        delegate = buildMap();
         return delegate.values();
     }
 

@@ -150,6 +150,15 @@ public class CollectionTest {
         } catch (IllegalStateException e) {
             // TODO: handle exception
         }
+        
+        testCollection.clear();
+        // Test that can remove from collection via the iterator if only has a single member
+        testCollection.add(STRING_1);
+        iterator = testCollection.iterator();
+        Assert.assertTrue(iterator.hasNext(), "Should have a first element");
+        iterator.next();
+        Assert.assertFalse(iterator.hasNext(), "Should not have a second element");
+        iterator.remove();
     }
 
     protected static void testSimpleCollection(Collection<String> collection, boolean allowDuplicates) {

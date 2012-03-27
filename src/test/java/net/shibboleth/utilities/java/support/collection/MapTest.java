@@ -17,9 +17,12 @@
 
 package net.shibboleth.utilities.java.support.collection;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.testng.Assert;
@@ -111,6 +114,31 @@ public class MapTest {
         
         map.clear();
         Assert.assertEquals(map.size(), 0, "After clear map must be empty");
+        
+        // Test iterator removal from singleton member cases
+        map.put(KEY_1, VALUE_1);
+        Set<Entry<String,Object>> entrySet = map.entrySet();
+        Iterator<Entry<String,Object>> entryIter = entrySet.iterator();
+        entryIter.next();
+        entryIter.remove();
+        
+        map.clear();
+        Assert.assertEquals(map.size(), 0, "After clear map must be empty");
+        
+        map.put(KEY_1, VALUE_1);
+        Set<String> keySet = map.keySet();
+        Iterator<String> keyIter = keySet.iterator();
+        keyIter.next();
+        keyIter.remove();
+        
+        map.clear();
+        Assert.assertEquals(map.size(), 0, "After clear map must be empty");
+        
+        map.put(KEY_1, VALUE_1);
+        Collection<Object> values = map.values();
+        Iterator<Object> valuesIter = values.iterator();
+        valuesIter.next();
+        valuesIter.remove();
     }
 
     @Test

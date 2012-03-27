@@ -102,6 +102,7 @@ public class LazyList<ElementType> implements List<ElementType>, Serializable {
 
     /** {@inheritDoc} */
     public Iterator<ElementType> iterator() {
+        delegate = buildList();
         return delegate.iterator();
     }
 
@@ -112,11 +113,13 @@ public class LazyList<ElementType> implements List<ElementType>, Serializable {
 
     /** {@inheritDoc} */
     public ListIterator<ElementType> listIterator() {
+        delegate = buildList();
         return delegate.listIterator();
     }
 
     /** {@inheritDoc} */
     public ListIterator<ElementType> listIterator(final int index) {
+        delegate = buildList();
         return delegate.listIterator(index);
     }
 
