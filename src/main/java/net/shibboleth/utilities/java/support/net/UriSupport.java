@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import net.shibboleth.utilities.java.support.collection.LazyList;
 import net.shibboleth.utilities.java.support.collection.Pair;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
@@ -235,7 +236,7 @@ public final class UriSupport {
     public static List<Pair<String, String>> parseQueryString(final String queryString) {
         final String trimmedQuery = trimOrNullQuery(queryString);
         if (trimmedQuery == null) {
-            return Collections.emptyList();
+            return new LazyList<Pair<String,String>>();
         }
 
         final ArrayList<Pair<String, String>> queryParams = new ArrayList<Pair<String, String>>();
