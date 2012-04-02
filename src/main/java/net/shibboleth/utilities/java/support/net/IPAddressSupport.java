@@ -36,6 +36,9 @@ public final class IPAddressSupport {
      * Supports optional subnet mask stored within the same byte array.  If the latter is present, 
      * output will be: "ipAddr/mask".
      * 
+     * Within an octet (v4) or a 2 byte group (v6), leading zeros are omitted. For v6 addresses, 
+     * a 2 byte group consisting of all zeros is collapsed to a single zero.
+     * 
      * @param address IP address in byte array form (in network byte order)
      * @return IP address as a string, or null if can not be processed
      */
