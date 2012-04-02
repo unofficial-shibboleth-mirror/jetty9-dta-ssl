@@ -25,11 +25,14 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.annotations.Beta;
+
 import net.shibboleth.utilities.java.support.collection.LazyList;
 import net.shibboleth.utilities.java.support.collection.Pair;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /** Helper methods for building {@link URI}s and parsing some HTTP URL information. */
+@Beta
 public final class UriSupport {
 
     /** Constructor. */

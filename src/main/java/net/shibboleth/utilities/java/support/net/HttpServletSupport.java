@@ -24,7 +24,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
+import com.google.common.annotations.Beta;
+
 /** Utilities for working with HTTP Servlet requests and responses. */
+@Beta
 public final class HttpServletSupport {
 
     /** Constructor. */
