@@ -17,17 +17,17 @@
 
 package net.shibboleth.utilities.java.support.component;
 
+import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * Tests for {@link ComponentSupport}
- */
+/** Tests for {@link ComponentSupport} */
 public class ComponentSupportTest {
 
     @Test public void testDestroy() throws ComponentInitializationException, ComponentValidationException {
         ComponentSupport.destroy(null);
-        
+
         ComponentSupport.destroy(new Object());
 
         MockDestructableComponent component = new MockDestructableComponent();
@@ -39,7 +39,7 @@ public class ComponentSupportTest {
 
     @Test public void testInitialized() throws ComponentInitializationException, ComponentValidationException {
         ComponentSupport.initialize(null);
-        
+
         ComponentSupport.initialize(new Object());
 
         MockInitializableComponent component = new MockInitializableComponent();
@@ -51,7 +51,7 @@ public class ComponentSupportTest {
 
     @Test public void testValidate() throws ComponentInitializationException, ComponentValidationException {
         ComponentSupport.validate(null);
-        
+
         ComponentSupport.validate(new Object());
 
         ValidatabledComponent component = new ValidatabledComponent();
@@ -77,12 +77,12 @@ public class ComponentSupportTest {
         } catch (DestroyedComponentException e) {
             // expected this
         }
-        
-        try{
+
+        try {
             ComponentSupport.ifDestroyedThrowDestroyedComponentException(null);
             Assert.fail();
-        }catch(AssertionError e){
-            //expected this
+        } catch (ConstraintViolationException e) {
+            // expected this
         }
     }
 
@@ -102,12 +102,12 @@ public class ComponentSupportTest {
         } catch (UninitializedComponentException e) {
             Assert.fail();
         }
-        
-        try{
+
+        try {
             ComponentSupport.ifNotInitializedThrowUninitializedComponentException(null);
             Assert.fail();
-        }catch(AssertionError e){
-            //expected this
+        } catch (ConstraintViolationException e) {
+            // expected this
         }
     }
 
@@ -127,12 +127,12 @@ public class ComponentSupportTest {
         } catch (UnmodifiableComponentException e) {
             // expected this
         }
-        
-        try{
+
+        try {
             ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(null);
             Assert.fail();
-        }catch(AssertionError e){
-            //expected this
+        } catch (ConstraintViolationException e) {
+            // expected this
         }
     }
 

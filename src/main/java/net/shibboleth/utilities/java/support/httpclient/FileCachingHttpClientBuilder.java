@@ -23,7 +23,7 @@ import java.io.IOException;
 import javax.annotation.Nonnull;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.apache.http.client.HttpClient;
@@ -62,7 +62,7 @@ public class FileCachingHttpClientBuilder {
      * @param builder builder of clients used to fetch data from remote servers
      */
     public FileCachingHttpClientBuilder(@Nonnull final HttpClientBuilder builder) {
-        clientBuilder = Assert.isNotNull(builder, "HttpClient builder can not be null");
+        clientBuilder = Constraint.isNotNull(builder, "HttpClient builder can not be null");
         cacheDir = new File(System.getProperty("java.io.tmpdir") + File.separator + "wwwcache");
         maxCacheEntries = 100;
         maxCacheEntrySize = 10485760;
@@ -84,7 +84,7 @@ public class FileCachingHttpClientBuilder {
      */
     public void setCacheDirectory(@Nonnull @NotEmpty String directoryPath) {
         String trimmedPath =
-                Assert.isNotNull(StringSupport.trimOrNull(directoryPath),
+                Constraint.isNotNull(StringSupport.trimOrNull(directoryPath),
                         "Cache directory path can not be null or empty");
         cacheDir = new File(trimmedPath);
     }
@@ -95,7 +95,7 @@ public class FileCachingHttpClientBuilder {
      * @param directory the directory
      */
     public void setCacheDirectory(@Nonnull File directory) {
-        cacheDir = Assert.isNotNull(directory, "Cache directory can not be null");
+        cacheDir = Constraint.isNotNull(directory, "Cache directory can not be null");
     }
 
     /**
@@ -114,7 +114,7 @@ public class FileCachingHttpClientBuilder {
      */
     public void setMaxCacheEntries(int maxEntries) {
         maxCacheEntries =
-                (int) Assert.isGreaterThan(0, maxEntries, "Maximum number of cache entries must be greater than 0");
+                (int) Constraint.isGreaterThan(0, maxEntries, "Maximum number of cache entries must be greater than 0");
     }
 
     /**
@@ -132,7 +132,7 @@ public class FileCachingHttpClientBuilder {
      * @param size maximum response body size that will be eligible for caching, must be greater than zero
      */
     public void setMaxCacheEntrySize(int size) {
-        maxCacheEntrySize = (int) Assert.isGreaterThan(0, size, "Maximum cache entry size must be greater than 0");
+        maxCacheEntrySize = (int) Constraint.isGreaterThan(0, size, "Maximum cache entry size must be greater than 0");
     }
 
     /**

@@ -22,7 +22,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /** An {@link Resource} that reads data from a fileystem file. */
@@ -38,7 +38,7 @@ public class FilesystemResource extends AbstractResource {
      */
     public FilesystemResource(final String resourcePath) {
         resourceFile =
-                new File(Assert.isNotNull(StringSupport.trimOrNull(resourcePath),
+                new File(Constraint.isNotNull(StringSupport.trimOrNull(resourcePath),
                         "Resource file path may not be null or empty"));
         setLocation(resourceFile.getAbsolutePath());
     }

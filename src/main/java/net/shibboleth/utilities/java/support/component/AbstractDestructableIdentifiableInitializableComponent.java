@@ -20,7 +20,7 @@ package net.shibboleth.utilities.java.support.component;
 import javax.annotation.Nonnull;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /**
@@ -47,7 +47,7 @@ public abstract class AbstractDestructableIdentifiableInitializableComponent ext
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
 
-        id = Assert.isNotNull(StringSupport.trimOrNull(componentId), "Component ID can not be null or empty");
+        id = Constraint.isNotNull(StringSupport.trimOrNull(componentId), "Component ID can not be null or empty");
     }
 
     /** {@inheritDoc} */

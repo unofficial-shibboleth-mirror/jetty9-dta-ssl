@@ -38,7 +38,7 @@ public class TransformAndCheckFunctionTest {
         boolean thrown = false;
         try {
             f = new TransformAndCheckFunction<String>(null, new MyPredicate(), true);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         org.testng.Assert.assertTrue(thrown, "Null function should throw");
@@ -46,7 +46,7 @@ public class TransformAndCheckFunctionTest {
         thrown = false;
         try {
             f = new TransformAndCheckFunction<String>(TrimOrNullStringFunction.INSTANCE, null, true);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         org.testng.Assert.assertTrue(thrown, "Null predicate should throw");

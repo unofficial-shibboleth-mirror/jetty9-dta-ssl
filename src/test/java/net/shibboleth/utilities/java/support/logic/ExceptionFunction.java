@@ -33,7 +33,7 @@ public class ExceptionFunction implements Function {
      * @param e exception that will be thrown when this function is executed
      */
     public ExceptionFunction(@Nonnull final RuntimeException e) {
-        thrownException = Assert.isNotNull(e);
+        thrownException = Constraint.isNotNull(e, "Exception can not be null");
     }
 
     /** {@inheritDoc} */

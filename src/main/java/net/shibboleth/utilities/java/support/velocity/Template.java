@@ -25,7 +25,7 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.apache.velocity.app.VelocityEngine;
@@ -68,12 +68,12 @@ public final class Template {
      */
     private Template(@Nonnull VelocityEngine velocityEngine, @Nonnull @NotEmpty String velocityTemplateName,
             @Nonnull String velocityTemplateEncoding) {
-        engine = Assert.isNotNull(velocityEngine, "Velocity engine can not be null");
+        engine = Constraint.isNotNull(velocityEngine, "Velocity engine can not be null");
         templateName =
-                Assert.isNotNull(StringSupport.trimOrNull(velocityTemplateName),
+                Constraint.isNotNull(StringSupport.trimOrNull(velocityTemplateName),
                         "Velocity template name can not be null or empty");
         templateEncoding =
-                Assert.isNotNull(StringSupport.trimOrNull(velocityTemplateEncoding),
+                Constraint.isNotNull(StringSupport.trimOrNull(velocityTemplateEncoding),
                         "Velocity template encoding name can not be null or empty");
     }
 
@@ -126,8 +126,8 @@ public final class Template {
     @Nonnull public static Template fromTemplate(@Nonnull VelocityEngine engine, @Nonnull @NotEmpty String template,
             @Nonnull Charset encoding) throws VelocityException {
         final String trimmedTemplate =
-                Assert.isNotNull(StringSupport.trimOrNull(template), "Velocity template can not be null or empty");
-        assert encoding != null : "Template encoding character set can not be null";
+                Constraint.isNotNull(StringSupport.trimOrNull(template), "Velocity template can not be null or empty");
+        Constraint.isNotNull(encoding, "Template encoding character set can not be null");
 
         final StringResourceRepository templateRepo = StringResourceLoader.getRepository();
 
@@ -188,8 +188,8 @@ public final class Template {
     public static Template fromTemplateName(@Nonnull VelocityEngine engine, @Nonnull @NotEmpty String name,
             @Nonnull Charset encoding) throws VelocityException {
         final String trimmedName =
-                Assert.isNotNull(StringSupport.trimOrNull(name), "Velocity template name can not be null or empty");
-        assert encoding != null : "Template encoding character set can not be null";
+                Constraint.isNotNull(StringSupport.trimOrNull(name), "Velocity template name can not be null or empty");
+        Constraint.isNotNull(encoding, "Template encoding character set can not be null");
 
         if (!engine.resourceExists(name)) {
             throw new VelocityException("No template with the name " + trimmedName

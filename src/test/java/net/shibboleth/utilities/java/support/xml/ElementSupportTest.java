@@ -26,6 +26,7 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.resource.ClasspathResource;
 import net.shibboleth.utilities.java.support.resource.ResourceException;
@@ -160,11 +161,11 @@ public class ElementSupportTest {
         Assert.assertEquals(ElementSupport.getElementAncestor(grandChild), child, "getElementAncestor for grand child");
 
     }
-    
+
     @Test(dependsOnMethods = {"testGetChildElementsByTagName"}) public void testGetElementContentAsString() {
         Assert.assertTrue(ElementSupport.getElementContentAsString(null).isEmpty(),
                 "getElementContentAsList: Null element should provide empty result");
-        
+
         Assert.assertTrue(StringSupport.trim(ElementSupport.getElementContentAsString(rootElement)).isEmpty(),
                 "getElementContentAsList: Empty element should provide empty result");
 
@@ -172,15 +173,13 @@ public class ElementSupportTest {
                 ElementSupport.getChildElementsByTagName(
                         ElementSupport.getChildElementsByTagName(rootElement, "Element4").get(0), "Element1").get(0);
 
-        Assert.assertEquals(ElementSupport.getElementContentAsString(interesting),
-                "Some Random" +"\n" + "test");
+        Assert.assertEquals(ElementSupport.getElementContentAsString(interesting), "Some Random" + "\n" + "test");
     }
-
 
     @Test(dependsOnMethods = {"testGetChildElementsByTagName"}) public void testGetElementContentAsList() {
         Assert.assertTrue(ElementSupport.getElementContentAsList(null).isEmpty(),
                 "getElementContentAsList: Null element should provide empty result");
-        
+
         Assert.assertTrue(ElementSupport.getElementContentAsList(rootElement).isEmpty(),
                 "getElementContentAsList: Empty element should provide empty result");
 
@@ -294,7 +293,7 @@ public class ElementSupportTest {
             boolean thrown = false;
             try {
                 ElementSupport.adoptElement(null, element);
-            } catch (AssertionError e) {
+            } catch (ConstraintViolationException e) {
                 thrown = true;
             }
             Assert.assertTrue(thrown, "adoptElement: Null Document should assert");
@@ -302,7 +301,7 @@ public class ElementSupportTest {
             thrown = false;
             try {
                 ElementSupport.adoptElement(testerDocument, null);
-            } catch (AssertionError e) {
+            } catch (ConstraintViolationException e) {
                 thrown = true;
             }
             Assert.assertTrue(thrown, "adoptElement: Null Element should assert");
@@ -324,35 +323,42 @@ public class ElementSupportTest {
         }
     }
 
-    @Test(dependsOnMethods = {"testConstructElement", "testGetChildElements", "testGetChildElementsByTagName"}) public void
-            testAppendChildElement() throws XMLParserException {
+    @Test(dependsOnMethods = {"testConstructElement", "testGetChildElements", "testGetChildElementsByTagName"}) public
+            void testAppendChildElement() throws XMLParserException {
         DocumentBuilder builder = parserPool.getBuilder();
         try {
             Document myDocument = builder.newDocument();
-            Element myRoot = ElementSupport.constructElement(testerDocument, new QName(TEST_NS, ROOT_ELEMENT, TEST_PREFIX));
+            Element myRoot =
+                    ElementSupport.constructElement(testerDocument, new QName(TEST_NS, ROOT_ELEMENT, TEST_PREFIX));
             Element testElement = ElementSupport.constructElement(testerDocument, TEST_ELEMENT_QNAME);
             boolean thrown = false;
             try {
                 ElementSupport.appendChildElement(null, testElement);
-            } catch (AssertionError e) {
+            } catch (ConstraintViolationException e) {
                 thrown = true;
             }
             Assert.assertTrue(thrown, "appendChildElement: assert on null parent");
 
-            Assert.assertTrue(ElementSupport.getChildElements(myRoot).isEmpty(), "appendChildElement: no elements to start with");
+            Assert.assertTrue(ElementSupport.getChildElements(myRoot).isEmpty(),
+                    "appendChildElement: no elements to start with");
             ElementSupport.appendChildElement(myRoot, testElement);
-            Assert.assertEquals(ElementSupport.getChildElements(myRoot).size(), 1, "appendChildElement: One elements after one insertion");
+            Assert.assertEquals(ElementSupport.getChildElements(myRoot).size(), 1,
+                    "appendChildElement: One elements after one insertion");
             ElementSupport.appendChildElement(myRoot, testElement);
-            Assert.assertEquals(ElementSupport.getChildElements(myRoot).size(), 1, "appendChildElement: One elements after re insertion");
-            
+            Assert.assertEquals(ElementSupport.getChildElements(myRoot).size(), 1,
+                    "appendChildElement: One elements after re insertion");
+
             QName qName = new QName(OTHER_NS, TEST_ELEMENT_NAME);
             ElementSupport.appendChildElement(myRoot, ElementSupport.constructElement(myDocument, TEST_ELEMENT_QNAME));
             ElementSupport.appendChildElement(myRoot, ElementSupport.constructElement(myDocument, qName));
             ElementSupport.appendChildElement(myRoot, ElementSupport.constructElement(myDocument, TEST_ELEMENT_QNAME));
             ElementSupport.appendChildElement(myRoot, ElementSupport.constructElement(myDocument, qName));
-            Assert.assertEquals(ElementSupport.getChildElements(myRoot).size(), 5, "appendChildElement:  elements after insertion");
-            Assert.assertEquals(ElementSupport.getChildElementsByTagNameNS(myRoot, TEST_NS, TEST_ELEMENT_NAME).size(), 3, "appendChildElement:  elements after insertion");
-            Assert.assertEquals(ElementSupport.getChildElementsByTagNameNS(myRoot, OTHER_NS, TEST_ELEMENT_NAME).size(), 2, "appendChildElement:  elements after insertion");
+            Assert.assertEquals(ElementSupport.getChildElements(myRoot).size(), 5,
+                    "appendChildElement:  elements after insertion");
+            Assert.assertEquals(ElementSupport.getChildElementsByTagNameNS(myRoot, TEST_NS, TEST_ELEMENT_NAME).size(),
+                    3, "appendChildElement:  elements after insertion");
+            Assert.assertEquals(ElementSupport.getChildElementsByTagNameNS(myRoot, OTHER_NS, TEST_ELEMENT_NAME).size(),
+                    2, "appendChildElement:  elements after insertion");
         } finally {
             parserPool.returnBuilder(builder);
         }
@@ -365,7 +371,7 @@ public class ElementSupportTest {
         boolean thrown = false;
         try {
             ElementSupport.appendTextContent(null, "test");
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "appendTextContent: null element should assert");
@@ -397,7 +403,7 @@ public class ElementSupportTest {
         boolean thrown = false;
         try {
             ElementSupport.constructElement(null, TEST_ELEMENT_QNAME);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "constructElement(Document, QName): null Document should throw");
@@ -405,7 +411,7 @@ public class ElementSupportTest {
         thrown = false;
         try {
             ElementSupport.constructElement(testerDocument, null);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "constructElement(Document, QName): null QName should throw");
@@ -413,7 +419,7 @@ public class ElementSupportTest {
         thrown = false;
         try {
             ElementSupport.constructElement(testerDocument, TEST_NS, null, TEST_PREFIX);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "constructElement(Document, String, String, String): null ElementName should throw");
@@ -421,52 +427,55 @@ public class ElementSupportTest {
         thrown = false;
         try {
             ElementSupport.constructElement(null, TEST_NS, TEST_ELEMENT_NAME, TEST_PREFIX);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "constructElement(Document, String, String, String): null ElementName should throw");
 
     }
 
-    @Test(dependsOnMethods = {"testConstructElement", "testGetChildElements"}) public void testSetDocumentElement() throws XMLParserException {
+    @Test(dependsOnMethods = {"testConstructElement", "testGetChildElements"}) public void testSetDocumentElement()
+            throws XMLParserException {
         DocumentBuilder builder = parserPool.getBuilder();
         try {
             Document myDocument = builder.newDocument();
-            Element myRoot = ElementSupport.constructElement(testerDocument, new QName(TEST_NS, ROOT_ELEMENT, TEST_PREFIX));
+            Element myRoot =
+                    ElementSupport.constructElement(testerDocument, new QName(TEST_NS, ROOT_ELEMENT, TEST_PREFIX));
             boolean thrown = false;
             try {
                 ElementSupport.setDocumentElement(myDocument, null);
-            } catch (AssertionError e) {
+            } catch (ConstraintViolationException e) {
                 thrown = true;
             }
             Assert.assertTrue(thrown, "setDocumentElement: null Element should assert");
-            
+
             thrown = false;
             try {
                 ElementSupport.setDocumentElement(null, myRoot);
-            } catch (AssertionError e) {
+            } catch (ConstraintViolationException e) {
                 thrown = true;
             }
             Assert.assertTrue(thrown, "setDocumentElement: null Document should assert");
             Assert.assertTrue(ElementSupport.getChildElements(myDocument).isEmpty(), "New document should be empty");
-            
+
             ElementSupport.setDocumentElement(myDocument, myRoot);
             List<Element> list = ElementSupport.getChildElements(myDocument);
             Assert.assertEquals(list.size(), 1, "setDocumentElement: One child after element set");
             Assert.assertEquals(list.get(0), myRoot, "setDocumentElement: after element set");
-            
+
             ElementSupport.setDocumentElement(myDocument, myRoot);
             list = ElementSupport.getChildElements(myDocument);
             Assert.assertEquals(list.size(), 1, "setDocumentElement: One child after element re-set");
             Assert.assertEquals(list.get(0), myRoot, "setDocumentElement: after element re-set");
-    
-            Element otherRoot = ElementSupport.constructElement(testerDocument, new QName(TEST_NS, ROOT_ELEMENT, TEST_PREFIX));
-    
+
+            Element otherRoot =
+                    ElementSupport.constructElement(testerDocument, new QName(TEST_NS, ROOT_ELEMENT, TEST_PREFIX));
+
             ElementSupport.setDocumentElement(myDocument, otherRoot);
             list = ElementSupport.getChildElements(myDocument);
             Assert.assertEquals(list.size(), 1, "setDocumentElement: One child after element re-set");
             Assert.assertEquals(list.get(0), otherRoot, "setDocumentElement: after element re-set");
-            
+
         } finally {
             parserPool.returnBuilder(builder);
         }

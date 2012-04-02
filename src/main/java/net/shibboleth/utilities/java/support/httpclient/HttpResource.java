@@ -29,7 +29,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import net.shibboleth.utilities.java.support.resource.AbstractResource;
 import net.shibboleth.utilities.java.support.resource.ResourceException;
@@ -80,8 +80,8 @@ public class HttpResource extends AbstractResource {
      * @param url URL of the remote resource data
      */
     public HttpResource(@Nonnull final HttpClient client, @Nonnull @NotEmpty final String url) {
-        httpClient = Assert.isNotNull(client, "HTTP client may not be null");
-        setLocation(Assert.isNotNull(StringSupport.trimOrNull(url), "Resource URL may not be null or empty"));
+        httpClient = Constraint.isNotNull(client, "HTTP client may not be null");
+        setLocation(Constraint.isNotNull(StringSupport.trimOrNull(url), "Resource URL may not be null or empty"));
     }
 
     /**

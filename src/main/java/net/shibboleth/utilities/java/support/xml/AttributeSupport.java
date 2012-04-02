@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.xml.namespace.QName;
 
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.w3c.dom.Attr;
@@ -47,8 +47,8 @@ public final class AttributeSupport {
      * @param base the base value
      */
     public static void addXMLBase(@Nonnull final Element element, @Nonnull final String base) {
-        Assert.isNotNull(element, "Element may not be null");
-        Assert.isNotNull(base, "base attribute value may not be null");
+        Constraint.isNotNull(element, "Element may not be null");
+        Constraint.isNotNull(base, "base attribute value may not be null");
 
         final Attr attr = constructAttribute(element.getOwnerDocument(), XmlConstants.XML_BASE_ATTRIB_NAME);
         attr.setValue(base);
@@ -62,8 +62,8 @@ public final class AttributeSupport {
      * @param id the Id value
      */
     public static void addXMLId(@Nonnull final Element element, @Nonnull final String id) {
-        Assert.isNotNull(element, "Element may not be null");
-        Assert.isNotNull(id, "id attribute value may not be null");
+        Constraint.isNotNull(element, "Element may not be null");
+        Constraint.isNotNull(id, "id attribute value may not be null");
 
         final Attr attr = constructAttribute(element.getOwnerDocument(), XmlConstants.XML_ID_ATTRIB_NAME);
         attr.setValue(id);
@@ -77,8 +77,8 @@ public final class AttributeSupport {
      * @param lang the lang value
      */
     public static void addXMLLang(@Nonnull final Element element, @Nonnull final String lang) {
-        Assert.isNotNull(element, "Element may not be null");
-        Assert.isNotNull(lang, "lang attribute value may not be null");
+        Constraint.isNotNull(element, "Element may not be null");
+        Constraint.isNotNull(lang, "lang attribute value may not be null");
 
         final Attr attr = constructAttribute(element.getOwnerDocument(), XmlConstants.XML_LANG_ATTRIB_NAME);
         attr.setValue(lang);
@@ -92,8 +92,8 @@ public final class AttributeSupport {
      * @param space the space value
      */
     public static void addXMLSpace(@Nonnull final Element element, @Nonnull final XmlSpace space) {
-        Assert.isNotNull(element, "Element may not be null");
-        Assert.isNotNull(space, "space attribute value may not be null");
+        Constraint.isNotNull(element, "Element may not be null");
+        Constraint.isNotNull(space, "space attribute value may not be null");
 
         final Attr attr = constructAttribute(element.getOwnerDocument(), XmlConstants.XML_SPACE_ATTRIB_NAME);
         attr.setValue(space.toString());
@@ -140,9 +140,9 @@ public final class AttributeSupport {
      */
     public static void appendAttribute(@Nonnull final Element element, @Nonnull final QName attributeName,
             @Nonnull final String attributeValue, final boolean isIDAttribute) {
-        Assert.isNotNull(element, "Element may not be null");
-        Assert.isNotNull(attributeName, "Attribute name may not be null");
-        Assert.isNotNull(attributeValue, "Attribute value may not be null");
+        Constraint.isNotNull(element, "Element may not be null");
+        Constraint.isNotNull(attributeName, "Attribute name may not be null");
+        Constraint.isNotNull(attributeValue, "Attribute value may not be null");
 
         final Document document = element.getOwnerDocument();
         final Attr attribute = constructAttribute(document, attributeName);
@@ -188,7 +188,7 @@ public final class AttributeSupport {
      */
     @Nonnull public static Attr constructAttribute(@Nonnull final Document owningDocument,
             @Nonnull final QName attributeName) {
-        Assert.isNotNull(attributeName, "Attribute name can not be null");
+        Constraint.isNotNull(attributeName, "Attribute name can not be null");
         return constructAttribute(owningDocument, attributeName.getNamespaceURI(), attributeName.getLocalPart(),
                 attributeName.getPrefix());
     }
@@ -205,10 +205,10 @@ public final class AttributeSupport {
      */
     @Nonnull public static Attr constructAttribute(@Nonnull final Document document,
             @Nullable final String namespaceURI, @Nonnull final String localName, @Nullable final String prefix) {
-        Assert.isNotNull(document, "Document may not null");
+        Constraint.isNotNull(document, "Document may not null");
 
         final String trimmedLocalName =
-                Assert.isNotNull(StringSupport.trimOrNull(localName), "Attribute local name may not be null or empty");
+                Constraint.isNotNull(StringSupport.trimOrNull(localName), "Attribute local name may not be null or empty");
 
         String qualifiedName;
         final String trimmedPrefix = StringSupport.trimOrNull(prefix);

@@ -26,7 +26,7 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
  * Set implementation which provides indexed access to set members via their class, and which allows only one instance
@@ -65,7 +65,7 @@ public class ClassIndexedSet<T> extends AbstractSet<T> implements Set<T> {
      * @return true if object was added
      */
     public boolean add(@Nonnull final T o, final boolean replace) {
-        Assert.isNotNull(o, "Null elements are not allowed");
+        Constraint.isNotNull(o, "Null elements are not allowed");
 
         boolean replacing = false;
         final Class<? extends T> indexClass = getIndexClass(o);
@@ -141,7 +141,7 @@ public class ClassIndexedSet<T> extends AbstractSet<T> implements Set<T> {
      * @return the class index value associated with the object instance
      */
     @Nonnull protected Class<? extends T> getIndexClass(@Nonnull final Object o) {
-        Assert.isNotNull(o);
+        Constraint.isNotNull(o, "Object can not be null");
         return (Class<? extends T>) o.getClass();
     }
 

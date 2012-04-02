@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /** A stopwatch with millisecond precision. */
 @NotThreadSafe
@@ -69,7 +69,7 @@ public class Stopwatch {
      * @return time that elapsed while the stopwatch was running, 0 if the stopwatch has not yet been stopped
      */
     public long elapsedTime(@Nonnull final TimeUnit unit) {
-        Assert.isNotNull(unit, "Provided TimeUnit can not be null");
+        Constraint.isNotNull(unit, "Provided TimeUnit can not be null");
         return unit.convert(elapsedTime, TimeUnit.MILLISECONDS);
     }
 

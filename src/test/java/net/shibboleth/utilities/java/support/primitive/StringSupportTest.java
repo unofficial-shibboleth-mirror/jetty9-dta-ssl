@@ -20,6 +20,8 @@ package net.shibboleth.utilities.java.support.primitive;
 import java.util.Arrays;
 import java.util.List;
 
+import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -29,17 +31,22 @@ import org.testng.annotations.Test;
 public class StringSupportTest {
 
     private static final String TRIM_TEST1 = " AARDVARK incorporated";
+
     private static final String EMPTY_TRIM_TEST2 = " \t ";
+
     private static final String SEPARATOR = "+";
+
     private static final String TEST_LIST = "1+x2+y3+z4+5+6+";
-    private static final List<String> TEST_LIST_AS_LIST = Arrays.asList("1","x2","y3","z4","5","6","");
-    
+
+    private static final List<String> TEST_LIST_AS_LIST = Arrays.asList("1", "x2", "y3", "z4", "5", "6", "");
+
     @Test public void testListToStringValue() {
-        Assert.assertEquals(StringSupport.listToStringValue(TEST_LIST_AS_LIST, SEPARATOR), TEST_LIST, "toList<String> fails");
+        Assert.assertEquals(StringSupport.listToStringValue(TEST_LIST_AS_LIST, SEPARATOR), TEST_LIST,
+                "toList<String> fails");
         boolean thrown = false;
         try {
             StringSupport.listToStringValue(TEST_LIST_AS_LIST, null);
-        } catch (java.lang.AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "null separator should throw an assertion");
@@ -47,20 +54,21 @@ public class StringSupportTest {
         thrown = false;
         try {
             StringSupport.listToStringValue(null, SEPARATOR);
-        } catch (java.lang.AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "null list should throw an assertion");
     }
 
     @Test public void testStringToList() {
-        Assert.assertEquals(StringSupport.stringToList(TEST_LIST, SEPARATOR), TEST_LIST_AS_LIST, "from List<String> fails");
+        Assert.assertEquals(StringSupport.stringToList(TEST_LIST, SEPARATOR), TEST_LIST_AS_LIST,
+                "from List<String> fails");
         Assert.assertTrue(StringSupport.stringToList("", SEPARATOR).isEmpty(), "Empty input should give empty list");
 
         boolean thrown = false;
         try {
             StringSupport.stringToList(null, SEPARATOR);
-        } catch (java.lang.AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "Null input should throw an assertion");
@@ -68,7 +76,7 @@ public class StringSupportTest {
         thrown = false;
         try {
             StringSupport.stringToList(TEST_LIST, null);
-        } catch (java.lang.AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "Null separator should throw an assertion");
@@ -90,7 +98,6 @@ public class StringSupportTest {
                 "Trimming an empty string should return null");
 
         Assert.assertEquals(StringSupport.trim(TRIM_TEST1), TRIM_TEST1.trim(), "Trimming a string");
-        
 
     }
 

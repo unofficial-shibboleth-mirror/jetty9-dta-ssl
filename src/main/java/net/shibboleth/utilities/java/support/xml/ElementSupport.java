@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.xml.namespace.QName;
 
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.w3c.dom.Document;
@@ -52,8 +52,8 @@ public final class ElementSupport {
      * @param adopter the document into which the element is adopted
      */
     public static void adoptElement(@Nonnull final Document adopter, @Nonnull final Element adoptee) {
-        Assert.isNotNull(adoptee, "Adoptee Element may not be null");
-        Assert.isNotNull(adopter, "Adopter Element may not be null");
+        Constraint.isNotNull(adoptee, "Adoptee Element may not be null");
+        Constraint.isNotNull(adopter, "Adopter Element may not be null");
 
         if (!(adoptee.getOwnerDocument().isSameNode(adopter))) {
             if (adopter.adoptNode(adoptee) == null) {
@@ -75,7 +75,7 @@ public final class ElementSupport {
             return;
         }
 
-        Assert.isNotNull(parentElement, "Parent Element may not be null");
+        Constraint.isNotNull(parentElement, "Parent Element may not be null");
         final Document parentDocument = parentElement.getOwnerDocument();
         if (!parentDocument.equals(childElement.getOwnerDocument())) {
             adoptElement(parentDocument, childElement);
@@ -94,7 +94,7 @@ public final class ElementSupport {
         if (textContent == null) {
             return;
         }
-        Assert.isNotNull(element, "Element may not be null");
+        Constraint.isNotNull(element, "Element may not be null");
         final Text textNode = element.getOwnerDocument().createTextNode(textContent);
         element.appendChild(textNode);
     }
@@ -108,7 +108,7 @@ public final class ElementSupport {
      * @return the element
      */
     public static Element constructElement(@Nonnull final Document document, @Nonnull final QName elementName) {
-        Assert.isNotNull(elementName, "Element name can not be null");
+        Constraint.isNotNull(elementName, "Element name can not be null");
         return constructElement(document, elementName.getNamespaceURI(), elementName.getLocalPart(),
                 elementName.getPrefix());
     }
@@ -125,10 +125,10 @@ public final class ElementSupport {
      */
     public static Element constructElement(@Nonnull final Document document, @Nullable final String namespaceURI,
             @Nonnull final String localName, @Nullable final String prefix) {
-        Assert.isNotNull(document, "Document may not be null");
+        Constraint.isNotNull(document, "Document may not be null");
 
         final String trimmedLocalName =
-                Assert.isNotNull(StringSupport.trimOrNull(localName), "Element local name may not be null or empty");
+                Constraint.isNotNull(StringSupport.trimOrNull(localName), "Element local name may not be null or empty");
 
         String qualifiedName;
         final String trimmedPrefix = StringSupport.trimOrNull(prefix);
@@ -301,10 +301,10 @@ public final class ElementSupport {
                 if (!first) {
                     builder.append(XmlConstants.LIST_DELIMITERS.charAt(0));
                 }
-                String s = ((Text) node).getWholeText();
-                builder.append(s);
+                builder.append(((Text) node).getWholeText());
             }
         }
+        
         return builder.toString();
     }
 
@@ -472,8 +472,8 @@ public final class ElementSupport {
      * @param element element that will be the new root element
      */
     public static void setDocumentElement(@Nonnull final Document document, @Nonnull final Element element) {
-        Assert.isNotNull(document, "Document may not be null");
-        Assert.isNotNull(element, "Element may not be null");
+        Constraint.isNotNull(document, "Document may not be null");
+        Constraint.isNotNull(element, "Element may not be null");
 
         final Element rootElement = document.getDocumentElement();
         if (rootElement == null) {

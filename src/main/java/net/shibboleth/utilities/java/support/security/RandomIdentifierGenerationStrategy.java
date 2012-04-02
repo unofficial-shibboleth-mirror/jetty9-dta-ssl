@@ -23,7 +23,7 @@ import java.util.Random;
 
 import javax.annotation.Nonnull;
 
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 import org.apache.commons.codec.BinaryEncoder;
 import org.apache.commons.codec.EncoderException;
@@ -69,7 +69,7 @@ public class RandomIdentifierGenerationStrategy implements IdentifierGenerationS
         try {
             random = SecureRandom.getInstance("SHA1PRNG");
             sizeOfIdentifier =
-                    (int) Assert.isGreaterThan(0, identifierSize,
+                    (int) Constraint.isGreaterThan(0, identifierSize,
                             "Number of bytes in the identifier must be greater than 0");
             encoder = new Hex();
         } catch (NoSuchAlgorithmException e) {
@@ -86,11 +86,11 @@ public class RandomIdentifierGenerationStrategy implements IdentifierGenerationS
      */
     public RandomIdentifierGenerationStrategy(@Nonnull final Random source, final int identifierSize,
             @Nonnull final BinaryEncoder identifierEncoder) {
-        random = Assert.isNotNull(source, "Random number source can not be null");
+        random = Constraint.isNotNull(source, "Random number source can not be null");
         sizeOfIdentifier =
-                (int) Assert.isGreaterThan(0, identifierSize,
+                (int) Constraint.isGreaterThan(0, identifierSize,
                         "Number of bytes in the identifier must be greater than 0");
-        encoder = Assert.isNotNull(identifierEncoder, "Identifier is encoder can not be null");
+        encoder = Constraint.isNotNull(identifierEncoder, "Identifier is encoder can not be null");
     }
 
     /** {@inheritDoc} */

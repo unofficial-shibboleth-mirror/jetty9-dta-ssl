@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 
 import net.shibboleth.utilities.java.support.component.DestroyedComponentException;
 import net.shibboleth.utilities.java.support.component.DestructableComponent;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 import org.apache.http.client.HttpClient;
 
@@ -72,8 +72,8 @@ public class IdleConnectionSweeper implements DestructableComponent {
      */
     public IdleConnectionSweeper(@Nonnull final HttpClient httpClient, final long idleTimeout,
             final long sweepInterval, @Nonnull final Timer backgroundTimer) {
-        client = Assert.isNotNull(httpClient, "HttpClient can not be null");
-        taskTimer = Assert.isNotNull(backgroundTimer, "Sweeper task timer can not be null");
+        client = Constraint.isNotNull(httpClient, "HttpClient can not be null");
+        taskTimer = Constraint.isNotNull(backgroundTimer, "Sweeper task timer can not be null");
 
         sweeper = new TimerTask() {
             public void run() {

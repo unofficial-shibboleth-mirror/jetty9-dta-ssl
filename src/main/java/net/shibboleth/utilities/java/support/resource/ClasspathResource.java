@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /** A resource which reads data from the classpath. */
@@ -48,12 +48,12 @@ public class ClasspathResource extends AbstractResource {
      */
     public ClasspathResource(final String resourcePath, final ClassLoader classLoader) {
         String myLocation =
-                Assert.isNotNull(StringSupport.trimOrNull(resourcePath), "Resource path may not be null or empty");
+                Constraint.isNotNull(StringSupport.trimOrNull(resourcePath), "Resource path may not be null or empty");
         setLocation(myLocation);
 
-        assert classLoader != null : "Resource class loader may not be null";
+        Constraint.isNotNull(classLoader, "Resource class loader may not be null");
         classpathResource =
-                Assert.isNotNull(classLoader.getResource(myLocation), "Resource " + resourcePath
+                Constraint.isNotNull(classLoader.getResource(myLocation), "Resource " + resourcePath
                         + " does not exist on the classpath");
     }
 

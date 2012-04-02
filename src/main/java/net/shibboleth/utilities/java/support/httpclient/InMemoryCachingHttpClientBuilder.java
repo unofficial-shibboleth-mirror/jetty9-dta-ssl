@@ -19,7 +19,7 @@ package net.shibboleth.utilities.java.support.httpclient;
 
 import javax.annotation.Nonnull;
 
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.cache.BasicHttpCacheStorage;
@@ -53,7 +53,7 @@ public class InMemoryCachingHttpClientBuilder {
      * @param builder builder of clients used to fetch data from remote servers
      */
     public InMemoryCachingHttpClientBuilder(@Nonnull final HttpClientBuilder builder) {
-        clientBuilder = Assert.isNotNull(builder, "HttpClient builder can not be null");
+        clientBuilder = Constraint.isNotNull(builder, "HttpClient builder can not be null");
         maxCacheEntries = 50;
         maxCacheEntrySize = 1048576;
     }
@@ -74,7 +74,7 @@ public class InMemoryCachingHttpClientBuilder {
      */
     public void setMaxCacheEntries(int maxEntries) {
         maxCacheEntries =
-                (int) Assert.isGreaterThan(0, maxEntries, "Maximum number of cache entries must be greater than 0");
+                (int) Constraint.isGreaterThan(0, maxEntries, "Maximum number of cache entries must be greater than 0");
     }
 
     /**
@@ -92,7 +92,7 @@ public class InMemoryCachingHttpClientBuilder {
      * @param size maximum response body size that will be eligible for caching, must be greater than zero
      */
     public void setMaxCacheEntrySize(int size) {
-        maxCacheEntrySize = (int) Assert.isGreaterThan(0, size, "Maximum cache entry size must be greater than 0");
+        maxCacheEntrySize = (int) Constraint.isGreaterThan(0, size, "Maximum cache entry size must be greater than 0");
     }
 
     /**

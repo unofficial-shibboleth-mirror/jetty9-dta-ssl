@@ -31,7 +31,7 @@ import javax.xml.validation.SchemaFactory;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.resource.Resource;
 import net.shibboleth.utilities.java.support.resource.ResourceException;
 
@@ -92,7 +92,7 @@ public final class SchemaBuilder {
      */
     @Nonnull public static Schema buildSchema(@Nonnull final SchemaLanguage lang,
             @Nonnull @NotEmpty @NullableElements final String... schemaFilesOrDirectories) throws SAXException {
-        Assert.isNotNull(schemaFilesOrDirectories, "Schema source files paths can not be null");
+        Constraint.isNotNull(schemaFilesOrDirectories, "Schema source files paths can not be null");
 
         ArrayList<File> sourceFiles = new ArrayList<File>();
         for (String file : schemaFilesOrDirectories) {
@@ -116,7 +116,7 @@ public final class SchemaBuilder {
      */
     @Nonnull public static Schema buildSchema(@Nonnull final SchemaLanguage lang,
             @Nonnull @NotEmpty @NullableElements final File... schemaFilesOrDirectories) throws SAXException {
-        Assert.isNotNull(schemaFilesOrDirectories, "Schema source files can not be null");
+        Constraint.isNotNull(schemaFilesOrDirectories, "Schema source files can not be null");
 
         final ArrayList<File> schemaFiles = new ArrayList<File>();
         getSchemaFiles(lang, schemaFiles, schemaFilesOrDirectories);
@@ -143,7 +143,7 @@ public final class SchemaBuilder {
      */
     @Nonnull public static Schema buildSchema(@Nonnull final SchemaLanguage lang,
             @Nonnull @NotEmpty @NullableElements final Resource... schemaSources) throws SAXException {
-        Assert.isNotNull(schemaSources, "Schema source resources can not be null");
+        Constraint.isNotNull(schemaSources, "Schema source resources can not be null");
 
         final ArrayList<Source> sourceStreams = new ArrayList<Source>();
         for (Resource schemaSource : schemaSources) {
@@ -171,7 +171,7 @@ public final class SchemaBuilder {
      */
     @Nonnull public static Schema buildSchema(@Nonnull final SchemaLanguage lang,
             @Nonnull @NotEmpty @NullableElements final InputStream... schemaSources) throws SAXException {
-        Assert.isNotNull(schemaSources, "Schema source inputstreams can not be null");
+        Constraint.isNotNull(schemaSources, "Schema source inputstreams can not be null");
 
         final ArrayList<StreamSource> sources = new ArrayList<StreamSource>();
         for (InputStream schemaSource : schemaSources) {
@@ -192,9 +192,9 @@ public final class SchemaBuilder {
      */
     private static void getSchemaFiles(@Nonnull final SchemaLanguage lang,
             @Nonnull final List<File> accumulatedSchemaFiles, @Nonnull final File... schemaFilesOrDirectories) {
-        Assert.isNotNull(lang, "Schema language identifier can not be null");
-        Assert.isNotNull(accumulatedSchemaFiles, "Accumulated schema file collection can not be null");
-        Assert.isNotNull(schemaFilesOrDirectories, "Schema file or directory can not be null");
+        Constraint.isNotNull(lang, "Schema language identifier can not be null");
+        Constraint.isNotNull(accumulatedSchemaFiles, "Accumulated schema file collection can not be null");
+        Constraint.isNotNull(schemaFilesOrDirectories, "Schema file or directory can not be null");
 
         for (File handle : schemaFilesOrDirectories) {
             if (handle == null) {
@@ -228,16 +228,16 @@ public final class SchemaBuilder {
      */
     @Nonnull private static Schema buildSchema(@Nonnull final SchemaLanguage lang,
             @Nonnull @NotEmpty @NullableElements final List<? extends Source> schemaSources) throws SAXException {
-        Assert.isNotNull(lang, "Schema language identifier can not be null");
+        Constraint.isNotNull(lang, "Schema language identifier can not be null");
 
-        Assert.isNotNull(schemaSources, "Schema source files can not be null");
+        Constraint.isNotNull(schemaSources, "Schema source files can not be null");
         ArrayList<Source> sources = new ArrayList<Source>();
         for (Source source : schemaSources) {
             if (source != null) {
                 sources.add(source);
             }
         }
-        assert !sources.isEmpty() : "No schema source specified";
+        Constraint.isNotEmpty(sources, "No schema source specified");
 
         final SchemaFactory schemaFactory;
         if (lang == SchemaLanguage.XML) {

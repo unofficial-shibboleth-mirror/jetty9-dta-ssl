@@ -20,7 +20,7 @@ package net.shibboleth.utilities.java.support.primitive;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
  * An object that represents a string containing a {@link java.util.Formatter} string and a set of values. When
@@ -42,7 +42,7 @@ public class LazilyFormattedString {
      * @param templateArguments the arguments to the template
      */
     public LazilyFormattedString(@Nonnull final String stringTemplate, @Nullable final Object... templateArguments) {
-        template = Assert.isNotNull(stringTemplate, "String template can not be null");
+        template = Constraint.isNotNull(stringTemplate, "String template can not be null");
         arguments = templateArguments;
     }
 

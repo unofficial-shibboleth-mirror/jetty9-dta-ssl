@@ -24,8 +24,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import javax.annotation.concurrent.ThreadSafe;
 
-import net.shibboleth.utilities.java.support.collection.LazyMap;
-
 /**
  * This class is used to store instances of objects that may be created independently but are, in face, the same object.
  * For example, KeyInfo XML structures contain keys, certs, and CRLs. Multiple unique instances of

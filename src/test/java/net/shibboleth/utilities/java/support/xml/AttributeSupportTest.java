@@ -26,6 +26,7 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 import net.shibboleth.utilities.java.support.resource.ClasspathResource;
 import net.shibboleth.utilities.java.support.resource.ResourceException;
 
@@ -179,7 +180,7 @@ public class AttributeSupportTest {
         boolean thrown = false;
         try {
             AttributeSupport.addXMLId(createdElement, null);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "null string to addXMLId");
@@ -187,7 +188,7 @@ public class AttributeSupportTest {
         thrown = false;
         try {
             AttributeSupport.addXMLId(null, "fr");
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "null element to addXMLId");
@@ -207,7 +208,7 @@ public class AttributeSupportTest {
         boolean thrown = false;
         try {
             AttributeSupport.addXMLBase(createdElement, null);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "null string to addXMLBase");
@@ -215,7 +216,7 @@ public class AttributeSupportTest {
         thrown = false;
         try {
             AttributeSupport.addXMLBase(null, "foo");
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "null element to addXMLBase");
@@ -238,7 +239,7 @@ public class AttributeSupportTest {
         boolean thrown = false;
         try {
             AttributeSupport.addXMLSpace(createdElement, null);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "null string to addXMLBase");
@@ -246,7 +247,7 @@ public class AttributeSupportTest {
         thrown = false;
         try {
             AttributeSupport.addXMLSpace(null, XmlSpace.DEFAULT);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "null element to addXMLSpace");
@@ -281,7 +282,7 @@ public class AttributeSupportTest {
         boolean thrown = false;
         try {
             AttributeSupport.addXMLLang(createdElement, null);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "null string to addXMLBase");
@@ -289,7 +290,7 @@ public class AttributeSupportTest {
         thrown = false;
         try {
             AttributeSupport.addXMLLang(null, "fr");
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "null element to addXMLLang");
@@ -459,7 +460,7 @@ public class AttributeSupportTest {
         boolean thrown = false;
         try {
             AttributeSupport.appendAttribute(null, qName, testResult);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "null element should throw");
@@ -467,7 +468,7 @@ public class AttributeSupportTest {
         thrown = false;
         try {
             AttributeSupport.appendAttribute(createdElement, null, testResult);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "null qname should throw");
@@ -475,7 +476,7 @@ public class AttributeSupportTest {
         thrown = false;
         try {
             AttributeSupport.appendAttribute(createdElement, qName, null);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "null string should throw");
@@ -483,7 +484,7 @@ public class AttributeSupportTest {
         thrown = false;
         try {
             AttributeSupport.appendAttribute(createdElement, qName, testResult);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertFalse(thrown, "All non nulls should not throw");
@@ -500,7 +501,7 @@ public class AttributeSupportTest {
         thrown = false;
         try {
             AttributeSupport.appendAttribute(null, qName, testResult, false);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "null element should throw");
@@ -508,7 +509,7 @@ public class AttributeSupportTest {
         thrown = false;
         try {
             AttributeSupport.appendAttribute(createdElement, null, testResult, false);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "null qname should throw");
@@ -516,7 +517,7 @@ public class AttributeSupportTest {
         thrown = false;
         try {
             AttributeSupport.appendAttribute(createdElement, qName, (String) null, false);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "null string should throw");
@@ -524,7 +525,7 @@ public class AttributeSupportTest {
         thrown = false;
         try {
             AttributeSupport.appendAttribute(createdElement, qName, testResult, false);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertFalse(thrown, "All non nulls should not throw");
@@ -553,7 +554,7 @@ public class AttributeSupportTest {
         thrown = false;
         try {
             AttributeSupport.appendAttribute(null, qName, data, false);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "null element should throw");
@@ -561,7 +562,7 @@ public class AttributeSupportTest {
         thrown = false;
         try {
             AttributeSupport.appendAttribute(createdElement, null, data, false);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "null qname should throw");
@@ -569,7 +570,7 @@ public class AttributeSupportTest {
         thrown = false;
         try {
             AttributeSupport.appendAttribute(createdElement, qName, (List<String>) null, false);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "null string should throw");
@@ -577,7 +578,7 @@ public class AttributeSupportTest {
         thrown = false;
         try {
             AttributeSupport.appendAttribute(createdElement, qName, data, false);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertFalse(thrown, "All non nulls should not throw");
@@ -600,7 +601,7 @@ public class AttributeSupportTest {
         thrown = false;
         try {
             AttributeSupport.appendDurationAttribute(null, qName, duration);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "null element should throw");
@@ -608,7 +609,7 @@ public class AttributeSupportTest {
         thrown = false;
         try {
             AttributeSupport.appendDurationAttribute(createdElement, null, duration);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "null qname should throw");
@@ -616,7 +617,7 @@ public class AttributeSupportTest {
         thrown = false;
         try {
             AttributeSupport.appendDurationAttribute(createdElement, qName, duration);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertFalse(thrown, "All non nulls should not throw");
@@ -631,7 +632,7 @@ public class AttributeSupportTest {
         thrown = false;
         try {
             AttributeSupport.appendDateTimeAttribute(null, qName, time);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "null element should throw");
@@ -639,7 +640,7 @@ public class AttributeSupportTest {
         thrown = false;
         try {
             AttributeSupport.appendDateTimeAttribute(createdElement, null, time);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "null qname should throw");
@@ -647,7 +648,7 @@ public class AttributeSupportTest {
         thrown = false;
         try {
             AttributeSupport.appendDateTimeAttribute(createdElement, qName, time);
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertFalse(thrown, "All non nulls should not throw");

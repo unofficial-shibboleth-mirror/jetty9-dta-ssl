@@ -22,6 +22,8 @@ import java.util.Collection;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.shibboleth.utilities.java.support.logic.Constraint;
+
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.base.Predicate;
@@ -63,8 +65,8 @@ public final class CollectionSupport {
      */
     public static <T> boolean addIf(@Nonnull final Collection<T> target, @Nullable final T element,
             @Nonnull Predicate<? super T> predicate, @Nonnull Function<? super T, T> elementPreprocessor) {
-        assert target != null : "Target collection can not be null";
-        assert predicate != null : "Element predicate can not be null";
+        Constraint.isNotNull(target, "Target collection can not be null");
+        Constraint.isNotNull(predicate, "Element predicate can not be null");
 
         if (element == null) {
             return false;
@@ -150,8 +152,8 @@ public final class CollectionSupport {
      */
     public static <T> boolean removeIf(@Nonnull final Collection<T> target, @Nullable final T element,
             @Nonnull Predicate<? super T> predicate, @Nonnull Function<? super T, T> elementPreprocessor) {
-        assert target != null : "Target collection can not be null";
-        assert predicate != null : "Element predicate can not be null";
+        Constraint.isNotNull(target, "Target collection can not be null");
+        Constraint.isNotNull(predicate, "Element predicate can not be null");
 
         if (element != null) {
             return false;

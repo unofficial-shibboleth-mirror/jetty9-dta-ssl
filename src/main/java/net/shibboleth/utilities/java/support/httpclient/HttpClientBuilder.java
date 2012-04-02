@@ -28,7 +28,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.apache.http.HttpHost;
@@ -156,7 +156,7 @@ public class HttpClientBuilder {
      * @throws UnknownHostException thrown if the given IP or hostname can not be resolved
      */
     public void setSocketLocalAddress(final String ipOrHost) throws UnknownHostException {
-        socketLocalAddress = InetAddress.getByName(Assert.isNotNull(ipOrHost, "IP or hostname may not be null"));
+        socketLocalAddress = InetAddress.getByName(Constraint.isNotNull(ipOrHost, "IP or hostname may not be null"));
     }
 
     /**
@@ -194,7 +194,7 @@ public class HttpClientBuilder {
      * @param size size of the socket buffer, in bytes, used for request/response buffering; must be greater than 0
      */
     public void setSocketBufferSize(final int size) {
-        socketBufferSize = (int) Assert.isGreaterThan(0, size, "Socket buffer size must be greater than 0");
+        socketBufferSize = (int) Constraint.isGreaterThan(0, size, "Socket buffer size must be greater than 0");
     }
 
     /**
@@ -290,7 +290,7 @@ public class HttpClientBuilder {
      *            than zero
      */
     public void setConnectionsMaxTotal(final int max) {
-        connectionsMaxTotal = (int) Assert.isGreaterThan(0, max, "Max total connections must be greater than 0");
+        connectionsMaxTotal = (int) Constraint.isGreaterThan(0, max, "Max total connections must be greater than 0");
     }
 
     /**
@@ -309,7 +309,7 @@ public class HttpClientBuilder {
      */
     public void setConnectionsMaxPerRoute(final int max) {
         connectionsMaxPerRoute =
-                (int) Assert.isGreaterThan(0, max, "Max connections per route must be greater than zero");
+                (int) Constraint.isGreaterThan(0, max, "Max connections per route must be greater than zero");
     }
 
     /**
@@ -346,7 +346,7 @@ public class HttpClientBuilder {
      */
     public void setConnectionProxyPort(final int port) {
         connectionProxyPort =
-                (int) Assert
+                (int) Constraint
                         .numberInRangeExclusive(0, 65536, port, "Proxy port must be between 0 and 65536, exclusive");
     }
 

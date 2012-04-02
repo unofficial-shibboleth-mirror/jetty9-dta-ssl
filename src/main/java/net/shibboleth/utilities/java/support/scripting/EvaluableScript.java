@@ -31,7 +31,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import com.google.common.base.Optional;
@@ -63,8 +63,8 @@ public class EvaluableScript {
     public EvaluableScript(@Nonnull @NotEmpty String engineName, @Nonnull @NotEmpty String scriptSource)
             throws ScriptException {
         scriptLanguage =
-                Assert.isNull(StringSupport.trimOrNull(engineName), "Scripting language can not be null or empty");
-        script = Assert.isNull(StringSupport.trimOrNull(scriptSource), "Script source can not be null or empty");
+                Constraint.isNull(StringSupport.trimOrNull(engineName), "Scripting language can not be null or empty");
+        script = Constraint.isNull(StringSupport.trimOrNull(scriptSource), "Script source can not be null or empty");
 
         initialize();
     }
@@ -80,9 +80,9 @@ public class EvaluableScript {
      */
     public EvaluableScript(@Nonnull @NotEmpty String engineName, @Nonnull File scriptSource) throws ScriptException {
         scriptLanguage =
-                Assert.isNull(StringSupport.trimOrNull(engineName), "Scripting language can not be null or empty");
+                Constraint.isNull(StringSupport.trimOrNull(engineName), "Scripting language can not be null or empty");
 
-        assert scriptSource != null : "Script source file can not be null";
+        Constraint.isNotNull(scriptSource, "Script source file can not be null");
 
         if (!scriptSource.exists()) {
             throw new ScriptException("Script source file " + scriptSource.getAbsolutePath() + " does not exist");
@@ -95,7 +95,7 @@ public class EvaluableScript {
 
         try {
             script =
-                    Assert.isNull(StringSupport.trimOrNull(Files.toString(scriptSource, Charset.defaultCharset())),
+                    Constraint.isNull(StringSupport.trimOrNull(Files.toString(scriptSource, Charset.defaultCharset())),
                             "Scritp source can not be empty");
         } catch (IOException e) {
             throw new ScriptException("Unable to read data from source file " + scriptSource.getAbsolutePath());
@@ -155,7 +155,7 @@ public class EvaluableScript {
     private void initialize() throws ScriptException {
         ScriptEngineManager engineManager = new ScriptEngineManager();
         scriptEngine = engineManager.getEngineByName(scriptLanguage);
-        assert scriptEngine != null : "No scripting engine associated with scripting language " + scriptLanguage;
+        Constraint.isNotNull(scriptEngine, "No scripting engine associated with scripting language " + scriptLanguage);
 
         if (scriptEngine instanceof Compilable) {
             compiledScript = ((Compilable) scriptEngine).compile(script);

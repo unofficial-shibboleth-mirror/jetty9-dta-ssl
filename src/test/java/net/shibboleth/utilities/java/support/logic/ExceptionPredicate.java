@@ -33,7 +33,7 @@ public class ExceptionPredicate implements Predicate<Object> {
      * @param e exception that will be thrown when this function is executed
      */
     public ExceptionPredicate(@Nonnull final RuntimeException e) {
-        thrownException = Assert.isNotNull(e);
+        thrownException = Constraint.isNotNull(e, "Exception can not be null");
     }
 
     /** {@inheritDoc} */

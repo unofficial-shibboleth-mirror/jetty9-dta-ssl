@@ -22,6 +22,7 @@ import java.io.InputStream;
 
 import net.shibboleth.utilities.java.support.component.DestroyedComponentException;
 import net.shibboleth.utilities.java.support.component.UninitializedComponentException;
+import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 import net.shibboleth.utilities.java.support.resource.ResourceException;
 
 import org.apache.http.client.HttpClient;
@@ -70,75 +71,75 @@ public class HttpResourceTest {
         try {
             new HttpResource(null, "http://example.org");
             Assert.fail();
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             // expected this
         }
 
         try {
             new HttpResource(httpClient, null);
             Assert.fail();
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             // expected this
         }
 
     }
-    
+
     @Test public void testInitialization() throws Exception {
         HttpResource resource = new HttpResource(httpClient, "http://shibboleth.net");
         Assert.assertFalse(resource.isInitialized());
-        
-        try{
+
+        try {
             resource.exists();
             Assert.fail();
-        }catch(UninitializedComponentException e){
-            //expected this
+        } catch (UninitializedComponentException e) {
+            // expected this
         }
-        
-        try{
+
+        try {
             resource.getInputStream();
             Assert.fail();
-        }catch(UninitializedComponentException e){
-            //expected this
+        } catch (UninitializedComponentException e) {
+            // expected this
         }
-        
-        try{
+
+        try {
             resource.getLastModifiedTime();
             Assert.fail();
-        }catch(UninitializedComponentException e){
-            //expected this
+        } catch (UninitializedComponentException e) {
+            // expected this
         }
-        
+
         resource.initialize();
         Assert.assertTrue(resource.isInitialized());
     }
-    
-    @Test public void testDestruction() throws Exception{
+
+    @Test public void testDestruction() throws Exception {
         HttpClient client = new HttpClientBuilder().buildClient();
         HttpResource resource = new HttpResource(client, "http://shibboleth.net");
         Assert.assertFalse(resource.isDestroyed());
-        
+
         resource.destroy();
         Assert.assertTrue(resource.isDestroyed());
-        
-        try{
+
+        try {
             resource.exists();
             Assert.fail();
-        }catch(DestroyedComponentException e){
-            //expected this
+        } catch (DestroyedComponentException e) {
+            // expected this
         }
-        
-        try{
+
+        try {
             resource.getInputStream();
             Assert.fail();
-        }catch(DestroyedComponentException e){
-            //expected this
+        } catch (DestroyedComponentException e) {
+            // expected this
         }
-        
-        try{
+
+        try {
             resource.getLastModifiedTime();
             Assert.fail();
-        }catch(DestroyedComponentException e){
-            //expected this
+        } catch (DestroyedComponentException e) {
+            // expected this
         }
     }
 

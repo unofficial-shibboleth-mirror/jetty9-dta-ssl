@@ -25,7 +25,7 @@ import java.util.StringTokenizer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /** String utility methods. */
 public final class StringSupport {
@@ -44,8 +44,8 @@ public final class StringSupport {
      */
     @Nonnull public static String
             listToStringValue(@Nonnull final List<String> values, @Nonnull final String delimiter) {
-        Assert.isNotNull(values, "List of values can not be null");
-        Assert.isNotNull(delimiter, "String delimiter may not be null");
+        Constraint.isNotNull(values, "List of values can not be null");
+        Constraint.isNotNull(delimiter, "String delimiter may not be null");
 
         final StringBuilder stringValue = new StringBuilder();
         final Iterator<String> valueItr = values.iterator();
@@ -70,8 +70,8 @@ public final class StringSupport {
      * @return the list of values or an empty list if the given string is empty
      */
     @Nonnull public static List<String> stringToList(@Nonnull final String string, @Nonnull final String delimiter) {
-        Assert.isNull(string, "String data can not be null");
-        Assert.isNotNull(delimiter, "String delimiter may not be null");
+        Constraint.isNotNull(string, "String data can not be null");
+        Constraint.isNotNull(delimiter, "String delimiter may not be null");
 
         final ArrayList<String> values = new ArrayList<String>();
 

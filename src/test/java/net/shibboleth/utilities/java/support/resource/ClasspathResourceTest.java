@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -53,7 +54,7 @@ public class ClasspathResourceTest {
         @SuppressWarnings("unused") Resource other = null;
         try {
             other = new ClasspathResource(NON_EXIST_RESOURCE);
-        } catch (java.lang.AssertionError e) {
+        } catch (ConstraintViolationException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown, "Non existant resource does not exist");

@@ -28,7 +28,7 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.w3c.dom.Attr;
@@ -53,7 +53,7 @@ public final class DomTypeSupport {
      */
     public static long dateTimeToLong(@Nonnull final String dateTime) {
         String trimmedString =
-                Assert.isNotNull(StringSupport.trimOrNull(dateTime), "Lexical dateTime may not be null or empty");
+                Constraint.isNotNull(StringSupport.trimOrNull(dateTime), "Lexical dateTime may not be null or empty");
 
         XMLGregorianCalendar calendar = dataTypeFactory.newXMLGregorianCalendar(trimmedString);
         return calendar.toGregorianCalendar().getTimeInMillis();

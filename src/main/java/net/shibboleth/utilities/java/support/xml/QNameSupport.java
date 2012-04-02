@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.xml.namespace.QName;
 
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.w3c.dom.Element;
@@ -45,8 +45,8 @@ public final class QNameSupport {
      * @return the QName respresented by the string
      */
     @Nonnull public static QName constructQName(@Nonnull final Element owningElement, @Nonnull final String qname) {
-        Assert.isNotNull(owningElement, "Owning element may not be null");
-        Assert.isNotNull(qname, "Name may not be null");
+        Constraint.isNotNull(owningElement, "Owning element may not be null");
+        Constraint.isNotNull(qname, "Name may not be null");
 
         String nsPrefix;
         String name;
@@ -74,7 +74,7 @@ public final class QNameSupport {
      */
     @Nonnull public static QName constructQName(@Nullable final String namespaceURI, @Nonnull final String localName,
             @Nullable final String prefix) {
-        String trimmedLocalName = Assert.isNotNull(StringSupport.trimOrNull(localName), "Local name may not be null");
+        String trimmedLocalName = Constraint.isNotNull(StringSupport.trimOrNull(localName), "Local name may not be null");
         String trimmedPrefix = StringSupport.trimOrNull(prefix);
 
         if (trimmedPrefix == null) {
@@ -107,7 +107,7 @@ public final class QNameSupport {
      * @return the string value of the QName
      */
     @Nonnull public static String qnameToContentString(@Nonnull final QName qname) {
-        Assert.isNotNull(qname, "QName may not be null");
+        Constraint.isNotNull(qname, "QName may not be null");
 
         final StringBuffer buf = new StringBuffer();
         final String s = StringSupport.trimOrNull(qname.getPrefix());

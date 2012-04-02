@@ -20,6 +20,7 @@ package net.shibboleth.utilities.java.support.component;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /** Support class for working with {@link Component} objects. */
@@ -88,7 +89,7 @@ public final class ComponentSupport {
      * @param component component to check
      */
     public static void ifDestroyedThrowDestroyedComponentException(@Nonnull DestructableComponent component) {
-        assert component != null : "Component can not be null";
+        Constraint.isNotNull(component, "Component can not be null");
 
         if (component.isDestroyed()) {
             if (component instanceof IdentifiableComponent) {
@@ -110,7 +111,7 @@ public final class ComponentSupport {
      * @param component component to check
      */
     public static void ifNotInitializedThrowUninitializedComponentException(@Nonnull InitializableComponent component) {
-        assert component != null : "Component can not be null";
+        Constraint.isNotNull(component, "Component can not be null");
 
         if (!component.isInitialized()) {
             if (component instanceof IdentifiableComponent) {
@@ -132,7 +133,7 @@ public final class ComponentSupport {
      * @param component component to check
      */
     public static void ifInitializedThrowUnmodifiabledComponentException(@Nullable InitializableComponent component) {
-        assert component != null : "Component can not be null";
+        Constraint.isNotNull(component, "Component can not be null");
 
         if (component.isInitialized()) {
             if (component instanceof IdentifiableComponent) {

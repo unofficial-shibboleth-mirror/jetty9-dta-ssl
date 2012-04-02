@@ -32,7 +32,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 import org.w3c.dom.DOMConfiguration;
 import org.w3c.dom.DOMImplementation;
@@ -59,7 +59,7 @@ public final class SerializeSupport {
      * @return the string representation of the node
      */
     @Nonnull public static String nodeToString(@Nonnull final Node node) {
-        Assert.isNotNull(node, "Node may not be null");
+        Constraint.isNotNull(node, "Node may not be null");
 
         final ByteArrayOutputStream baout = new ByteArrayOutputStream();
         writeNode(node, baout);
@@ -79,7 +79,7 @@ public final class SerializeSupport {
      * @return pretty-printed xml
      */
     @Nonnull public static String prettyPrintXML(@Nonnull final Node node) {
-        Assert.isNotNull(node, "Node may not be null");
+        Constraint.isNotNull(node, "Node may not be null");
 
         final TransformerFactory tfactory = TransformerFactory.newInstance();
         try {
@@ -105,8 +105,8 @@ public final class SerializeSupport {
      * @param output the output stream to write the XML to
      */
     public static void writeNode(@Nonnull final Node node, @Nonnull final OutputStream output) {
-        Assert.isNotNull(node, "Node may not be null");
-        Assert.isNotNull(output, "Outputstream may not be null");
+        Constraint.isNotNull(node, "Node may not be null");
+        Constraint.isNotNull(output, "Outputstream may not be null");
 
         final DOMImplementationLS domImplLS = getDomLsImplementation(node); 
         final LSSerializer serializer = domImplLS.createLSSerializer();
@@ -145,7 +145,7 @@ public final class SerializeSupport {
      */
     @Nonnull public static LSSerializer getLsSerializer(@Nonnull final DOMImplementationLS domImplLS,
             @Nullable final Map<String, Object> serializerParams) {
-        Assert.isNotNull(domImplLS, "DOM implementation can not be null");
+        Constraint.isNotNull(domImplLS, "DOM implementation can not be null");
         final LSSerializer serializer = domImplLS.createLSSerializer();
 
         serializer.setFilter(new LSSerializerFilter() {
@@ -177,7 +177,7 @@ public final class SerializeSupport {
      * @return the Load/Store implementation, never null
      */
     @Nonnull public static DOMImplementationLS getDomLsImplementation(@Nonnull final Node node) {
-        Assert.isNotNull(node, "DOM node can not be null");
+        Constraint.isNotNull(node, "DOM node can not be null");
         final DOMImplementation domImpl;
         if (node instanceof Document) {
             domImpl = ((Document) node).getImplementation();

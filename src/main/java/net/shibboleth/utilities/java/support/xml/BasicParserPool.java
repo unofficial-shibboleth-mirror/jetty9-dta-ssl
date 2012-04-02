@@ -41,7 +41,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.component.AbstractDestructableInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -224,7 +224,7 @@ public class BasicParserPool extends AbstractDestructableInitializableComponent 
     @Nonnull public Document parse(@Nonnull final InputStream input) throws XMLParserException {
         checkInitializedNotDestroyed();
 
-        Assert.isNotNull(input, "Input stream can not be null");
+        Constraint.isNotNull(input, "Input stream can not be null");
 
         final DocumentBuilder builder = getBuilder();
         try {
@@ -243,7 +243,7 @@ public class BasicParserPool extends AbstractDestructableInitializableComponent 
     @Nonnull public Document parse(@Nonnull final Reader input) throws XMLParserException {
         checkInitializedNotDestroyed();
 
-        Assert.isNotNull(input, "Input reader can not be null");
+        Constraint.isNotNull(input, "Input reader can not be null");
 
         final DocumentBuilder builder = getBuilder();
         try {
@@ -275,7 +275,7 @@ public class BasicParserPool extends AbstractDestructableInitializableComponent 
     public synchronized void setMaxPoolSize(final int newSize) {
         checkNotInitializedNotDestroyed();
 
-        maxPoolSize = (int) Assert.isGreaterThan(0, newSize, "New maximum pool size must be greater than 0");
+        maxPoolSize = (int) Constraint.isGreaterThan(0, newSize, "New maximum pool size must be greater than 0");
     }
 
     /**

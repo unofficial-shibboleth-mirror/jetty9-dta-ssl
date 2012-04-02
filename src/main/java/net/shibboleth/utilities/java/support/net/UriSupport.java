@@ -23,7 +23,6 @@ import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import net.shibboleth.utilities.java.support.collection.LazyList;

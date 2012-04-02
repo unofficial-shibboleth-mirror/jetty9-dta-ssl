@@ -55,8 +55,8 @@ public class TransformAndCheckFunction<T> implements Function<T, Optional<? exte
      */
     public TransformAndCheckFunction(@Nonnull Function<T, ? extends T> inputPreprocessor,
             @Nonnull Predicate<T> inputConstraint, boolean failOnInputConstraintViolation) {
-        preprocessor = Assert.isNotNull(inputPreprocessor, "Input preprocessor can not be null");
-        constraint = Assert.isNotNull(inputConstraint, "Input constraint can not be null");
+        preprocessor = Constraint.isNotNull(inputPreprocessor, "Input preprocessor can not be null");
+        constraint = Constraint.isNotNull(inputConstraint, "Input constraint can not be null");
         failOnConstraintViolation = failOnInputConstraintViolation;
     }
 

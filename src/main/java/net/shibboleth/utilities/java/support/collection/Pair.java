@@ -20,6 +20,8 @@ package net.shibboleth.utilities.java.support.collection;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.shibboleth.utilities.java.support.logic.Constraint;
+
 import com.google.common.base.Objects;
 
 /**
@@ -58,7 +60,7 @@ public class Pair<T1, T2> {
      * @param pair pair to be copied
      */
     public Pair(@Nonnull Pair<? extends T1, ? extends T2> pair) {
-        assert pair != null : "Pair to be copied can not be null";
+        Constraint.isNotNull(pair, "Pair to be copied can not be null");
         first = pair.getFirst();
         second = pair.getSecond();
     }

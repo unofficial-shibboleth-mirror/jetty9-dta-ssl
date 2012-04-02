@@ -19,7 +19,7 @@ package net.shibboleth.utilities.java.support.codec;
 
 import javax.annotation.Nonnull;
 
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.apache.commons.codec.binary.Base64;
@@ -61,7 +61,7 @@ public final class Base64Support {
      * @return the base64 encoded data
      */
     @Nonnull public static String encode(@Nonnull final byte[] data, final boolean chunked) {
-        Assert.isNotNull(data, "Binary data to be encoded can not be null");
+        Constraint.isNotNull(data, "Binary data to be encoded can not be null");
         if (chunked) {
             return StringSupport.trim(CHUNKED_ENCODER.encodeToString(data));
         } else {
@@ -77,7 +77,7 @@ public final class Base64Support {
      * @return the decoded data
      */
     @Nonnull public static byte[] decode(@Nonnull final String data) {
-        Assert.isNotNull(data, "Base64 encoded data can not be null");
+        Constraint.isNotNull(data, "Base64 encoded data can not be null");
         return CHUNKED_ENCODER.decode(data);
     }
 }

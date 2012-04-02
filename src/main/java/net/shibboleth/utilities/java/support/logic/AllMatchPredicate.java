@@ -42,7 +42,7 @@ public class AllMatchPredicate<T> implements Predicate<Iterable<T>> {
      * @param target the target predicate against which all {@link Iterable} elements are evaluated
      */
     public AllMatchPredicate(@Nonnull final Predicate<T> target) {
-        predicate = Assert.isNotNull(target, "Target predicate can not be null");
+        predicate = Constraint.isNotNull(target, "Target predicate can not be null");
     }
 
     /** {@inheritDoc} */

@@ -20,7 +20,7 @@ package net.shibboleth.utilities.java.support.xml;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.shibboleth.utilities.java.support.logic.Assert;
+import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.w3c.dom.DOMException;
@@ -47,12 +47,12 @@ public final class NamespaceSupport {
      */
     public static void appendNamespaceDeclaration(@Nonnull final Element element, @Nonnull final String namespaceURI,
             @Nullable final String prefix) {
-        Assert.isNotNull(element, "Element may not be null");
+        Constraint.isNotNull(element, "Element may not be null");
 
         final String nsURI = StringSupport.trimOrNull(namespaceURI);
         final String nsPrefix = StringSupport.trimOrNull(prefix);
         
-        Assert.isNotNull(nsURI, "namespace may not be null or empty");
+        Constraint.isNotNull(nsURI, "namespace may not be null or empty");
 
         String attributeName;
         if (nsPrefix == null) {
@@ -94,7 +94,7 @@ public final class NamespaceSupport {
      */
     @Nullable public static String lookupNamespaceURI(@Nonnull final Element startingElement,
             @Nullable final Element stoppingElement, @Nonnull final String prefix) {
-        Assert.isNotNull(startingElement, "Starting element may not be null");
+        Constraint.isNotNull(startingElement, "Starting element may not be null");
 
         // This code is a modified version of the lookup code within Xerces
         if (startingElement.hasAttributes()) {
@@ -148,7 +148,7 @@ public final class NamespaceSupport {
      */
     @Nullable public static String lookupPrefix(@Nonnull final Element startingElement,
             @Nullable final Element stopingElement, @Nullable final String namespaceURI) {
-        Assert.isNotNull(startingElement, "Starting element may not be null");
+        Constraint.isNotNull(startingElement, "Starting element may not be null");
 
         if (null == namespaceURI) {
             return null;

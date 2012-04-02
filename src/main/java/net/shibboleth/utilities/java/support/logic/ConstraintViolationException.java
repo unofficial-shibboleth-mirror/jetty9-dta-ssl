@@ -17,34 +17,23 @@
 
 package net.shibboleth.utilities.java.support.logic;
 
-import javax.annotation.Nonnull;
-
-import com.google.common.base.Predicate;
-
 /**
- * A {@link Predicate} that checks that a given input string matches a target string while ignoring case. If a given
- * input is <code>null</code> this predicate returns <code>false</code>.
+ * An exception that represents the violation of a constraint. For example, a method argument not being within the
+ * proper integer range or a return value being null. The astute observer might ask "Why not just use
+ * {@link IllegalArgumentException}?" The short answer is that that exception is really only meant to be thrown when
+ * checking method inputs and we wanted something that could really be used anywhere.
  */
-public class CaseInsensitiveStringMatchPredicate implements Predicate<CharSequence> {
+public class ConstraintViolationException extends RuntimeException {
 
-    /** The target string. */
-    private final String target;
+    /** Serial version UID. */
+    private static final long serialVersionUID = -3994361273802830823L;
 
     /**
      * Constructor.
      * 
-     * @param matchString that string against which predicate inputs will be checked
+     * @param message message describing the violated constraint
      */
-    public CaseInsensitiveStringMatchPredicate(@Nonnull final String matchString) {
-        target = Constraint.isNotNull(matchString, "Target string can not be null");
-    }
-
-    /** {@inheritDoc} */
-    public boolean apply(CharSequence input) {
-        if (input == null) {
-            return false;
-        }
-
-        return target.equalsIgnoreCase(input.toString());
+    public ConstraintViolationException(final String message) {
+        super(message);
     }
 }

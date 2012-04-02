@@ -17,6 +17,8 @@
 
 package net.shibboleth.utilities.java.support.component;
 
+import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -31,21 +33,21 @@ public class AbstractIdentifiableInitializableComponentTest {
         try {
             component.setId(null);
             Assert.fail();
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             // expected this
         }
 
         try {
             component.setId("");
             Assert.fail();
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             // expected this
         }
 
         try {
             component.setId("  ");
             Assert.fail();
-        } catch (AssertionError e) {
+        } catch (ConstraintViolationException e) {
             // expected this
         }
 
