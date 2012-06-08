@@ -1,0 +1,4 @@
+Changes in Release 1.1.0
+===============================
+[JSPT-3] - Providers helpers for dealing with idle connections in HttpClient
+[JSPT-16] - Add a ServletListener that configures logback with a specified configuration file
