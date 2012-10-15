@@ -72,7 +72,6 @@
             <artifactId>logback-classic</artifactId>
             <scope>provided</scope>
         </dependency>
-        
 
         <!-- Runtime Dependencies -->
         <dependency>
