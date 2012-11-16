@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 public interface Resolver<ProductType, CriteriaType> {
 
     /**
-     * Process the specified criteria and return the resulting instances the the product type
+     * Process the specified criteria and return the resulting instances of the product type
      * which satisfy the criteria.
      * 
      * @param criteria the criteria to evaluate or process
