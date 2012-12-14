@@ -21,7 +21,7 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
-/** Indicates that the annotated array, string, collection other object is not empty. */
+/** Indicates that the annotated array, string, collection, or other object is not empty. */
 @Documented
 @Target({ElementType.FIELD, ElementType.LOCAL_VARIABLE, ElementType.METHOD, ElementType.PARAMETER})
 public @interface NotEmpty {

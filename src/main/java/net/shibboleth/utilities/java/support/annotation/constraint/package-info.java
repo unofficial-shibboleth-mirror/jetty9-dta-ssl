@@ -17,7 +17,7 @@
 
 /** 
  * A set of annotations used to document constraints on methods, fields, parameters, etc. Note, these annotations are
- * for documentation purposes only.  They do not have any effect on the executing code.  Use a JSR-303 implementations
+ * for documentation purposes only.  They do not have any effect on the executing code.  Use a JSR-303 implementation
  * if that's what you're after.
  */
 package net.shibboleth.utilities.java.support.annotation.constraint;
