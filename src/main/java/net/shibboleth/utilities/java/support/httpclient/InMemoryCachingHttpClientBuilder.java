@@ -45,7 +45,7 @@ public class InMemoryCachingHttpClientBuilder {
     private int maxCacheEntries;
 
     /** The maximum response body size, in bytes, that will be eligible for caching. Default: 1048576 (1 megabyte) */
-    private int maxCacheEntrySize;
+    private long maxCacheEntrySize;
 
     /**
      * Constructor.
@@ -82,7 +82,7 @@ public class InMemoryCachingHttpClientBuilder {
      * 
      * @return maximum response body size that will be eligible for caching
      */
-    public int getMaxCacheEntrySize() {
+    public long getMaxCacheEntrySize() {
         return maxCacheEntrySize;
     }
 
@@ -91,8 +91,8 @@ public class InMemoryCachingHttpClientBuilder {
      * 
      * @param size maximum response body size that will be eligible for caching, must be greater than zero
      */
-    public void setMaxCacheEntrySize(int size) {
-        maxCacheEntrySize = (int) Constraint.isGreaterThan(0, size, "Maximum cache entry size must be greater than 0");
+    public void setMaxCacheEntrySize(long size) {
+        maxCacheEntrySize = Constraint.isGreaterThan(0, size, "Maximum cache entry size must be greater than 0");
     }
 
     /**
@@ -105,7 +105,7 @@ public class InMemoryCachingHttpClientBuilder {
 
         CacheConfig cacheConfig = new CacheConfig();
         cacheConfig.setMaxCacheEntries(maxCacheEntries);
-        cacheConfig.setMaxObjectSizeBytes(maxCacheEntrySize);
+        cacheConfig.setMaxObjectSize(maxCacheEntrySize);
         cacheConfig.setHeuristicCachingEnabled(false);
         cacheConfig.setSharedCache(false);
 

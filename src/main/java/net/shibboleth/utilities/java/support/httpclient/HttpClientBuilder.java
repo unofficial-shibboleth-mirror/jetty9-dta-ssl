@@ -45,7 +45,7 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.apache.http.params.HttpParams;
 
 //TODO retry attempts, keep alive strategy
@@ -474,15 +474,15 @@ public class HttpClientBuilder {
     }
 
     /**
-     * Builds the connection manager used by the HTTP client. A {@link ThreadSafeClientConnManager} is used with
-     * {@link ThreadSafeClientConnManager#setDefaultMaxPerRoute(int)} set to {@link #connectionsMaxPerRoute} and
-     * {@link ThreadSafeClientConnManager#setMaxTotal(int)} set to {@link #connectionsMaxTotal}.
+     * Builds the connection manager used by the HTTP client. A {@link PoolingClientConnectionManager} is used with
+     * {@link PoolingClientConnectionManager#setDefaultMaxPerRoute(int)} set to {@link #connectionsMaxPerRoute} and
+     * {@link PoolingClientConnectionManager#setMaxTotal(int)} set to {@link #connectionsMaxTotal}.
      * 
      * @return the connection manager used by the HTTP client
      */
     private ClientConnectionManager buildConnectionManager() {
         final SchemeRegistry registry = buildSchemeRegistry();
-        final ThreadSafeClientConnManager manager = new ThreadSafeClientConnManager(registry);
+        final PoolingClientConnectionManager manager = new PoolingClientConnectionManager(registry);
         manager.setDefaultMaxPerRoute(connectionsMaxPerRoute);
         manager.setMaxTotal(connectionsMaxTotal);
         return manager;
