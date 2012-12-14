@@ -57,7 +57,8 @@ public class IdleConnectionSweeper implements DestructableComponent {
      * @param idleTimeout length of time, in milliseconds, connection may be idle before being closed down
      * @param sweepInterval length of time, in milliseconds, between sweeps
      */
-    public IdleConnectionSweeper(@Nonnull final HttpClient httpClient, final long idleTimeout, final long sweepInterval) {
+    public IdleConnectionSweeper(@Nonnull final HttpClient httpClient, final long idleTimeout,
+            final long sweepInterval) {
         this(httpClient, idleTimeout, sweepInterval, new Timer(true));
         createdTimer = true;
     }
