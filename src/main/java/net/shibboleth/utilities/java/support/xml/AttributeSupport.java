@@ -68,6 +68,7 @@ public final class AttributeSupport {
         final Attr attr = constructAttribute(element.getOwnerDocument(), XmlConstants.XML_ID_ATTRIB_NAME);
         attr.setValue(id);
         element.setAttributeNodeNS(attr);
+        element.setIdAttributeNode(attr, true);
     }
 
     /**
@@ -208,7 +209,7 @@ public final class AttributeSupport {
         Constraint.isNotNull(document, "Document may not null");
 
         final String trimmedLocalName =
-                Constraint.isNotNull(StringSupport.trimOrNull(localName), "Attribute local name may not be null or empty");
+            Constraint.isNotNull(StringSupport.trimOrNull(localName), "Attribute local name may not be null or empty");
 
         String qualifiedName;
         final String trimmedPrefix = StringSupport.trimOrNull(prefix);
