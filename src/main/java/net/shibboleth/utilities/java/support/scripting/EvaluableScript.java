@@ -63,7 +63,7 @@ public class EvaluableScript {
     public EvaluableScript(@Nonnull @NotEmpty String engineName, @Nonnull @NotEmpty String scriptSource)
             throws ScriptException {
         scriptLanguage =
-                Constraint.isNotNull(StringSupport.trimOrNull(engineName), "Scripting language can not be null or empty");
+            Constraint.isNotNull(StringSupport.trimOrNull(engineName), "Scripting language can not be null or empty");
         script = Constraint.isNotNull(StringSupport.trimOrNull(scriptSource), "Script source can not be null or empty");
 
         initialize();
@@ -80,7 +80,7 @@ public class EvaluableScript {
      */
     public EvaluableScript(@Nonnull @NotEmpty String engineName, @Nonnull File scriptSource) throws ScriptException {
         scriptLanguage =
-                Constraint.isNotNull(StringSupport.trimOrNull(engineName), "Scripting language can not be null or empty");
+            Constraint.isNotNull(StringSupport.trimOrNull(engineName), "Scripting language can not be null or empty");
 
         Constraint.isNotNull(scriptSource, "Script source file can not be null");
 
@@ -95,7 +95,7 @@ public class EvaluableScript {
 
         try {
             script =
-                    Constraint.isNotNull(StringSupport.trimOrNull(Files.toString(scriptSource, Charset.defaultCharset())),
+                Constraint.isNotNull(StringSupport.trimOrNull(Files.toString(scriptSource, Charset.defaultCharset())),
                             "Script source can not be empty");
         } catch (IOException e) {
             throw new ScriptException("Unable to read data from source file " + scriptSource.getAbsolutePath());

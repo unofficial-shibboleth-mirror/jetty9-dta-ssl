@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
  */
 public class ClasspathResolver implements EntityResolver, LSResourceResolver {
 
-    /** UR scheme for classpath locations. */
+    /** URI scheme for classpath locations. */
     public static final String CLASSPATH_URI_SCHEME = "classpath:";
 
     /** Class logger. */

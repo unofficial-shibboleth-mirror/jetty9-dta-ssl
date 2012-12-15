@@ -25,7 +25,7 @@ import net.shibboleth.utilities.java.support.component.DestructableComponent;
 import net.shibboleth.utilities.java.support.component.InitializableComponent;
 import net.shibboleth.utilities.java.support.component.ValidatableComponent;
 
-/** An interface representing an data resource. */
+/** An interface representing a data resource. */
 public interface Resource extends DestructableComponent, InitializableComponent, ValidatableComponent {
 
     /**

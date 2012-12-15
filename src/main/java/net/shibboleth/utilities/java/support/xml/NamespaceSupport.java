@@ -80,10 +80,10 @@ public final class NamespaceSupport {
 
     /**
      * Looks up the namespace URI associated with the given prefix starting at the given element. This method differs
-     * from the {@link Node#lookupNamespaceURI(java.lang.String)} in that it only returns those namespaces declared by
-     * an xmlns attribute are inspected. The Node method also checks the namespace a particular node was created in by
+     * from {@link Node#lookupNamespaceURI(java.lang.String)} in that it only returns those namespaces actually declared
+     * by an xmlns attribute. The Node method also checks the namespace a particular node was created in by
      * way of a call like {@link org.w3c.dom.Document#createElementNS(java.lang.String, java.lang.String)} even if the
-     * resulting element doesn't have an namespace declaration attribute.
+     * resulting element doesn't have a namespace declaration attribute.
      * 
      * @param startingElement the starting element
      * @param stoppingElement the ancestor of the starting element that serves as the upper-bound, inclusive, for the
@@ -131,13 +131,13 @@ public final class NamespaceSupport {
 
     /**
      * Looks up the namespace prefix associated with the given URI starting at the given element. This method differs
-     * from the {@link Node#lookupPrefix(java.lang.String)} in that it only those namespaces declared by an xmlns
-     * attribute are inspected. The Node method also checks the namespace a particular node was created in by way of a
+     * from {@link Node#lookupPrefix(java.lang.String)} in that only those namespaces declared by an xmlns attribute
+     * are inspected. The Node method also checks the namespace a particular node was created in by way of a
      * call like {@link org.w3c.dom.Document#createElementNS(java.lang.String, java.lang.String)} even if the resulting
-     * element doesn't have an namespace delcaration attribute.
+     * element doesn't have a namespace delcaration attribute.
      * <p>
      * <em>Note:</em>The prefix returned may not necessarily refer to the corresponding namespace within this element
-     * (if, for instance the prefix is associated with a namespaces at different points of the hierarchy.
+     * (if, for instance the prefix is associated with different namespaces at different points of the hierarchy.
      * 
      * @param startingElement the starting element
      * @param stopingElement the ancestor of the starting element that serves as the upper-bound, inclusive, for the

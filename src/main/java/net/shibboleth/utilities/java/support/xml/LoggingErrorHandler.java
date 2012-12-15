@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * A SAX error handler that logs errors a {@link Logger} before rethrowing them.
+ * A SAX error handler that logs errors to a {@link Logger} before rethrowing them.
  */
 public final class LoggingErrorHandler implements ErrorHandler {
 

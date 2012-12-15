@@ -70,14 +70,14 @@ public final class XmlConstants {
     /** XML Schema instance <code>xsi:type</code> attribute QName. */
     public static final QName XSI_TYPE_ATTRIB_NAME = new QName(XSI_NS, "type", XSI_PREFIX);
 
-    /** XML Schema instance <code>xsi:type</code> attribute QName. */
+    /** XML Schema instance <code>xsi:schemaLocation</code> attribute QName. */
     public static final QName XSI_SCHEMA_LOCATION_ATTRIB_NAME = new QName(XSI_NS, "schemaLocation", XSI_PREFIX);
 
-    /** XML Schema instance <code>xsi:type</code> attribute QName. */
+    /** XML Schema instance <code>xsi:noNamespaceSchemaLocation</code> attribute QName. */
     public static final QName XSI_NO_NAMESPACE_SCHEMA_LOCATION_ATTRIB_NAME = new QName(XSI_NS,
             "noNamespaceSchemaLocation", XSI_PREFIX);
 
-    /** XML Schema instance <code>xsi:type</code> attribute QName. */
+    /** XML Schema instance <code>xsi:nil</code> attribute QName. */
     public static final QName XSI_NIL_ATTRIB_NAME = new QName(XSI_NS, "nil", XSI_PREFIX);
 
     /** Constructor. */

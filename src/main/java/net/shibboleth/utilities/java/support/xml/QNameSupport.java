@@ -37,10 +37,10 @@ public final class QNameSupport {
     }
 
     /**
-     * Constructs a QName from a string (attribute element content) value.
+     * Constructs a QName from a string (attribute or element content) value.
      * 
-     * @param qname the QName string
      * @param owningElement parent DOM element of the Node which contains the QName value
+     * @param qname the QName string
      * 
      * @return the QName respresented by the string
      */
@@ -74,7 +74,8 @@ public final class QNameSupport {
      */
     @Nonnull public static QName constructQName(@Nullable final String namespaceURI, @Nonnull final String localName,
             @Nullable final String prefix) {
-        String trimmedLocalName = Constraint.isNotNull(StringSupport.trimOrNull(localName), "Local name may not be null");
+        String trimmedLocalName =
+                Constraint.isNotNull(StringSupport.trimOrNull(localName), "Local name may not be null");
         String trimmedPrefix = StringSupport.trimOrNull(prefix);
 
         if (trimmedPrefix == null) {

@@ -128,7 +128,7 @@ public final class ElementSupport {
         Constraint.isNotNull(document, "Document may not be null");
 
         final String trimmedLocalName =
-                Constraint.isNotNull(StringSupport.trimOrNull(localName), "Element local name may not be null or empty");
+            Constraint.isNotNull(StringSupport.trimOrNull(localName), "Element local name may not be null or empty");
 
         String qualifiedName;
         final String trimmedPrefix = StringSupport.trimOrNull(prefix);
