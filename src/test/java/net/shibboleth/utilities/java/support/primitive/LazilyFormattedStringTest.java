@@ -35,7 +35,7 @@ public class LazilyFormattedStringTest {
 
         Assert.assertEquals(testString.toString(), formatter.out().toString(),
                 "Should be the same result regardless of whether lazily or actively formatted");
-
+        formatter.close();
     }
 
     @Test public void testNullFormat() {
@@ -46,5 +46,6 @@ public class LazilyFormattedStringTest {
 
         Assert.assertEquals(testString.toString(), formatter.out().toString(),
                 "Should be the same result regardless of whether lazily or actively formatted");
+        formatter.close();
     }
 }
