@@ -47,6 +47,9 @@ import com.google.common.base.Objects;
  * template. Note, this check occurs only at {@link Template} construction time so, if you're loading a named template
  * from a file and that file disappears before calling {@link #merge(Context)} or {@link #merge(Context, Writer)} you'll
  * still end up getting a {@link org.apache.velocity.exception.ResourceNotFoundException}.
+ * 
+ * Many methods throw an {@link org.apache.velocity.exception.VelocityException} to report template or argument errors,
+ * which is an unchecked exception type.
  */
 public final class Template {
 
@@ -91,12 +94,8 @@ public final class Template {
      *            {@link #fromTemplateName(VelocityEngine, String, Charset)} for that
      * 
      * @return an instance of this class that can be used to evaluate the given template using the given engine
-     * 
-     * @throws VelocityException thrown if engine is not configured to load the given template from the default
-     *             {@link StringResourceRepository}
      */
-    @Nonnull public static Template fromTemplate(@Nonnull VelocityEngine engine, @Nonnull @NotEmpty String template)
-            throws VelocityException {
+    @Nonnull public static Template fromTemplate(@Nonnull VelocityEngine engine, @Nonnull @NotEmpty String template) {
         return fromTemplate(engine, template, Charsets.US_ASCII);
     }
 
@@ -119,12 +118,9 @@ public final class Template {
      * @param encoding the encoding used by the template
      * 
      * @return an instance of this class that can be used to evaluate the given template using the given engine
-     * 
-     * @throws VelocityException thrown if engine is not configured to load the given template from the default
-     *             {@link StringResourceRepository}
      */
     @Nonnull public static Template fromTemplate(@Nonnull VelocityEngine engine, @Nonnull @NotEmpty String template,
-            @Nonnull Charset encoding) throws VelocityException {
+            @Nonnull Charset encoding) {
         final String trimmedTemplate =
                 Constraint.isNotNull(StringSupport.trimOrNull(template), "Velocity template can not be null or empty");
         Constraint.isNotNull(encoding, "Template encoding character set can not be null");
@@ -166,11 +162,8 @@ public final class Template {
      * @param templateName the name, as known to the given engine, of a velocity template
      * 
      * @return an instance of this class that can be used to evaluate the named template using the given engine
-     * 
-     * @throws VelocityException thrown if the template name is not known to the engine
      */
-    public static Template fromTemplateName(@Nonnull VelocityEngine engine, @Nonnull @NotEmpty String templateName)
-            throws VelocityException {
+    public static Template fromTemplateName(@Nonnull VelocityEngine engine, @Nonnull @NotEmpty String templateName) {
         return fromTemplateName(engine, templateName, Charsets.US_ASCII);
     }
 
@@ -182,11 +175,9 @@ public final class Template {
      * @param encoding the template encoding
      * 
      * @return an instance of this class that can be used to evaluate the named template using the given engine
-     * 
-     * @throws VelocityException thrown if the template name is not known to the engine
      */
     public static Template fromTemplateName(@Nonnull VelocityEngine engine, @Nonnull @NotEmpty String name,
-            @Nonnull Charset encoding) throws VelocityException {
+            @Nonnull Charset encoding) {
         final String trimmedName =
                 Constraint.isNotNull(StringSupport.trimOrNull(name), "Velocity template name can not be null or empty");
         Constraint.isNotNull(encoding, "Template encoding character set can not be null");
@@ -220,24 +211,20 @@ public final class Template {
      * @param templateContext current template context
      * 
      * @return the generated output of the template
-     * 
-     * @throws VelocityException thrown if there is a problem evaluating the template
      */
-    public String merge(Context templateContext) throws VelocityException {
+    public String merge(Context templateContext) {
         StringWriter output = new StringWriter();
         merge(templateContext, output);
         return output.toString();
     }
 
     /**
-     * Evaluates the template using the given context and returns the result as a string.
+     * Evaluates the template using the given context and sends the result to a Writer.
      * 
      * @param templateContext current template context
      * @param output writer that will receive the template output
-     * 
-     * @throws VelocityException thrown if there is a problem evaluating the template
      */
-    public void merge(Context templateContext, Writer output) throws VelocityException {
+    public void merge(Context templateContext, Writer output) {
         try {
             engine.mergeTemplate(templateName, templateEncoding, templateContext, output);
         } catch (ResourceNotFoundException e) {
