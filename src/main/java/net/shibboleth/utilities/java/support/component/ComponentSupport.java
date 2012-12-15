@@ -89,7 +89,7 @@ public final class ComponentSupport {
      * @param component component to check
      */
     public static void ifDestroyedThrowDestroyedComponentException(@Nonnull DestructableComponent component) {
-        Constraint.isNotNull(component, "Component can not be null");
+        Constraint.isNotNull(component, "Component cannot be null");
 
         if (component.isDestroyed()) {
             if (component instanceof IdentifiableComponent) {
@@ -97,7 +97,7 @@ public final class ComponentSupport {
                         + StringSupport.trimOrNull(((IdentifiableComponent) component).getId())
                         + "' has already been destroyed and can no longer be used.");
             } else {
-                throw new DestroyedComponentException("Component has already been destroy and can no longer be used");
+                throw new DestroyedComponentException("Component has already been destroyed and can no longer be used");
             }
         }
 
@@ -111,16 +111,16 @@ public final class ComponentSupport {
      * @param component component to check
      */
     public static void ifNotInitializedThrowUninitializedComponentException(@Nonnull InitializableComponent component) {
-        Constraint.isNotNull(component, "Component can not be null");
+        Constraint.isNotNull(component, "Component cannot be null");
 
         if (!component.isInitialized()) {
             if (component instanceof IdentifiableComponent) {
                 throw new UninitializedComponentException("Component '"
                         + StringSupport.trimOrNull(((IdentifiableComponent) component).getId())
-                        + "' has not yet been initialized and so can not be used.");
+                        + "' has not yet been initialized and cannot be used.");
             } else {
                 throw new UninitializedComponentException(
-                        "Component has not yet been initialized and so can not be used.");
+                        "Component has not yet been initialized and cannot be used.");
             }
         }
     }
@@ -133,16 +133,16 @@ public final class ComponentSupport {
      * @param component component to check
      */
     public static void ifInitializedThrowUnmodifiabledComponentException(@Nullable InitializableComponent component) {
-        Constraint.isNotNull(component, "Component can not be null");
+        Constraint.isNotNull(component, "Component cannot be null");
 
         if (component.isInitialized()) {
             if (component instanceof IdentifiableComponent) {
                 throw new UnmodifiableComponentException("Component '"
                         + StringSupport.trimOrNull(((IdentifiableComponent) component).getId())
-                        + "' has already been initialized and so can no longer be modified");
+                        + "' has already been initialized and can no longer be modified");
             } else {
                 throw new UnmodifiableComponentException(
-                        "Component has already been initialized and so can no longer be modified");
+                        "Component has already been initialized and can no longer be modified");
             }
         }
     }

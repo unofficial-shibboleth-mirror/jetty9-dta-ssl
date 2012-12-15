@@ -21,7 +21,7 @@ package net.shibboleth.utilities.java.support.component;
 public interface ValidatableComponent extends Component {
 
     /**
-     * Validates that this component is operational and functioning properly (with the limits that such things can be
+     * Validates that this component is operational and functioning properly (to the extent that such things can be
      * checked).
      * 
      * @throws ComponentValidationException thrown if there is a problem with the component

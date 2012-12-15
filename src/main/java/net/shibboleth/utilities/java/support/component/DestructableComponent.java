@@ -21,9 +21,9 @@ package net.shibboleth.utilities.java.support.component;
 public interface DestructableComponent extends Component {
 
     /**
-     * Gets whether this component has been destroyed. Normally, once a component has been destroyed is can not be used.
+     * Gets whether this component has been destroyed. Normally, once a component has been destroyed it cannot be used.
      * 
-     * @return true if the component has been destroyed, false if not
+     * @return true iff the component has been destroyed
      */
     public boolean isDestroyed();
 

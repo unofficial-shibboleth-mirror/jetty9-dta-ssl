@@ -58,7 +58,10 @@ public abstract class AbstractDestructableInitializableComponent implements Dest
         isInitialized = true;
     }
 
-    /** Performs component specific destruction logic. Default implementation of this method is a no-op. */
+    /**
+     * Performs component specific destruction logic. This method is executed within the lock on the object being
+     * destroyed. The default implementation of this method is a no-op.
+     */
     protected void doDestroy() {
 
     }

@@ -52,9 +52,9 @@ public class ComponentInitializationException extends Exception {
      * Constructor.
      * 
      * @param message exception message
-     * @param wrappedException exception to be wrapped by this one
+     * @param wrapped exception to be wrapped by this one
      */
-    public ComponentInitializationException(@Nullable final String message, @Nullable final Exception wrappedException) {
-        super(message, wrappedException);
+    public ComponentInitializationException(@Nullable final String message, @Nullable final Exception wrapped) {
+        super(message, wrapped);
     }
 }

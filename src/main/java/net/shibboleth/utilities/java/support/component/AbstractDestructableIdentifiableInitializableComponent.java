@@ -39,7 +39,7 @@ public abstract class AbstractDestructableIdentifiableInitializableComponent ext
     }
 
     /**
-     * Sets the ID of this component.
+     * Sets the ID of this component. The component must not be initialized or destroyed.
      * 
      * @param componentId ID of the component
      */

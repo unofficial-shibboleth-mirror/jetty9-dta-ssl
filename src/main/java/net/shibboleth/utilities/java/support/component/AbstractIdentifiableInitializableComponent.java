@@ -41,14 +41,12 @@ public abstract class AbstractIdentifiableInitializableComponent extends Abstrac
     }
 
     /**
-     * Sets the ID of this component.
+     * Sets the ID of this component. The component must not yet be initialized.
      * 
      * @param componentId ID of the component
      */
     protected synchronized void setId(@Nonnull @NotEmpty final String componentId) {
-        if (isInitialized()) {
-            return;
-        }
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         id = Constraint.isNotNull(StringSupport.trimOrNull(componentId), "Component ID can not be null or empty");
     }

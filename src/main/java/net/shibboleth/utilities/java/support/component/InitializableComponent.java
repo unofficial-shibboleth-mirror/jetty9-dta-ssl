@@ -26,7 +26,7 @@ public interface InitializableComponent extends Component {
     /**
      * Gets whether this component is initialized.
      * 
-     * @return whether this component is initialized
+     * @return true iff this component is initialized
      */
     public boolean isInitialized();
     
