@@ -57,8 +57,12 @@ public class AbstractIdentifiableInitializableComponentTest {
         component.initialize();
         Assert.assertEquals(component.getId(), "foo");
 
-        component.setId("bar");
-        Assert.assertEquals(component.getId(), "foo");
+        try {
+            component.setId("bar");
+            Assert.fail();
+        } catch (UnmodifiableComponentException e) {
+            // expected this
+        }
     }
 
     /** Tests initializing the component. */
