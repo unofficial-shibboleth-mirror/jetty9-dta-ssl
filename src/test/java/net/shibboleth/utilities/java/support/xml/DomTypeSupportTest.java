@@ -81,8 +81,14 @@ public class DomTypeSupportTest {
     }
 
     @Test public void testLongToDuration() {
-        Assert.assertEquals(DomTypeSupport.longToDuration(1000), "P0Y0M0DT0H0M1.000S", "One second duration");
-        Assert.assertEquals(DomTypeSupport.longToDuration(-1000*24*3600), "-P0Y0M1DT0H0M0.000S", "Back One day duration");
+        // We have to check for two different possible return values because Oracle's and Xerces' implementations
+        // are different.
+        
+        String onesec = DomTypeSupport.longToDuration(1000);
+        Assert.assertTrue("P0Y0M0DT0H0M1.000S".equals(onesec) || "PT1.000S".equals(onesec), "One second duration");
+
+        String backday = DomTypeSupport.longToDuration(-1000*24*3600);
+        Assert.assertTrue("-P0Y0M1DT0H0M0.000S".equals(backday) || "-P1DT0H0M0.000S".equals(backday), "Back one day duration");
     }
     
     @Test public void testGetXSIType() {
