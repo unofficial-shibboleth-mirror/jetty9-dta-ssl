@@ -132,7 +132,7 @@ public final class ComponentSupport {
      * 
      * @param component component to check
      */
-    public static void ifInitializedThrowUnmodifiabledComponentException(@Nullable InitializableComponent component) {
+    public static void ifInitializedThrowUnmodifiabledComponentException(@Nonnull InitializableComponent component) {
         Constraint.isNotNull(component, "Component cannot be null");
 
         if (component.isInitialized()) {
