@@ -50,7 +50,7 @@ public interface Resolver<ProductType, CriteriaType> {
      * 
      * @param criteria the criteria to evaluate or process
      * 
-     * @return instances which satisfy the criteria
+     * @return a single instance satisfying the criteria, or null
      * 
      * @throws ResolverException thrown if there is an error processing the specified criteria
      */
