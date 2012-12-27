@@ -36,7 +36,7 @@ public final class Constraint {
      * is thrown.
      * 
      * @param <T> type of items in the collection
-     * @param collection collection check
+     * @param collection collection to check
      * @param message message used in the {@link ConstraintViolationException}
      * 
      * @return the checked input
@@ -49,7 +49,7 @@ public final class Constraint {
 
         return collection;
     }
-
+    
     /**
      * Checks that the given boolean is false. If not an {@link ConstraintViolationException} is thrown.
      * 
@@ -143,7 +143,7 @@ public final class Constraint {
      * is thrown.
      * 
      * @param <T> type of items in the collection
-     * @param collection collection check
+     * @param collection collection to check
      * @param message message used in the {@link ConstraintViolationException}
      * 
      * @return the checked input
@@ -157,6 +157,44 @@ public final class Constraint {
         return collection;
     }
 
+    /**
+     * Checks that the given array is not empty. If the array is empty an {@link ConstraintViolationException}
+     * is thrown.
+     * 
+     * @param <T> type of items in the array
+     * @param array array to check
+     * @param message message used in the {@link ConstraintViolationException}
+     * 
+     * @return the checked input
+     */
+    @Nonnull public static <T> T[] isNotEmpty(@Nonnull final T[] array,
+            @Nonnull final String message) {
+        if (array == null || array.length == 0) {
+            throw new ConstraintViolationException(message);
+        }
+
+        return array;
+    }
+
+
+    /**
+     * Checks that the given byte array is not empty. If the array is empty an {@link ConstraintViolationException}
+     * is thrown.
+     * 
+     * @param array array to check
+     * @param message message used in the {@link ConstraintViolationException}
+     * 
+     * @return the checked input
+     */
+    @Nonnull public static byte[] isNotEmpty(@Nonnull final byte[] array,
+            @Nonnull final String message) {
+        if (array == null || array.length == 0) {
+            throw new ConstraintViolationException(message);
+        }
+
+        return array;
+    }    
+    
     /**
      * Checks that the given object is not null. If the object is null an {@link ConstraintViolationException} is
      * thrown.
