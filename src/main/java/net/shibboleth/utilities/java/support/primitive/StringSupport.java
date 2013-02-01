@@ -119,16 +119,4 @@ public final class StringSupport {
 
         return temp;
     }
-
-
-    /**
-     * Checks for a null or empty string.
-     * 
-     * @param s the string to check
-     * 
-     * @return true iff the string is null or empty
-     */
-    public static boolean isEmpty(@Nullable final String s) {
-        return s == null || s.length() == 0;
-    }
 }
