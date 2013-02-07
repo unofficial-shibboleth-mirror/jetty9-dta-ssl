@@ -208,13 +208,6 @@ public final class UriSupport {
 
         final String encodedName = urlEncode(trimmedName);
         
-        // Special case, just a single parameter present
-        if (!trimmedQuery.contains("&")) {
-            if (trimmedQuery.startsWith(encodedName+"=") || trimmedQuery.equals(encodedName)) {
-                return trimmedQuery;
-            }
-        }
-        
         String[] candidates = trimmedQuery.split("&");
         for (String candidate : candidates) {
             if (candidate.startsWith(encodedName+"=") || candidate.equals(encodedName)) {
