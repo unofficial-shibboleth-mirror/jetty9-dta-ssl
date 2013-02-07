@@ -207,21 +207,21 @@ public final class UriSupport {
         }
 
         final String encodedName = urlEncode(trimmedName);
-
-        int index = queryString.indexOf(encodedName);
-        while (index != -1) {
-            // check if this is an valueless parameter at the end of the query string
-            if (index + encodedName.length() == queryString.length()) {
-                return encodedName;
-            }
-
-            // check if the next character after the name is an = or if we've just found another parameter
-            // name that happens to start with the name we're looking for
-            if (queryString.charAt(index++) == '=') {
-                return queryString.substring(index - encodedName.length() - 1, queryString.indexOf("&", index));
+        
+        // Special case, just a single parameter present
+        if (!trimmedQuery.contains("&")) {
+            if (trimmedQuery.startsWith(encodedName+"=") || trimmedQuery.equals(encodedName)) {
+                return trimmedQuery;
             }
         }
-
+        
+        String[] candidates = trimmedQuery.split("&");
+        for (String candidate : candidates) {
+            if (candidate.startsWith(encodedName+"=") || candidate.equals(encodedName)) {
+                return candidate;
+            }
+        }
+        
         return null;
     }
 

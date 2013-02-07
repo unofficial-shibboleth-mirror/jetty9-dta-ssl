@@ -68,6 +68,7 @@ public class UriSupportTest {
     }
     
     @Test public void testGetRawQueryStringParameter() {
+        // Chad's original java-support tests
         String param = UriSupport.getRawQueryStringParameter(null, null);
         Assert.assertEquals(param, null);
 
@@ -102,6 +103,76 @@ public class UriSupportTest {
 
         param = UriSupport.getRawQueryStringParameter(queryString, "paramName2");
         Assert.assertEquals(param, "paramName2");
+        
+        // Tests brought in directly from v2 java-openws
+        queryString = "ABC=123&Foo=Bar&XYZ=456";
+        param = UriSupport.getRawQueryStringParameter(queryString, "Foo");
+        Assert.assertEquals(param, "Foo=Bar");
+        
+        queryString = "Foo=Bar&XYZ=456";
+        param = UriSupport.getRawQueryStringParameter(queryString, "Foo");
+        Assert.assertEquals(param, "Foo=Bar");
+        
+        queryString = "ABC=123&Foo=Bar";
+        param = UriSupport.getRawQueryStringParameter(queryString, "Foo");
+        Assert.assertEquals(param, "Foo=Bar");
+        
+        queryString = "Foo=Bar";
+        param = UriSupport.getRawQueryStringParameter(queryString, "Foo");
+        Assert.assertEquals(param, "Foo=Bar");
+        
+        queryString = "ABC=123&Foo=Bar&XYZ456";
+        param = UriSupport.getRawQueryStringParameter(queryString, "NotThere");
+        Assert.assertNull(param);
+        
+        queryString = "ABC=123&XYZ456";
+        param  = UriSupport.getRawQueryStringParameter(queryString, "Foo");
+        Assert.assertNull(param);
+        
+        queryString = null;
+        param = UriSupport.getRawQueryStringParameter(queryString, "Foo");
+        Assert.assertNull(param);
+        
+        // Brent's new tests
+        queryString = "ABC=123&FooFoo=BarBar&Foo=Bar&XYZ=456";
+        param = UriSupport.getRawQueryStringParameter(queryString, "Foo");
+        Assert.assertEquals(param, "Foo=Bar");
+        
+        queryString = "ABC=123&Foo=&XYZ=456";
+        param = UriSupport.getRawQueryStringParameter(queryString, "Foo");
+        Assert.assertEquals(param, "Foo=");
+        
+        queryString = "Foo=&ABC=123&XYZ=456";
+        param = UriSupport.getRawQueryStringParameter(queryString, "Foo");
+        Assert.assertEquals(param, "Foo=");
+        
+        queryString = "ABC=123&XYZ=456&Foo=";
+        param = UriSupport.getRawQueryStringParameter(queryString, "Foo");
+        Assert.assertEquals(param, "Foo=");
+        
+        queryString = "ABC=123&Foo&XYZ=456";
+        param = UriSupport.getRawQueryStringParameter(queryString, "Foo");
+        Assert.assertEquals(param, "Foo");
+        
+        queryString = "Foo&ABC=123&XYZ=456";
+        param = UriSupport.getRawQueryStringParameter(queryString, "Foo");
+        Assert.assertEquals(param, "Foo");
+        
+        queryString = "ABC=123&XYZ=456&Foo";
+        param = UriSupport.getRawQueryStringParameter(queryString, "Foo");
+        Assert.assertEquals(param, "Foo");
+        
+        queryString = "ABC=123&&Foo=Bar&XYZ456";
+        param = UriSupport.getRawQueryStringParameter(queryString, "Foo");
+        Assert.assertEquals(param, "Foo=Bar");
+        
+        queryString = "Foo";
+        param = UriSupport.getRawQueryStringParameter(queryString, "Foo");
+        Assert.assertEquals(param, "Foo");
+        
+        queryString = "Foo=";
+        param = UriSupport.getRawQueryStringParameter(queryString, "Foo");
+        Assert.assertEquals(param, "Foo=");
     }
 
     @Test public void testParseQueryString() {
