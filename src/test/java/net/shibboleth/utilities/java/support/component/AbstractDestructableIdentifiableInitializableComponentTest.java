@@ -21,7 +21,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /** {@link AbstractDestructableIdentifiableInitializableComponent} unit test. */
-public class AbstractDestrucableIdentifiableInitializableComponentTest {
+public class AbstractDestructableIdentifiableInitializableComponentTest {
 
     @Test public void testId() throws Exception {
         MockComponent component = new MockComponent();
