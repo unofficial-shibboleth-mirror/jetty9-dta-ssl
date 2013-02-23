@@ -194,7 +194,7 @@ public class HttpResource extends AbstractResource {
             }
         } catch (IOException e) {
             httpRequest.abort();
-            throw new ResourceException("Error retrieving metadata from " + getLocation(), e);
+            throw new ResourceException("Error retrieving resource from " + getLocation(), e);
         }
     }
 
