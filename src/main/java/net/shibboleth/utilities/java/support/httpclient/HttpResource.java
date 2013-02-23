@@ -187,14 +187,14 @@ public class HttpResource extends AbstractResource {
 
                 return responseEntity.getContent();
             } else {
-                log.debug("Unacceptable status code, {}, returned when fetching metadata from '{}'", httpStatus,
+                log.debug("Unacceptable status code, {}, returned when fetching resource from '{}'", httpStatus,
                         getLocation());
                 throw new ResourceException("Unable to read resource from " + getLocation()
                         + ", received a status code of " + httpStatus);
             }
         } catch (IOException e) {
             httpRequest.abort();
-            throw new ResourceException("Error retrieving resource from " + getLocation(), e);
+            throw new ResourceException("Error fetching resource from " + getLocation(), e);
         }
     }
 
