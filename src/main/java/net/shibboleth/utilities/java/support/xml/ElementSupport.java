@@ -87,7 +87,7 @@ public final class ElementSupport {
     /**
      * Creates a text node with the given content and appends it as child to the given element.
      * 
-     * @param element the element to recieve the text node
+     * @param element the element to receive the text node
      * @param textContent the content for the text node
      */
     public static void appendTextContent(@Nonnull final Element element, @Nullable final String textContent) {
@@ -378,7 +378,7 @@ public final class ElementSupport {
      * 
      * @param root element to get the child elements of
      * 
-     * @return child elements indexed by namespace qualifed tag name, never null
+     * @return child elements indexed by namespace qualified tag name, never null
      */
     @Nonnull public static Map<QName, List<Element>> getIndexedChildElements(@Nullable final Element root) {
         if (root == null) {
