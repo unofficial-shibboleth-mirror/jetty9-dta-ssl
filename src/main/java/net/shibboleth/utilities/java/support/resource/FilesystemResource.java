@@ -22,13 +22,15 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import javax.annotation.Nonnull;
+
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
-/** An {@link Resource} that reads data from a fileystem file. */
+/** An {@link Resource} that reads data from a filesystem file. */
 public class FilesystemResource extends AbstractResource {
 
-    /** Filesytem file read by this resource. */
+    /** Filesystem file read by this resource. */
     private final File resourceFile;
 
     /**
@@ -36,7 +38,7 @@ public class FilesystemResource extends AbstractResource {
      * 
      * @param resourcePath file read by this resource, never null or empty
      */
-    public FilesystemResource(final String resourcePath) {
+    public FilesystemResource(@Nonnull final String resourcePath) {
         resourceFile =
                 new File(Constraint.isNotNull(StringSupport.trimOrNull(resourcePath),
                         "Resource file path may not be null or empty"));
