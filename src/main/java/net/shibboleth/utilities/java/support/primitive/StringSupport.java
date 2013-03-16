@@ -17,6 +17,12 @@
 
 package net.shibboleth.utilities.java.support.primitive;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -32,6 +38,38 @@ public final class StringSupport {
 
     /** Constructor. */
     private StringSupport() {
+    }
+
+    /**
+     * Reads an input stream into a string. The provided stream is <strong>not</strong> closed.
+     * 
+     * @param input the input stream to read
+     * @param decoder character decoder to use, if null, system default character set is used
+     * 
+     * @return the string read from the stream
+     * 
+     * @throws IOException thrown if there is a problem reading from the stream and decoding it
+     */
+    // TODO port from v2, not sure if correct
+    @Nonnull public static String inputStreamToString(@Nonnull final InputStream input,
+            @Nullable final CharsetDecoder decoder) throws IOException {
+        CharsetDecoder charsetDecoder = decoder;
+        if (decoder == null) {
+            charsetDecoder = Charset.defaultCharset().newDecoder();
+        }
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(input, charsetDecoder));
+
+        StringBuilder stringBuffer = new StringBuilder();
+        String line = reader.readLine();
+        while (line != null) {
+            stringBuffer.append(line).append("\n");
+            line = reader.readLine();
+        }
+
+        reader.close();
+
+        return stringBuffer.toString();
     }
 
     /**
@@ -60,8 +98,8 @@ public final class StringSupport {
     }
 
     /**
-     * Converts a delimited string into a list.  We cannot user an ungarnished tokenizer since it doesn't add a empty
-     * String if end of the input String was the delimiter.  Hence we have to explicitly check.
+     * Converts a delimited string into a list. We cannot use an ungarnished tokenizer since it doesn't add an empty
+     * String if the end of the input String was the delimiter. Hence we have to explicitly check.
      * 
      * @param string the string to be split into a list
      * @param delimiter the delimiter between values. This string may contain multiple delimiter characters, as allowed
