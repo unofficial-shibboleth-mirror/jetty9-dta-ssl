@@ -289,13 +289,10 @@ public final class NamespaceSupport {
 
         // Now for the child elements, we pass a copy of the resolved namespace list in order to
         // maintain proper scoping of namespaces.
-        NodeList childNodes = domElement.getChildNodes();
-        Node childNode;
-        for (int i = 0; i < childNodes.getLength(); i++) {
-            childNode = childNodes.item(i);
-            if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-                rootNamespaces((Element) childNode, upperNamespaceSearchBound);
-            }
+        Element childNode = ElementSupport.getFirstChildElement(domElement);
+        while (childNode != null) {
+            rootNamespaces(childNode, upperNamespaceSearchBound);
+            childNode = ElementSupport.getNextSiblingElement(childNode);
         }
     }
 }

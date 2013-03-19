@@ -33,7 +33,6 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 import com.google.common.base.Objects;
@@ -156,14 +155,10 @@ public final class ElementSupport {
         
         final ArrayList<Element> children = new ArrayList<Element>();
 
-        final NodeList childNodes = root.getChildNodes();
-        final int numOfNodes = childNodes.getLength();
-        Node childNode;
-        for (int i = 0; i < numOfNodes; i++) {
-            childNode = childNodes.item(i);
-            if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-                children.add((Element) childNode);
-            }
+        Element childNode = getFirstChildElement(root);
+        while (childNode != null) {
+            children.add((Element) childNode);
+            childNode = getNextSiblingElement(childNode);
         }
 
         return children;
@@ -203,18 +198,12 @@ public final class ElementSupport {
 
         final ArrayList<Element> children = new ArrayList<Element>();
 
-        final NodeList childNodes = root.getChildNodes();
-        final int numOfNodes = childNodes.getLength();
-        Node childNode;
-        Element e;
-        for (int i = 0; i < numOfNodes; i++) {
-            childNode = childNodes.item(i);
-            if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-                e = (Element) childNode;
-                if (Objects.equal(e.getLocalName(), localName)) {
-                    children.add(e);
-                }
+        Element childNode = getFirstChildElement(root);
+        while (childNode != null) {
+            if (Objects.equal(childNode.getLocalName(), localName)) {
+                children.add(childNode);
             }
+            childNode = getNextSiblingElement(childNode);
         }
 
         return children;
@@ -238,18 +227,12 @@ public final class ElementSupport {
 
         final ArrayList<Element> children = new ArrayList<Element>();
 
-        final NodeList childNodes = root.getChildNodes();
-        final int numOfNodes = childNodes.getLength();
-        Node childNode;
-        Element e;
-        for (int i = 0; i < numOfNodes; i++) {
-            childNode = childNodes.item(i);
-            if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-                e = (Element) childNode;
-                if (Objects.equal(e.getNamespaceURI(), namespaceURI) && Objects.equal(e.getLocalName(), localName)) {
-                    children.add(e);
-                }
+        Element childNode = getFirstChildElement(root);
+        while (childNode != null) {
+            if (isElementNamed(childNode, namespaceURI, localName)) {
+                children.add(childNode);
             }
+            childNode = getNextSiblingElement(childNode);
         }
 
         return children;
@@ -269,8 +252,7 @@ public final class ElementSupport {
 
         final Node parent = currentNode.getParentNode();
         if (parent != null) {
-            short type = parent.getNodeType();
-            if (type == Node.ELEMENT_NODE) {
+            if (parent.getNodeType() == Node.ELEMENT_NODE) {
                 return (Element) parent;
             }
             return getElementAncestor(parent);
@@ -292,17 +274,18 @@ public final class ElementSupport {
         }
         StringBuilder builder = new StringBuilder();
 
-        final NodeList nodeList = element.getChildNodes();
-        Node node;
+        Node node = element.getFirstChild();
         boolean first = true;
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            node = nodeList.item(i);
-            if (node.getNodeType() == Node.TEXT_NODE) {
-                if (!first) {
+        while (node != null) {
+            if (node.getNodeType() == Node.TEXT_NODE || node.getNodeType() == Node.CDATA_SECTION_NODE) {
+                if (first) {
+                    first = false;
+                } else {
                     builder.append(XmlConstants.LIST_DELIMITERS.charAt(0));
                 }
                 builder.append(((Text) node).getWholeText());
             }
+            node = node.getNextSibling();
         }
         
         return builder.toString();
@@ -387,26 +370,18 @@ public final class ElementSupport {
 
         final Map<QName, List<Element>> children = new HashMap<QName, List<Element>>();
 
-        final NodeList childNodes = root.getChildNodes();
-        final int numOfNodes = childNodes.getLength();
-
-        Node childNode;
-        Element e;
-        QName qname;
-        List<Element> elements;
-        for (int i = 0; i < numOfNodes; i++) {
-            childNode = childNodes.item(i);
-            if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-                e = (Element) childNode;
-                qname = QNameSupport.getNodeQName(e);
-                elements = children.get(qname);
-                if (elements == null) {
-                    elements = new ArrayList<Element>();
-                    children.put(qname, elements);
-                }
-
-                elements.add(e);
+        Element e = getFirstChildElement(root);
+        while (e != null) {
+            QName qname = QNameSupport.getNodeQName(e);
+            List<Element> elements = children.get(qname);
+            if (elements == null) {
+                elements = new ArrayList<Element>();
+                children.put(qname, elements);
             }
+
+            elements.add(e);
+            
+            e = getNextSiblingElement(e);
         }
 
         return children;
