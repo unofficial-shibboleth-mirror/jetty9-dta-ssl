@@ -35,7 +35,7 @@ public final class XmlConstants {
     /** QName for the xml:id attribute. */
     public static final QName XML_ID_ATTRIB_NAME = new QName(XML_NS, "id", XML_PREFIX);
     
-    /** QName for the xml:lan attribute. */
+    /** QName for the xml:lang attribute. */
     public static final QName XML_LANG_ATTRIB_NAME = new QName(XML_NS, "lang", XML_PREFIX);
         
     /** QName for the xml:space attribute. */
