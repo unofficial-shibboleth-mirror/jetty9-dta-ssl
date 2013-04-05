@@ -19,19 +19,13 @@ package net.shibboleth.utilities.java.support.xml;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
+import net.shibboleth.utilities.java.support.collection.LazyMap;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
 import org.w3c.dom.DOMConfiguration;
@@ -45,6 +39,9 @@ import org.w3c.dom.ls.LSSerializerFilter;
 
 /** Set of helper functions for serializing/writing DOM nodes. */
 public final class SerializeSupport {
+    
+    /** DOM configuration parameters used by LSSerializer in pretty print format output. */
+    private static Map<String, Object> prettyPrintParams;
 
     /** Constructor. */
     private SerializeSupport() {
@@ -72,7 +69,8 @@ public final class SerializeSupport {
     }
 
     /**
-     * Pretty prints the XML node.
+     * Converts a Node into a String, using the DOM, level 3, Load/Save serializer. A serializer
+     * option of 'format-pretty-print=true' is used to produce the pretty-print formatting.
      * 
      * @param node xml node to print
      * 
@@ -80,19 +78,13 @@ public final class SerializeSupport {
      */
     @Nonnull public static String prettyPrintXML(@Nonnull final Node node) {
         Constraint.isNotNull(node, "Node may not be null");
-
-        final TransformerFactory tfactory = TransformerFactory.newInstance();
+        
+        final ByteArrayOutputStream baout = new ByteArrayOutputStream();
+        writeNode(node, baout, prettyPrintParams);
         try {
-            final Transformer serializer = tfactory.newTransformer();
-            serializer.setOutputProperty(OutputKeys.INDENT, "yes");
-            serializer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "3");
-
-            final StringWriter output = new StringWriter();
-            serializer.transform(new DOMSource(node), new StreamResult(output));
-            return output.toString();
-        } catch (TransformerException e) {
-            // this is fatal, just dump the stack and throw a runtime exception
-            e.printStackTrace();
+            return new String(baout.toByteArray(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            // all VMs are required to support UTF-8, if it's not something is really wrong
             throw new RuntimeException(e);
         }
     }
@@ -105,21 +97,25 @@ public final class SerializeSupport {
      * @param output the output stream to write the XML to
      */
     public static void writeNode(@Nonnull final Node node, @Nonnull final OutputStream output) {
+        writeNode(node, output, null);
+    }
+    
+    /**
+     * Writes a Node out to a Writer using the DOM, level 3, Load/Save serializer. The written content is encoded using
+     * the encoding specified in the writer configuration.
+     * 
+     * @param node the node to write out
+     * @param output the output stream to write the XML to
+     * @param serializerParams parameters to pass to the {@link DOMConfiguration} of the serializer instance, obtained
+     *            via {@link LSSerializer#getDomConfig()}. May be null.
+     */
+    public static void writeNode(@Nonnull final Node node, @Nonnull final OutputStream output,
+            @Nullable final Map<String, Object> serializerParams) {
         Constraint.isNotNull(node, "Node may not be null");
         Constraint.isNotNull(output, "Outputstream may not be null");
 
         final DOMImplementationLS domImplLS = getDomLsImplementation(node); 
-        final LSSerializer serializer = domImplLS.createLSSerializer();
-        serializer.setFilter(new LSSerializerFilter() {
-
-            public short acceptNode(Node arg0) {
-                return FILTER_ACCEPT;
-            }
-
-            public int getWhatToShow() {
-                return SHOW_ALL;
-            }
-        });
+        final LSSerializer serializer = getLsSerializer(domImplLS, serializerParams);
 
         final LSOutput serializerOut = domImplLS.createLSOutput();
         serializerOut.setByteStream(output);
@@ -187,4 +183,10 @@ public final class SerializeSupport {
 
         return (DOMImplementationLS) domImpl.getFeature("LS", "3.0");
     }
+    
+    static {
+        prettyPrintParams = new LazyMap<String, Object>();
+        prettyPrintParams.put("format-pretty-print", Boolean.TRUE);
+    }
+
 }
