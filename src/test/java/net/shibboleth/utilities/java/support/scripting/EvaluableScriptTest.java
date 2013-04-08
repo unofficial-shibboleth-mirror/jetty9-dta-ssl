@@ -77,7 +77,7 @@ public class EvaluableScriptTest {
         s.write(TEST_SIMPLE_SCRIPT, 0, TEST_SIMPLE_SCRIPT.length());
         s.close();
 
-        new EvaluableScript(SCRIPT_LANGUAGE, f);
+        Assert.assertEquals((new EvaluableScript(SCRIPT_LANGUAGE, f)).getScriptLanguage(), SCRIPT_LANGUAGE);
 
         try {
             new EvaluableScript(null, f);

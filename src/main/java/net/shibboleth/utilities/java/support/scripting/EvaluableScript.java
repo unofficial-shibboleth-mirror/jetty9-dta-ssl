@@ -114,6 +114,15 @@ public class EvaluableScript {
     }
 
     /**
+     * Gets the script language.
+     * 
+     * @return the script source
+     */
+    @Nonnull public String getScriptLanguage() {
+        return scriptLanguage;
+    }
+
+    /**
      * Evaluates this script against the given bindings.
      * 
      * @param scriptBindings the script bindings
