@@ -15,6 +15,6 @@
  * limitations under the License.
  */
 
-/** Heleprs for common security related tasks. */
+/** Helpers for common security related tasks. */
 
 package net.shibboleth.utilities.java.support.security;
