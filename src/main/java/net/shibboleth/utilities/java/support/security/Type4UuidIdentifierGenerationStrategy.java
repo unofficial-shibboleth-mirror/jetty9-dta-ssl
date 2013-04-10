@@ -28,6 +28,6 @@ public class Type4UuidIdentifierGenerationStrategy implements IdentifierGenerati
 
     /** {@inheritDoc} */
     @Nonnull public String generateIdentifier() {
-        return UUID.randomUUID().toString();
+        return "_" + UUID.randomUUID().toString();
     }
 }

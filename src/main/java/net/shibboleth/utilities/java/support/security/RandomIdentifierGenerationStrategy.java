@@ -98,7 +98,7 @@ public class RandomIdentifierGenerationStrategy implements IdentifierGenerationS
         byte[] buf = new byte[sizeOfIdentifier];
         random.nextBytes(buf);
         try {
-            return StringUtils.newStringUsAscii(encoder.encode(buf));
+            return "_" + StringUtils.newStringUsAscii(encoder.encode(buf));
         } catch (EncoderException e) {
             throw new RuntimeException(e);
         }
