@@ -21,7 +21,7 @@ public final class HttpServletRequestResponseContext {
 	/** ThreadLocal storage for request. */
 	private static ThreadLocal<HttpServletRequest> currentRequest = new ThreadLocal<HttpServletRequest>();
 	
-	/** ThreadLocal storage for request. */
+	/** ThreadLocal storage for response. */
 	private static ThreadLocal<HttpServletResponse> currentResponse = new ThreadLocal<HttpServletResponse>();
 
 	/** Constructor. */

@@ -29,7 +29,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 
 /**
  * An implementation of {@link HttpServletResponse} which serves as a proxy for the 
- * current thread-local servlet request obtained from {@link HttpServletRequestResponseContext}.
+ * current thread-local servlet response obtained from {@link HttpServletRequestResponseContext}.
  */
 public class ThreadLocalHttpServletResponseProxy implements HttpServletResponse {
 
@@ -194,9 +194,9 @@ public class ThreadLocalHttpServletResponseProxy implements HttpServletResponse 
     }
     
     /**
-     * Get the current HttpServletRequest from ThreadLocal storage.
+     * Get the current HttpServletResponse from ThreadLocal storage.
      * 
-     * @return the current request
+     * @return the current response
      */
     protected HttpServletResponse getCurrent() {
         return Constraint.isNotNull(HttpServletRequestResponseContext.getResponse(),
