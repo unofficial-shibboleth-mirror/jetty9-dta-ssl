@@ -31,6 +31,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import net.shibboleth.utilities.java.support.logic.Constraint;
+
 /**
  * An implementation of {@link HttpServletRequest} which serves as a proxy for the 
  * current thread-local servlet request obtained from {@link HttpServletRequestResponseContext}.
@@ -313,7 +315,8 @@ public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
      * @return the current request
      */
     protected HttpServletRequest getCurrent() {
-        return HttpServletRequestResponseContext.getCurrent().getRequest();
+        return Constraint.isNotNull(HttpServletRequestResponseContext.getRequest(), 
+                "Current HttpServletRequest has not been loaded via HttpServletRequestResponseContext");
     }
 
 }

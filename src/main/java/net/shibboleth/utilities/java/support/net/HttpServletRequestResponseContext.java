@@ -16,19 +16,16 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
  * and clean up this context in a servlet container.
  * </p>
  */
-public class HttpServletRequestResponseContext {
+public final class HttpServletRequestResponseContext {
 	
-	/** ThreadLocal storage for request and response. */
-	private static ThreadLocal<HttpServletRequestResponseContext> curr = new ThreadLocal<HttpServletRequestResponseContext>();
+	/** ThreadLocal storage for request. */
+	private static ThreadLocal<HttpServletRequest> currentRequest = new ThreadLocal<HttpServletRequest>();
 	
-	/** The stored HTTP servlet request. */
-	private HttpServletRequest req;
+	/** ThreadLocal storage for request. */
+	private static ThreadLocal<HttpServletResponse> currentResponse = new ThreadLocal<HttpServletResponse>();
 
-	/** The stored HTTP servlet response. */
-	private HttpServletResponse resp;
-
-	/** Constructor. Only allow local and subclass instantiation */
-	protected HttpServletRequestResponseContext() {};
+	/** Constructor. */
+	private HttpServletRequestResponseContext() {};
 
 	/**
 	 * Load the thread-local storage with the current request and response.
@@ -40,28 +37,16 @@ public class HttpServletRequestResponseContext {
 	    Constraint.isNotNull(request, "HttpServletRequest may not be null");
 	    Constraint.isNotNull(response, "HttpServletResponse may not be null");
 	    
-		HttpServletRequestResponseContext current = new HttpServletRequestResponseContext();
-		
-		current.req = request;
-		current.resp = response;
-		
-		curr.set(current);
-	}
-	
-	/**
-	 * Get the thread-local context instance holding the current request and response.
-	 * 
-	 * @return the current thread-local context instance
-	 */
-	@Nullable public static HttpServletRequestResponseContext getCurrent() {
-		return curr.get();
+		currentRequest.set(request);
+		currentResponse.set(response);
 	}
 
 	/**
-	 *  Clear the current thread-local context instance.
+	 *  Clear the current thread-local context instances.
 	 */
 	public static void clearCurrent() {
-		curr.remove();
+		currentRequest.remove();
+		currentResponse.remove();
 	}
 
 	/**
@@ -69,8 +54,8 @@ public class HttpServletRequestResponseContext {
 	 * 
 	 * @return the current request 
 	 */
-	@Nonnull public HttpServletRequest getRequest() {
-		return req;
+	@Nullable public static HttpServletRequest getRequest() {
+		return currentRequest.get();
 	}
 
 	/**
@@ -78,8 +63,8 @@ public class HttpServletRequestResponseContext {
 	 * 
 	 * @return the current response 
 	 */
-	@Nonnull public HttpServletResponse getResponse() {
-		return resp;
+	@Nullable public static HttpServletResponse getResponse() {
+		return currentResponse.get();
 	}
 	
 }
