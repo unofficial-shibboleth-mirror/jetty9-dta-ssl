@@ -20,6 +20,8 @@ package net.shibboleth.utilities.java.support.resolver;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+
 /**
  * Generic interface for resolvers which process specified criteria and produce some implementation-specific
  * result information.
@@ -39,7 +41,7 @@ public interface Resolver<ProductType, CriteriaType> {
      * 
      * @throws ResolverException thrown if there is an error processing the specified criteria
      */
-    @Nonnull Iterable<ProductType> resolve(@Nullable CriteriaType criteria) throws ResolverException;
+    @Nonnull @NonnullElements Iterable<ProductType> resolve(@Nullable CriteriaType criteria) throws ResolverException;
     
     /**
      * Process the specified criteria and return a single instance of the product type
