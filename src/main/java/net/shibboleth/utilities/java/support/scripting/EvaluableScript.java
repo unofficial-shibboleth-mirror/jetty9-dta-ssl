@@ -34,7 +34,6 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
-import com.google.common.base.Optional;
 import com.google.common.io.Files;
 
 /** This is a helper class that takes care of reading in, optionally compiling, and evaluating a script. */
@@ -127,15 +126,15 @@ public class EvaluableScript {
      * 
      * @param scriptBindings the script bindings
      * 
-     * @return the result of the script or {@link Optional#absent()} if the script did not return a result
+     * @return the result of the script or null if the script did not return a result
      * 
      * @throws ScriptException thrown if there was a problem evaluating the script
      */
-    @Nonnull public Optional<Object> eval(Bindings scriptBindings) throws ScriptException {
+    @Nonnull public Object eval(Bindings scriptBindings) throws ScriptException {
         if (compiledScript != null) {
-            return Optional.fromNullable(compiledScript.eval(scriptBindings));
+            return compiledScript.eval(scriptBindings);
         } else {
-            return Optional.fromNullable(scriptEngine.eval(script, scriptBindings));
+            return scriptEngine.eval(script, scriptBindings);
         }
     }
 
@@ -148,11 +147,11 @@ public class EvaluableScript {
      * 
      * @throws ScriptException thrown if there was a problem evaluating the script
      */
-    @Nonnull public Optional<Object> eval(ScriptContext scriptContext) throws ScriptException {
+    @Nonnull public Object eval(ScriptContext scriptContext) throws ScriptException {
         if (compiledScript != null) {
-            return Optional.fromNullable(compiledScript.eval(scriptContext));
+            return compiledScript.eval(scriptContext);
         } else {
-            return Optional.fromNullable(scriptEngine.eval(script, scriptContext));
+            return scriptEngine.eval(script, scriptContext);
         }
     }
 
