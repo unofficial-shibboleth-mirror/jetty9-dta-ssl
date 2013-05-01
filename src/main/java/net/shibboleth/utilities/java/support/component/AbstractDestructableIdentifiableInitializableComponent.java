@@ -18,7 +18,9 @@
 package net.shibboleth.utilities.java.support.component;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
@@ -31,10 +33,10 @@ public abstract class AbstractDestructableIdentifiableInitializableComponent ext
         AbstractDestructableInitializableComponent implements IdentifiableComponent {
 
     /** ID of this component. */
-    private String id;
+    @Nullable @NonnullAfterInit private String id;
 
     /** {@inheritDoc} */
-    public String getId() {
+    @Nullable @NonnullAfterInit public String getId() {
         return id;
     }
 
