@@ -127,7 +127,8 @@ public final class ElementSupport {
         Constraint.isNotNull(document, "Document may not be null");
 
         final String trimmedLocalName =
-            Constraint.isNotNull(StringSupport.trimOrNull(localName), "Element local name may not be null or empty");
+                Constraint
+                        .isNotNull(StringSupport.trimOrNull(localName), "Element local name may not be null or empty");
 
         String qualifiedName;
         final String trimmedPrefix = StringSupport.trimOrNull(prefix);
@@ -152,7 +153,7 @@ public final class ElementSupport {
         if (root == null) {
             return Collections.emptyList();
         }
-        
+
         final ArrayList<Element> children = new ArrayList<Element>();
 
         Element childNode = getFirstChildElement(root);
@@ -174,11 +175,28 @@ public final class ElementSupport {
      * @return list of child elements, never null
      */
     @Nonnull public static List<Element> getChildElements(@Nullable final Node root, @Nullable final QName name) {
-        if (name == null  || name == null) {
+        if (root == null || name == null) {
             return Collections.emptyList();
         }
 
         return getChildElementsByTagNameNS(root, name.getNamespaceURI(), name.getLocalPart());
+    }
+
+    /**
+     * Returns the first child element of the supplied element with the supplied name if it exists. Otherwise null. See
+     * {@link #getChildElements(Node, QName)}.
+     * 
+     * @param root element to parse child elements
+     * @param name name of the child elements to parse
+     * 
+     * @return first child element or null
+     */
+    @Nullable public static Element getFirstChildElement(@Nullable final Node root, @Nullable final QName name) {
+        final List<Element> elements = ElementSupport.getChildElements(root, name);
+        if (elements.size() > 0) {
+            return elements.get(0);
+        }
+        return null;
     }
 
     /**
@@ -259,16 +277,16 @@ public final class ElementSupport {
         }
         return null;
     }
-    
+
     /**
-     * Gets the text content for this Element only.  Whereas {@link Node#getTextContent()} will return all text for this
-     * element and all children, this just grabs the text for this element (which may be spread over multiple lines).  
+     * Gets the text content for this Element only. Whereas {@link Node#getTextContent()} will return all text for this
+     * element and all children, this just grabs the text for this element (which may be spread over multiple lines).
      * 
      * @param element The element to look at.
      * @return The text content, or "" if there is none, never null.
      * 
      */
-    @Nonnull public static String getElementContentAsString(@Nullable final Element element){
+    @Nonnull public static String getElementContentAsString(@Nullable final Element element) {
         if (element == null) {
             return "";
         }
@@ -287,7 +305,7 @@ public final class ElementSupport {
             }
             node = node.getNextSibling();
         }
-        
+
         return builder.toString();
     }
 
@@ -327,9 +345,10 @@ public final class ElementSupport {
         if (valueComponents.length == 1) {
             result = QNameSupport.constructQName(element.lookupNamespaceURI(null), valueComponents[0], null);
         } else if (valueComponents.length == 2) {
-            result = QNameSupport.constructQName(element.lookupNamespaceURI(valueComponents[0]), valueComponents[1],
-                    valueComponents[0]);
-        } 
+            result =
+                    QNameSupport.constructQName(element.lookupNamespaceURI(valueComponents[0]), valueComponents[1],
+                            valueComponents[0]);
+        }
         return result;
     }
 
@@ -380,7 +399,7 @@ public final class ElementSupport {
             }
 
             elements.add(e);
-            
+
             e = getNextSiblingElement(e);
         }
 
