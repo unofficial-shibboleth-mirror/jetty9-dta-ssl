@@ -21,7 +21,10 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
-/** Indicates that the annotated collection may contain null elements. */
+/**
+ * Indicates that the annotated collection may contain null elements and, if mutable, null
+ * elements may be added to it safely.
+ */
 @Documented
 @Target({ElementType.FIELD, ElementType.LOCAL_VARIABLE, ElementType.METHOD, ElementType.PARAMETER})
 public @interface NullableElements {

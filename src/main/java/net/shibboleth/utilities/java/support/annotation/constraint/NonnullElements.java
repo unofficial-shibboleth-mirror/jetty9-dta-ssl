@@ -21,7 +21,18 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
-/** Indicates that the annotated collection does not contain any null elements. */
+/**
+ * Indicates that the annotated collection cannot contain any null elements:
+ * 
+ * <ul>
+ * <li>Input collections as parameters MUST NOT contain any null elements.</li>
+ * <li>Collections returned by methods WILL NOT contain any null elements, and if mutable,
+ * callers MUST NOT add a null element.</li>
+ * </ul>
+ * 
+ * <p>Behavior is undefined if these constraints are violated. Some form of exception should be
+ * expected.</p>
+ */
 @Documented
 @Target({ElementType.FIELD, ElementType.LOCAL_VARIABLE, ElementType.METHOD, ElementType.PARAMETER})
 public @interface NonnullElements {
