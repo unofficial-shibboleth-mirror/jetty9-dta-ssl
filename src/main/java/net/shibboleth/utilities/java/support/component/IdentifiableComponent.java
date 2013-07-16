@@ -25,7 +25,7 @@ public interface IdentifiableComponent extends Component {
     /**
      * Gets the ID of this component.
      * 
-     * @return ID of this component, never null
+     * @return ID of this component
      */
     @Nullable public String getId();
 }
