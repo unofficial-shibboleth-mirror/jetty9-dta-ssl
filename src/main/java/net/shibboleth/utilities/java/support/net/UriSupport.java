@@ -157,6 +157,29 @@ public final class UriSupport {
             throw new IllegalArgumentException("Illegal scheme", e);
         }
     }
+    
+    /**
+     * Create a file: URI from an absolute path, dealing with the Windows, non leading "/" issue.
+     * <br/>
+     * Windows absolute paths have a habit of starting with a "DosDeviceName" (such as <code>C:\absolute\path</code>
+     * if we blindly convert that to a file URI by prepending "file://", then we end up with a URI which has "C:" as 
+     * the network segment.  So if we need to have an absolute file path based URI (JAAS is the example) we call this
+     * method which hides the hideous implementation
+     * @param path the absolute file path to convert
+     * @return a suitable URI
+     * @throws URISyntaxException if the URI contructor fails
+     */
+    public static URI fileURIFromAbsolutePath(String path) throws URISyntaxException {
+        final StringBuilder uriPath = new StringBuilder(path.length()+8);
+        
+        uriPath.append("file://");
+        if (!path.startsWith("/")) {
+            // it's windows
+            uriPath.append('/');
+        }
+        uriPath.append(path);
+        return new URI(uriPath.toString());
+    }
 
     /**
      * Builds an RFC-3968 encoded URL query component from a collection of parameters.
