@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -157,7 +158,7 @@ public final class ClassToInstanceMultiMap<B> {
             values.add(value);
         }
 
-        final ArrayList<Class<?>> valueTypes = new ArrayList<Class<?>>();
+        final HashSet<Class<?>> valueTypes = new HashSet<Class<?>>();
         valueTypes.add(value.getClass());
 
         if (indexSupertypes) {
@@ -230,7 +231,7 @@ public final class ClassToInstanceMultiMap<B> {
      * @param clazz class for which supertypes will be determined
      * @param accumulator collection to which supertypes are added as they are determined
      */
-    private void getSuperTypes(final Class<?> clazz, final ArrayList<Class<?>> accumulator) {
+    private void getSuperTypes(final Class<?> clazz, Set<Class<?>> accumulator) {
         final Class<?> superclass = clazz.getSuperclass();
         if (superclass != null && superclass != Object.class) {
             accumulator.add(superclass);

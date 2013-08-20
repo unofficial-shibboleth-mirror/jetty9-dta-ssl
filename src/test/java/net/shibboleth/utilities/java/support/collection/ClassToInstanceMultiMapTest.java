@@ -117,6 +117,18 @@ public class ClassToInstanceMultiMapTest {
         values = map.get(Instant.class);
         Assert.assertEquals(values.size(), 1);
     }
+    
+    @Test public void testNoIndexedDuplicateValues() {
+        ClassToInstanceMultiMap<Object> map = new ClassToInstanceMultiMap<Object>(true);
+        
+        map.put(new FooBarImpl());
+        
+        Assert.assertEquals(map.get(Foo.class).size(), 1);
+        Assert.assertEquals(map.get(Bar.class).size(), 1);
+        Assert.assertEquals(map.get(AbstractFoo.class).size(), 1);
+        Assert.assertEquals(map.get(AbstractFooBar.class).size(), 1);
+        Assert.assertEquals(map.get(FooBarImpl.class).size(), 1);
+    }
 
     protected void populate(ClassToInstanceMultiMap<AbstractInstant> map) {
         DateTime now = new DateTime();
@@ -128,4 +140,20 @@ public class ClassToInstanceMultiMapTest {
         Instant instant = new Instant();
         map.put(instant);
     }
+    
+    
+    // Test classes and interfaces
+    
+    public interface Foo { };
+    
+    public interface Bar extends Foo { };
+    
+    public abstract class AbstractFoo implements Foo { };
+    
+    public class FooImpl extends AbstractFoo { };
+    
+    public abstract class AbstractFooBar extends AbstractFoo implements Bar { };
+    
+    public class FooBarImpl extends AbstractFooBar { };
+    
 }
