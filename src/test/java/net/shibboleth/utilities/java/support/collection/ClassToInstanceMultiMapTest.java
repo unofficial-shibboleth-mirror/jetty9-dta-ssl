@@ -146,7 +146,108 @@ public class ClassToInstanceMultiMapTest {
         Assert.assertEquals(map.get(AbstractFooBar.class).size(), 1);
         Assert.assertEquals(map.get(FooBarImpl.class).size(), 1);
     }
+    
+    @Test public void testRemoveValue() {
+        ClassToInstanceMultiMap<Object> map = new ClassToInstanceMultiMap<Object>(true);
+        
+        FooBarImpl fb = new FooBarImpl();
+        FooImpl f = new FooImpl();
+        
+        map.put(fb); // This is what we'll remove.
+        map.put(f); // This is canary to test that its indexes don't disappear.
+        
+        Assert.assertTrue(map.containsValue(fb));
+        Assert.assertTrue(map.containsValue(f));
+        
+        Assert.assertTrue(map.containsKey(Foo.class));
+        Assert.assertTrue(map.containsKey(AbstractFoo.class));
+        Assert.assertTrue(map.containsKey(FooImpl.class));
+        
+        Assert.assertEquals(map.get(Foo.class).size(), 2);
+        Assert.assertEquals(map.get(AbstractFoo.class).size(), 2);
+        Assert.assertEquals(map.get(FooImpl.class).size(), 1);
+        
+        Assert.assertTrue(map.containsKey(Bar.class));
+        Assert.assertTrue(map.containsKey(AbstractFooBar.class));
+        Assert.assertTrue(map.containsKey(FooBarImpl.class));
+        
+        Assert.assertEquals(map.get(Bar.class).size(), 1);
+        Assert.assertEquals(map.get(AbstractFooBar.class).size(), 1);
+        Assert.assertEquals(map.get(FooBarImpl.class).size(), 1);
+        
+        map.remove(fb);
+        
+        Assert.assertFalse(map.containsValue(fb));
+        Assert.assertTrue(map.containsValue(f));
+        
+        Assert.assertTrue(map.containsKey(Foo.class));
+        Assert.assertTrue(map.containsKey(AbstractFoo.class));
+        Assert.assertTrue(map.containsKey(FooImpl.class));
+        
+        Assert.assertEquals(map.get(Foo.class).size(), 1);
+        Assert.assertEquals(map.get(AbstractFoo.class).size(), 1);
+        Assert.assertEquals(map.get(FooImpl.class).size(), 1);
+        
+        Assert.assertFalse(map.containsKey(Bar.class));
+        Assert.assertFalse(map.containsKey(AbstractFooBar.class));
+        Assert.assertFalse(map.containsKey(FooBarImpl.class));
+        
+        Assert.assertEquals(map.get(Bar.class).size(), 0);
+        Assert.assertEquals(map.get(AbstractFooBar.class).size(), 0);
+        Assert.assertEquals(map.get(FooBarImpl.class).size(), 0);
+    }
 
+    @Test public void testRemoveByType() {
+        ClassToInstanceMultiMap<Object> map = new ClassToInstanceMultiMap<Object>(true);
+        
+        FooBarImpl fb = new FooBarImpl();
+        FooImpl f = new FooImpl();
+        
+        map.put(fb);
+        map.put(f);
+        
+        Assert.assertTrue(map.containsValue(fb));
+        Assert.assertTrue(map.containsValue(f));
+        
+        Assert.assertTrue(map.containsKey(Foo.class));
+        Assert.assertTrue(map.containsKey(AbstractFoo.class));
+        Assert.assertTrue(map.containsKey(FooImpl.class));
+        
+        Assert.assertEquals(map.get(Foo.class).size(), 2);
+        Assert.assertEquals(map.get(AbstractFoo.class).size(), 2);
+        Assert.assertEquals(map.get(FooImpl.class).size(), 1);
+        
+        Assert.assertTrue(map.containsKey(Bar.class));
+        Assert.assertTrue(map.containsKey(AbstractFooBar.class));
+        Assert.assertTrue(map.containsKey(FooBarImpl.class));
+        
+        Assert.assertEquals(map.get(Bar.class).size(), 1);
+        Assert.assertEquals(map.get(AbstractFooBar.class).size(), 1);
+        Assert.assertEquals(map.get(FooBarImpl.class).size(), 1);
+        
+        map.remove(Bar.class);
+        
+        Assert.assertFalse(map.containsValue(fb));
+        Assert.assertTrue(map.containsValue(f));
+        
+        Assert.assertTrue(map.containsKey(Foo.class));
+        Assert.assertTrue(map.containsKey(AbstractFoo.class));
+        Assert.assertTrue(map.containsKey(FooImpl.class));
+        
+        Assert.assertEquals(map.get(Foo.class).size(), 1);
+        Assert.assertEquals(map.get(AbstractFoo.class).size(), 1);
+        Assert.assertEquals(map.get(FooImpl.class).size(), 1);
+        
+        Assert.assertFalse(map.containsKey(Bar.class));
+        Assert.assertFalse(map.containsKey(AbstractFooBar.class));
+        Assert.assertFalse(map.containsKey(FooBarImpl.class));
+        
+        Assert.assertEquals(map.get(Bar.class).size(), 0);
+        Assert.assertEquals(map.get(AbstractFooBar.class).size(), 0);
+        Assert.assertEquals(map.get(FooBarImpl.class).size(), 0);
+        
+    }
+    
     protected void populate(ClassToInstanceMultiMap<AbstractInstant> map) {
         DateTime now = new DateTime();
         map.put(now);

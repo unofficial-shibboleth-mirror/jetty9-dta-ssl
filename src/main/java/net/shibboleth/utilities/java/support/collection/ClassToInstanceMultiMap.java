@@ -208,6 +208,64 @@ public final class ClassToInstanceMultiMap<B> {
             put(value);
         }
     }
+    
+    /**
+     * Remove the specified value from the map and from the value list of all indexes.
+     * 
+     * <p>
+     * If the value list for a type index becomes empty due to the value removal, the entire type 
+     * index will be removed and {@link #containsKey(Class)} for that type will then return <code>false</code>.
+     * </p>
+     * 
+     * @param value the value to remove
+     */
+    public void remove(final B value) {
+        if (value == null) {
+            return;
+        }
+        
+        values.remove(value);
+        
+        List<B> indexValues;
+        for (Class<?> indexKey : getIndexTypes(value)) {
+            indexValues = backingMap.get(indexKey);
+            if (indexValues != null) {
+                indexValues.remove(value);
+                if (indexValues.isEmpty()) {
+                    backingMap.remove(indexKey);
+                }
+            }
+        }
+    }
+    
+    /**
+     * Remove from the map all values which have the specified type.
+     * 
+     * <p>
+     * Note that when a value was indexed by multiple superclass and/or interface types,
+     * it will be removed from all those type indexes, not just the specified one.  
+     * </p>
+     * 
+     * <p>
+     * If the value list for a type index becomes empty due to a value removal, the entire type 
+     * index will be removed and {@link #containsKey(Class)} for that type will then return <code>false</code>.
+     * </p>
+     * 
+     * @param type the type of values to remove
+     */
+    public void remove(final Class<?> type) {
+        if (type == null) {
+            return;
+        }
+        
+        List<B> indexValues = backingMap.remove(type);
+        
+        if (indexValues != null) {
+            for (B value : indexValues) {
+                remove(value);
+            }
+        }
+    }
 
     /**
      * The collection of values currently present in the map. This collection is backed by the map so changeds to the
