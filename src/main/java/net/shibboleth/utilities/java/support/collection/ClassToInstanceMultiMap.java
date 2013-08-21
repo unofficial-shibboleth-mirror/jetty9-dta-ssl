@@ -195,18 +195,16 @@ public final class ClassToInstanceMultiMap<B> {
      * regardless of the given map's policy on indexing by value supertypes, this map will index values based on its
      * policy.
      * 
-     * @param newValues values to be added
+     * @param map map containing values to be added
      * 
      * @see ClassToInstanceMultiMap#put(Object)
      */
-    public void putAll(final ClassToInstanceMultiMap<? extends B> newValues) {
-        if (newValues == null) {
+    public void putAll(final ClassToInstanceMultiMap<? extends B> map) {
+        if (map == null) {
             return;
         }
 
-        for (B value : newValues.values()) {
-            put(value);
-        }
+        putAll(map.values);
     }
     
     /**
@@ -236,6 +234,44 @@ public final class ClassToInstanceMultiMap<B> {
                 }
             }
         }
+    }
+    
+    /**
+     * Remove the specified values from the map and from the value list of all indexes.
+     * 
+     * <p>
+     * If the value list for a type index becomes empty due to a value removal, the entire type 
+     * index will be removed and {@link #containsKey(Class)} for that type will then return <code>false</code>.
+     * </p>
+     * 
+     * @param removeValues the values to remove
+     */
+    public void removeAll(final Iterable<? extends B> removeValues) {
+        if (removeValues == null) {
+            return;
+        }
+        
+        for (B value : removeValues) {
+            remove(value);
+        }
+    }
+    
+    /**
+     * Remove the values contained in the specified map from this map and from the value list of all indexes.
+     * 
+     * <p>
+     * If the value list for a type index becomes empty due to a value removal, the entire type 
+     * index will be removed and {@link #containsKey(Class)} for that type will then return <code>false</code>.
+     * </p>
+     * 
+     * @param map the map containing the values to remove
+     */
+    public void removeAll(final ClassToInstanceMultiMap<? extends B> map) {
+        if (values == null) {
+            return;
+        }
+        
+        removeAll(map.values);
     }
     
     /**

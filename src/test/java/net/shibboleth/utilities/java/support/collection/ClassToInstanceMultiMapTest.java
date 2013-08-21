@@ -18,6 +18,7 @@
 package net.shibboleth.utilities.java.support.collection;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 import org.joda.time.Chronology;
@@ -246,6 +247,51 @@ public class ClassToInstanceMultiMapTest {
         Assert.assertEquals(map.get(AbstractFooBar.class).size(), 0);
         Assert.assertEquals(map.get(FooBarImpl.class).size(), 0);
         
+    }
+    
+    @Test public void testRemoveAll() {
+        ClassToInstanceMultiMap<Object> map = new ClassToInstanceMultiMap<Object>(true);
+        
+        FooImpl f1 = new FooImpl();
+        FooImpl f2 = new FooImpl();
+        FooImpl f3 = new FooImpl();
+        
+        FooBarImpl fb1 = new FooBarImpl();
+        FooBarImpl fb2 = new FooBarImpl();
+        FooBarImpl fb3 = new FooBarImpl();
+        
+        map.put(f1);
+        map.put(f2);
+        map.put(f3);
+        map.put(fb1);
+        map.put(fb2);
+        map.put(fb3);
+        
+        Assert.assertEquals(map.values().size(), 6);
+        Assert.assertEquals(map.get(Foo.class).size(), 6);
+        Assert.assertEquals(map.get(Bar.class).size(), 3);
+        
+        map.removeAll(Arrays.asList(f1,f2,fb1));
+        
+        Assert.assertEquals(map.values().size(), 3);
+        Assert.assertEquals(map.get(Foo.class).size(), 3);
+        Assert.assertEquals(map.get(Bar.class).size(), 2);
+        
+        map.removeAll(Arrays.asList(fb2,fb3));
+        
+        Assert.assertEquals(map.values().size(), 1);
+        Assert.assertEquals(map.get(Foo.class).size(), 1);
+        Assert.assertEquals(map.get(Bar.class).size(), 0);
+        Assert.assertFalse(map.containsKey(Bar.class));
+        
+        map.removeAll(Arrays.asList(f3));
+        
+        Assert.assertEquals(map.values().size(), 0);
+        Assert.assertTrue(map.isEmpty());
+        Assert.assertEquals(map.get(Foo.class).size(), 0);
+        Assert.assertEquals(map.get(Bar.class).size(), 0);
+        Assert.assertFalse(map.containsKey(Foo.class));
+        Assert.assertFalse(map.containsKey(Bar.class));
     }
     
     protected void populate(ClassToInstanceMultiMap<AbstractInstant> map) {
