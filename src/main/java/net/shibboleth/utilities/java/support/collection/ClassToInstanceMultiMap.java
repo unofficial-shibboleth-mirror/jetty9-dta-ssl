@@ -267,7 +267,7 @@ public final class ClassToInstanceMultiMap<B> {
      * @param map the map containing the values to remove
      */
     public void removeAll(final ClassToInstanceMultiMap<? extends B> map) {
-        if (values == null) {
+        if (map == null) {
             return;
         }
         
