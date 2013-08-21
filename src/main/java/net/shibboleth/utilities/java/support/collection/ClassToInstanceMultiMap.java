@@ -204,7 +204,7 @@ public final class ClassToInstanceMultiMap<B> {
             return;
         }
 
-        putAll(map.values);
+        putAll(map.values());
     }
     
     /**
@@ -271,7 +271,7 @@ public final class ClassToInstanceMultiMap<B> {
             return;
         }
         
-        removeAll(map.values);
+        removeAll(map.values());
     }
     
     /**
