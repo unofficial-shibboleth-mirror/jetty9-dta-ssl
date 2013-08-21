@@ -158,23 +158,18 @@ public final class ClassToInstanceMultiMap<B> {
             values.add(value);
         }
 
-        final HashSet<Class<?>> valueTypes = new HashSet<Class<?>>();
-        valueTypes.add(value.getClass());
-
-        if (indexSupertypes) {
-            getSuperTypes(value.getClass(), valueTypes);
-        }
-
         List<B> indexValues;
-        for (Class<?> valueType : valueTypes) {
-            indexValues = backingMap.get(valueType);
+        for (Class<?> indexKey : getIndexTypes(value)) {
+            indexValues = backingMap.get(indexKey);
 
             if (indexValues == null) {
                 indexValues = new ArrayList<B>();
-                backingMap.put(valueType, indexValues);
+                backingMap.put(indexKey, indexValues);
             }
 
-            indexValues.add(value);
+            if (!indexValues.contains(value)) {
+                indexValues.add(value);
+            }
         }
     }
 
@@ -223,6 +218,24 @@ public final class ClassToInstanceMultiMap<B> {
      */
     public Collection<? extends B> values() {
         return Collections.unmodifiableList(values);
+    }
+    
+    /**
+     * Get the effective set of all class types via which the specified value
+     * should be indexed.
+     * 
+     * @param value the value to index
+     * @return the set of classes by which to index the value
+     */
+    private Set<Class<?>> getIndexTypes(final B value) {
+        final HashSet<Class<?>> indexTypes = new HashSet<>();
+        indexTypes.add(value.getClass());
+
+        if (indexSupertypes) {
+            getSuperTypes(value.getClass(), indexTypes);
+        }
+        
+        return indexTypes;
     }
 
     /**

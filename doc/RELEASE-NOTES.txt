@@ -1,7 +1,8 @@
-Changes in Release 1.1.0
+Changes in Release 2.0.0
 ===============================
 [JSPT-3] - Providers helpers for dealing with idle connections in HttpClient
 [JSPT-16] - Add a ServletListener that configures logback with a specified configuration file
 [JSPT-23] - SerializeSupport prettyPrintXML has reverted impl to diverge from writeNode and nodeToString
 [JSPT-24] - Type4UuidIdentifier and RandomIdentifier generation strategies do not generate a valid XML ID
 [JSPT-27] - ClassToInstanceMultiMap get() returns duplicate values
+[JSPT-29] - ClassToInstanceMultiMap contains duplicates in value list on multiple insertions of same value
