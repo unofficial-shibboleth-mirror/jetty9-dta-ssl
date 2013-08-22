@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.script.Bindings;
 import javax.script.Compilable;
 import javax.script.CompiledScript;
@@ -130,7 +131,7 @@ public class EvaluableScript {
      * 
      * @throws ScriptException thrown if there was a problem evaluating the script
      */
-    @Nonnull public Object eval(Bindings scriptBindings) throws ScriptException {
+    @Nullable public Object eval(Bindings scriptBindings) throws ScriptException {
         if (compiledScript != null) {
             return compiledScript.eval(scriptBindings);
         } else {
@@ -143,11 +144,11 @@ public class EvaluableScript {
      * 
      * @param scriptContext the script context
      * 
-     * @return the result of the script or {@link Optional#absent()} if the script did not return a result
+     * @return the result of the script or null if the script did not return a result
      * 
      * @throws ScriptException thrown if there was a problem evaluating the script
      */
-    @Nonnull public Object eval(ScriptContext scriptContext) throws ScriptException {
+    @Nullable public Object eval(ScriptContext scriptContext) throws ScriptException {
         if (compiledScript != null) {
             return compiledScript.eval(scriptContext);
         } else {
