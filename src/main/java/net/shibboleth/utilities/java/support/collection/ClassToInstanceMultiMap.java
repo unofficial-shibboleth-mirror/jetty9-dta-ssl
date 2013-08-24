@@ -37,7 +37,7 @@ import javax.annotation.concurrent.NotThreadSafe;
  * @param <B> a bound for the types of values in the map
  */
 @NotThreadSafe
-public final class ClassToInstanceMultiMap<B> {
+public class ClassToInstanceMultiMap<B> {
 
     /** Whether supertypes should also be indexed. */
     private final boolean indexSupertypes;
