@@ -17,7 +17,7 @@
 
 package net.shibboleth.utilities.java.support.xml;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
@@ -40,6 +41,9 @@ public final class DomTypeSupport {
     /** JAXP DatatypeFactory. */
     private static DatatypeFactory dataTypeFactory;
 
+    /** Baseline for duration calculations (comes from XML Schema standard). */
+    private static Calendar baseline;    
+    
     /** Constructor. */
     private DomTypeSupport() {
     }
@@ -67,9 +71,20 @@ public final class DomTypeSupport {
      * @return duration in milliseconds
      */
     public static long durationToLong(final String duration) {
-        return dataTypeFactory.newDuration(duration).getTimeInMillis(new Date(0));
+        return dataTypeFactory.newDuration(duration).getTimeInMillis(baseline);
     }
 
+    /**
+     * Converts a lexical duration, as defined by XML Schema 1.0, into milliseconds.
+     * 
+     * @param duration JAXP duration representation
+     * 
+     * @return duration in milliseconds
+     */
+    public static long durationToLong(final Duration duration) {
+        return duration.getTimeInMillis(baseline);
+    }
+    
     /**
      * Gets a static instance of a JAXP DatatypeFactory.
      * 
@@ -142,6 +157,7 @@ public final class DomTypeSupport {
     static {
         try {
             dataTypeFactory = DatatypeFactory.newInstance();
+            baseline = new GregorianCalendar(1696, 9, 1, 0, 0, 0);
         } catch (DatatypeConfigurationException e) {
             throw new RuntimeException("JVM is required to support XML DatatypeFactory but it does not", e);
         }
