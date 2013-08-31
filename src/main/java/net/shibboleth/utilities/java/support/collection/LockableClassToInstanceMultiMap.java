@@ -21,8 +21,7 @@ public class LockableClassToInstanceMultiMap<B> extends ClassToInstanceMultiMap<
      * Constructor.
      */
     public LockableClassToInstanceMultiMap() {
-        super();
-        readWriteLock = new ReentrantReadWriteLock(true);
+        this(false);
     }
 
     /**
@@ -32,7 +31,7 @@ public class LockableClassToInstanceMultiMap<B> extends ClassToInstanceMultiMap<
      */
     public LockableClassToInstanceMultiMap(boolean isIndexingSupertypes) {
         super(isIndexingSupertypes);
-        readWriteLock = new ReentrantReadWriteLock();
+        readWriteLock = new ReentrantReadWriteLock(true);
     }
 
     /**
