@@ -22,7 +22,7 @@ public class LockableClassToInstanceMultiMap<B> extends ClassToInstanceMultiMap<
      */
     public LockableClassToInstanceMultiMap() {
         super();
-        readWriteLock = new ReentrantReadWriteLock();
+        readWriteLock = new ReentrantReadWriteLock(true);
     }
 
     /**
