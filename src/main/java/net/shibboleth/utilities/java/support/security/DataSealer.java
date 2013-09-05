@@ -23,30 +23,34 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.Key;
 import java.security.KeyException;
 import java.security.KeyStore;
 import java.security.SecureRandom;
-import java.util.Arrays;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import javax.annotation.Nonnull;
-import javax.crypto.Cipher;
-import javax.crypto.Mac;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.codec.Base64Support;
 import net.shibboleth.utilities.java.support.component.AbstractInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
+import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
+import org.bouncycastle.crypto.InvalidCipherTextException;
+import org.bouncycastle.crypto.engines.AESEngine;
+import org.bouncycastle.crypto.modes.GCMBlockCipher;
+import org.bouncycastle.crypto.params.AEADParameters;
+import org.bouncycastle.crypto.params.KeyParameter;
+import org.bouncycastle.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,23 +87,9 @@ public class DataSealer extends AbstractInitializableComponent {
     /** Password for encryption key(s). */
     @NonnullAfterInit private String cipherKeyPassword;
 
-    /** Encryption algorithm to use. */
-    @Nonnull @NotEmpty private String cipherAlgorithm;
-
-    /** Keystore alias for the MAC key. */
-    @NonnullAfterInit private String macKeyAlias;
-
-    /** Password for MAC key. */
-    @NonnullAfterInit private String macKeyPassword;
-
-    /** MAC algorithm to use. */
-    @Nonnull @NotEmpty private String macAlgorithm;
-
     /** Constructor. */
     public DataSealer() {
         keystoreType = "JCEKS";
-        cipherAlgorithm = "AES/CBC/PKCS5Padding";
-        macAlgorithm = "HmacSHA256";
     }
     
     /** {@inheritDoc} */
@@ -115,19 +105,11 @@ public class DataSealer extends AbstractInitializableComponent {
                 throw new ComponentInitializationException(e);
             }
             
-            if (macKeyAlias == null) {
-                macKeyAlias = cipherKeyAlias;
-            }
-            
-            if (macKeyPassword == null) {
-                macKeyPassword = cipherKeyPassword;
-            }
-
             if (random == null) {
                 random = new SecureRandom();
             }
 
-            loadKeys();
+            cipherKey = loadKey(cipherKeyAlias);
 
             // Before we finish initialization, make sure that things are working.
             testEncryption();
@@ -214,47 +196,13 @@ public class DataSealer extends AbstractInitializableComponent {
     }
 
     /**
-     * Returns the encryption algorithm.
-     * 
-     * @return the encryption algorithm
-     */
-    @Nonnull @NotEmpty public String getCipherAlgorithm() {
-        return cipherAlgorithm;
-    }
-
-    /**
-     * Returns the MAC key alias.
-     * 
-     * @return the MAC key alias
-     */
-    @NonnullAfterInit public String getMacKeyAlias() {
-        return macKeyAlias;
-    }
-
-    /**
-     * Returns the MAC key password.
-     * 
-     * @return the MAC key password
-     */
-    @NonnullAfterInit public String getMacKeyPassword() {
-        return macKeyPassword;
-    }
-
-    /**
-     * Returns the MAC algorithm.
-     * 
-     * @return the MAC algorithm
-     */
-    @Nonnull @NotEmpty public String getMacAlgorithm() {
-        return macAlgorithm;
-    }
-
-    /**
      * Sets the pseudorandom generator.
      * 
      * @param r the pseudorandom generator to set
      */
     public void setRandom(@Nonnull final SecureRandom r) {
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         random = Constraint.isNotNull(r, "SecureRandom cannot be null");
     }
 
@@ -264,6 +212,8 @@ public class DataSealer extends AbstractInitializableComponent {
      * @param type the keystore type to set
      */
     public void setKeystoreType(@Nonnull @NotEmpty final String type) {
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         keystoreType = Constraint.isNotNull(StringSupport.trimOrNull(type), "Keystore type cannot be null or empty");
     }
 
@@ -273,6 +223,8 @@ public class DataSealer extends AbstractInitializableComponent {
      * @param path the keystore path to set
      */
     public void setKeystorePath(@Nonnull @NotEmpty final String path) {
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         keystorePath = Constraint.isNotNull(StringSupport.trimOrNull(path), "Keystore path cannot be null or empty");
     }
 
@@ -282,6 +234,8 @@ public class DataSealer extends AbstractInitializableComponent {
      * @param password the keystore password to set
      */
     public void setKeystorePassword(@Nonnull @NotEmpty final String password) {
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         keystorePassword = Constraint.isNotNull(password, "Keystore password cannot be null");
     }
 
@@ -291,6 +245,8 @@ public class DataSealer extends AbstractInitializableComponent {
      * @param alias the encryption key alias to set
      */
     public void setCipherKeyAlias(@Nonnull @NotEmpty final String alias) {
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         cipherKeyAlias = Constraint.isNotNull(StringSupport.trimOrNull(alias),
                 "Cipher key alias cannot be null or empty");
     }
@@ -301,174 +257,140 @@ public class DataSealer extends AbstractInitializableComponent {
      * @param password the encryption key password to set
      */
     public void setCipherKeyPassword(@Nonnull @NotEmpty final String password) {
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
         cipherKeyPassword = Constraint.isNotNull(password, "Cipher key password cannot be null");
     }
 
     /**
-     * Sets the encryption algorithm.
+     * Decrypts and verifies an encrypted bundle created with {@link #wrap(String, long)}.
      * 
-     * @param alg the encryption algorithm to set
-     */
-    public void setCipherAlgorithm(@Nonnull @NotEmpty final String alg) {
-        cipherAlgorithm = Constraint.isNotNull(StringSupport.trimOrNull(alg),
-                "Cipher algorithm cannot be null or empty");
-    }
-
-    /**
-     * Sets the MAC key alias.
-     * 
-     * @param alias the MAC key alias to set
-     */
-    public void setMacKeyAlias(@Nonnull @NotEmpty final String alias) {
-        macKeyAlias = Constraint.isNotNull(StringSupport.trimOrNull(alias), "MAC key alias cannot be null or empty");
-    }
-
-    /**
-     * Sets the MAC key password.
-     * 
-     * @param password the the MAC key password to set
-     */
-    public void setMacKeyPassword(@Nonnull @NotEmpty final String password) {
-        macKeyPassword = Constraint.isNotNull(password, "MAC key password cannot be null");
-    }
-
-    /**
-     * Sets the MAC key algorithm.
-     * 
-     * @param alg the MAC algorithm to set
-     */
-    public void setMacAlgorithm(@Nonnull @NotEmpty final String alg) {
-        macAlgorithm = Constraint.isNotNull(StringSupport.trimOrNull(alg), "MAC algorithm cannot be null or empty");
-    }
-
-    /**
-     * Decrypts and verifies an encrypted bundle of MAC'd data, and returns it.
+     * <p>If the data indicates that a non-default key was used, an attempt to load this key
+     * from the keystore will be made.</p>
      * 
      * @param wrapped the encoded blob
      * @return the decrypted data, if it's unexpired
      * @throws DataSealerException if the data cannot be unwrapped and verified
      */
-    @Nonnull public String unwrap(@Nonnull String wrapped) throws DataSealerException {
+    @Nonnull public String unwrap(@Nonnull @NotEmpty final String wrapped) throws DataSealerException {
 
         try {
             final byte[] in = Base64Support.decode(wrapped);
 
-            final Cipher cipher = Cipher.getInstance(cipherAlgorithm);
-            final int ivSize = cipher.getBlockSize();
-            final byte[] iv = new byte[ivSize];
-
-
-            if (in.length < ivSize) {
-                log.error("Wrapped data is malformed (not enough bytes).");
-                throw new DataSealerException("Wrapped data is malformed (not enough bytes).");
+            final ByteArrayInputStream inputByteStream = new ByteArrayInputStream(in);
+            final DataInputStream inputDataStream = new DataInputStream(inputByteStream);
+            
+            // Extract alias of key, and load if necessary.
+            SecretKey keyUsed;
+            String keyAlias = inputDataStream.readUTF();
+            log.trace("Data was encrypted by key '{}'", keyAlias);
+            if (keyAlias.equals(cipherKeyAlias)) {
+                keyUsed = cipherKey;
+            } else {
+                keyUsed = loadKey(keyAlias);
+                log.trace("Loaded older key '{}' from keystore", keyAlias);
             }
+            
+            final GCMBlockCipher cipher = new GCMBlockCipher(new AESEngine());
+            
+            // Load the IV.
+            final int ivSize = cipher.getUnderlyingCipher().getBlockSize();
+            final byte[] iv = new byte[ivSize];
+            inputDataStream.readFully(iv);
 
-            // extract the IV, setup the cipher and extract the encrypted handle
-            System.arraycopy(in, 0, iv, 0, ivSize);
-            IvParameterSpec ivSpec = new IvParameterSpec(iv);
-            cipher.init(Cipher.DECRYPT_MODE, cipherKey, ivSpec);
+            final AEADParameters aeadParams =
+                    new AEADParameters(new KeyParameter(keyUsed.getEncoded()), 128, iv, cipherKeyAlias.getBytes());
+            cipher.init(false, aeadParams);
 
-            final byte[] encryptedHandle = new byte[in.length - iv.length];
-            System.arraycopy(in, ivSize, encryptedHandle, 0, in.length - iv.length);
+            // Data can't be any bigger the original minus IV.
+            final byte[] data = new byte[in.length - ivSize];
+            final int dataSize = inputDataStream.read(data);
+            
+            final byte[] plaintext = new byte[cipher.getOutputSize(dataSize)];
+            final int outputLen = cipher.processBytes(data, 0, dataSize, plaintext, 0);
+            cipher.doFinal(data, outputLen);
+            
+            // Decrypt the rest of the data and pass it into the subroutine for processing.
+            return extractAndCheckDecryptedData(plaintext);
 
-            // decrypt the rest of the data and setup the streams
-            final byte[] decryptedBytes = cipher.doFinal(encryptedHandle);
-            return extractAndCheckDecryptedData(decryptedBytes);
-
+        } catch (IllegalStateException | InvalidCipherTextException| IOException e) {
+            log.error(e.getMessage());
+            throw new DataSealerException("Exception unwrapping data", e);
         } catch (GeneralSecurityException e) {
             log.error(e.getMessage());
-            throw new DataSealerException("Caught GeneralSecurityException unwrapping data.", e);
+            throw new DataSealerException("Exception loading legacy key", e);
         }
     }
 
     /**
-     * Extract the components from the provided data stream decode them and test them prior to returning the value.
+     * Extract the GZIP'd data and test for expiration before returning it.
      * 
-     * @param decryptedBytes the data we are looking at.
-     * @return the decoded data if it is valid and unexpired.
+     * @param decryptedBytes the data we are looking at
+     * 
+     * @return the decoded data if it is valid and unexpired
      * @throws DataSealerException if the data cannot be unwrapped and verified
      */
-    @Nonnull private String extractAndCheckDecryptedData(@Nonnull byte[] decryptedBytes)
+    @Nonnull private String extractAndCheckDecryptedData(@Nonnull @NotEmpty byte[] decryptedBytes)
             throws DataSealerException {
         
         try {
-            final Mac mac = Mac.getInstance(macAlgorithm);
-            mac.init(macKey);
-            final int macSize = mac.getMacLength();
-            
             ByteArrayInputStream byteStream = new ByteArrayInputStream(decryptedBytes);
             GZIPInputStream compressedData = new GZIPInputStream(byteStream);
             DataInputStream dataInputStream = new DataInputStream(compressedData);
 
-            // extract the components
-            final byte[] decodedMac = new byte[macSize];
-            final int bytesRead;
-
-            bytesRead = dataInputStream.read(decodedMac);
-            if (bytesRead != macSize) {
-                log.error("Error parsing unwrapped data, unable to extract HMAC.");
-                throw new DataSealerException("Error parsing unwrapped data, unable to extract HMAC.");
-            }
             final long decodedExpirationTime = dataInputStream.readLong();
             final String decodedData = dataInputStream.readUTF();
 
             if (System.currentTimeMillis() > decodedExpirationTime) {
-                log.info("Unwrapped data has expired.");
-                throw new DataExpiredException("Unwrapped data has expired.");
+                log.info("Unwrapped data has expired");
+                throw new DataExpiredException("Unwrapped data has expired");
             }
 
-            final byte[] generatedMac = getMAC(mac, decodedData, decodedExpirationTime);
-
-            if (!Arrays.equals(decodedMac, generatedMac)) {
-                log.warn("Unwrapped data failed integrity check.");
-                throw new DataSealerException("Unwrapped data failed integrity check.");
-            }
-
-            log.debug("Unwrapped data verified.");
+            log.debug("Unwrapped data verified");
             return decodedData;
         } catch (IOException e) {
             log.error(e.getMessage());
-            throw new DataSealerException("Caught IOException unwrapping data.", e);
-        } catch (GeneralSecurityException e) {
-            log.error(e.getMessage());
-            throw new DataSealerException("Caught GeneralSecurityException unwrapping data.", e);
+            throw new DataSealerException("Caught IOException unwrapping data", e);
         }
-
     }
 
     /**
-     * Encodes data into a cryptographic blob: [IV][HMAC][exp][data] where: [IV] = the Initialization Vector; byte-array
-     * [HMAC] = the HMAC; byte array [exp] = expiration time of the data; 8 bytes; Big-endian [data] = the principal; a
-     * UTF-8-encoded string The bytes are then GZIP'd. The IV is pre-pended to this byte stream, and the result is
-     * Base32-encoded. We don't need to encode the IV or MAC's lengths. They can be obtained from Cipher.getBlockSize()
-     * and Mac.getMacLength(), respectively.
+     * Encodes data into an AEAD-encrypted blob, gzip(exp|data)
+     * 
+     * <ul>
+     * <li>exp = expiration time of the data; 8 bytes; Big-endian</li>
+     * <li>data = the data; a UTF-8-encoded string</li>
+     * </ul>
+     * 
+     * <p>As part of encryption, the key alias is supplied as additional authenticated data
+     * to the cipher. Afterwards, the encrypted data is prepended by the IV and then again by the alias
+     * (in length-prefixed UTF-8 format), which identifies the key used. Finally the result is base64-encoded.</p>
      * 
      * @param data the data to wrap
      * @param exp expiration time
      * @return the encoded blob
      * @throws DataSealerException if the wrapping operation fails
      */
-    @Nonnull public String wrap(@Nonnull String data, long exp) throws DataSealerException {
+    @Nonnull public String wrap(@Nonnull @NotEmpty final String data, long exp) throws DataSealerException {
 
-        if (data == null) {
-            throw new IllegalArgumentException("Data must be supplied for the wrapping operation.");
+        if (data == null || data.length() == 0) {
+            throw new IllegalArgumentException("Data must be supplied for the wrapping operation");
         }
 
         try {
-            final Mac mac = Mac.getInstance(macAlgorithm);
-            mac.init(macKey);
 
-            final Cipher cipher = Cipher.getInstance(cipherAlgorithm);
-            final byte[] iv = new byte[cipher.getBlockSize()];
+            final GCMBlockCipher cipher = new GCMBlockCipher(new AESEngine());
+            final byte[] iv = new byte[cipher.getUnderlyingCipher().getBlockSize()];
             random.nextBytes(iv);
-            IvParameterSpec ivSpec = new IvParameterSpec(iv);
-            cipher.init(Cipher.ENCRYPT_MODE, cipherKey, ivSpec);
+            
+            final AEADParameters aeadParams =
+                    new AEADParameters(new KeyParameter(cipherKey.getEncoded()), 128, iv, cipherKeyAlias.getBytes());
+            cipher.init(true, aeadParams);
 
             final ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
             final GZIPOutputStream compressedStream = new GZIPOutputStream(byteStream);
             final DataOutputStream dataStream = new DataOutputStream(compressedStream);
 
-            dataStream.write(getMAC(mac, data, exp));
             dataStream.writeLong(exp);
             dataStream.writeUTF(data);
 
@@ -477,23 +399,24 @@ public class DataSealer extends AbstractInitializableComponent {
             compressedStream.finish();
             byteStream.flush();
 
-            final byte[] encryptedData = cipher.doFinal(byteStream.toByteArray());
+            final byte[] plaintext = byteStream.toByteArray();
+            final byte[] encryptedData = new byte[cipher.getOutputSize(plaintext.length)];
+            int outputLen = cipher.processBytes(plaintext, 0, plaintext.length, encryptedData, 0);
+            cipher.doFinal(encryptedData, outputLen);
 
-            final byte[] handleBytes = new byte[iv.length + encryptedData.length];
-            System.arraycopy(iv, 0, handleBytes, 0, iv.length);
-            System.arraycopy(encryptedData, 0, handleBytes, iv.length, encryptedData.length);
+            final ByteArrayOutputStream finalByteStream = new ByteArrayOutputStream();
+            final DataOutputStream finalDataStream = new DataOutputStream(finalByteStream);
+            finalDataStream.writeUTF(cipherKeyAlias);
+            finalDataStream.write(iv);
+            finalDataStream.write(encryptedData);
+            finalDataStream.flush();
+            finalByteStream.flush();
+            
+            return Base64Support.encode(finalByteStream.toByteArray(), false);
 
-            return Base64Support.encode(handleBytes, false);
-
-        } catch (KeyException e) {
+        } catch (IOException | IllegalStateException | InvalidCipherTextException e) {
             log.error(e.getMessage());
-            throw new DataSealerException("Caught KeyException wrapping data.", e);
-        } catch (GeneralSecurityException e) {
-            log.error(e.getMessage());
-            throw new DataSealerException("Caught GeneralSecurityException wrapping data.", e);
-        } catch (IOException e) {
-            log.error(e.getMessage());
-            throw new DataSealerException("Caught IOException wrapping data.", e);
+            throw new DataSealerException("Exception wrapping data", e);
         }
 
     }
@@ -507,105 +430,44 @@ public class DataSealer extends AbstractInitializableComponent {
 
         String decrypted;
         try {
-            final Cipher cipher = Cipher.getInstance(cipherAlgorithm);
-            final byte[] iv = new byte[cipher.getBlockSize()];
+            final GCMBlockCipher cipher = new GCMBlockCipher(new AESEngine());
+            final byte[] iv = new byte[cipher.getUnderlyingCipher().getBlockSize()];
             random.nextBytes(iv);
-            final IvParameterSpec ivSpec = new IvParameterSpec(iv);
-            cipher.init(Cipher.ENCRYPT_MODE, cipherKey, ivSpec);
-            final byte[] cipherText = cipher.doFinal("test".getBytes());
+            final AEADParameters aeadParams = new AEADParameters(
+                    new KeyParameter(cipherKey.getEncoded()), 128, iv, "aad".getBytes(StandardCharsets.UTF_8));
+            cipher.init(true, aeadParams);
+            byte[] plaintext = "test".getBytes(StandardCharsets.UTF_8);
+            final byte[] encryptedData = new byte[cipher.getOutputSize(plaintext.length)];
+            int outputLen = cipher.processBytes(plaintext, 0, plaintext.length, encryptedData, 0);
+            cipher.doFinal(encryptedData, outputLen);
 
-            cipher.init(Cipher.DECRYPT_MODE, cipherKey, ivSpec);
-            decrypted = new String(cipher.doFinal(cipherText));
-        } catch (GeneralSecurityException e) {
-            log.error("Round trip encryption/decryption test unsuccessful: " + e);
-            throw new DataSealerException("Round trip encryption/decryption test unsuccessful.", e);
+            cipher.init(false, aeadParams);
+            plaintext = new byte[cipher.getOutputSize(encryptedData.length)];
+            outputLen = cipher.processBytes(encryptedData, 0, encryptedData.length, plaintext, 0);
+            cipher.doFinal(plaintext, outputLen);
+            decrypted = Strings.fromUTF8ByteArray(plaintext);
+            
+        } catch (IllegalStateException | InvalidCipherTextException e) {
+            log.error("Round trip encryption/decryption test unsuccessful", e);
+            throw new DataSealerException("Round trip encryption/decryption test unsuccessful", e);
         }
 
         if (decrypted == null || !"test".equals(decrypted)) {
-            log.error("Round trip encryption/decryption test unsuccessful. Decrypted text did not match.");
-            throw new DataSealerException("Round trip encryption/decryption test unsuccessful.");
-        }
-
-        final byte[] code;
-        try {
-            final Mac mac = Mac.getInstance(macAlgorithm);
-            mac.init(macKey);
-            mac.update("foo".getBytes());
-            code = mac.doFinal();
-        } catch (GeneralSecurityException e) {
-            log.error("Message Authentication test unsuccessful: " + e);
-            throw new DataSealerException("Message Authentication test unsuccessful.", e);
-        }
-
-        if (code == null) {
-            log.error("Message Authentication test unsuccessful.");
-            throw new DataSealerException("Message Authentication test unsuccessful.");
+            log.error("Round trip encryption/decryption test unsuccessful. Decrypted text did not match");
+            throw new DataSealerException("Round trip encryption/decryption test unsuccessful");
         }
     }
 
-    /**
-     * Compute a MAC over a string, prefixed by an expiration time.
-     * 
-     * @param mac MAC object to use
-     * @param data data to hash
-     * @param exp timestamp to prefix the data with
-     * @return the resulting MAC
-     */
-    @Nonnull protected static byte[] getMAC(@Nonnull Mac mac, @Nonnull String data, long exp) {
-        mac.update(getLongBytes(exp));
-        mac.update(data.getBytes());
-        return mac.doFinal();
-    }
-
-    /**
-     * Convert a long value into a byte array.
-     * 
-     * @param longValue value to convert
-     * @return a byte array
-     */
-    @Nonnull protected static byte[] getLongBytes(long longValue) {
-        try {
-            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-            DataOutputStream dataStream = new DataOutputStream(byteStream);
-
-            dataStream.writeLong(longValue);
-            dataStream.flush();
-            byteStream.flush();
-
-            return byteStream.toByteArray();
-        } catch (IOException ex) {
-            return null;
-        }
-    }
-
-    /**
-     * Load default keys based on bean properties.
-     * 
-     * @throws GeneralSecurityException if the load fails due to a security-related issue
-     * @throws IOException if the load process fails
-     */
-    private void loadKeys() throws GeneralSecurityException, IOException {
-        
-        cipherKey = loadKey(cipherKeyAlias, cipherKeyPassword);
-
-        if (!macKeyAlias.equals(cipherKeyAlias)) {
-            macKey = loadKey(macKeyAlias, macKeyPassword);
-        } else {
-            macKey = cipherKey;
-        }
-    }
-    
     /**
      * Load a particular key from the keystore designated by the bean's properties.
      * 
      * @param alias alias of the key to load
-     * @param password password of the key to load
      * 
      * @return  the loaded key
      * @throws GeneralSecurityException if the load fails due to a security-related issue
      * @throws IOException if the load process fails
      */
-    private SecretKey loadKey(@Nonnull @NotEmpty final String alias, @Nonnull @NotEmpty final String password)
+    @Nonnull private SecretKey loadKey(@Nonnull @NotEmpty final String alias)
             throws GeneralSecurityException, IOException {
  
         final KeyStore ks = KeyStore.getInstance(keystoreType);
@@ -619,9 +481,13 @@ public class DataSealer extends AbstractInitializableComponent {
             }
         }
 
-        Key loadedKey = ks.getKey(alias, password.toCharArray());
-        if (!(loadedKey instanceof SecretKey)) {
-            log.error("Key '{}' is not a symmetric key.", alias);
+        Key loadedKey = ks.getKey(alias, cipherKeyPassword.toCharArray());
+        if (loadedKey == null) {
+            log.error("Key '{}' not found", alias);
+            throw new KeyException("Key was not found in keystore");
+        } else if (!(loadedKey instanceof SecretKey)) {
+            log.error("Key '{}' is not a symmetric key", alias);
+            throw new KeyException("Key was of incorrect type");
         }
         return (SecretKey) loadedKey;
     }

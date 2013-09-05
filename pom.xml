@@ -70,6 +70,12 @@
             <optional>true</optional>
         </dependency>
 
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <!-- Provided Dependencies -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
