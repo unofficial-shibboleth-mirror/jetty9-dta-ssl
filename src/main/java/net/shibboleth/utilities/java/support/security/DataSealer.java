@@ -299,7 +299,7 @@ public class DataSealer extends AbstractInitializableComponent {
             inputDataStream.readFully(iv);
 
             final AEADParameters aeadParams =
-                    new AEADParameters(new KeyParameter(keyUsed.getEncoded()), 128, iv, cipherKeyAlias.getBytes());
+                    new AEADParameters(new KeyParameter(keyUsed.getEncoded()), 128, iv, keyAlias.getBytes());
             cipher.init(false, aeadParams);
 
             // Data can't be any bigger the original minus IV.

@@ -112,6 +112,19 @@ public class DataSealerTest {
         return sealer;
     }
 
+    private DataSealer createDataSealer2() throws DataSealerException, ComponentInitializationException {
+        DataSealer sealer = new DataSealer();
+        sealer.setCipherKeyAlias("secret2");
+        sealer.setCipherKeyPassword("kpassword");
+
+        sealer.setKeystorePassword("password");
+        sealer.setKeystorePath(keyStorePath);
+
+        sealer.initialize();
+
+        return sealer;
+    }
+    
     @Test public void encodeDecode() throws DataSealerException, ComponentInitializationException {
         final DataSealer sealer = createDataSealer();
 
@@ -119,6 +132,15 @@ public class DataSealerTest {
         Assert.assertEquals(sealer.unwrap(encoded), THE_DATA);
     }
 
+    @Test public void encodeDecodeSecondKey() throws DataSealerException, ComponentInitializationException {
+        final DataSealer sealer = createDataSealer();
+        final DataSealer sealer2 = createDataSealer2();
+
+        String encoded = sealer.wrap(THE_DATA, System.currentTimeMillis() + 50000);
+        Assert.assertEquals(sealer.unwrap(encoded), THE_DATA);
+        Assert.assertEquals(sealer2.unwrap(encoded), THE_DATA);
+    }
+    
     @Test public void timeOut() throws DataSealerException, InterruptedException, ComponentInitializationException {
         final DataSealer sealer = createDataSealer();
 
