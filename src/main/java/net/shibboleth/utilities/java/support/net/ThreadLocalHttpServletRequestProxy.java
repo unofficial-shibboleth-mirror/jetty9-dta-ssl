@@ -160,6 +160,7 @@ public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("deprecation")
     public String getRealPath(String path) {
         return getCurrent().getRealPath(path);
     }
@@ -305,6 +306,7 @@ public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("deprecation")
     public boolean isRequestedSessionIdFromUrl() {
         return getCurrent().isRequestedSessionIdFromUrl();
     }

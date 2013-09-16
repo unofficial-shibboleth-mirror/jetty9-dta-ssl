@@ -24,6 +24,8 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.apache.commons.codec.binary.Base64;
 
+// Checkstyle: AbstractClassName OFF
+
 /**
  * Helper class for working with {@link Base64}.
  * 

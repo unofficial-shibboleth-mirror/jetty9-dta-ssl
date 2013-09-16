@@ -17,22 +17,18 @@
 
 package net.shibboleth.utilities.java.support.annotation.constraint;
 
-import javax.annotation.concurrent.ThreadSafe;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import net.shibboleth.utilities.java.support.component.InitializableComponent;
-
 /**
  * Indicates that the annotated class will meet the definition of the {@link ThreadSafe}
  * annotation after its initialization and before its destruction.
  * 
  * <p>Primarily, but not exclusively, addresses the behavior of components based on the
- * {@link InitializableComponent} interface.
+ * {@link net.shibboleth.utilities.java.support.component.InitializableComponent} interface.
  */
 @Documented
 @Target(ElementType.TYPE)

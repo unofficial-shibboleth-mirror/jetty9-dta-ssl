@@ -267,6 +267,7 @@ public class UrlBuilder {
      * 
      * @return URL built from the given data
      */
+    // Checkstyle: CyclomaticComplexity OFF
     @Nullable public String buildURL() {
         StringBuilder builder = new StringBuilder();
 
@@ -313,6 +314,7 @@ public class UrlBuilder {
 
         return builder.toString();
     }
+    // Checkstyle: CyclomaticComplexity ON
 
     /**
      * Builds the query string for the URL.

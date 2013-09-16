@@ -129,11 +129,13 @@ public class ThreadLocalHttpServletResponseProxy implements HttpServletResponse 
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("deprecation")
     public String encodeUrl(String url) {
         return getCurrent().encodeUrl(url);
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("deprecation")
     public String encodeRedirectUrl(String url) {
         return getCurrent().encodeRedirectUrl(url);
     }
@@ -189,6 +191,7 @@ public class ThreadLocalHttpServletResponseProxy implements HttpServletResponse 
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("deprecation")
     public void setStatus(int sc, String sm) {
         getCurrent().setStatus(sc, sm);
     }
