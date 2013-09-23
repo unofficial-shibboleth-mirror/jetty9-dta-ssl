@@ -95,10 +95,19 @@ public class RandomIdentifierGenerationStrategy implements IdentifierGenerationS
 
     /** {@inheritDoc} */
     @Nonnull public String generateIdentifier() {
+        return generateIdentifier(true);
+    }
+
+    /** {@inheritDoc} */
+    public String generateIdentifier(boolean xmlSafe) {
         byte[] buf = new byte[sizeOfIdentifier];
         random.nextBytes(buf);
         try {
-            return "_" + StringUtils.newStringUsAscii(encoder.encode(buf));
+            if (xmlSafe) {
+                return "_" + StringUtils.newStringUsAscii(encoder.encode(buf));
+            } else {
+                return StringUtils.newStringUsAscii(encoder.encode(buf));
+            }
         } catch (EncoderException e) {
             throw new RuntimeException(e);
         }

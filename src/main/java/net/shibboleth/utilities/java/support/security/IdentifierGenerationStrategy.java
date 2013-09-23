@@ -26,10 +26,17 @@ import javax.annotation.Nonnull;
 public interface IdentifierGenerationStrategy {
 
     /**
-     * Generates an identifier.
+     * Generates an identifier guaranteed to be XML ID safe.
      * 
      * @return the identifier
      */
     @Nonnull public String generateIdentifier();
 
+    /**
+     * Generates an identifier.
+     * 
+     * @param xmlSafe true iff the result must be XML ID safe
+     * @return the identifier
+     */
+    @Nonnull public String generateIdentifier(boolean xmlSafe);
 }
