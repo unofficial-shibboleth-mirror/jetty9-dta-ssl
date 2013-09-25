@@ -7,3 +7,4 @@ Changes in Release 2.0.0
 [JSPT-26] - ClassToInstanceMultiMap should ideally support remove() ops rather than being append-only.
 [JSPT-27] - ClassToInstanceMultiMap get() returns duplicate values
 [JSPT-29] - ClassToInstanceMultiMap contains duplicates in value list on multiple insertions of same value
+[JSPT-32] - Remove deprecated EvaluableCriterion interface and related classes
