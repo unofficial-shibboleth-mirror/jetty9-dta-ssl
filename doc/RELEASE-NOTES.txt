@@ -2,6 +2,7 @@ Changes in Release 2.0.0
 ===============================
 [JSPT-3] - Providers helpers for dealing with idle connections in HttpClient
 [JSPT-16] - Add a ServletListener that configures logback with a specified configuration file
+[JSPT-18] - Should RandomIdentifierGenerationStrategy have a Secure subclass? 
 [JSPT-23] - SerializeSupport prettyPrintXML has reverted impl to diverge from writeNode and nodeToString
 [JSPT-24] - Type4UuidIdentifier and RandomIdentifier generation strategies do not generate a valid XML ID
 [JSPT-26] - ClassToInstanceMultiMap should ideally support remove() ops rather than being append-only.
