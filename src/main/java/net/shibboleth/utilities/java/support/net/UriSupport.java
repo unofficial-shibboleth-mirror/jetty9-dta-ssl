@@ -110,6 +110,14 @@ public final class UriSupport {
     /**
      * Sets the query of a URI.
      * 
+     * <p>
+     * <b>WARNING:</b> If the supplied query parameter names and/or values contain '%' characters 
+     * (for example because they are already Base64-encoded), then the approach of using {@link URI} 
+     * instances to work with the URI/URL may not be appropriate.  Per its documentation, the 
+     * {@link URI} constructors always encode '%' characters, which can lead to cases of double-encoding.
+     * For an alternative way of manipulating URL's see {@link UrlBuilder}.
+     * </p>
+     * 
      * @param prototype prototype URI that provides information other than the query
      * @param query query for the new URI
      * 
@@ -126,6 +134,14 @@ public final class UriSupport {
 
     /**
      * Sets the query of a URI.
+     * 
+     * <p>
+     * <b>WARNING:</b> If the supplied query parameter names and/or values contain '%' characters 
+     * (for example because they are already Base64-encoded), then the approach of using {@link URI} 
+     * instances to work with the URI/URL may not be appropriate.  Per its documentation, the 
+     * {@link URI} constructors always encode '%' characters, which can lead to cases of double-encoding.
+     * For an alternative way of manipulating URL's see {@link UrlBuilder}.
+     * </p>
      * 
      * @param prototype prototype URI that provides information other than the query
      * @param parameters query parameters for the new URI
