@@ -56,10 +56,24 @@ public final class SerializeSupport {
      * @return the string representation of the node
      */
     @Nonnull public static String nodeToString(@Nonnull final Node node) {
+        return nodeToString(node, null);
+    }
+
+    /**
+     * Converts a Node into a String using the DOM, level 3, Load/Save serializer.
+     * 
+     * @param node the node to be written to a string
+     * @param serializerParams parameters to pass to the {@link DOMConfiguration} of the serializer instance, obtained
+     *            via {@link LSSerializer#getDomConfig()}. May be null.
+     * 
+     * @return the string representation of the node
+     */
+    @Nonnull public static String nodeToString(@Nonnull final Node node,
+            @Nullable final Map<String, Object> serializerParams) {
         Constraint.isNotNull(node, "Node may not be null");
 
         final ByteArrayOutputStream baout = new ByteArrayOutputStream();
-        writeNode(node, baout);
+        writeNode(node, baout, serializerParams);
         try {
             return new String(baout.toByteArray(), "UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -67,7 +81,7 @@ public final class SerializeSupport {
             throw new RuntimeException(e);
         }
     }
-
+    
     /**
      * Converts a Node into a String, using the DOM, level 3, Load/Save serializer. A serializer
      * option of 'format-pretty-print=true' is used to produce the pretty-print formatting.
