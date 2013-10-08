@@ -61,6 +61,7 @@ public final class CookieManager extends AbstractInitializableComponent {
     /** Constructor. */
     public CookieManager() {
         secure = true;
+        maxAge = -1;
     }
 
     /**
@@ -150,6 +151,23 @@ public final class CookieManager extends AbstractInitializableComponent {
         }
         cookie.setSecure(secure);
         cookie.setMaxAge(maxAge);
+        
+        httpResponse.addCookie(cookie);
+    }
+
+    /**
+     * Unsets a cookie with the specified name.
+     * 
+     * @param name  name of cookie
+     */
+    @Nullable public void unsetCookie(@Nonnull @NotEmpty final String name) {
+        Cookie cookie = new Cookie(name, null);
+        cookie.setPath(cookiePath != null ? cookiePath : httpRequest.getContextPath());
+        if (cookieDomain != null) {
+            cookie.setDomain(cookieDomain);
+        }
+        cookie.setSecure(secure);
+        cookie.setMaxAge(0);
         
         httpResponse.addCookie(cookie);
     }

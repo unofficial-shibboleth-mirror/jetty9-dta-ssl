@@ -67,6 +67,7 @@ public class CookieManagerTest {
         Assert.assertEquals(cookie.getPath(), "/idp");
         Assert.assertNull(cookie.getDomain());
         Assert.assertTrue(cookie.getSecure());
+        Assert.assertEquals(cookie.getMaxAge(), -1);
     }
 
     @Test public void testCookieNoPath() throws ComponentInitializationException {
@@ -87,5 +88,28 @@ public class CookieManagerTest {
         Assert.assertEquals(cookie.getPath(), "/idp");
         Assert.assertNull(cookie.getDomain());
         Assert.assertTrue(cookie.getSecure());
+        Assert.assertEquals(cookie.getMaxAge(), -1);
+    }
+
+    @Test public void testCookieUnset() throws ComponentInitializationException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setContextPath("/idp");
+        request.setCookies(new Cookie("foo", "bar"));
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        
+        CookieManager cm = new CookieManager();
+        cm.setHttpServletRequest(request);
+        cm.setHttpServletResponse(response);
+        cm.initialize();
+        
+        cm.unsetCookie("foo");
+        
+        Cookie cookie = response.getCookie("foo");
+        Assert.assertNotNull(cookie);
+        Assert.assertNull(cookie.getValue());
+        Assert.assertEquals(cookie.getPath(), "/idp");
+        Assert.assertNull(cookie.getDomain());
+        Assert.assertTrue(cookie.getSecure());
+        Assert.assertEquals(cookie.getMaxAge(), 0);
     }
 }
