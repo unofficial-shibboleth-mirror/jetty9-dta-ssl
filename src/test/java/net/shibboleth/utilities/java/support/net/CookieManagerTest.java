@@ -44,8 +44,8 @@ public class CookieManagerTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         
         CookieManager cm = new CookieManager();
-        cm.setHttpRequest(request);
-        cm.setHttpResponse(response);
+        cm.setHttpServletRequest(request);
+        cm.setHttpServletResponse(response);
         cm.initialize();
     }
 
@@ -54,8 +54,8 @@ public class CookieManagerTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         
         CookieManager cm = new CookieManager();
-        cm.setHttpRequest(request);
-        cm.setHttpResponse(response);
+        cm.setHttpServletRequest(request);
+        cm.setHttpServletResponse(response);
         cm.setCookiePath("/idp");
         cm.initialize();
         
@@ -75,8 +75,8 @@ public class CookieManagerTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         
         CookieManager cm = new CookieManager();
-        cm.setHttpRequest(request);
-        cm.setHttpResponse(response);
+        cm.setHttpServletRequest(request);
+        cm.setHttpServletResponse(response);
         cm.initialize();
         
         cm.addCookie("foo", "bar");

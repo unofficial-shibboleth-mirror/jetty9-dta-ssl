@@ -92,7 +92,7 @@ public final class CookieManager extends AbstractInitializableComponent {
      * 
      * @param request servlet request
      */
-    public void setHttpRequest(@Nonnull final HttpServletRequest request) {
+    public void setHttpServletRequest(@Nonnull final HttpServletRequest request) {
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         
         httpRequest = Constraint.isNotNull(request, "HttpServletRequest cannot be null");
@@ -103,7 +103,7 @@ public final class CookieManager extends AbstractInitializableComponent {
      * 
      * @param response servlet response
      */
-    public void setHttpResponse(@Nonnull final HttpServletResponse response) {
+    public void setHttpServletResponse(@Nonnull final HttpServletResponse response) {
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         
         httpResponse = Constraint.isNotNull(response, "HttpServletResponse cannot be null");
