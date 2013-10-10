@@ -145,7 +145,7 @@ public final class CookieManager extends AbstractInitializableComponent {
      */
     @Nullable public void addCookie(@Nonnull @NotEmpty final String name, @Nonnull @NotEmpty final String value) {
         Cookie cookie = new Cookie(name, value);
-        cookie.setPath(cookiePath != null ? cookiePath : httpRequest.getContextPath());
+        cookie.setPath(cookiePath != null ? cookiePath : contextPathToCookiePath());
         if (cookieDomain != null) {
             cookie.setDomain(cookieDomain);
         }
@@ -162,7 +162,7 @@ public final class CookieManager extends AbstractInitializableComponent {
      */
     @Nullable public void unsetCookie(@Nonnull @NotEmpty final String name) {
         Cookie cookie = new Cookie(name, null);
-        cookie.setPath(cookiePath != null ? cookiePath : httpRequest.getContextPath());
+        cookie.setPath(cookiePath != null ? cookiePath : contextPathToCookiePath());
         if (cookieDomain != null) {
             cookie.setDomain(cookieDomain);
         }
@@ -171,4 +171,14 @@ public final class CookieManager extends AbstractInitializableComponent {
         
         httpResponse.addCookie(cookie);
     }
+    
+    /**
+     * Turn the servlet context path into an appropriate cookie path.
+     * 
+     * @return  the cookie path
+     */
+    @Nonnull @NotEmpty private String contextPathToCookiePath() {
+        return "".equals(httpRequest.getContextPath()) ? "/" : httpRequest.getContextPath();
+    }
+    
 }
