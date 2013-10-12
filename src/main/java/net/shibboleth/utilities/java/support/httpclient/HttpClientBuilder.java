@@ -19,14 +19,6 @@ package net.shibboleth.utilities.java.support.httpclient;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
@@ -36,17 +28,10 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.params.AllClientPNames;
-import org.apache.http.client.protocol.RequestAcceptEncoding;
-import org.apache.http.client.protocol.ResponseContentEncoding;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.PoolingClientConnectionManager;
-import org.apache.http.params.HttpParams;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.config.ConnectionConfig;
+import org.apache.http.config.SocketConfig;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 
 //TODO retry attempts, keep alive strategy
 
@@ -82,12 +67,6 @@ public class HttpClientBuilder {
      */
     private boolean connectionStalecheck;
 
-    /** Total number of connections that may be open. Default value: 20 */
-    private int connectionsMaxTotal;
-
-    /** Maximum number of connections that may be opened to a single host. Default value: 2 */
-    private int connectionsMaxPerRoute;
-
     /** Host name of the HTTP proxy server through which connections will be made. Default value: null. */
     private String connectionProxyHost;
 
@@ -105,9 +84,22 @@ public class HttpClientBuilder {
 
     /** Character set used for HTTP entity content. Default value: UTF-8 */
     private String httpContentCharSet;
+    
+    /** The Apache HttpClientBuilder 4.3+ instance over which to layer this builder. */
+    private org.apache.http.impl.client.HttpClientBuilder apacheBuilder;
 
     /** Constructor. */
     public HttpClientBuilder() {
+        this(null);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param builder the Apache HttpClientBuilder 4.3+ instance over which to layer this builder
+     */
+    public HttpClientBuilder(org.apache.http.impl.client.HttpClientBuilder builder) {
+        apacheBuilder = builder;
         resetDefaults();
     }
 
@@ -120,8 +112,6 @@ public class HttpClientBuilder {
         connectionDisregardSslCertificate = false;
         connectionCloseAfterResponse = true;
         connectionStalecheck = false;
-        connectionsMaxTotal = 20;
-        connectionsMaxPerRoute = 2;
         connectionProxyHost = null;
         connectionProxyPort = 8080;
         connectionProxyUsername = null;
@@ -275,44 +265,6 @@ public class HttpClientBuilder {
     }
 
     /**
-     * Gets the maximum number of connections that may be open at any given time when pooling is used.
-     * 
-     * @return maximum number of connections that may be open at any given time when pooling is used
-     */
-    public int getConnectionsMaxTotal() {
-        return connectionsMaxTotal;
-    }
-
-    /**
-     * Sets the maximum number of connections that may be open at any given time when pooling is used.
-     * 
-     * @param max maximum number of connections that may be open at any given time when pooling is used; must be greater
-     *            than zero
-     */
-    public void setConnectionsMaxTotal(final int max) {
-        connectionsMaxTotal = (int) Constraint.isGreaterThan(0, max, "Max total connections must be greater than 0");
-    }
-
-    /**
-     * Gets the maximum number of connection per route. A route is the destination host plus all intermediary proxies.
-     * 
-     * @return maximum number of connection per route
-     */
-    public int getConnectionsMaxPerRoute() {
-        return connectionsMaxPerRoute;
-    }
-
-    /**
-     * Sets the maximum number of connection per route. A route is the destination host plus all intermediary proxies.
-     * 
-     * @param max maximum number of connection per route; must be greater than zero
-     */
-    public void setConnectionsMaxPerRoute(final int max) {
-        connectionsMaxPerRoute =
-                (int) Constraint.isGreaterThan(0, max, "Max connections per route must be greater than zero");
-    }
-
-    /**
      * Gets the hostname of the default proxy used when making connection. A null indicates no default proxy.
      * 
      * @return hostname of the default proxy used when making connection
@@ -428,110 +380,72 @@ public class HttpClientBuilder {
      * @return the constructed client
      */
     public HttpClient buildClient() {
-        final DefaultHttpClient client = new DefaultHttpClient(buildConnectionManager());
-
-        client.addRequestInterceptor(new RequestAcceptEncoding());
-        if (connectionCloseAfterResponse) {
-            client.addRequestInterceptor(new RequestConnectionClose());
+        org.apache.http.impl.client.HttpClientBuilder builder = getApacheBuilder();
+        
+        if (connectionDisregardSslCertificate) {
+            builder.setSSLSocketFactory(HttpClientSupport.buildNoTrustSSLConnectionSocketFactory());
         }
 
-        client.addResponseInterceptor(new ResponseContentEncoding());
-
-        final HttpParams httpParams = client.getParams();
+        if (connectionCloseAfterResponse) {
+            builder.addInterceptorLast(new RequestConnectionClose());
+        }
+        
+        RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
+        ConnectionConfig.Builder connectionConfigBuilder = ConnectionConfig.custom();
+        SocketConfig.Builder socketConfigBuilder = SocketConfig.custom();
 
         if (socketLocalAddress != null) {
-            httpParams.setParameter(AllClientPNames.LOCAL_ADDRESS, socketLocalAddress);
+            requestConfigBuilder.setLocalAddress(socketLocalAddress);
         }
 
         if (socketTimeout > 0) {
-            httpParams.setIntParameter(AllClientPNames.SO_TIMEOUT, socketTimeout);
+            socketConfigBuilder.setSoTimeout(socketTimeout);
         }
 
-        httpParams.setIntParameter(AllClientPNames.SOCKET_BUFFER_SIZE, socketBufferSize);
-
+        connectionConfigBuilder.setBufferSize(socketBufferSize);
+        
         if (connectionTimeout > 0) {
-            httpParams.setIntParameter(AllClientPNames.CONNECTION_TIMEOUT, connectionTimeout);
+            requestConfigBuilder.setConnectTimeout(connectionTimeout);
         }
 
-        httpParams.setBooleanParameter(AllClientPNames.STALE_CONNECTION_CHECK, connectionStalecheck);
+        requestConfigBuilder.setStaleConnectionCheckEnabled(connectionStalecheck);
+        
+        requestConfigBuilder.setRedirectsEnabled(httpFollowRedirects);
 
+        // TODO ??? where does this go in 4.3+
+        //httpParams.setParameter(AllClientPNames.HTTP_CONTENT_CHARSET, httpContentCharSet);
+        
         if (connectionProxyHost != null) {
             final HttpHost proxyHost = new HttpHost(connectionProxyHost, connectionProxyPort);
-            httpParams.setParameter(AllClientPNames.DEFAULT_PROXY, proxyHost);
+            requestConfigBuilder.setProxy(proxyHost);
 
             if (connectionProxyUsername != null && connectionProxyPassword != null) {
-                final CredentialsProvider credProvider = client.getCredentialsProvider();
+                final CredentialsProvider credProvider = new BasicCredentialsProvider();
                 credProvider.setCredentials(new AuthScope(connectionProxyHost, connectionProxyPort),
                         new UsernamePasswordCredentials(connectionProxyUsername, connectionProxyPassword));
+                builder.setDefaultCredentialsProvider(credProvider);
             }
         }
 
-        httpParams.setBooleanParameter(AllClientPNames.HANDLE_REDIRECTS, httpFollowRedirects);
+        builder.setDefaultRequestConfig(requestConfigBuilder.build());
+        builder.setDefaultConnectionConfig(connectionConfigBuilder.build());
+        builder.setDefaultSocketConfig(socketConfigBuilder.build());
 
-        httpParams.setParameter(AllClientPNames.HTTP_CONTENT_CHARSET, httpContentCharSet);
-
-        return client;
+        return builder.build();
     }
-
+    
     /**
-     * Builds the connection manager used by the HTTP client. A {@link PoolingClientConnectionManager} is used with
-     * {@link PoolingClientConnectionManager#setDefaultMaxPerRoute(int)} set to {@link #connectionsMaxPerRoute} and
-     * {@link PoolingClientConnectionManager#setMaxTotal(int)} set to {@link #connectionsMaxTotal}.
+     * Get the Apache {@link org.apache.http.impl.client.HttpClientBuilder} instance over which this
+     * builder will be layered.
      * 
-     * @return the connection manager used by the HTTP client
+     * @return the Apache HttpClientBuilder instance to use
      */
-    private ClientConnectionManager buildConnectionManager() {
-        final SchemeRegistry registry = buildSchemeRegistry();
-        final PoolingClientConnectionManager manager = new PoolingClientConnectionManager(registry);
-        manager.setDefaultMaxPerRoute(connectionsMaxPerRoute);
-        manager.setMaxTotal(connectionsMaxTotal);
-        return manager;
-    }
-
-    /**
-     * Creates the default scheme registry for connection. The constructed registry supports http with a default port of
-     * 80 and https with a default port of 443. If {@link #connectionDisregardSslCertificate} is true, than the https
-     * port will accept any certificate presented by the responder.
-     * 
-     * @return the default scheme registry.
-     */
-    private SchemeRegistry buildSchemeRegistry() {
-        final SchemeRegistry registry = new SchemeRegistry();
-
-        registry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
-
-        final SSLSocketFactory sslSF;
-        if (!connectionDisregardSslCertificate) {
-            sslSF = SSLSocketFactory.getSocketFactory();
+    private org.apache.http.impl.client.HttpClientBuilder getApacheBuilder() {
+        if (apacheBuilder != null) {
+            return apacheBuilder;
         } else {
-            X509TrustManager noTrustManager = new X509TrustManager() {
-
-                public X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-
-                public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                    // accept everything
-                }
-
-                public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                    // accept everything
-                }
-            };
-
-            try {
-                SSLContext sslcontext = SSLContext.getInstance("TLS");
-                sslcontext.init(null, new TrustManager[] {noTrustManager}, null);
-                sslSF = new SSLSocketFactory(sslcontext);
-            } catch (NoSuchAlgorithmException e) {
-                throw new RuntimeException("TLS SSLContext type is required to be supported by the JVM but is not", e);
-            } catch (KeyManagementException e) {
-                throw new RuntimeException("Some how the trust everything trust manager didn't trust everything", e);
-            }
+            return org.apache.http.impl.client.HttpClientBuilder.create();
         }
-        registry.register(new Scheme("https", 443, sslSF));
-
-        return registry;
     }
 
 }
