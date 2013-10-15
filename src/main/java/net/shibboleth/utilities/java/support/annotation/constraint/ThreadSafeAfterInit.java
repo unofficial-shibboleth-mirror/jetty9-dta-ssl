@@ -24,7 +24,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Indicates that the annotated class will meet the definition of the {@link ThreadSafe}
+ * Indicates that the annotated class will meet the definition of the {@link javax.annotation.concurrent.ThreadSafe}
  * annotation after its initialization and before its destruction.
  * 
  * <p>Primarily, but not exclusively, addresses the behavior of components based on the
