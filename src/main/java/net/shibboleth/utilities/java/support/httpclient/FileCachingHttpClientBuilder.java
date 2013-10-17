@@ -53,6 +53,9 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
     /** The maximum response body size, in bytes, that will be eligible for caching. Default: 10485760 (10 megabytes) */
     private long maxCacheEntrySize;
     
+    /**
+     * Constructor.
+     */
     public FileCachingHttpClientBuilder() {
         this(CachingHttpClientBuilder.create());
     }

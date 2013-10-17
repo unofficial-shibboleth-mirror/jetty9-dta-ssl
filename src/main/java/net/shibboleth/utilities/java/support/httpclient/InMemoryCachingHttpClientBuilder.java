@@ -44,6 +44,9 @@ public class InMemoryCachingHttpClientBuilder extends HttpClientBuilder {
     /** The maximum response body size, in bytes, that will be eligible for caching. Default: 1048576 (1 megabyte) */
     private long maxCacheEntrySize;
 
+    /**
+     * Constructor.
+     */
     public InMemoryCachingHttpClientBuilder() {
         this(CachingHttpClientBuilder.create());
     }
