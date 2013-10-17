@@ -27,9 +27,9 @@ import net.shibboleth.utilities.java.support.component.DestroyedComponentExcepti
 import net.shibboleth.utilities.java.support.component.DestructableComponent;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
-import org.apache.http.client.HttpClient;
+import org.apache.http.conn.HttpClientConnectionManager;
 
-/** A utility that periodically closes idle connections held by a {@link HttpClient}. */
+/** A utility that periodically closes idle connections held by an {@link HttpClientConnectionManager}. */
 public class IdleConnectionSweeper implements DestructableComponent {
 
     /** Whether this sweeper has been destroyed. */
@@ -41,8 +41,8 @@ public class IdleConnectionSweeper implements DestructableComponent {
      */
     private boolean createdTimer;
 
-    /** Client whose connections will be swept. */
-    private final HttpClient client;
+    /** HttpClientConnectionManager whose connections will be swept. */
+    private final HttpClientConnectionManager connectionManager;
 
     /** Timer used to schedule and execute the sweeping task. */
     private final Timer taskTimer;
@@ -53,32 +53,32 @@ public class IdleConnectionSweeper implements DestructableComponent {
     /**
      * Constructor. This method will create a daemon {@link Timer} and use it to periodically sweep connections.
      * 
-     * @param httpClient client whose connections will be swept
+     * @param manager HTTP client connection manager whose connections will be swept
      * @param idleTimeout length of time, in milliseconds, connection may be idle before being closed down
      * @param sweepInterval length of time, in milliseconds, between sweeps
      */
-    public IdleConnectionSweeper(@Nonnull final HttpClient httpClient, final long idleTimeout,
+    public IdleConnectionSweeper(@Nonnull final HttpClientConnectionManager manager, final long idleTimeout,
             final long sweepInterval) {
-        this(httpClient, idleTimeout, sweepInterval, new Timer(true));
+        this(manager, idleTimeout, sweepInterval, new Timer(true));
         createdTimer = true;
     }
 
     /**
      * Constructor.
      * 
-     * @param httpClient client whose connections will be swept
+     * @param manager HTTP client connection manager whose connections will be swept
      * @param idleTimeout length of time, in milliseconds, connection may be idle before being closed down
      * @param sweepInterval length of time, in milliseconds, between sweeps
      * @param backgroundTimer timer used to schedule the background sweeping task
      */
-    public IdleConnectionSweeper(@Nonnull final HttpClient httpClient, final long idleTimeout,
+    public IdleConnectionSweeper(@Nonnull final HttpClientConnectionManager manager, final long idleTimeout,
             final long sweepInterval, @Nonnull final Timer backgroundTimer) {
-        client = Constraint.isNotNull(httpClient, "HttpClient can not be null");
+        connectionManager = Constraint.isNotNull(manager, "HttpClientConnectionManager can not be null");
         taskTimer = Constraint.isNotNull(backgroundTimer, "Sweeper task timer can not be null");
 
         sweeper = new TimerTask() {
             public void run() {
-                client.getConnectionManager().closeIdleConnections(idleTimeout, TimeUnit.MILLISECONDS);
+                connectionManager.closeIdleConnections(idleTimeout, TimeUnit.MILLISECONDS);
             }
         };
 

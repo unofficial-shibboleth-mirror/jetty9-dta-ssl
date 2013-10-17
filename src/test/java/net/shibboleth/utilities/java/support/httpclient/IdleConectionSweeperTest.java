@@ -21,7 +21,7 @@ import java.util.Timer;
 
 import net.shibboleth.utilities.java.support.component.DestroyedComponentException;
 
-import org.apache.http.client.HttpClient;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -31,9 +31,9 @@ public class IdleConectionSweeperTest {
     private final long SWEEP_INTERVAL = 50;
 
     @Test public void test() throws Exception {
-        HttpClient httpClient = new HttpClientBuilder().buildClient();
+        PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
 
-        IdleConnectionSweeper sweeper = new IdleConnectionSweeper(httpClient, 30, SWEEP_INTERVAL);
+        IdleConnectionSweeper sweeper = new IdleConnectionSweeper(connectionManager, 30, SWEEP_INTERVAL);
         Thread.sleep(75);
         Assert.assertTrue(sweeper.scheduledExecutionTime() + SWEEP_INTERVAL > System.currentTimeMillis());
 
@@ -48,7 +48,7 @@ public class IdleConectionSweeperTest {
         }
 
         Timer timer = new Timer(true);
-        sweeper = new IdleConnectionSweeper(httpClient, 30, SWEEP_INTERVAL, timer);
+        sweeper = new IdleConnectionSweeper(connectionManager, 30, SWEEP_INTERVAL, timer);
         Thread.sleep(10);
         Assert.assertTrue(sweeper.scheduledExecutionTime() + SWEEP_INTERVAL > System.currentTimeMillis());
 
