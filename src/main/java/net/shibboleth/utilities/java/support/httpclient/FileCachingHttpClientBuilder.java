@@ -28,7 +28,7 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.cache.CacheConfig;
-import org.apache.http.impl.client.cache.CachingHttpClient;
+import org.apache.http.impl.client.cache.CachingHttpClientBuilder;
 import org.apache.http.impl.client.cache.FileResourceFactory;
 import org.apache.http.impl.client.cache.ManagedHttpCacheStorage;
 
@@ -39,10 +39,7 @@ import org.apache.http.impl.client.cache.ManagedHttpCacheStorage;
  * directory unintentionally. This could result senstive data being available in ways it should not be.
  * </p>
  */
-public class FileCachingHttpClientBuilder {
-
-    /** Builder of clients used to fetch data from remote servers. */
-    private final HttpClientBuilder clientBuilder;
+public class FileCachingHttpClientBuilder extends HttpClientBuilder {
 
     /**
      * Directory in which cached content will be stored. Default:
@@ -55,14 +52,18 @@ public class FileCachingHttpClientBuilder {
 
     /** The maximum response body size, in bytes, that will be eligible for caching. Default: 10485760 (10 megabytes) */
     private long maxCacheEntrySize;
-
+    
+    public FileCachingHttpClientBuilder() {
+        this(CachingHttpClientBuilder.create());
+    }
+    
     /**
      * Constructor.
      * 
      * @param builder builder of clients used to fetch data from remote servers
      */
-    public FileCachingHttpClientBuilder(@Nonnull final HttpClientBuilder builder) {
-        clientBuilder = Constraint.isNotNull(builder, "HttpClient builder can not be null");
+    public FileCachingHttpClientBuilder(@Nonnull final CachingHttpClientBuilder builder) {
+        super(builder);
         cacheDir = new File(System.getProperty("java.io.tmpdir") + File.separator + "wwwcache");
         maxCacheEntries = 100;
         maxCacheEntrySize = 10485760;
@@ -135,15 +136,10 @@ public class FileCachingHttpClientBuilder {
         maxCacheEntrySize = (int) Constraint.isGreaterThan(0, size, "Maximum cache entry size must be greater than 0");
     }
 
-    /**
-     * Builds an HTTP client that performs RFC2616 caching.
-     * 
-     * @return the constructed HTTP client
-     * 
-     * @throws IOException if the cache directory does not exist and can not be created or if it can not be read from or
-     *             written to
-     */
-    public HttpClient buildClient() throws IOException {
+    /** {@inheritDoc} */
+    protected void decorateApacheBuilder() throws Exception {
+        super.decorateApacheBuilder();
+        
         if (!cacheDir.exists()) {
             if (!cacheDir.mkdirs()) {
                 throw new IOException("Unable to create cache directory " + cacheDir.getAbsolutePath());
@@ -157,16 +153,18 @@ public class FileCachingHttpClientBuilder {
         if (!cacheDir.canWrite()) {
             throw new IOException("Cache directory '" + cacheDir.getAbsolutePath() + "' is not writable");
         }
+        
+        CachingHttpClientBuilder cachingBuilder = (CachingHttpClientBuilder) getApacheBuilder();
 
-        HttpClient client = clientBuilder.buildClient();
-
-        CacheConfig cacheConfig = new CacheConfig();
-        cacheConfig.setMaxCacheEntries(maxCacheEntries);
-        cacheConfig.setMaxObjectSize(maxCacheEntrySize);
-        cacheConfig.setHeuristicCachingEnabled(false);
-        cacheConfig.setSharedCache(false);
-
-        return new CachingHttpClient(client, new FileResourceFactory(cacheDir),
-                new ManagedHttpCacheStorage(cacheConfig), cacheConfig);
+        CacheConfig.Builder cacheConfigBuilder = CacheConfig.custom();
+        cacheConfigBuilder.setMaxCacheEntries(maxCacheEntries);
+        cacheConfigBuilder.setMaxObjectSize(maxCacheEntrySize);
+        cacheConfigBuilder.setHeuristicCachingEnabled(false);
+        cacheConfigBuilder.setSharedCache(false);
+        CacheConfig cacheConfig = cacheConfigBuilder.build();
+        
+        cachingBuilder.setCacheConfig(cacheConfig);
+        cachingBuilder.setResourceFactory(new FileResourceFactory(cacheDir));
+        cachingBuilder.setHttpCacheStorage(new ManagedHttpCacheStorage(cacheConfig));
     }
 }

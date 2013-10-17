@@ -40,7 +40,7 @@ public class HttpResourceTest {
 
     private File propFile;
 
-    @BeforeTest public void testSetUp() {
+    @BeforeTest public void testSetUp() throws Exception {
         // Be sure to keep connection pooling enabled. TestNG runs its tests in parallel
         // and so without connection pooling one test might clobber the connection of another
         HttpClientBuilder clientBuilder = new HttpClientBuilder();

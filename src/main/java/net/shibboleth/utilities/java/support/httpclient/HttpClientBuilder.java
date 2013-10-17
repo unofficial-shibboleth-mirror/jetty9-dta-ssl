@@ -20,6 +20,8 @@ package net.shibboleth.utilities.java.support.httpclient;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import javax.annotation.Nonnull;
+
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
@@ -90,7 +92,7 @@ public class HttpClientBuilder {
 
     /** Constructor. */
     public HttpClientBuilder() {
-        this(null);
+        this(org.apache.http.impl.client.HttpClientBuilder.create());
     }
 
     /**
@@ -98,7 +100,8 @@ public class HttpClientBuilder {
      *
      * @param builder the Apache HttpClientBuilder 4.3+ instance over which to layer this builder
      */
-    public HttpClientBuilder(org.apache.http.impl.client.HttpClientBuilder builder) {
+    public HttpClientBuilder(@Nonnull org.apache.http.impl.client.HttpClientBuilder builder) {
+        Constraint.isNotNull(builder, "Apache HttpClientBuilder may not be null");
         apacheBuilder = builder;
         resetDefaults();
     }
@@ -378,8 +381,21 @@ public class HttpClientBuilder {
      * Constructs an {@link HttpClient} using the settings of this builder.
      * 
      * @return the constructed client
+     * 
+     * @throws Exception if there is any problem building the new client instance
      */
-    public HttpClient buildClient() {
+    public final HttpClient buildClient() throws Exception {
+        decorateApacheBuilder();
+        return getApacheBuilder().build();
+    }
+    
+    /**
+     * Decorate the Apache builder as determined by this builder's parameters.
+     * Subclasses will likely add additional decoration.
+     * 
+     * @throws Exception if there is a problem decorating the Apache builder
+     */
+    protected void decorateApacheBuilder() throws Exception {
         org.apache.http.impl.client.HttpClientBuilder builder = getApacheBuilder();
         
         if (connectionDisregardSslCertificate) {
@@ -430,22 +446,16 @@ public class HttpClientBuilder {
         builder.setDefaultRequestConfig(requestConfigBuilder.build());
         builder.setDefaultConnectionConfig(connectionConfigBuilder.build());
         builder.setDefaultSocketConfig(socketConfigBuilder.build());
-
-        return builder.build();
     }
     
     /**
      * Get the Apache {@link org.apache.http.impl.client.HttpClientBuilder} instance over which this
-     * builder will be layered.
+     * builder will be layered. Subclasses may override to return a specialized subclass.
      * 
      * @return the Apache HttpClientBuilder instance to use
      */
-    private org.apache.http.impl.client.HttpClientBuilder getApacheBuilder() {
-        if (apacheBuilder != null) {
-            return apacheBuilder;
-        } else {
-            return org.apache.http.impl.client.HttpClientBuilder.create();
-        }
+    protected org.apache.http.impl.client.HttpClientBuilder getApacheBuilder() {
+        return apacheBuilder;
     }
 
 }

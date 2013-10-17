@@ -24,7 +24,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.cache.BasicHttpCacheStorage;
 import org.apache.http.impl.client.cache.CacheConfig;
-import org.apache.http.impl.client.cache.CachingHttpClient;
+import org.apache.http.impl.client.cache.CachingHttpClientBuilder;
 import org.apache.http.impl.client.cache.HeapResourceFactory;
 
 /**
@@ -36,10 +36,7 @@ import org.apache.http.impl.client.cache.HeapResourceFactory;
  * system's memory is not fully consumed.
  * </p>
  */
-public class InMemoryCachingHttpClientBuilder {
-
-    /** Builder of clients used to fetch data from remote servers. */
-    private final HttpClientBuilder clientBuilder;
+public class InMemoryCachingHttpClientBuilder extends HttpClientBuilder {
 
     /** The maximum number of cached responses. Default: 50 */
     private int maxCacheEntries;
@@ -47,13 +44,17 @@ public class InMemoryCachingHttpClientBuilder {
     /** The maximum response body size, in bytes, that will be eligible for caching. Default: 1048576 (1 megabyte) */
     private long maxCacheEntrySize;
 
+    public InMemoryCachingHttpClientBuilder() {
+        this(CachingHttpClientBuilder.create());
+    }
+    
     /**
      * Constructor.
      * 
      * @param builder builder of clients used to fetch data from remote servers
      */
-    public InMemoryCachingHttpClientBuilder(@Nonnull final HttpClientBuilder builder) {
-        clientBuilder = Constraint.isNotNull(builder, "HttpClient builder can not be null");
+    public InMemoryCachingHttpClientBuilder(@Nonnull final CachingHttpClientBuilder builder) {
+        super(builder);
         maxCacheEntries = 50;
         maxCacheEntrySize = 1048576;
     }
@@ -95,21 +96,22 @@ public class InMemoryCachingHttpClientBuilder {
         maxCacheEntrySize = Constraint.isGreaterThan(0, size, "Maximum cache entry size must be greater than 0");
     }
 
-    /**
-     * Builds an HTTP client that performs RFC2616 caching.
-     * 
-     * @return the constructed HTTP client
-     */
-    public HttpClient buildClient() {
-        HttpClient client = clientBuilder.buildClient();
+    /** {@inheritDoc} */
+    protected void decorateApacheBuilder() throws Exception {
+        super.decorateApacheBuilder();
+        
+        // Note: This cast is safe because of constructor enforcement.
+        CachingHttpClientBuilder cachingBuilder = (CachingHttpClientBuilder) getApacheBuilder();
 
-        CacheConfig cacheConfig = new CacheConfig();
-        cacheConfig.setMaxCacheEntries(maxCacheEntries);
-        cacheConfig.setMaxObjectSize(maxCacheEntrySize);
-        cacheConfig.setHeuristicCachingEnabled(false);
-        cacheConfig.setSharedCache(false);
-
-        return new CachingHttpClient(client, new HeapResourceFactory(), new BasicHttpCacheStorage(cacheConfig),
-                cacheConfig);
+        CacheConfig.Builder cacheConfigBuilder = CacheConfig.custom();
+        cacheConfigBuilder.setMaxCacheEntries(maxCacheEntries);
+        cacheConfigBuilder.setMaxObjectSize(maxCacheEntrySize);
+        cacheConfigBuilder.setHeuristicCachingEnabled(false);
+        cacheConfigBuilder.setSharedCache(false);
+        CacheConfig cacheConfig = cacheConfigBuilder.build();
+        
+        cachingBuilder.setCacheConfig(cacheConfig);
+        cachingBuilder.setResourceFactory(new HeapResourceFactory());
+        cachingBuilder.setHttpCacheStorage(new BasicHttpCacheStorage(cacheConfig));
     }
 }
