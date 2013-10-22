@@ -18,16 +18,26 @@
 package net.shibboleth.utilities.java.support.net;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Map;
 
+import javax.annotation.Nonnull;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+
+import com.google.common.collect.Maps;
+
+import net.shibboleth.utilities.java.support.annotation.constraint.Live;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 
 /**
  * Implementation of an HTTP servlet {@link Filter} which stores the current {@link HttpServletRequest} and
@@ -66,9 +76,64 @@ public class CookieBufferingFilter implements Filter {
         // in the wrapper and dump the cookies at that point from the wrapper.
         
         // Dump all the cookies set into the real response.
-        for (Cookie cookie : responseProxy.getCookies().values()) {
-            ((HttpServletResponse) response).addCookie(cookie);
-        }
+        responseProxy.dumpCookies();
     }
 
+    /**
+     * An implementation of {@link HttpServletResponse} which buffers added cookies to
+     * ensure only a single cookie of a given name is eventually set.
+     */
+    private class CookieBufferingHttpServletResponseProxy extends HttpServletResponseWrapper {
+
+        /** Map of delayed cookie additions. */
+        @Nonnull @NonnullElements private Map<String,Cookie> cookieMap;
+        
+        /**
+         * Constructor.
+         *
+         * @param response the response to delegate to
+         */
+        public CookieBufferingHttpServletResponseProxy(@Nonnull final HttpServletResponse response) {
+            super(response);
+            cookieMap = Maps.newHashMap();
+        }
+    
+        /** {@inheritDoc} */
+        public void addCookie(Cookie cookie) {
+            // Guarantees any existing cookie by this name is replaced.
+            cookieMap.put(cookie.getName(), cookie);
+        }
+    
+        /**
+         * Get the map of cookies that will be set.
+         * 
+         * @return map of cookies to be set
+         */
+        @Nonnull @NonnullElements @Live protected Map<String,Cookie> getCookies() {
+            return cookieMap;
+        }
+
+        /** {@inheritDoc} */
+        public ServletOutputStream getOutputStream() throws IOException {
+            dumpCookies();
+            return super.getOutputStream();
+        }
+
+        /** {@inheritDoc} */
+        public PrintWriter getWriter() throws IOException {
+            dumpCookies();
+            return super.getWriter();
+        }
+
+        /**
+         * Transfer cookies added into the real response.
+         */
+        protected void dumpCookies() {
+            for (Cookie cookie : cookieMap.values()) {
+                ((HttpServletResponse) getResponse()).addCookie(cookie);
+            }
+            cookieMap.clear();
+        }
+    }
+    
 }
