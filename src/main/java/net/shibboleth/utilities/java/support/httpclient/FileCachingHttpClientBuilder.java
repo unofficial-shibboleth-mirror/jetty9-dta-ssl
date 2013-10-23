@@ -38,6 +38,36 @@ import org.apache.http.impl.client.cache.ManagedHttpCacheStorage;
  * Cached content is written to disk. Special care should be taken so that multiple clients do not share a single cache
  * directory unintentionally. This could result senstive data being available in ways it should not be.
  * </p>
+ * 
+ * <p>
+ * When using the single-arg constructor variant to wrap an existing instance of
+ * {@link CachingHttpClientBuilder}, there are several caveats of which to be aware:
+ * 
+ * <ul>
+ * 
+ * <li>
+ * Several important non-caching-specific caveats are enumerated in this class's superclass {@link HttpClientBuilder}.
+ * </li>
+ * 
+ * <li>
+ * Instances of the following which are set as the default instance on the Apache builder will be
+ * unconditionally overwritten by this builder when {@link #buildClient()} is called:
+ * 
+ *   <ul>
+ *   <li>{@link CacheConfig}</li>
+ *   </ul>
+ *   
+ *   <p>
+ *   This is due to the unfortunate fact that the Apache builder does not currently provide accessor methods to
+ *   obtain the default instances currently set on the builder.  Therefore, if you need to set any default cache
+ *   config parameters which are not exposed by this builder, then you must use the Apache
+ *   builder directly and may not use this builder.
+ *   </p>
+ * </li>
+ * 
+ * </ul>
+ * 
+ * </p>
  */
 public class FileCachingHttpClientBuilder extends HttpClientBuilder {
 
