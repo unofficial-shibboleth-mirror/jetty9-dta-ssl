@@ -302,15 +302,15 @@ public class DataSealer extends AbstractInitializableComponent {
                     new AEADParameters(new KeyParameter(keyUsed.getEncoded()), 128, iv, keyAlias.getBytes());
             cipher.init(false, aeadParams);
 
-            // Data can't be any bigger the original minus IV.
+            // Data can't be any bigger than the original minus IV.
             final byte[] data = new byte[in.length - ivSize];
             final int dataSize = inputDataStream.read(data);
             
             final byte[] plaintext = new byte[cipher.getOutputSize(dataSize)];
             final int outputLen = cipher.processBytes(data, 0, dataSize, plaintext, 0);
-            cipher.doFinal(data, outputLen);
+            cipher.doFinal(plaintext, outputLen);
             
-            // Decrypt the rest of the data and pass it into the subroutine for processing.
+            // Pass the plaintext into the subroutine for processing.
             return extractAndCheckDecryptedData(plaintext);
 
         } catch (IllegalStateException | InvalidCipherTextException| IOException e) {
@@ -378,7 +378,6 @@ public class DataSealer extends AbstractInitializableComponent {
         }
 
         try {
-
             final GCMBlockCipher cipher = new GCMBlockCipher(new AESEngine());
             final byte[] iv = new byte[cipher.getUnderlyingCipher().getBlockSize()];
             random.nextBytes(iv);
@@ -400,15 +399,16 @@ public class DataSealer extends AbstractInitializableComponent {
             byteStream.flush();
 
             final byte[] plaintext = byteStream.toByteArray();
+            
             final byte[] encryptedData = new byte[cipher.getOutputSize(plaintext.length)];
             int outputLen = cipher.processBytes(plaintext, 0, plaintext.length, encryptedData, 0);
-            cipher.doFinal(encryptedData, outputLen);
+            outputLen += cipher.doFinal(encryptedData, outputLen);
 
             final ByteArrayOutputStream finalByteStream = new ByteArrayOutputStream();
             final DataOutputStream finalDataStream = new DataOutputStream(finalByteStream);
             finalDataStream.writeUTF(cipherKeyAlias);
             finalDataStream.write(iv);
-            finalDataStream.write(encryptedData);
+            finalDataStream.write(encryptedData, 0, outputLen);
             finalDataStream.flush();
             finalByteStream.flush();
             
