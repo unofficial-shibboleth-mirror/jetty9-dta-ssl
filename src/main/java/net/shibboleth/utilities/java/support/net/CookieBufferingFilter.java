@@ -70,12 +70,7 @@ public class CookieBufferingFilter implements Filter {
                 new CookieBufferingHttpServletResponseProxy((HttpServletResponse) response);
         chain.doFilter(request, responseProxy);
         
-        // TODO: I don't think this is going to work, this would run post-response generation
-        // so the headers should already be sent. Should be easy to tell, since no cookies will
-        // get set. If so, I think we have to catch all of the potential "body writing" methods
-        // in the wrapper and dump the cookies at that point from the wrapper.
-        
-        // Dump all the cookies set into the real response.
+        // Dump all the cookies set into the real response if not done already.
         responseProxy.dumpCookies();
     }
 
