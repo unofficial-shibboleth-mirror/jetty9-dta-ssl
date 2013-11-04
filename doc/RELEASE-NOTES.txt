@@ -1,13 +1,5 @@
-Changes in Release 2.0.0
-===============================
-[JSPT-3] - Providers helpers for dealing with idle connections in HttpClient
-[JSPT-16] - Add a ServletListener that configures logback with a specified configuration file
-[JSPT-18] - Should RandomIdentifierGenerationStrategy have a Secure subclass? 
-[JSPT-23] - SerializeSupport prettyPrintXML has reverted impl to diverge from writeNode and nodeToString
-[JSPT-24] - Type4UuidIdentifier and RandomIdentifier generation strategies do not generate a valid XML ID
-[JSPT-26] - ClassToInstanceMultiMap should ideally support remove() ops rather than being append-only.
-[JSPT-27] - ClassToInstanceMultiMap get() returns duplicate values
-[JSPT-29] - ClassToInstanceMultiMap contains duplicates in value list on multiple insertions of same value
-[JSPT-30] - Move revamped DataSealer into java-support
-[JSPT-31] - release process for java-support v2.0.0
-[JSPT-32] - Remove deprecated EvaluableCriterion interface and related classes
+Release Notes - Java Support - Version 2.0.1
+============================================
+
+** Task
+    * [JSPT-35] - Release java-support version 2.0.1
