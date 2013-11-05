@@ -66,12 +66,7 @@ public class CookieBufferingFilter implements Filter {
             throw new ServletException("Response is not an instance of HttpServletResponse");
         }
 
-        CookieBufferingHttpServletResponseProxy responseProxy =
-                new CookieBufferingHttpServletResponseProxy((HttpServletResponse) response);
-        chain.doFilter(request, responseProxy);
-        
-        // Dump all the cookies set into the real response if not done already.
-        responseProxy.dumpCookies();
+        chain.doFilter(request, new CookieBufferingHttpServletResponseProxy((HttpServletResponse) response));
     }
 
     /**
@@ -94,6 +89,7 @@ public class CookieBufferingFilter implements Filter {
         }
     
         /** {@inheritDoc} */
+        @Override
         public void addCookie(Cookie cookie) {
             // Guarantees any existing cookie by this name is replaced.
             cookieMap.put(cookie.getName(), cookie);
@@ -109,17 +105,40 @@ public class CookieBufferingFilter implements Filter {
         }
 
         /** {@inheritDoc} */
+        @Override
         public ServletOutputStream getOutputStream() throws IOException {
             dumpCookies();
             return super.getOutputStream();
         }
 
         /** {@inheritDoc} */
+        @Override
         public PrintWriter getWriter() throws IOException {
             dumpCookies();
             return super.getWriter();
         }
 
+        /** {@inheritDoc} */
+        @Override
+        public void sendError(int sc, String msg) throws IOException {
+            dumpCookies();
+            super.sendError(sc, msg);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void sendError(int sc) throws IOException {
+            dumpCookies();
+            super.sendError(sc);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void sendRedirect(String location) throws IOException {
+            dumpCookies();
+            super.sendRedirect(location);
+        }
+        
         /**
          * Transfer cookies added into the real response.
          */
