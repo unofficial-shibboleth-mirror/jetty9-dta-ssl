@@ -23,6 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.xml.namespace.QName;
 
+import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
@@ -44,19 +45,20 @@ public final class QNameSupport {
      * 
      * @return the QName respresented by the string
      */
-    @Nonnull public static QName constructQName(@Nonnull final Element owningElement, @Nonnull final String qname) {
-        Constraint.isNotNull(owningElement, "Owning element may not be null");
-        Constraint.isNotNull(qname, "Name may not be null");
+    @Nonnull public static QName constructQName(@Nonnull final Element owningElement,
+            @Nonnull @NotEmpty final String qname) {
+        Constraint.isNotNull(owningElement, "Owning element cannot be null");
+        String trimmedName = Constraint.isNotNull(StringSupport.trimOrNull(qname), "QName cannot be null");
 
         String nsPrefix;
         String name;
-        if (qname.indexOf(":") > -1) {
-            final StringTokenizer qnameTokens = new StringTokenizer(qname, ":");
+        if (trimmedName.indexOf(":") > -1) {
+            final StringTokenizer qnameTokens = new StringTokenizer(trimmedName, ":");
             nsPrefix = StringSupport.trim(qnameTokens.nextToken());
             name = qnameTokens.nextToken();
         } else {
             nsPrefix = null;
-            name = qname;
+            name = trimmedName;
         }
 
         final String nsURI = owningElement.lookupNamespaceURI(nsPrefix);
@@ -72,10 +74,10 @@ public final class QNameSupport {
      * 
      * @return the QName
      */
-    @Nonnull public static QName constructQName(@Nullable final String namespaceURI, @Nonnull final String localName,
-            @Nullable final String prefix) {
+    @Nonnull public static QName constructQName(@Nullable final String namespaceURI,
+            @Nonnull @NotEmpty final String localName, @Nullable final String prefix) {
         String trimmedLocalName =
-                Constraint.isNotNull(StringSupport.trimOrNull(localName), "Local name may not be null");
+                Constraint.isNotNull(StringSupport.trimOrNull(localName), "Local name cannot be null or empty");
         String trimmedPrefix = StringSupport.trimOrNull(prefix);
 
         if (trimmedPrefix == null) {
