@@ -21,14 +21,13 @@ import javax.annotation.Nonnull;
 
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
-import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.cache.BasicHttpCacheStorage;
 import org.apache.http.impl.client.cache.CacheConfig;
 import org.apache.http.impl.client.cache.CachingHttpClientBuilder;
 import org.apache.http.impl.client.cache.HeapResourceFactory;
 
 /**
- * An {@link HttpClient} builder that supports RFC 2616 caching.
+ * An {@link org.apache.http.client.HttpClient} builder that supports RFC 2616 caching.
  * <p>
  * This client will cache information retrieved from the remote server in memory. The backing store does
  * <strong>not</strong> perform any resource management (e.g., removing content that has nominally expired) so, special

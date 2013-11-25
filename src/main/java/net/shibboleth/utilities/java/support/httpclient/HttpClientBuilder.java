@@ -66,7 +66,8 @@ import org.apache.http.util.CharsetUtils;
  * <li>
  * If this builder's <code>connectionDisregardSslCertificate</code> is set to <code>true</code>, then any value
  * previously set via the Apache builder's
- * {@link org.apache.http.impl.client.HttpClientBuilder#setSSLSocketFactory(org.apache.http.conn.socket.LayeredConnectionSocketFactory)} will be
+ * {@link org.apache.http.impl.client.HttpClientBuilder#
+ * setSSLSocketFactory(org.apache.http.conn.socket.LayeredConnectionSocketFactory)} will be
  * unconditionally overwritten.</li>
  * 
  * <li>
@@ -78,7 +79,8 @@ import org.apache.http.util.CharsetUtils;
  * <li>
  * Per the Apache builder's Javadoc, if a non-null instance of {@link org.apache.http.conn.HttpClientConnectionManager}
  * is set on the Apache builder via
- * {@link org.apache.http.impl.client.HttpClientBuilder#setConnectionManager(org.apache.http.conn.HttpClientConnectionManager)}
+ * {@link org.apache.http.impl.client.HttpClientBuilder#
+ * setConnectionManager(org.apache.http.conn.HttpClientConnectionManager)}
  * , this supersedes various other properties set on the Apache builder. This includes the following
  * instances/properties on the Apache builder:
  * 
