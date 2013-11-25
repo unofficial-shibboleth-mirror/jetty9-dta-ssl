@@ -54,7 +54,7 @@ public class IndexingObjectStore<T> {
     /** Constructor. */
     public IndexingObjectStore() {
         rwLock = new ReentrantReadWriteLock();
-        objectStore = new LazyMap<String, StoredObjectWrapper>();
+        objectStore = new LazyMap<>();
     }
 
     /** Clears the object store. */

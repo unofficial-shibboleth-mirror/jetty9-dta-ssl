@@ -108,7 +108,7 @@ public class Pair<T1, T2> {
         }
 
         if (o instanceof Pair) {
-            final Pair<T1, T2> otherPair = (Pair<T1, T2>) o;
+            final Pair<?,?> otherPair = (Pair<?,?>) o;
             return Objects.equal(getFirst(), otherPair.getFirst()) && Objects.equal(getSecond(), otherPair.getSecond());
         }
 

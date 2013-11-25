@@ -94,7 +94,7 @@ public class MapTest {
         Assert.assertTrue(map.containsValue(VALUE_2), "Contains value " + VALUE_2);
         
         Assert.assertEquals(map.values().size(), 2, "Two Keys, one value");
-        Set<Object> set = new HashSet<Object>();
+        Set<Object> set = new HashSet<>();
         set.addAll(map.values());
         Assert.assertEquals(set.size(), 1, "Two Keys, one (distinct) value");
         Assert.assertEquals(map.keySet().size(), 2, "Two Keys, one value");
@@ -104,7 +104,7 @@ public class MapTest {
         Assert.assertEquals(map.put(KEY_1, VALUE_3), VALUE_2, "Should have replaced");
         Assert.assertTrue(map.containsValue(INTEGER_3), "Contains value " + INTEGER_3);
 
-        Map<String, Integer> testMap = new HashMap<String, Integer>();
+        Map<String, Integer> testMap = new HashMap<>();
         testMap.put(KEY_1, INTEGER_3);
         testMap.put(KEY_2, INTEGER_3);
         

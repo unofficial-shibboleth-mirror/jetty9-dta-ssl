@@ -45,7 +45,7 @@ public class ValueTypeIndexedMap<KeyType, ValueType> implements Map<KeyType, Val
     private Map<KeyType, ValueType> map;
 
     /** Set of valid types for this map. */
-    private Set<Class> types;
+    private Set<Class<?>> types;
 
     /** Constructor. */
     public ValueTypeIndexedMap() {
@@ -60,8 +60,8 @@ public class ValueTypeIndexedMap<KeyType, ValueType> implements Map<KeyType, Val
      */
     public ValueTypeIndexedMap(final Map<KeyType, ValueType> newMap, final Collection<Class<?>> newTypes) {
         map = newMap;
-        types = new HashSet<Class>(newTypes);
-        index = new HashMap<Class<?>, Map<KeyType, ValueType>>();
+        types = new HashSet<>(newTypes);
+        index = new HashMap<>();
         rebuildIndex();
     }
 
@@ -105,7 +105,7 @@ public class ValueTypeIndexedMap<KeyType, ValueType> implements Map<KeyType, Val
      * 
      * @return which value types are indexed
      */
-    public Set<Class> getTypes() {
+    public Set<Class<?>> getTypes() {
         return types;
     }
 
@@ -203,8 +203,8 @@ public class ValueTypeIndexedMap<KeyType, ValueType> implements Map<KeyType, Val
      * 
      * @param newTypes which value types are indexed
      */
-    public void setTypes(final Collection<Class> newTypes) {
-        types = new HashSet<Class>(newTypes);
+    public void setTypes(final Collection<Class<?>> newTypes) {
+        types = new HashSet<>(newTypes);
     }
 
     /** {@inheritDoc} */

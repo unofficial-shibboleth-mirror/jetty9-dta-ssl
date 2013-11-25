@@ -126,7 +126,7 @@ public class LazySet<ElementType> implements Set<ElementType>, Serializable {
             return delegate;
         }
 
-        return new HashSet<ElementType>(delegate);
+        return new HashSet<>(delegate);
     }
 
     /** {@inheritDoc} */

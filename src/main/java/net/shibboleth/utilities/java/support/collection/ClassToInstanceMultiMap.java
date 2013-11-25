@@ -59,8 +59,8 @@ public class ClassToInstanceMultiMap<B> {
      * @param isIndexingSupertypes indicates whether supertypes of a value should be indexed
      */
     public ClassToInstanceMultiMap(final boolean isIndexingSupertypes) {
-        backingMap = new HashMap<Class<?>, List<B>>();
-        values = new ArrayList<B>();
+        backingMap = new HashMap<>();
+        values = new ArrayList<>();
         indexSupertypes = isIndexingSupertypes;
     }
 
@@ -163,7 +163,7 @@ public class ClassToInstanceMultiMap<B> {
             indexValues = backingMap.get(indexKey);
 
             if (indexValues == null) {
-                indexValues = new ArrayList<B>();
+                indexValues = new ArrayList<>();
                 backingMap.put(indexKey, indexValues);
             }
 

@@ -31,8 +31,8 @@ public class ValueTypeIndexedMapTest {
 
     /** Set up state for this test. */
     @BeforeMethod public void setUp() {
-        map = new ValueTypeIndexedMap<String, Object>();
-        map.setTypes(Arrays.asList(new Class[] {Integer.class, String.class}));
+        map = new ValueTypeIndexedMap<>();
+        map.setTypes(Arrays.asList(new Class<?>[] {Integer.class, String.class}));
         map.rebuildIndex();
     }
 
@@ -107,8 +107,8 @@ public class ValueTypeIndexedMapTest {
 
     /* Test equals and hashcode */
     @Test public void testEqualsHashCode() {
-        ValueTypeIndexedMap<String, Object> other = new ValueTypeIndexedMap<String, Object>();
-        other.setTypes(Arrays.asList(new Class[] {Integer.class}));
+        ValueTypeIndexedMap<String, Object> other = new ValueTypeIndexedMap<>();
+        other.setTypes(Arrays.asList(new Class<?>[] {Integer.class}));
         other.rebuildIndex();
 
         Assert.assertEquals(map, other, "Empty maps should be the same");

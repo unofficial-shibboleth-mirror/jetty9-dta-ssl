@@ -47,8 +47,8 @@ public class ClassIndexedSet<T> extends AbstractSet<T> implements Set<T> {
      * 
      */
     public ClassIndexedSet() {
-        set = new HashSet<T>();
-        index = new HashMap<Class<? extends T>, T>();
+        set = new HashSet<>();
+        index = new HashMap<>();
     }
 
     /** {@inheritDoc} */
@@ -137,12 +137,13 @@ public class ClassIndexedSet<T> extends AbstractSet<T> implements Set<T> {
      * Get the index class of the specified object. Subclasses may override to use a class index other than the main
      * runtime class of the object.
      * 
+     * @param <X> generic parameter which eliminates need for casting by the caller
      * @param o the object whose class index to determine
      * @return the class index value associated with the object instance
      */
-    @Nonnull protected Class<? extends T> getIndexClass(@Nonnull final Object o) {
+    @Nonnull protected  <X extends T> Class<X> getIndexClass(@Nonnull final X o) {
         Constraint.isNotNull(o, "Object can not be null");
-        return (Class<? extends T>) o.getClass();
+        return (Class<X>) o.getClass();
     }
 
     /**

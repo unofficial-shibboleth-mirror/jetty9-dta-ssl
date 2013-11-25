@@ -122,7 +122,7 @@ public class LazyMap<KeyType, ValueType> implements Map<KeyType, ValueType>, Ser
             return delegate;
         }
 
-        return new HashMap<KeyType, ValueType>(delegate);
+        return new HashMap<>(delegate);
     }
 
     /** {@inheritDoc} */

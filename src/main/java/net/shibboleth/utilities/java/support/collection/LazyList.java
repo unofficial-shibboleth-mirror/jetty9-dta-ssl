@@ -183,7 +183,7 @@ public class LazyList<ElementType> implements List<ElementType>, Serializable {
             return delegate;
         }
 
-        return new ArrayList<ElementType>(delegate);
+        return new ArrayList<>(delegate);
     }
 
     /** {@inheritDoc} */

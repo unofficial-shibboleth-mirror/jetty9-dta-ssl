@@ -26,7 +26,7 @@ public class IndexingObjectStoreTest {
 
     @Test
     public void testIndexingObjectStore() {
-        IndexingObjectStore<String> store = new IndexingObjectStore<String>();
+        IndexingObjectStore<String> store = new IndexingObjectStore<>();
 
         String str1 = new String("foo");
         String str2 = new String("bar");
