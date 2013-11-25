@@ -56,7 +56,8 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
-//TODO(lajoie) see if we can use either java.util.concurrent or Guava classes for the pool so we don't have to manage synchronicity
+//TODO(lajoie) see if we can use either java.util.concurrent or Guava 
+// classes for the pool so we don't have to manage synchronicity
 
 /**
  * A pool of JAXP 1.3 {@link DocumentBuilder}s.

@@ -26,14 +26,13 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
-import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.cache.CacheConfig;
 import org.apache.http.impl.client.cache.CachingHttpClientBuilder;
 import org.apache.http.impl.client.cache.FileResourceFactory;
 import org.apache.http.impl.client.cache.ManagedHttpCacheStorage;
 
 /**
- * An {@link HttpClient} builder that supports RFC 2616 caching.
+ * An {@link org.apache.http.client.HttpClient} builder that supports RFC 2616 caching.
  * <p>
  * Cached content is written to disk. Special care should be taken so that multiple clients do not share a single cache
  * directory unintentionally. This could result senstive data being available in ways it should not be.

@@ -21,7 +21,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import javax.annotation.Nonnull;
-import javax.net.ssl.SSLContext;
 
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
@@ -33,98 +32,92 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.ConnectionConfig;
-import org.apache.http.config.SocketConfig;
-import org.apache.http.conn.HttpClientConnectionManager;
-import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
-import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.util.CharsetUtils;
 
 //TODO retry attempts, keep alive strategy
 
-/** Builder used to construct {@link HttpClient} objects configured with particular settings. 
+/**
+ * Builder used to construct {@link HttpClient} objects configured with particular settings.
  * 
  * <p>
  * When using the single-arg constructor variant to wrap an existing instance of
- * {@link org.apache.http.impl.client.HttpClientBuilder}, there are several caveats
- * of which to be aware:
+ * {@link org.apache.http.impl.client.HttpClientBuilder}, there are several caveats of which to be aware:
  * 
  * <ul>
  * 
  * <li>
- * Instances of the following which are set as the default instance on the Apache builder will be
- * unconditionally overwritten by this builder when {@link #buildClient()} is called:
+ * Instances of the following which are set as the default instance on the Apache builder will be unconditionally
+ * overwritten by this builder when {@link #buildClient()} is called:
  * 
- *   <ul>
- *   <li>{@link RequestConfig}</li>
- *   <li>{@link ConnectionConfig}</li>
- *   </ul>
- *   
- *   <p>
- *   This is due to the unfortunate fact that the Apache builder does not currently provide accessor methods to
- *   obtain the default instances currently set on the builder.  Therefore, if you need to set any default request
- *   or connection config parameters which are not exposed by this builder, then you must use the Apache
- *   builder directly and may not use this builder.
- *   </p>
+ * <ul>
+ * <li>{@link RequestConfig}</li>
+ * <li>{@link ConnectionConfig}</li>
+ * </ul>
+ * 
+ * <p>
+ * This is due to the unfortunate fact that the Apache builder does not currently provide accessor methods to obtain the
+ * default instances currently set on the builder. Therefore, if you need to set any default request or connection
+ * config parameters which are not exposed by this builder, then you must use the Apache builder directly and may not
+ * use this builder.
+ * </p>
  * </li>
  * 
  * <li>
- * If this builder's <code>connectionDisregardSslCertificate</code> is set to <code>true</code>, 
- * then any value previously set via the Apache builder's
- * {@link org.apache.http.impl.client.HttpClientBuilder#setSSLSocketFactory(LayeredConnectionSocketFactory)}
- * will be unconditionally overwritten.
+ * If this builder's <code>connectionDisregardSslCertificate</code> is set to <code>true</code>, then any value
+ * previously set via the Apache builder's
+ * {@link org.apache.http.impl.client.HttpClientBuilder#setSSLSocketFactory(org.apache.http.conn.socket.LayeredConnectionSocketFactory)} will be
+ * unconditionally overwritten.</li>
+ * 
+ * <li>
+ * If this builder is supplied with a <code>connectionProxyHost</code>, <code>connectionProxyUsername</code> and
+ * <code>connectionProxyPassword</code>, then any value previously set via the Apache builder's
+ * {@link org.apache.http.impl.client.HttpClientBuilder#setDefaultCredentialsProvider(CredentialsProvider)} will be
+ * unconditionally overwritten.</li>
+ * 
+ * <li>
+ * Per the Apache builder's Javadoc, if a non-null instance of {@link org.apache.http.conn.HttpClientConnectionManager}
+ * is set on the Apache builder via
+ * {@link org.apache.http.impl.client.HttpClientBuilder#setConnectionManager(org.apache.http.conn.HttpClientConnectionManager)}
+ * , this supersedes various other properties set on the Apache builder. This includes the following
+ * instances/properties on the Apache builder:
+ * 
+ * <ul>
+ * <li><code>SSLSocketFactory</code> ({@link org.apache.http.conn.socket.LayeredConnectionSocketFactory})</li>
+ * <li>{@link javax.net.ssl.SSLContext}</li>
+ * <li>{@link org.apache.http.conn.ssl.X509HostnameVerifier}</li>
+ * <li>{@link org.apache.http.config.SocketConfig}</li>
+ * <li>{@link ConnectionConfig}</li>
+ * <li><code>maxConnTotal</code></li>
+ * <li><code>maxConnPerRoute</code></li>
+ * </ul>
+ * 
+ * <p>
+ * Similarly, the following setters on this builder will become ineffective when a non-null connection manger is set on
+ * the Apache builder:
+ * </p>
+ * 
+ * <ul>
+ * <li>{@link #setConnectionDisregardSslCertificate(boolean)}</li>
+ * <li>{@link #setSocketBufferSize(int)}</li>
+ * <li>{@link #setHttpContentCharSet(String)}</li>
+ * </ul>
+ * 
+ * <p>
+ * Therefore, if you need to explicitly supply a connection manager instance to the Apache builder (for example in order
+ * to be able to use {@link IdleConnectionSweeper}), then you must supply these properties or instances directly to the
+ * connection manager rather than to this builder or the Apache builder.
+ * </p>
  * </li>
  * 
  * <li>
- * If this builder is supplied with a <code>connectionProxyHost</code>, <code>connectionProxyUsername</code> 
- * and <code>connectionProxyPassword</code>, then any value previously set via the Apache builder's 
- * {@link org.apache.http.impl.client.HttpClientBuilder#setDefaultCredentialsProvider(CredentialsProvider)}
- * will be unconditionally overwritten.
- * </li>
+ * Similar to the above issue, setting an explicit <code>SSLSocketFactory</code> on the Apache builder will supersede
+ * the following Apache builder properties:
  * 
- * <li>
- * Per the Apache builder's Javadoc, if a non-null instance of {@link HttpClientConnectionManager} is set on
- * the Apache builder via 
- * {@link org.apache.http.impl.client.HttpClientBuilder#setConnectionManager(HttpClientConnectionManager)},
- * this supersedes various other properties set on the Apache builder.  This includes the following instances/properties
- * on the Apache builder:
- * 
- *   <ul>
- *   <li><code>SSLSocketFactory</code> ({@link LayeredConnectionSocketFactory})</li>
- *   <li>{@link SSLContext}</li>
- *   <li>{@link X509HostnameVerifier}</li>
- *   <li>{@link SocketConfig}</li>
- *   <li>{@link ConnectionConfig}</li>
- *   <li><code>maxConnTotal</code></li>
- *   <li><code>maxConnPerRoute</code></li>
- *   </ul>
- *   
- *   <p>
- *   Similarly, the following setters on this builder will become ineffective when a non-null connection manger is set
- *   on the Apache builder:
- *   </p>
- *   
- *   <ul>
- *   <li>{@link #setConnectionDisregardSslCertificate(boolean)}</li>
- *   <li>{@link #setSocketBufferSize(int)}</li>
- *   <li>{@link #setHttpContentCharSet(String)}</li>
- *   </ul>
- *   
- *   <p>
- *   Therefore, if you need to explicitly supply a connection manager instance to the Apache builder (for example in 
- *   order to be able to use {@link IdleConnectionSweeper}), then you must supply these properties or instances 
- *   directly to the connection manager rather than to this builder or the Apache builder.
- *   </p>
- * </li>
- * 
- * <li>
- * Similar to the above issue, setting an explicit <code>SSLSocketFactory</code> on the Apache builder will 
- * supersede the following Apache builder properties:
- * 
- *   <ul>
- *   <li>{@link SSLContext}</li>
- *   <li>{@link X509HostnameVerifier}</li>
- *   </ul>
+ * <ul>
+ * <li>{@link javax.net.ssl.SSLContext}</li>
+ * <li>{@link org.apache.http.conn.ssl.X509HostnameVerifier}</li>
+ * </ul>
  * </li>
  * 
  * </ul>
@@ -180,7 +173,7 @@ public class HttpClientBuilder {
 
     /** Character set used for HTTP entity content. Default value: UTF-8 */
     private String httpContentCharSet;
-    
+
     /** The Apache HttpClientBuilder 4.3+ instance over which to layer this builder. */
     private org.apache.http.impl.client.HttpClientBuilder apacheBuilder;
 
@@ -191,7 +184,7 @@ public class HttpClientBuilder {
 
     /**
      * Constructor.
-     *
+     * 
      * @param builder the Apache HttpClientBuilder 4.3+ instance over which to layer this builder
      */
     public HttpClientBuilder(@Nonnull org.apache.http.impl.client.HttpClientBuilder builder) {
@@ -395,8 +388,8 @@ public class HttpClientBuilder {
      */
     public void setConnectionProxyPort(final int port) {
         connectionProxyPort =
-                (int) Constraint
-                        .numberInRangeExclusive(0, 65536, port, "Proxy port must be between 0 and 65536, exclusive");
+                (int) Constraint.numberInRangeExclusive(0, 65536, port,
+                        "Proxy port must be between 0 and 65536, exclusive");
     }
 
     /**
@@ -482,16 +475,16 @@ public class HttpClientBuilder {
         decorateApacheBuilder();
         return getApacheBuilder().build();
     }
-    
+
     /**
-     * Decorate the Apache builder as determined by this builder's parameters.
-     * Subclasses will likely add additional decoration.
+     * Decorate the Apache builder as determined by this builder's parameters. Subclasses will likely add additional
+     * decoration.
      * 
      * @throws Exception if there is a problem decorating the Apache builder
      */
     protected void decorateApacheBuilder() throws Exception {
         org.apache.http.impl.client.HttpClientBuilder builder = getApacheBuilder();
-        
+
         if (connectionDisregardSslCertificate) {
             builder.setSSLSocketFactory(HttpClientSupport.buildNoTrustSSLConnectionSocketFactory());
         }
@@ -499,10 +492,10 @@ public class HttpClientBuilder {
         if (connectionCloseAfterResponse) {
             builder.addInterceptorLast(new RequestConnectionClose());
         }
-        
+
         // RequestConfig params
         RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
-        
+
         if (socketLocalAddress != null) {
             requestConfigBuilder.setLocalAddress(socketLocalAddress);
         }
@@ -511,13 +504,12 @@ public class HttpClientBuilder {
             requestConfigBuilder.setSocketTimeout(socketTimeout);
         }
 
-        
         if (connectionTimeout > 0) {
             requestConfigBuilder.setConnectTimeout(connectionTimeout);
         }
 
         requestConfigBuilder.setStaleConnectionCheckEnabled(connectionStalecheck);
-        
+
         requestConfigBuilder.setRedirectsEnabled(httpFollowRedirects);
 
         if (connectionProxyHost != null) {
@@ -531,24 +523,23 @@ public class HttpClientBuilder {
                 builder.setDefaultCredentialsProvider(credProvider);
             }
         }
-        
+
         // ConnectionConfig params
         ConnectionConfig.Builder connectionConfigBuilder = ConnectionConfig.custom();
 
         connectionConfigBuilder.setBufferSize(socketBufferSize);
-        
+
         if (httpContentCharSet != null) {
             connectionConfigBuilder.setCharset(CharsetUtils.get(httpContentCharSet));
         }
-        
 
         builder.setDefaultRequestConfig(requestConfigBuilder.build());
         builder.setDefaultConnectionConfig(connectionConfigBuilder.build());
     }
-    
+
     /**
-     * Get the Apache {@link org.apache.http.impl.client.HttpClientBuilder} instance over which this
-     * builder will be layered. Subclasses may override to return a specialized subclass.
+     * Get the Apache {@link org.apache.http.impl.client.HttpClientBuilder} instance over which this builder will be
+     * layered. Subclasses may override to return a specialized subclass.
      * 
      * @return the Apache HttpClientBuilder instance to use
      */

@@ -207,6 +207,8 @@ public final class NamespaceSupport {
      * @param domElement the Element
      * @param upperNamespaceSearchBound the "root" element of the fragment where namespaces may be rooted
      */
+    //CheckStyle: MethodLength OFF
+    //CheckStyle: CyclomaticComplexity OFF
     private static void rootNamespaces(@Nullable final Element domElement,
             @Nullable final Element upperNamespaceSearchBound) {
         if (domElement == null) {
@@ -294,4 +296,6 @@ public final class NamespaceSupport {
             childNode = ElementSupport.getNextSiblingElement(childNode);
         }
     }
+    //CheckStyle: MethodLength ON
+    //CheckStyle: CyclomaticComplexity ON
 }

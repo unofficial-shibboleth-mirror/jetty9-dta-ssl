@@ -22,7 +22,6 @@ import java.security.SecureRandom;
 import javax.annotation.Nonnull;
 
 import org.apache.commons.codec.BinaryEncoder;
-import org.apache.commons.codec.binary.Hex;
 
 /**
  * A specialized subclass of {@link RandomIdentifierGenerationStrategy} which constrains the supplied
@@ -32,7 +31,7 @@ public class SecureRandomIdentifierGenerationStrategy extends RandomIdentifierGe
 
     /**
      * Constructor. Initializes the random number source to a new {@link SecureRandom}, size of identifier is set to 16
-     * bytes, and the encoder is set to a {@link Hex}.
+     * bytes, and the encoder is set to a {@link org.apache.commons.codec.binary.Hex}.
      */
     public SecureRandomIdentifierGenerationStrategy() {
         super();
@@ -40,7 +39,7 @@ public class SecureRandomIdentifierGenerationStrategy extends RandomIdentifierGe
 
     /**
      * Constructor. Initializes the random number source to a new {@link SecureRandom} and the encoder is set to a
-     * {@link Hex}.
+     * {@link org.apache.commons.codec.binary.Hex}.
      * 
      * @param identifierSize number of random bytes in identifier
      */
