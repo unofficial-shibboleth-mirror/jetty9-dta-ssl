@@ -18,6 +18,7 @@
 package net.shibboleth.utilities.java.support.xml;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +33,7 @@ import javax.xml.validation.SchemaFactory;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.logic.Constraint;
-import net.shibboleth.utilities.java.support.resource.Resource;
-import net.shibboleth.utilities.java.support.resource.ResourceException;
+import net.shibboleth.utilities.java.support.resource.ShibbolethResource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -142,17 +142,18 @@ public final class SchemaBuilder {
      * @throws SAXException thrown if there is a problem converting the schema sources in to a schema
      */
     @Nonnull public static Schema buildSchema(@Nonnull final SchemaLanguage lang,
-            @Nonnull @NotEmpty @NullableElements final Resource... schemaSources) throws SAXException {
+            @Nonnull @NotEmpty @NullableElements final ShibbolethResource... schemaSources) throws SAXException {
         Constraint.isNotNull(schemaSources, "Schema source resources can not be null");
 
         final ArrayList<Source> sourceStreams = new ArrayList<Source>();
-        for (Resource schemaSource : schemaSources) {
+        for (ShibbolethResource schemaSource : schemaSources) {
             try {
                 if (schemaSource != null) {
-                    sourceStreams.add(new StreamSource(schemaSource.getInputStream(), schemaSource.getLocation()));
+                    sourceStreams.add(new StreamSource(schemaSource.getInputStream(), schemaSource.getURL()
+                            .toExternalForm()));
                 }
-            } catch (ResourceException e) {
-                throw new SAXException("Unable to read schema resource " + schemaSource.getLocation(), e);
+            } catch (IOException e) {
+                throw new SAXException("Unable to read schema resource " + schemaSource.getDescription(), e);
             }
         }
 

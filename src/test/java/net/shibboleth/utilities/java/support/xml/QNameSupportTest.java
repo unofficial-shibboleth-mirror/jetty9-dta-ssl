@@ -24,10 +24,10 @@ import javax.xml.parsers.DocumentBuilder;
 
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
-import net.shibboleth.utilities.java.support.resource.ClasspathResource;
-import net.shibboleth.utilities.java.support.resource.Resource;
-import net.shibboleth.utilities.java.support.resource.ResourceException;
+import net.shibboleth.utilities.java.support.resource.ShibbolethResource;
+import net.shibboleth.utilities.java.support.resource.TestResourceConverter;
 
+import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -63,15 +63,15 @@ public class QNameSupportTest {
     private Element child;
 
     @BeforeTest public void setup() throws ComponentInitializationException, SAXException, IOException,
-            ResourceException, XMLParserException {
+            XMLParserException {
         BasicParserPool pool = new BasicParserPool();
         pool.initialize();
         parserPool = pool;
 
         DocumentBuilder builder = parserPool.getBuilder();
-        Resource resource =
-                new ClasspathResource("data/net/shibboleth/utilities/java/support/xml/qNameSupportTest.xml");
-        resource.initialize();
+        ShibbolethResource resource =
+                TestResourceConverter.of(new ClassPathResource(
+                        "data/net/shibboleth/utilities/java/support/xml/qNameSupportTest.xml"));
 
         Document testFile = builder.parse(resource.getInputStream());
         parent = (Element) testFile.getFirstChild();

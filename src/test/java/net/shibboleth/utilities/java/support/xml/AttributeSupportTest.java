@@ -27,9 +27,9 @@ import javax.xml.parsers.DocumentBuilder;
 
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
-import net.shibboleth.utilities.java.support.resource.ClasspathResource;
-import net.shibboleth.utilities.java.support.resource.ResourceException;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
@@ -44,7 +44,7 @@ import org.xml.sax.SAXException;
  */
 public class AttributeSupportTest {
 
-    // Contants to test againsy
+    // Contants to test against
     private static final String TEST_NS = "http://example.org/NameSpace";
 
     private static final String TEST_PREFIX = "testns";
@@ -76,7 +76,7 @@ public class AttributeSupportTest {
     private BasicParserPool parserPool;
 
     @BeforeTest public void setUp() throws XMLParserException, ComponentInitializationException, SAXException,
-            IOException, ResourceException {
+            IOException {
         parserPool = new BasicParserPool();
         parserPool.initialize();
 
@@ -84,9 +84,8 @@ public class AttributeSupportTest {
         try {
             idAttrQName = new QName(TEST_NS, TEST_ID_ATTRIBUTE, TEST_PREFIX);
 
-            ClasspathResource resource =
-                    new ClasspathResource("data/net/shibboleth/utilities/java/support/xml/attributeSupportTest.xml");
-            resource.initialize();
+            Resource resource =
+                    new ClassPathResource("data/net/shibboleth/utilities/java/support/xml/attributeSupportTest.xml");
             Document testFile = builder.parse(resource.getInputStream());
 
             Element root = (Element) testFile.getFirstChild();
@@ -137,12 +136,10 @@ public class AttributeSupportTest {
      * @throws ComponentInitializationException if badness happens.
      * @throws IOException if badness happens.
      */
-    @Test public void testBadNS() throws XMLParserException, ComponentInitializationException, IOException,
-            ResourceException {
+    @Test public void testBadNS() throws XMLParserException, ComponentInitializationException, IOException {
         DocumentBuilder builder = parserPool.getBuilder();
 
-        ClasspathResource resource = new ClasspathResource("data/net/shibboleth/utilities/java/support/xml/badNS1.xml");
-        resource.initialize();
+        Resource resource = new ClassPathResource("data/net/shibboleth/utilities/java/support/xml/badNS1.xml");
         boolean thrown = false;
         Document file = null;
         try {
@@ -154,8 +151,7 @@ public class AttributeSupportTest {
                 thrown,
                 "xmlns: declaration with name other than xml and namespace of http://www.w3.org/XML/1998/namespace should throw an error ");
 
-        resource = new ClasspathResource("data/net/shibboleth/utilities/java/support/xml/badNS2.xml");
-        resource.initialize();
+        resource = new ClassPathResource("data/net/shibboleth/utilities/java/support/xml/badNS2.xml");
         thrown = false;
         try {
             file = builder.parse(resource.getInputStream());

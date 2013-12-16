@@ -30,7 +30,7 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
 import com.google.common.base.Objects;
 
 /** Base class for resources. */
-public abstract class AbstractResource extends AbstractDestructableInitializableComponent implements Resource {
+public abstract class AbstractResource extends AbstractDestructableInitializableComponent {
 
     /** Location of the resource. */
     private String location;
@@ -127,8 +127,8 @@ public abstract class AbstractResource extends AbstractDestructableInitializable
             return true;
         }
 
-        if (obj instanceof Resource) {
-            return getClass().equals(obj.getClass()) && Objects.equal(location, ((Resource) obj).getLocation());
+        if (obj instanceof AbstractResource) {
+            return getClass().equals(obj.getClass()) && Objects.equal(location, ((AbstractResource) obj).getLocation());
         }
 
         return false;

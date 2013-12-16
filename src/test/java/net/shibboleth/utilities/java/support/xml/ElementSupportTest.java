@@ -28,9 +28,10 @@ import javax.xml.parsers.DocumentBuilder;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
-import net.shibboleth.utilities.java.support.resource.ClasspathResource;
-import net.shibboleth.utilities.java.support.resource.ResourceException;
+import net.shibboleth.utilities.java.support.resource.ShibbolethResource;
+import net.shibboleth.utilities.java.support.resource.TestResourceConverter;
 
+import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -65,16 +66,15 @@ public class ElementSupportTest {
     private Element rootElement;
 
     @BeforeTest public void setUp() throws XMLParserException, ComponentInitializationException, SAXException,
-            IOException, ResourceException {
+            IOException {
         parserPool = new BasicParserPool();
         parserPool.initialize();
 
         DocumentBuilder builder = parserPool.getBuilder();
         try {
 
-            ClasspathResource resource =
-                    new ClasspathResource("data/net/shibboleth/utilities/java/support/xml/elementSupportTest.xml");
-            resource.initialize();
+            ShibbolethResource resource =
+                    TestResourceConverter.of(new ClassPathResource("data/net/shibboleth/utilities/java/support/xml/elementSupportTest.xml"));
             testFileDocument = builder.parse(resource.getInputStream());
             rootElement = (Element) testFileDocument.getFirstChild();
             testerDocument = builder.newDocument();

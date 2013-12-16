@@ -22,9 +22,10 @@ import java.io.IOException;
 import javax.xml.parsers.DocumentBuilder;
 
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.resource.ClasspathResource;
-import net.shibboleth.utilities.java.support.resource.ResourceException;
+import net.shibboleth.utilities.java.support.resource.ShibbolethResource;
+import net.shibboleth.utilities.java.support.resource.TestResourceConverter;
 
+import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -67,14 +68,14 @@ public class NamespaceSupportTest {
     private static final String PREFIX_4 = "myns4";
 
     @BeforeMethod public void setup() throws XMLParserException, ComponentInitializationException, SAXException,
-            IOException, ResourceException {
+            IOException {
         parserPool = new BasicParserPool();
         parserPool.initialize();
         DocumentBuilder builder = parserPool.getBuilder();
         try {
-            ClasspathResource resource =
-                    new ClasspathResource("data/net/shibboleth/utilities/java/support/xml/namespaceSupportTest.xml");
-            resource.initialize();
+            ShibbolethResource resource =
+                    TestResourceConverter.of(new ClassPathResource(
+                            "data/net/shibboleth/utilities/java/support/xml/namespaceSupportTest.xml"));
             Document testFile = builder.parse(resource.getInputStream());
 
             parent = (Element) testFile.getFirstChild();
@@ -159,15 +160,16 @@ public class NamespaceSupportTest {
                 "lookupNamespaceURI(child, parent)");
         Assert.assertEquals(NamespaceSupport.lookupNamespaceURI(child, parent, null), DEFAULT_NAMESPACE_1,
                 "lookupNamespaceURI(child, parent)");
-        
+
         //
         // Finally check that a freshly created node does not have a namespace attribute
         // even if it was created with a defauklt namespace for that prefix.
         //
-        Element element = ElementSupport.constructElement(parent.getOwnerDocument(), DEFAULT_NAMESPACE_1, "Element", PREFIX_1);
+        Element element =
+                ElementSupport.constructElement(parent.getOwnerDocument(), DEFAULT_NAMESPACE_1, "Element", PREFIX_1);
         Assert.assertEquals(element.lookupNamespaceURI(PREFIX_1), DEFAULT_NAMESPACE_1, "Default namespace correct");
-        Assert.assertNull(NamespaceSupport.lookupNamespaceURI(element, null, PREFIX_1),  "Default namespace correct");
-   }
+        Assert.assertNull(NamespaceSupport.lookupNamespaceURI(element, null, PREFIX_1), "Default namespace correct");
+    }
 
     @Test public void testLookupPrefix() {
 
@@ -176,30 +178,36 @@ public class NamespaceSupportTest {
         //
         // .assertTrue(false);
 
-        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null,NAMESPACE_1), PREFIX_1, "lookupPrefix(parent)");
-        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null,NAMESPACE_2), PREFIX_2, "lookupPrefix(parent)");
-        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null,NAMESPACE_3), PREFIX_3, "lookupPrefix(parent)");
-        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null,NAMESPACE_4), null, "lookupPrefix(parent)");
-        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null,DEFAULT_NAMESPACE_1), null, "lookupPrefix(parent)");
-        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null,DEFAULT_NAMESPACE_2), null, "lookupPrefix(parent)");
+        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null, NAMESPACE_1), PREFIX_1, "lookupPrefix(parent)");
+        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null, NAMESPACE_2), PREFIX_2, "lookupPrefix(parent)");
+        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null, NAMESPACE_3), PREFIX_3, "lookupPrefix(parent)");
+        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null, NAMESPACE_4), null, "lookupPrefix(parent)");
+        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null, DEFAULT_NAMESPACE_1), null,
+                "lookupPrefix(parent)");
+        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null, DEFAULT_NAMESPACE_2), null,
+                "lookupPrefix(parent)");
 
-        Assert.assertEquals(NamespaceSupport.lookupPrefix(child, null,NAMESPACE_1), PREFIX_1, "lookupPrefix(child)");
-        Assert.assertEquals(NamespaceSupport.lookupPrefix(child, null,NAMESPACE_2), PREFIX_1, "lookupPrefix(child)");
-        Assert.assertEquals(NamespaceSupport.lookupPrefix(child, null,NAMESPACE_3), PREFIX_3, "lookupPrefix(child)");
-        Assert.assertEquals(NamespaceSupport.lookupPrefix(child, null,NAMESPACE_4), PREFIX_4, "lookupPrefix(child)");
-        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null,DEFAULT_NAMESPACE_1), null, "lookupPrefix(parent)");
-        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null,DEFAULT_NAMESPACE_2), null, "lookupPrefix(parent)");
+        Assert.assertEquals(NamespaceSupport.lookupPrefix(child, null, NAMESPACE_1), PREFIX_1, "lookupPrefix(child)");
+        Assert.assertEquals(NamespaceSupport.lookupPrefix(child, null, NAMESPACE_2), PREFIX_1, "lookupPrefix(child)");
+        Assert.assertEquals(NamespaceSupport.lookupPrefix(child, null, NAMESPACE_3), PREFIX_3, "lookupPrefix(child)");
+        Assert.assertEquals(NamespaceSupport.lookupPrefix(child, null, NAMESPACE_4), PREFIX_4, "lookupPrefix(child)");
+        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null, DEFAULT_NAMESPACE_1), null,
+                "lookupPrefix(parent)");
+        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null, DEFAULT_NAMESPACE_2), null,
+                "lookupPrefix(parent)");
 
-        Assert.assertEquals(NamespaceSupport.lookupPrefix(grandchild, null,NAMESPACE_1), PREFIX_1,
+        Assert.assertEquals(NamespaceSupport.lookupPrefix(grandchild, null, NAMESPACE_1), PREFIX_1,
                 "lookupPrefix(grandchild)");
-        Assert.assertEquals(NamespaceSupport.lookupPrefix(grandchild, null,NAMESPACE_2), PREFIX_1,
+        Assert.assertEquals(NamespaceSupport.lookupPrefix(grandchild, null, NAMESPACE_2), PREFIX_1,
                 "lookupPrefix(grandchild)");
-        Assert.assertEquals(NamespaceSupport.lookupPrefix(grandchild, null,NAMESPACE_3), PREFIX_3,
+        Assert.assertEquals(NamespaceSupport.lookupPrefix(grandchild, null, NAMESPACE_3), PREFIX_3,
                 "lookupPrefix(grandchild)");
-        Assert.assertEquals(NamespaceSupport.lookupPrefix(grandchild, null,NAMESPACE_4), PREFIX_4,
+        Assert.assertEquals(NamespaceSupport.lookupPrefix(grandchild, null, NAMESPACE_4), PREFIX_4,
                 "lookupPrefix(grandchild)");
-        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null,DEFAULT_NAMESPACE_1), null, "lookupPrefix(parent)");
-        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null,DEFAULT_NAMESPACE_2), null, "lookupPrefix(parent)");
+        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null, DEFAULT_NAMESPACE_1), null,
+                "lookupPrefix(parent)");
+        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null, DEFAULT_NAMESPACE_2), null,
+                "lookupPrefix(parent)");
 
         Assert.assertEquals(NamespaceSupport.lookupPrefix(grandchild, child, NAMESPACE_1), null,
                 "lookupPrefix(grandchild)");
@@ -209,38 +217,42 @@ public class NamespaceSupportTest {
                 "lookupPrefix(grandchild)");
         Assert.assertEquals(NamespaceSupport.lookupPrefix(grandchild, child, NAMESPACE_4), PREFIX_4,
                 "lookupPrefix(grandchild)");
-        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null,DEFAULT_NAMESPACE_1), null, "lookupPrefix(parent)");
-        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null,DEFAULT_NAMESPACE_2), null, "lookupPrefix(parent)");
+        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null, DEFAULT_NAMESPACE_1), null,
+                "lookupPrefix(parent)");
+        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null, DEFAULT_NAMESPACE_2), null,
+                "lookupPrefix(parent)");
 
         Assert.assertEquals(NamespaceSupport.lookupPrefix(child, parent, NAMESPACE_1), PREFIX_1, "lookupPrefix(child)");
         Assert.assertEquals(NamespaceSupport.lookupPrefix(child, parent, NAMESPACE_2), PREFIX_1, "lookupPrefix(child)");
         Assert.assertEquals(NamespaceSupport.lookupPrefix(child, parent, NAMESPACE_3), PREFIX_3, "lookupPrefix(child)");
         Assert.assertEquals(NamespaceSupport.lookupPrefix(child, parent, NAMESPACE_4), PREFIX_4, "lookupPrefix(child)");
-        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null,DEFAULT_NAMESPACE_1), null, "lookupPrefix(parent)");
-        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null,DEFAULT_NAMESPACE_2), null, "lookupPrefix(parent)");
+        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null, DEFAULT_NAMESPACE_1), null,
+                "lookupPrefix(parent)");
+        Assert.assertEquals(NamespaceSupport.lookupPrefix(parent, null, DEFAULT_NAMESPACE_2), null,
+                "lookupPrefix(parent)");
 
         //
         // Finally check that a freshly created node does not have a namespace attribute
         // even if it was created with a default prefix for that namespace.
         //
-        Element element = ElementSupport.constructElement(parent.getOwnerDocument(), DEFAULT_NAMESPACE_1, "Element", PREFIX_1);
+        Element element =
+                ElementSupport.constructElement(parent.getOwnerDocument(), DEFAULT_NAMESPACE_1, "Element", PREFIX_1);
         Assert.assertEquals(element.lookupPrefix(DEFAULT_NAMESPACE_1), PREFIX_1, "Default namespace correct");
-        Assert.assertNull(NamespaceSupport.lookupPrefix(element, null, DEFAULT_NAMESPACE_1),  "Default namespace correct");
-        
-}
+        Assert.assertNull(NamespaceSupport.lookupPrefix(element, null, DEFAULT_NAMESPACE_1),
+                "Default namespace correct");
+
+    }
 
     @Test(dependsOnMethods = {"testLookupPrefix", "testLookupNamespaceURI"}) public void
             testAppendNamespaceDeclaration() {
         Element element = ElementSupport.constructElement(parent.getOwnerDocument(), null, "Element", null);
-
 
         NamespaceSupport.appendNamespaceDeclaration(element, NAMESPACE_1, PREFIX_1);
         Assert.assertEquals(element.lookupNamespaceURI(PREFIX_1), NAMESPACE_1,
                 "appendNamespaceDeclaration - simple add");
 
         NamespaceSupport.appendNamespaceDeclaration(element, NAMESPACE_2, PREFIX_1);
-        Assert.assertEquals(element.lookupPrefix(NAMESPACE_2), PREFIX_1,
-                "appendNamespaceDeclaration - simple replace");
+        Assert.assertEquals(element.lookupPrefix(NAMESPACE_2), PREFIX_1, "appendNamespaceDeclaration - simple replace");
         Assert.assertEquals(element.lookupNamespaceURI(PREFIX_1), NAMESPACE_2,
                 "appendNamespaceDeclaration - simple replace");
 
@@ -289,14 +301,13 @@ public class NamespaceSupportTest {
                 "appendNamespaceDeclaration - default NS cannot be changed");
         Assert.assertEquals(element.lookupPrefix(null), null,
                 "appendNamespaceDeclaration - default NS cannot be changed");
-        
+
         //
         // Try overiding parsed entities
         //
         NamespaceSupport.appendNamespaceDeclaration(grandchild, DEFAULT_NAMESPACE_1, null);
         Assert.assertEquals(grandchild.lookupNamespaceURI(null), DEFAULT_NAMESPACE_1, "Change default name space");
-        
-        
+
         NamespaceSupport.appendNamespaceDeclaration(child, NAMESPACE_3, PREFIX_2);
         Assert.assertEquals(child.lookupNamespaceURI(PREFIX_2), NAMESPACE_3, "Change default name space");
     }
@@ -304,7 +315,7 @@ public class NamespaceSupportTest {
     @Test(dependsOnMethods = {"testLookupPrefix", "testLookupNamespaceURI", "testAppendNamespaceDeclaration"}) public
             void testRootNamespaces() {
         //
-        // We are going to root an element we parsed.  Preconditions
+        // We are going to root an element we parsed. Preconditions
         //
         Assert.assertEquals(child.lookupNamespaceURI(null), DEFAULT_NAMESPACE_1);
         Assert.assertEquals(NamespaceSupport.lookupNamespaceURI(child, null, null), DEFAULT_NAMESPACE_1);
@@ -339,10 +350,11 @@ public class NamespaceSupportTest {
         Assert.assertEquals(NamespaceSupport.lookupNamespaceURI(grandchild, grandchild, PREFIX_4), null);
 
         NamespaceSupport.rootNamespaces(child);
-        
+
         //
-        // On rooting child will get a default and grandchild will get ns3 (because that is its prefix) and ns2 (because of the
-        // attribute.  Nothing else should change
+        // On rooting child will get a default and grandchild will get ns3 (because that is its prefix) and ns2 (because
+        // of the
+        // attribute. Nothing else should change
         //
 
         Assert.assertEquals(child.lookupNamespaceURI(null), DEFAULT_NAMESPACE_1);

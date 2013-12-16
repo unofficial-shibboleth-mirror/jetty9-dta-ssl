@@ -53,6 +53,7 @@ import org.slf4j.LoggerFactory;
 
 /** A resource that fetches data from a remote source via HTTP. */
 @NotThreadSafe
+@Deprecated
 public class HttpResource extends AbstractResource {
 
     /** Property name under which the ETag data is stored. */

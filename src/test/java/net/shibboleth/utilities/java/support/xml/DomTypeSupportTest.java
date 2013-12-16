@@ -23,10 +23,10 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.resource.ClasspathResource;
-import net.shibboleth.utilities.java.support.resource.Resource;
-import net.shibboleth.utilities.java.support.resource.ResourceException;
+import net.shibboleth.utilities.java.support.resource.ShibbolethResource;
+import net.shibboleth.utilities.java.support.resource.TestResourceConverter;
 
+import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -42,18 +42,16 @@ public class DomTypeSupportTest {
     private Element xsStringXSITypeElement;
     private Element noXSITypeElement;
     
-    @BeforeTest public void setup() throws ComponentInitializationException, SAXException, IOException, ResourceException, XMLParserException {
+    @BeforeTest public void setup() throws ComponentInitializationException, SAXException, IOException, XMLParserException {
         BasicParserPool pool = new BasicParserPool();
         pool.initialize();
         parserPool = pool;
         
         DocumentBuilder builder = parserPool.getBuilder();
-        Resource res = new ClasspathResource("data/net/shibboleth/utilities/java/support/xml/getXSIType.xml");
-        res.initialize();
+        ShibbolethResource res = TestResourceConverter.of(new ClassPathResource("data/net/shibboleth/utilities/java/support/xml/getXSIType.xml"));
         xsStringXSITypeElement = (Element) builder.parse(res.getInputStream()).getFirstChild();
 
-        res = new ClasspathResource("data/net/shibboleth/utilities/java/support/xml/noXSIType.xml");
-        res.initialize();
+        res = TestResourceConverter.of(new ClassPathResource("data/net/shibboleth/utilities/java/support/xml/noXSIType.xml"));
         noXSITypeElement = (Element) builder.parse(res.getInputStream()).getFirstChild();
         
         if (null != builder) {

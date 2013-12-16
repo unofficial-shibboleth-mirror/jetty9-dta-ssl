@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
-/** Classes for reading in documents/files/data. */
+/** The package defines only the ShibbolethResource interface.  This is API compatible with 
+ * the spring Resource http://docs.spring.io/spring/docs/2.5.x/api/org/springframework/core/io/Resource.html
+ * but allows Resource consuming code to not require Spring.*/
 
 package net.shibboleth.utilities.java.support.resource;

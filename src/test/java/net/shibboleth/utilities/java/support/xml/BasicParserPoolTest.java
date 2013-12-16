@@ -37,11 +37,12 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
 import net.shibboleth.utilities.java.support.component.DestroyedComponentException;
 import net.shibboleth.utilities.java.support.component.UninitializedComponentException;
 import net.shibboleth.utilities.java.support.component.UnmodifiableComponentException;
-import net.shibboleth.utilities.java.support.resource.ClasspathResource;
-import net.shibboleth.utilities.java.support.resource.ResourceException;
+import net.shibboleth.utilities.java.support.resource.ShibbolethResource;
+import net.shibboleth.utilities.java.support.resource.TestResourceConverter;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool.DocumentBuilderProxy;
 import net.shibboleth.utilities.java.support.xml.SchemaBuilder.SchemaLanguage;
 
+import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -92,8 +93,7 @@ public class BasicParserPoolTest {
         basicParserPool.setIgnoreComments(true);
         basicParserPool.setIgnoreElementContentWhitespace(true);
         basicParserPool.setNamespaceAware(true);
-        ClasspathResource r = new ClasspathResource(SCHEMA_FILE);
-        r.initialize();
+        ShibbolethResource r = TestResourceConverter.of(new ClassPathResource(SCHEMA_FILE));
         Schema schema = SchemaBuilder.buildSchema(SchemaLanguage.XML, r);
         basicParserPool.setSchema(schema);
         basicParserPool.setXincludeAware(true);
@@ -264,8 +264,7 @@ public class BasicParserPoolTest {
         }
         Assert.assertTrue(thrown, "setNamespaceAware after init");
 
-        ClasspathResource r = new ClasspathResource(SCHEMA_FILE);
-        r.initialize();
+        ShibbolethResource r = TestResourceConverter.of(new ClassPathResource(SCHEMA_FILE));
         Schema schema = SchemaBuilder.buildSchema(SchemaLanguage.XML, r);
 
         thrown = false;
@@ -373,8 +372,7 @@ public class BasicParserPoolTest {
         }
         Assert.assertTrue(thrown, "setNamespaceAware after destroy");
 
-        ClasspathResource r = new ClasspathResource(SCHEMA_FILE);
-        r.initialize();
+        ShibbolethResource r = TestResourceConverter.of(new ClassPathResource(SCHEMA_FILE));
         Schema schema = SchemaBuilder.buildSchema(SchemaLanguage.XML, r);
 
         thrown = false;
@@ -420,12 +418,11 @@ public class BasicParserPoolTest {
         Assert.assertEquals(list.get(1).getNamespaceURI(), "https://www.example.org/Example", "Check second child namespace");
     }
 
-    @Test public void testParse() throws ResourceException, ComponentInitializationException, XMLParserException, FileNotFoundException {
+    @Test public void testParse() throws IOException, ComponentInitializationException, XMLParserException, FileNotFoundException {
 
         basicParserPool.initialize();
         
-        ClasspathResource r = new ClasspathResource(XML_FILE);
-        r.initialize();
+        ShibbolethResource r = TestResourceConverter.of(new ClassPathResource(XML_FILE));
         
         checkParsedDocument(basicParserPool.parse(r.getInputStream()));
         

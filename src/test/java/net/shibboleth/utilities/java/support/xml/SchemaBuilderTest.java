@@ -25,11 +25,11 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
 
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.resource.ClasspathResource;
-import net.shibboleth.utilities.java.support.resource.Resource;
-import net.shibboleth.utilities.java.support.resource.ResourceException;
+import net.shibboleth.utilities.java.support.resource.ShibbolethResource;
+import net.shibboleth.utilities.java.support.resource.TestResourceConverter;
 import net.shibboleth.utilities.java.support.xml.SchemaBuilder.SchemaLanguage;
 
+import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -48,26 +48,24 @@ public class SchemaBuilderTest {
 
     private static final String SECOND_SCHEMA_FILE = "schemaBuilderTest-schemaSecondLoaded.xsd";
 
-    private Resource works;
+    private ShibbolethResource works;
 
-    private Resource fails;
+    private ShibbolethResource fails;
 
-    private StreamSource workingSource() throws ResourceException {
+    private StreamSource workingSource() throws IOException {
         return new StreamSource(works.getInputStream());
     }
 
-    private StreamSource failingSource() throws ResourceException {
+    private StreamSource failingSource() throws IOException {
         return new StreamSource(fails.getInputStream());
     }
 
-    @BeforeTest public void setup() throws ResourceException, ComponentInitializationException {
-        works = new ClasspathResource(TEST_DIR + "schemaBuilderTest-works.xml");
-        works.initialize();
-        fails = new ClasspathResource(TEST_DIR + "schemaBuilderTest-fails.xml");
-        fails.initialize();
+    @BeforeTest public void setup()  {
+        works = TestResourceConverter.of(new ClassPathResource(TEST_DIR + "schemaBuilderTest-works.xml"));
+        fails = TestResourceConverter.of(new ClassPathResource(TEST_DIR + "schemaBuilderTest-fails.xml"));
     }
 
-    @Test public void testString() throws SAXException, IOException, ResourceException {
+    @Test public void testString() throws SAXException, IOException  {
 
         Schema schema =
                 SchemaBuilder.buildSchema(SchemaLanguage.XML, FILE_ROOT + TEST_DIR + FIRST_SCHEMA_FILE, FILE_ROOT
@@ -87,7 +85,7 @@ public class SchemaBuilderTest {
         Assert.assertTrue(thrown, "Should fail to validate");
     }
 
-    @Test public void testStringDir() throws SAXException, IOException, ResourceException {
+    @Test public void testStringDir() throws SAXException, IOException {
         Schema schema = SchemaBuilder.buildSchema(SchemaLanguage.XML, FILE_ROOT + TEST_DIR);
 
         Validator validator = schema.newValidator();
@@ -104,7 +102,7 @@ public class SchemaBuilderTest {
         Assert.assertTrue(thrown, "Should fail to validate");
     }
 
-    @Test public void testFiles() throws SAXException, IOException, ResourceException {
+    @Test public void testFiles() throws SAXException, IOException {
         File first = new File(FILE_ROOT + TEST_DIR + FIRST_SCHEMA_FILE);
         File second = new File(FILE_ROOT + TEST_DIR + SECOND_SCHEMA_FILE);
 
@@ -124,7 +122,7 @@ public class SchemaBuilderTest {
         Assert.assertTrue(thrown, "Should fail to validate");
     }
 
-    @Test public void testDir() throws SAXException, IOException, ResourceException {
+    @Test public void testDir() throws SAXException, IOException {
         File dir = new File(FILE_ROOT + TEST_DIR);
 
         Schema schema = SchemaBuilder.buildSchema(SchemaLanguage.XML, dir);
@@ -143,11 +141,9 @@ public class SchemaBuilderTest {
         Assert.assertTrue(thrown, "Should fail to validate");
     }
 
-    @Test public void testResource() throws SAXException, IOException, ResourceException, ComponentInitializationException {
-        Resource first = new ClasspathResource(TEST_DIR + FIRST_SCHEMA_FILE);
-        Resource second = new ClasspathResource(TEST_DIR + SECOND_SCHEMA_FILE);
-        first.initialize();
-        second.initialize();
+    @Test public void testResource() throws SAXException, IOException,  ComponentInitializationException {
+        ShibbolethResource first = TestResourceConverter.of(new ClassPathResource(TEST_DIR + FIRST_SCHEMA_FILE));
+        ShibbolethResource second = TestResourceConverter.of(new ClassPathResource(TEST_DIR + SECOND_SCHEMA_FILE));
 
         Schema schema = SchemaBuilder.buildSchema(SchemaLanguage.XML, first, second);
 
@@ -165,11 +161,9 @@ public class SchemaBuilderTest {
         Assert.assertTrue(thrown, "Should fail to validate");
     }
 
-    @Test public void testInputStream() throws SAXException, IOException, ResourceException, ComponentInitializationException {
-        Resource first = new ClasspathResource(TEST_DIR + FIRST_SCHEMA_FILE);
-        Resource second = new ClasspathResource(TEST_DIR + SECOND_SCHEMA_FILE);
-        first.initialize();
-        second.initialize();
+    @Test public void testInputStream() throws SAXException, IOException, ComponentInitializationException {
+        ShibbolethResource first = TestResourceConverter.of(new ClassPathResource(TEST_DIR + FIRST_SCHEMA_FILE));
+        ShibbolethResource second = TestResourceConverter.of(new ClassPathResource(TEST_DIR + SECOND_SCHEMA_FILE));
 
         Schema schema = SchemaBuilder.buildSchema(SchemaLanguage.XML, first.getInputStream(), second.getInputStream());
 
