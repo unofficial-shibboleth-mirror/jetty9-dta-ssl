@@ -19,6 +19,7 @@ package net.shibboleth.utilities.java.support.net;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.Locale;
 
 import javax.servlet.ServletOutputStream;
@@ -196,6 +197,26 @@ public class ThreadLocalHttpServletResponseProxy implements HttpServletResponse 
         getCurrent().setStatus(sc, sm);
     }
     
+    /** {@inheritDoc} */
+    public int getStatus() {
+        return getCurrent().getStatus();
+    }
+
+    /** {@inheritDoc} */
+    public String getHeader(String name) {
+        return getCurrent().getHeader(name);
+    }
+
+    /** {@inheritDoc} */
+    public Collection<String> getHeaders(String name) {
+        return getCurrent().getHeaders(name);
+    }
+
+    /** {@inheritDoc} */
+    public Collection<String> getHeaderNames() {
+        return getCurrent().getHeaderNames();
+    }
+
     /**
      * Get the current HttpServletResponse from ThreadLocal storage.
      * 

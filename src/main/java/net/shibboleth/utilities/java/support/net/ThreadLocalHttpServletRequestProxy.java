@@ -21,15 +21,24 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.AsyncContext;
+import javax.servlet.DispatcherType;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
@@ -311,6 +320,66 @@ public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
         return getCurrent().isRequestedSessionIdFromUrl();
     }
     
+    /** {@inheritDoc} */
+    public ServletContext getServletContext() {
+        return getCurrent().getServletContext();
+    }
+
+    /** {@inheritDoc} */
+    public AsyncContext startAsync() {
+        return getCurrent().startAsync();
+    }
+
+    /** {@inheritDoc} */
+    public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse) {
+        return getCurrent().startAsync(servletRequest, servletResponse);
+    }
+
+    /** {@inheritDoc} */
+    public boolean isAsyncStarted() {
+        return getCurrent().isAsyncStarted();
+    }
+
+    /** {@inheritDoc} */
+    public boolean isAsyncSupported() {
+        return getCurrent().isAsyncSupported();
+    }
+
+    /** {@inheritDoc} */
+    public AsyncContext getAsyncContext() {
+        return getCurrent().getAsyncContext();
+    }
+
+    /** {@inheritDoc} */
+    public DispatcherType getDispatcherType() {
+        return getCurrent().getDispatcherType();
+    }
+
+    /** {@inheritDoc} */
+    public boolean authenticate(HttpServletResponse response) throws IOException, ServletException {
+        return getCurrent().authenticate(response);
+    }
+
+    /** {@inheritDoc} */
+    public void login(String username, String password) throws ServletException {
+        getCurrent().login(username, password);
+    }
+
+    /** {@inheritDoc} */
+    public void logout() throws ServletException {
+        getCurrent().logout();
+    }
+
+    /** {@inheritDoc} */
+    public Collection<Part> getParts() throws IOException, ServletException {
+        return getCurrent().getParts();
+    }
+
+    /** {@inheritDoc} */
+    public Part getPart(String name) throws IOException, ServletException {
+        return getCurrent().getPart(name);
+    }
+
     /**
      * Get the current HttpServletRequest from ThreadLocal storage.
      * 
