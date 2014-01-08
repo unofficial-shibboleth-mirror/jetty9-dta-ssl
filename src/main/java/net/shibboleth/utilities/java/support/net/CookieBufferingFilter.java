@@ -40,9 +40,8 @@ import net.shibboleth.utilities.java.support.annotation.constraint.Live;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 
 /**
- * Implementation of an HTTP servlet {@link Filter} which stores the current {@link HttpServletRequest} and
- * {@link HttpServletResponse} being serviced on thread-local storage via the use of holder class
- * {@link HttpServletRequestResponseContext}.
+ * Implementation of an HTTP servlet {@link Filter} which wraps the {@link HttpServletResponse} via
+ * {@link CookieBufferingHttpServletResponseProxy} to ensure that only a single cookie of a given name is set.
  */
 public class CookieBufferingFilter implements Filter {
 
