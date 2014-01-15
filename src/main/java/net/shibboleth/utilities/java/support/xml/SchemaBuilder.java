@@ -180,7 +180,17 @@ public class SchemaBuilder {
     }
     
     /**
-     * Adds schemas from the given schema pathnames.
+     * Clear the schemas to be included.
+     * 
+     * @return this builder
+     */
+    @Nonnull public SchemaBuilder resetSchemas() {
+        sources.clear();
+        return this;
+    }
+    
+    /**
+     * Add schemas from the given schema pathnames.
      * 
      * @param schemaFilesOrDirectories files or directories which contains schema sources
      * 
@@ -199,11 +209,11 @@ public class SchemaBuilder {
     }
 
     /**
-     * Adds schemas from the given schema sources.
+     * Add schemas from the given schema sources.
      * 
      * @param schemaFilesOrDirectories files or directories which contains schema sources
      * 
-     * @return the constructed schema
+     * @return this builder
      */
     @Nonnull public SchemaBuilder addSchemas(@Nonnull @NullableElements final File... schemaFilesOrDirectories) {
         Constraint.isNotNull(schemaFilesOrDirectories, "Schema source files cannot be null");
@@ -219,7 +229,7 @@ public class SchemaBuilder {
     }
 
     /**
-     * Adds schemas from the given schema input streams.
+     * Add schemas from the given schema input streams.
      * 
      * @param schemaSources schema input streams
      * 
@@ -238,7 +248,7 @@ public class SchemaBuilder {
     }
     
     /**
-     * Adds schemas from the given schema sources.
+     * Add schemas from the given schema sources.
      * 
      * @param schemaSources schema sources
      * 
@@ -257,7 +267,7 @@ public class SchemaBuilder {
     }
 
     /**
-     * Builds a schema from the given schema sources.
+     * Build a schema from the given schema sources.
      * 
      * @return the constructed schema
      * @throws SAXException thrown if there is a problem converting the schema sources into a schema
@@ -288,7 +298,7 @@ public class SchemaBuilder {
     }
 
     /**
-     * Gets all of the schema files in the given set of readable files, directories or subdirectories.
+     * Get all of the schema files in the given set of readable files, directories or subdirectories.
      * 
      * @param schemaFilesOrDirectories the sources to pull from
      * 
