@@ -48,6 +48,7 @@ public class ClasspathResolver implements EntityResolver, LSResourceResolver {
     private final Logger log = LoggerFactory.getLogger(ClasspathResolver.class);
 
     /** {@inheritDoc} */
+    @Override
     public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
         InputStream resourceStream = resolver(publicId, systemId);
         if (resourceStream != null) {
@@ -61,6 +62,7 @@ public class ClasspathResolver implements EntityResolver, LSResourceResolver {
     }
 
     /** {@inheritDoc} */
+    @Override
     public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
         return new LSInputImpl(publicId, systemId, resolver(publicId, systemId));
     }
@@ -108,7 +110,7 @@ public class ClasspathResolver implements EntityResolver, LSResourceResolver {
         /** Public ID of the resolved resource. */
         private String publicId;
 
-        /** System ID of the resolved recource. */
+        /** System ID of the resolved resource. */
         private String systemId;
 
         /** Resolved resource. */
@@ -128,36 +130,43 @@ public class ClasspathResolver implements EntityResolver, LSResourceResolver {
         }
 
         /** {@inheritDoc} */
+        @Override
         public String getBaseURI() {
             return null;
         }
 
         /** {@inheritDoc} */
+        @Override
         public InputStream getByteStream() {
             return buffInput;
         }
 
         /** {@inheritDoc} */
+        @Override
         public boolean getCertifiedText() {
             return false;
         }
 
         /** {@inheritDoc} */
+        @Override
         public Reader getCharacterStream() {
             return new InputStreamReader(buffInput);
         }
 
         /** {@inheritDoc} */
+        @Override
         public String getEncoding() {
             return null;
         }
 
         /** {@inheritDoc} */
+        @Override
         public String getPublicId() {
             return publicId;
         }
 
         /** {@inheritDoc} */
+        @Override
         public String getStringData() {
             synchronized (buffInput) {
                 try {
@@ -172,39 +181,48 @@ public class ClasspathResolver implements EntityResolver, LSResourceResolver {
         }
 
         /** {@inheritDoc} */
+        @Override
         public String getSystemId() {
             return systemId;
         }
 
         /** {@inheritDoc} */
+        @Override
         public void setBaseURI(String uri) {
         }
 
         /** {@inheritDoc} */
+        @Override
         public void setByteStream(InputStream byteStream) {
         }
 
         /** {@inheritDoc} */
+        @Override
         public void setCertifiedText(boolean isCertifiedText) {
         }
 
         /** {@inheritDoc} */
+        @Override
         public void setCharacterStream(Reader characterStream) {
         }
 
         /** {@inheritDoc} */
+        @Override
         public void setEncoding(String encoding) {
         }
 
         /** {@inheritDoc} */
+        @Override
         public void setPublicId(String id) {
         }
 
         /** {@inheritDoc} */
+        @Override
         public void setStringData(String stringData) {
         }
 
         /** {@inheritDoc} */
+        @Override
         public void setSystemId(String id) {
         }
     }
