@@ -37,12 +37,10 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
 import net.shibboleth.utilities.java.support.component.DestroyedComponentException;
 import net.shibboleth.utilities.java.support.component.UninitializedComponentException;
 import net.shibboleth.utilities.java.support.component.UnmodifiableComponentException;
-import net.shibboleth.utilities.java.support.resource.ShibbolethResource;
-import net.shibboleth.utilities.java.support.resource.TestResourceConverter;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool.DocumentBuilderProxy;
-import net.shibboleth.utilities.java.support.xml.SchemaBuilder.SchemaLanguage;
 
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -72,7 +70,7 @@ public class BasicParserPoolTest {
     }
     
     
-    @Test public void testParams() throws SAXException, ComponentInitializationException, XMLParserException {
+    @Test public void testParams() throws SAXException, ComponentInitializationException, XMLParserException, IOException {
 
         Map<String, Object> attributes = new HashMap<String, Object>();
         attributes.put("http://apache.org/xml/features/dom/create-entity-ref-nodes", false);
@@ -93,8 +91,10 @@ public class BasicParserPoolTest {
         basicParserPool.setIgnoreComments(true);
         basicParserPool.setIgnoreElementContentWhitespace(true);
         basicParserPool.setNamespaceAware(true);
-        ShibbolethResource r = TestResourceConverter.of(new ClassPathResource(SCHEMA_FILE));
-        Schema schema = SchemaBuilder.buildSchema(SchemaLanguage.XML, r);
+        Resource r = new ClassPathResource(SCHEMA_FILE);
+        final SchemaBuilder schemaBuilder = new SchemaBuilder();
+        schemaBuilder.addSchemas(r.getInputStream());
+        Schema schema = schemaBuilder.buildSchema();
         basicParserPool.setSchema(schema);
         basicParserPool.setXincludeAware(true);
 
@@ -169,7 +169,7 @@ public class BasicParserPoolTest {
         Assert.assertFalse(basicParserPool.isXincludeAware(), "pool isXIncludeAware");
     }
 
-    @Test public void testInit() throws ComponentInitializationException, SAXException, XMLParserException {
+    @Test public void testInit() throws ComponentInitializationException, SAXException, XMLParserException, IOException {
         Boolean thrown = false;
 
         try {
@@ -264,8 +264,10 @@ public class BasicParserPoolTest {
         }
         Assert.assertTrue(thrown, "setNamespaceAware after init");
 
-        ShibbolethResource r = TestResourceConverter.of(new ClassPathResource(SCHEMA_FILE));
-        Schema schema = SchemaBuilder.buildSchema(SchemaLanguage.XML, r);
+        Resource r = new ClassPathResource(SCHEMA_FILE);
+        final SchemaBuilder schemaBuilder = new SchemaBuilder();
+        schemaBuilder.addSchemas(r.getInputStream());
+        Schema schema = schemaBuilder.buildSchema();
 
         thrown = false;
         try {
@@ -294,7 +296,7 @@ public class BasicParserPoolTest {
         basicParserPool.destroy();
     }
 
-    @Test public void testDestroy() throws ComponentInitializationException, SAXException {
+    @Test public void testDestroy() throws ComponentInitializationException, SAXException, IOException {
         BasicParserPool pool = new BasicParserPool();
         pool.destroy();
 
@@ -372,8 +374,10 @@ public class BasicParserPoolTest {
         }
         Assert.assertTrue(thrown, "setNamespaceAware after destroy");
 
-        ShibbolethResource r = TestResourceConverter.of(new ClassPathResource(SCHEMA_FILE));
-        Schema schema = SchemaBuilder.buildSchema(SchemaLanguage.XML, r);
+        Resource r = new ClassPathResource(SCHEMA_FILE);
+        final SchemaBuilder schemaBuilder = new SchemaBuilder();
+        schemaBuilder.addSchemas(r.getInputStream());
+        Schema schema = schemaBuilder.buildSchema();
 
         thrown = false;
         try {
@@ -422,7 +426,7 @@ public class BasicParserPoolTest {
 
         basicParserPool.initialize();
         
-        ShibbolethResource r = TestResourceConverter.of(new ClassPathResource(XML_FILE));
+        Resource r = new ClassPathResource(XML_FILE);
         
         checkParsedDocument(basicParserPool.parse(r.getInputStream()));
         

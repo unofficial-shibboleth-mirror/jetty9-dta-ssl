@@ -27,9 +27,9 @@ import javax.xml.validation.Validator;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.resource.ShibbolethResource;
 import net.shibboleth.utilities.java.support.resource.TestResourceConverter;
-import net.shibboleth.utilities.java.support.xml.SchemaBuilder.SchemaLanguage;
 
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -67,9 +67,10 @@ public class SchemaBuilderTest {
 
     @Test public void testString() throws SAXException, IOException  {
 
-        Schema schema =
-                SchemaBuilder.buildSchema(SchemaLanguage.XML, FILE_ROOT + TEST_DIR + FIRST_SCHEMA_FILE, FILE_ROOT
-                        + TEST_DIR + SECOND_SCHEMA_FILE);
+        final SchemaBuilder builder = new SchemaBuilder();
+        builder.addSchemas(FILE_ROOT + TEST_DIR + FIRST_SCHEMA_FILE, FILE_ROOT + TEST_DIR + SECOND_SCHEMA_FILE);
+        
+        Schema schema = builder.buildSchema();
 
         Validator validator = schema.newValidator();
 
@@ -86,7 +87,9 @@ public class SchemaBuilderTest {
     }
 
     @Test public void testStringDir() throws SAXException, IOException {
-        Schema schema = SchemaBuilder.buildSchema(SchemaLanguage.XML, FILE_ROOT + TEST_DIR);
+        final SchemaBuilder builder = new SchemaBuilder();
+        builder.addSchemas(FILE_ROOT + TEST_DIR);
+        Schema schema = builder.buildSchema();
 
         Validator validator = schema.newValidator();
 
@@ -106,7 +109,9 @@ public class SchemaBuilderTest {
         File first = new File(FILE_ROOT + TEST_DIR + FIRST_SCHEMA_FILE);
         File second = new File(FILE_ROOT + TEST_DIR + SECOND_SCHEMA_FILE);
 
-        Schema schema = SchemaBuilder.buildSchema(SchemaLanguage.XML, first, second);
+        final SchemaBuilder builder = new SchemaBuilder();
+        builder.addSchemas(first, second);
+        Schema schema = builder.buildSchema();
 
         Validator validator = schema.newValidator();
 
@@ -125,27 +130,9 @@ public class SchemaBuilderTest {
     @Test public void testDir() throws SAXException, IOException {
         File dir = new File(FILE_ROOT + TEST_DIR);
 
-        Schema schema = SchemaBuilder.buildSchema(SchemaLanguage.XML, dir);
-
-        Validator validator = schema.newValidator();
-
-        validator.validate(workingSource());
-
-        boolean thrown = false;
-        StreamSource fails = failingSource();
-        try {
-            validator.validate(fails);
-        } catch (Exception e) {
-            thrown = true;
-        }
-        Assert.assertTrue(thrown, "Should fail to validate");
-    }
-
-    @Test public void testResource() throws SAXException, IOException,  ComponentInitializationException {
-        ShibbolethResource first = TestResourceConverter.of(new ClassPathResource(TEST_DIR + FIRST_SCHEMA_FILE));
-        ShibbolethResource second = TestResourceConverter.of(new ClassPathResource(TEST_DIR + SECOND_SCHEMA_FILE));
-
-        Schema schema = SchemaBuilder.buildSchema(SchemaLanguage.XML, first, second);
+        final SchemaBuilder builder = new SchemaBuilder();
+        builder.addSchemas(dir);
+        Schema schema = builder.buildSchema();
 
         Validator validator = schema.newValidator();
 
@@ -162,10 +149,12 @@ public class SchemaBuilderTest {
     }
 
     @Test public void testInputStream() throws SAXException, IOException, ComponentInitializationException {
-        ShibbolethResource first = TestResourceConverter.of(new ClassPathResource(TEST_DIR + FIRST_SCHEMA_FILE));
-        ShibbolethResource second = TestResourceConverter.of(new ClassPathResource(TEST_DIR + SECOND_SCHEMA_FILE));
+        Resource first = new ClassPathResource(TEST_DIR + FIRST_SCHEMA_FILE);
+        Resource second = new ClassPathResource(TEST_DIR + SECOND_SCHEMA_FILE);
 
-        Schema schema = SchemaBuilder.buildSchema(SchemaLanguage.XML, first.getInputStream(), second.getInputStream());
+        final SchemaBuilder builder = new SchemaBuilder();
+        builder.addSchemas(first.getInputStream(), second.getInputStream());
+        Schema schema = builder.buildSchema();
 
         Validator validator = schema.newValidator();
 
