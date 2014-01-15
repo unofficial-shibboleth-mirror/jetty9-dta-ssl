@@ -23,10 +23,9 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.resource.ShibbolethResource;
-import net.shibboleth.utilities.java.support.resource.TestResourceConverter;
 
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -48,10 +47,10 @@ public class DomTypeSupportTest {
         parserPool = pool;
         
         DocumentBuilder builder = parserPool.getBuilder();
-        ShibbolethResource res = TestResourceConverter.of(new ClassPathResource("data/net/shibboleth/utilities/java/support/xml/getXSIType.xml"));
+        Resource res = new ClassPathResource("data/net/shibboleth/utilities/java/support/xml/getXSIType.xml");
         xsStringXSITypeElement = (Element) builder.parse(res.getInputStream()).getFirstChild();
 
-        res = TestResourceConverter.of(new ClassPathResource("data/net/shibboleth/utilities/java/support/xml/noXSIType.xml"));
+        res = new ClassPathResource("data/net/shibboleth/utilities/java/support/xml/noXSIType.xml");
         noXSITypeElement = (Element) builder.parse(res.getInputStream()).getFirstChild();
         
         if (null != builder) {

@@ -25,8 +25,6 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
 
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.resource.ShibbolethResource;
-import net.shibboleth.utilities.java.support.resource.TestResourceConverter;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -48,9 +46,9 @@ public class SchemaBuilderTest {
 
     private static final String SECOND_SCHEMA_FILE = "schemaBuilderTest-schemaSecondLoaded.xsd";
 
-    private ShibbolethResource works;
+    private Resource works;
 
-    private ShibbolethResource fails;
+    private Resource fails;
 
     private StreamSource workingSource() throws IOException {
         return new StreamSource(works.getInputStream());
@@ -61,8 +59,8 @@ public class SchemaBuilderTest {
     }
 
     @BeforeTest public void setup()  {
-        works = TestResourceConverter.of(new ClassPathResource(TEST_DIR + "schemaBuilderTest-works.xml"));
-        fails = TestResourceConverter.of(new ClassPathResource(TEST_DIR + "schemaBuilderTest-fails.xml"));
+        works = new ClassPathResource(TEST_DIR + "schemaBuilderTest-works.xml");
+        fails = new ClassPathResource(TEST_DIR + "schemaBuilderTest-fails.xml");
     }
 
     @Test public void testString() throws SAXException, IOException  {
