@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -269,6 +270,9 @@ public class SchemaBuilder {
     /**
      * Build a schema from the given schema sources.
      * 
+     * <p>This method is thread-safe, although the various mutating methods to establish the state of
+     * the object are not.</p>
+     * 
      * @return the constructed schema
      * @throws SAXException thrown if there is a problem converting the schema sources into a schema
      */
@@ -282,12 +286,26 @@ public class SchemaBuilder {
             schemaFactory = SchemaFactory.newInstance(XMLConstants.RELAXNG_NS_URI);
         }
         
-        for (final Map.Entry<String, Boolean> entry : features.entrySet()) {
-            schemaFactory.setFeature(entry.getKey(), entry.getValue());
+        if (features.isEmpty()) {
+            schemaFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        } else {
+            for (final Map.Entry<String, Boolean> entry : features.entrySet()) {
+                schemaFactory.setFeature(entry.getKey(), entry.getValue());
+            }
         }
 
-        for (final Map.Entry<String, Object> entry : properties.entrySet()) {
-            schemaFactory.setProperty(entry.getKey(), entry.getValue());
+        if (properties.isEmpty()) {
+            try {
+                schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+                schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+            } catch (SAXNotRecognizedException e) {
+                log.warn("Default properties limiting external schema/DTD access not supported by JAXP implementation",
+                        e);
+            }
+        } else {
+            for (final Map.Entry<String, Object> entry : properties.entrySet()) {
+                schemaFactory.setProperty(entry.getKey(), entry.getValue());
+            }
         }
         
         schemaFactory.setErrorHandler(errorHandler);
