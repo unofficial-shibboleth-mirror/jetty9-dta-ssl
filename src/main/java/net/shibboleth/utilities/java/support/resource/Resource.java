@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
  * Shibboleth components only implement this interface if they also implement the Spring Resource interface. Refer to
  * the Spring documentation to implement other versions of this in a spring free environment.
  * */
-public interface ShibbolethResource {
+public interface Resource {
 
     /**
      * Return whether this resource actually exists in physical form.
@@ -95,14 +95,17 @@ public interface ShibbolethResource {
 
     /**
      * Return an {@link InputStream}.
-     * <p>It is expected that each call creates a <i>fresh</i> stream.
-     * <p>This requirement is particularly important when you consider an API such
-     * as JavaMail, which needs to be able to read the stream multiple times when
-     * creating mail attachments. For such a use case, it is <i>required</i>
-     * that each {@code getInputStream()} call returns a fresh stream.
+     * <p>
+     * It is expected that each call creates a <i>fresh</i> stream.
+     * <p>
+     * This requirement is particularly important when you consider an API such as JavaMail, which needs to be able to
+     * read the stream multiple times when creating mail attachments. For such a use case, it is <i>required</i> that
+     * each {@code getInputStream()} call returns a fresh stream.
+     * 
      * @return the input stream for the underlying resource (must not be {@code null})
      * @throws IOException if the stream could not be opened
-     * @see org.springframework.mail.javamail.MimeMessageHelper#addAttachment(String, InputStreamSource)
+     * @see org.springframework.mail.javamail.MimeMessageHelper#addAttachment(String,
+     *      org.springframework.core.io.InputStreamSource)
      */
     @Nonnull InputStream getInputStream() throws IOException;
 
@@ -131,7 +134,7 @@ public interface ShibbolethResource {
      * @return the resource handle for the relative resource
      * @throws IOException if the relative resource cannot be determined
      */
-    ShibbolethResource createRelative(String relativePath) throws IOException;
+    Resource createRelativeResource(String relativePath) throws IOException;
 
     /**
      * Determine a filename for this resource, i.e. typically the last part of the path: for example, "myfile.txt".
