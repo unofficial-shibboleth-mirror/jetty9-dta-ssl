@@ -296,8 +296,8 @@ public class SchemaBuilder {
 
         if (properties.isEmpty()) {
             try {
-                schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-                schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+                schemaFactory.setProperty("http://javax.xml.XMLConstants/property/accessExternalDTD", "");
+                schemaFactory.setProperty("http://javax.xml.XMLConstants/property/accessExternalSchema", "");
             } catch (SAXNotRecognizedException e) {
                 log.warn("Default properties limiting external schema/DTD access not supported by JAXP implementation",
                         e);
