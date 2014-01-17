@@ -191,6 +191,20 @@ public class SchemaBuilder {
     }
     
     /**
+     * Set the schemas to load from the given schema sources (replaces any previously added).
+     * 
+     * @param schemaSources schema sources
+     */
+    @Nonnull public void setSchemas(@Nonnull @NullableElements final Collection<Source> schemaSources) {
+        Constraint.isNotNull(schemaSources, "Schema source file paths cannot be null");
+
+        resetSchemas();
+        if (!schemaSources.isEmpty()) {
+            addSchemas(schemaSources.toArray(new Source[schemaSources.size()]));
+        }
+    }
+    
+    /**
      * Add schemas from the given schema pathnames.
      * 
      * @param schemaFilesOrDirectories files or directories which contains schema sources
