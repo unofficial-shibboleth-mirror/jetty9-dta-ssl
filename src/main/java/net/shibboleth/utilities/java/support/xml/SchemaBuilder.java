@@ -17,9 +17,9 @@
 
 package net.shibboleth.utilities.java.support.xml;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -93,7 +93,7 @@ public class SchemaBuilder {
     @Nonnull private SchemaLanguage schemaLang;
 
     /** Sources of schema material compatible with JAXP. */
-    @Nonnull @NonnullElements private Collection<Source> sources;
+    @Nonnull @NonnullElements private List<Source> sources;
     
     /** Mechanism for resolving nested resources like included/imported schemas. */
     @Nullable private LSResourceResolver resourceResolver;
@@ -193,71 +193,32 @@ public class SchemaBuilder {
     /**
      * Set the schemas to load from the given schema sources (replaces any previously added).
      * 
+     * <p>If the caller wishes to ensure the schemas are loaded in a particular order,
+     * the {@link Collection} implementation provided must be one that preserves order.
+     * The method will add the sources in the order returned by the collection.</p>
+     * 
      * @param schemaSources schema sources
      */
     @Nonnull public void setSchemas(@Nonnull @NullableElements final Collection<Source> schemaSources) {
         Constraint.isNotNull(schemaSources, "Schema source file paths cannot be null");
 
         resetSchemas();
-        if (!schemaSources.isEmpty()) {
-            addSchemas(schemaSources.toArray(new Source[schemaSources.size()]));
+        for (final Source schemaSource : schemaSources) {
+            addSchema(schemaSource);
         }
     }
     
-    /**
-     * Add schemas from the given schema pathnames.
-     * 
-     * @param schemaFilesOrDirectories files or directories which contains schema sources
-     * 
-     * @return this builder
-     */
-    @Nonnull public SchemaBuilder addSchemas(@Nonnull @NullableElements final String... schemaFilesOrDirectories) {
-        Constraint.isNotNull(schemaFilesOrDirectories, "Schema source file paths cannot be null");
-
-        for (String file : schemaFilesOrDirectories) {
-            if (file != null) {
-                addSchemas(new File(file));
-            }
-        }
-
-        return this;
-    }
-
-    /**
-     * Add schemas from the given schema sources.
-     * 
-     * @param schemaFilesOrDirectories files or directories which contains schema sources
-     * 
-     * @return this builder
-     */
-    @Nonnull public SchemaBuilder addSchemas(@Nonnull @NullableElements final File... schemaFilesOrDirectories) {
-        Constraint.isNotNull(schemaFilesOrDirectories, "Schema source files cannot be null");
-
-        final Collection<File> schemaFiles = getSchemaFiles(schemaFilesOrDirectories);
-        for (File schemaFile : schemaFiles) {
-            if (schemaFile != null) {
-                addSchemas(new StreamSource(schemaFile));
-            }
-        }
-
-        return this;
-    }
-
     /**
      * Add schemas from the given schema input streams.
      * 
-     * @param schemaSources schema input streams
+     * @param schemaSource schema input stream
      * 
      * @return this builder
      */
-    @Nonnull public SchemaBuilder addSchemas(@Nonnull @NullableElements final InputStream... schemaSources) {
-        Constraint.isNotNull(schemaSources, "Schema source input streams cannot be null");
+    @Nonnull public SchemaBuilder addSchema(@Nonnull @NullableElements final InputStream schemaSource) {
+        Constraint.isNotNull(schemaSource, "Schema source input stream cannot be null");
 
-        for (InputStream schemaSource : schemaSources) {
-            if (schemaSource != null) {
-                addSchemas(new StreamSource(schemaSource));
-            }
-        }
+        addSchema(new StreamSource(schemaSource));
 
         return this;
     }
@@ -265,18 +226,14 @@ public class SchemaBuilder {
     /**
      * Add schemas from the given schema sources.
      * 
-     * @param schemaSources schema sources
+     * @param schemaSource schema source
      * 
      * @return this builder
      */
-    @Nonnull public SchemaBuilder addSchemas(@Nonnull @NullableElements final Source... schemaSources) {
-        Constraint.isNotNull(schemaSources, "Schema source inputstreams can not be null");
+    @Nonnull public SchemaBuilder addSchema(@Nonnull @NullableElements final Source schemaSource) {
+        Constraint.isNotNull(schemaSource, "Schema source inputstreams can not be null");
 
-        for (Source schemaSource : schemaSources) {
-            if (schemaSource != null) {
-                sources.add(schemaSource);
-            }
-        }
+        sources.add(schemaSource);
 
         return this;
     }
@@ -329,39 +286,4 @@ public class SchemaBuilder {
         return schemaFactory.newSchema(sources.toArray(new Source[sources.size()]));
     }
 
-    /**
-     * Get all of the schema files in the given set of readable files, directories or subdirectories.
-     * 
-     * @param schemaFilesOrDirectories the sources to pull from
-     * 
-     * @return a collection of {@link File} objects
-     */
-    @Nonnull @NonnullElements private Collection<File> getSchemaFiles(
-            @Nonnull @NullableElements final File... schemaFilesOrDirectories) {
-        Constraint.isNotNull(schemaFilesOrDirectories, "Schema source file paths cannot be null");
-
-        Collection<File> schemas = Lists.newArrayList();
-        
-        for (File handle : schemaFilesOrDirectories) {
-            if (handle == null) {
-                continue;
-            }
-
-            if (!handle.canRead()) {
-                log.debug("Ignoring '{}', no read permission", handle.getAbsolutePath());
-            }
-
-            if (handle.isFile() && handle.getName().endsWith(schemaLang.getSchemaFileExtension())) {
-                log.debug("Added schema source '{}'", handle.getAbsolutePath());
-                schemas.add(handle);
-            }
-
-            if (handle.isDirectory()) {
-                schemas.addAll(getSchemaFiles(handle.listFiles()));
-            }
-        }
-        
-        return schemas;
-    }
-    
 }

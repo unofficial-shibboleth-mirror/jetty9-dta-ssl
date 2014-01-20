@@ -93,7 +93,7 @@ public class BasicParserPoolTest {
         basicParserPool.setNamespaceAware(true);
         Resource r = new ClassPathResource(SCHEMA_FILE);
         final SchemaBuilder schemaBuilder = new SchemaBuilder();
-        schemaBuilder.addSchemas(r.getInputStream());
+        schemaBuilder.addSchema(r.getInputStream());
         Schema schema = schemaBuilder.buildSchema();
         basicParserPool.setSchema(schema);
         basicParserPool.setXincludeAware(true);
@@ -266,7 +266,7 @@ public class BasicParserPoolTest {
 
         Resource r = new ClassPathResource(SCHEMA_FILE);
         final SchemaBuilder schemaBuilder = new SchemaBuilder();
-        schemaBuilder.addSchemas(r.getInputStream());
+        schemaBuilder.addSchema(r.getInputStream());
         Schema schema = schemaBuilder.buildSchema();
 
         thrown = false;
@@ -376,7 +376,7 @@ public class BasicParserPoolTest {
 
         Resource r = new ClassPathResource(SCHEMA_FILE);
         final SchemaBuilder schemaBuilder = new SchemaBuilder();
-        schemaBuilder.addSchemas(r.getInputStream());
+        schemaBuilder.addSchema(r.getInputStream());
         Schema schema = schemaBuilder.buildSchema();
 
         thrown = false;
