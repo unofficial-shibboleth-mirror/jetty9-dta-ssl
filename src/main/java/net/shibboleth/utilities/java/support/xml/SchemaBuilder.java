@@ -58,31 +58,30 @@ public class SchemaBuilder {
     public static enum SchemaLanguage {
 
         /** W3 XML Schema. */
-        XML("xsd"),
+        XML(XMLConstants.W3C_XML_SCHEMA_NS_URI),
 
         /** OASIS RELAX NG Schema. */
-        RELAX("rng");
+        RELAX(XMLConstants.RELAXNG_NS_URI);
 
-        /** File extension used for the schema files. */
-        @Nonnull private String schemaFileExtension;
-
+        /** Constant for use with {@link SchemaFactory#newInstance(String)}. */
+        @Nonnull private String schemaFactoryURI;
+        
         /**
          * Constructor.
          * 
-         * @param extension file extension used for the schema files
+         * @param uri schema factory identifier
          */
-        private SchemaLanguage(@Nonnull @NotEmpty String extension) {
-            schemaFileExtension = Constraint.isNotNull(StringSupport.trimOrNull(extension),
-                    "Extension cannot be null or empty");
+        private SchemaLanguage(@Nonnull @NotEmpty String uri) {
+            schemaFactoryURI = Constraint.isNotNull(StringSupport.trimOrNull(uri), "URI cannot be null or empty");
         }
 
         /**
-         * Gets the file extension used for the schema files.
+         * Get a {@link SchemaFactory} instance for a schema language.
          * 
-         * @return file extension used for the schema files
+         * @return  a factory instance
          */
-        @Nonnull @NotEmpty public String getSchemaFileExtension() {
-            return schemaFileExtension;
+        @Nonnull public SchemaFactory getSchemaFactory() {
+            return SchemaFactory.newInstance(schemaFactoryURI);
         }
     };
 
@@ -250,12 +249,7 @@ public class SchemaBuilder {
     @Nonnull public Schema buildSchema() throws SAXException {
         Constraint.isNotEmpty(sources, "No schema sources specified");
 
-        final SchemaFactory schemaFactory;
-        if (schemaLang == SchemaLanguage.XML) {
-            schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        } else {
-            schemaFactory = SchemaFactory.newInstance(XMLConstants.RELAXNG_NS_URI);
-        }
+        final SchemaFactory schemaFactory = schemaLang.getSchemaFactory();
         
         if (features.isEmpty()) {
             schemaFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
