@@ -259,18 +259,8 @@ public class SchemaBuilder {
             }
         }
 
-        if (properties.isEmpty()) {
-            try {
-                schemaFactory.setProperty("http://javax.xml.XMLConstants/property/accessExternalDTD", "");
-                schemaFactory.setProperty("http://javax.xml.XMLConstants/property/accessExternalSchema", "");
-            } catch (SAXNotRecognizedException e) {
-                log.warn("Default properties limiting external schema/DTD access not supported by JAXP implementation",
-                        e);
-            }
-        } else {
-            for (final Map.Entry<String, Object> entry : properties.entrySet()) {
-                schemaFactory.setProperty(entry.getKey(), entry.getValue());
-            }
+        for (final Map.Entry<String, Object> entry : properties.entrySet()) {
+            schemaFactory.setProperty(entry.getKey(), entry.getValue());
         }
         
         schemaFactory.setErrorHandler(errorHandler);
