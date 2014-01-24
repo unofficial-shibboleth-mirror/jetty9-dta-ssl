@@ -161,7 +161,7 @@ public class SchemaBuilder {
      * @param name The feature name, which is a non-null fully-qualified URI.
      * @param value The requested value of the feature (true or false).
      *
-     * @see {@link SchemaFactory#setFeature(String, boolean)}
+     * @see SchemaFactory#setFeature(String, boolean)
      */
     public void setFeature(@Nonnull @NotEmpty final String name, final boolean value) {
         features.put(name, value);
@@ -173,7 +173,7 @@ public class SchemaBuilder {
      * @param name The property name, which is a non-null fully-qualified URI.
      * @param object The requested value for the property.
      * 
-     * @see {@link SchemaFactory#setProperty(String, Object)}
+     * @see SchemaFactory#setProperty(String, Object)
      */
     public void setProperty(@Nonnull @NotEmpty final String name, @Nullable Object object) {
         properties.put(name, object);
