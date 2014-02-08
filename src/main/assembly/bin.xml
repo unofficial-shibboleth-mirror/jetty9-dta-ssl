@@ -1,9 +1,53 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
-<html><head>
-<title>404 Not Found</title>
-</head><body>
-<h1>Not Found</h1>
-<p>The requested URL /java-parent-projects/java-parent-project-v3/trunk/resource/maven/assembly-bin.xml was not found on this server.</p>
-<hr>
-<address>Apache/2.2.3 (CentOS) Server at svn.shibboleth.net Port 443</address>
-</body></html>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd" >
+          
+    <id>bin</id>
+    
+    <formats>
+        <format>zip</format>
+    </formats>
+
+    <dependencySets>
+        <!-- Example dependency set. Directory and file mode and scope are important -->
+        <!--
+        <dependencySet>
+            <outputDirectory>/lib</outputDirectory>
+            <directoryMode>774</directoryMode>
+            <fileMode>444</fileMode>
+            <scope>compile</scope>
+            <includes>
+                <include>*:jar:*</include>
+            </includes>
+        </dependencySet>
+        -->
+    </dependencySets>
+
+    <fileSets>
+        <!-- Documentation -->
+        <fileSet>
+            <directory>doc/</directory>
+            <outputDirectory>/doc</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>target/site/apidocs</directory>
+            <outputDirectory>/doc/api</outputDirectory>
+        </fileSet>
+
+        <!-- Copy execution scripts into the root of the package -->
+        <!--
+        <fileSet>
+            <directory>src/main/bash</directory>
+            <outputDirectory/>
+            <includes>
+                <include>*.sh</include>
+            </includes>
+            <fileMode>0755</fileMode>
+            <directoryMode>0755</directoryMode>
+        </fileSet>
+        -->
+        
+    </fileSets>
+
+</assembly>
