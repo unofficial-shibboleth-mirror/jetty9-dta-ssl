@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * A basic implementation of {@link UriComparator} that compares
  * URL's by canonicalizing them as per {@link SimpleUrlCanonicalizer},
  * and then compares the resulting string representations for equality 
- * using {@link Object#equals()}. If {@link #isCaseInsensitive()} is true,
+ * using {@link Object#equals}. If {@link #isCaseInsensitive()} is true,
  * then the equality test is instead performed using {@link String#equalsIgnoreCase(String)}.
  */
 public class BasicUrlComparator implements UriComparator {
