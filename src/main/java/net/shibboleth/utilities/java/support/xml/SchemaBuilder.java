@@ -42,7 +42,6 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXNotRecognizedException;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
