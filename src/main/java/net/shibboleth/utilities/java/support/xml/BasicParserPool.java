@@ -30,6 +30,7 @@ import java.util.Stack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -132,8 +133,8 @@ public class BasicParserPool extends AbstractDestructableInitializableComponent 
         builderPool = new Stack<SoftReference<DocumentBuilder>>();
         builderAttributes = Collections.emptyMap();
         coalescing = true;
-        expandEntityReferences = true;
-        builderFeatures = Collections.emptyMap();
+        expandEntityReferences = false;
+        builderFeatures = buildDefaultFeatures();
         ignoreComments = true;
         ignoreElementContentWhitespace = true;
         namespaceAware = true;
@@ -583,6 +584,28 @@ public class BasicParserPool extends AbstractDestructableInitializableComponent 
     private void checkNotInitializedNotDestroyed() {
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
+    }
+    
+    /**
+     * Build the default set of parser features to use.
+     * 
+     * <p>These will be overriden by a call to {@link #setBuilderFeatures(Map)}.</p>
+     * 
+     * <p>
+     * The default features set are:
+     * <ul>
+     * <li>{@link XMLConstants#FEATURE_SECURE_PROCESSING} = true</li>
+     * <li>http://apache.org/xml/features/disallow-doctype-decl = true</li>
+     * </ul>
+     * </p>
+     * 
+     * @return the default features map
+     */
+    protected Map<String, Boolean> buildDefaultFeatures() {
+        HashMap<String, Boolean> features = new HashMap<String, Boolean>();
+        features.put(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        features.put("http://apache.org/xml/features/disallow-doctype-decl", true);
+        return features;
     }
 
     /** A proxy that prevents the manages document builders retrieved from the parser pool. */

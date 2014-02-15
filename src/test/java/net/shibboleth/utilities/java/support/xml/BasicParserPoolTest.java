@@ -146,7 +146,8 @@ public class BasicParserPoolTest {
         basicParserPool.initialize();
 
         Assert.assertTrue(basicParserPool.getBuilderAttributes().isEmpty(), "Checking attributes");
-        Assert.assertTrue(basicParserPool.getBuilderFeatures().isEmpty(), "Checking features");
+        // This is false because we now default in certain security-related features
+        Assert.assertFalse(basicParserPool.getBuilderFeatures().isEmpty(), "Checking features");
 
         Assert.assertFalse(basicParserPool.isCoalescing(), "pool Coalescing");
 
