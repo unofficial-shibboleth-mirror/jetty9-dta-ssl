@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
 /** Tests for {@link ComponentSupport} */
 public class ComponentSupportTest {
 
-    @Test public void testDestroy() throws ComponentInitializationException, ComponentValidationException {
+    @Test public void testDestroy() throws ComponentInitializationException {
         ComponentSupport.destroy(null);
 
         ComponentSupport.destroy(new Object());
@@ -37,7 +37,7 @@ public class ComponentSupportTest {
         Assert.assertTrue(component.isDestroyed(), "Destroyed component destroyed");
     }
 
-    @Test public void testInitialized() throws ComponentInitializationException, ComponentValidationException {
+    @Test public void testInitialized() throws ComponentInitializationException {
         ComponentSupport.initialize(null);
 
         ComponentSupport.initialize(new Object());
@@ -47,18 +47,6 @@ public class ComponentSupportTest {
 
         ComponentSupport.initialize(component);
         Assert.assertTrue(component.isInitialized(), "Initialized component initialized");
-    }
-
-    @Test public void testValidate() throws ComponentInitializationException, ComponentValidationException {
-        ComponentSupport.validate(null);
-
-        ComponentSupport.validate(new Object());
-
-        ValidatabledComponent component = new ValidatabledComponent();
-        Assert.assertFalse(component.isValidated(), "New component not validated");
-
-        ComponentSupport.validate(component);
-        Assert.assertTrue(component.isValidated(), "Validated component validated");
     }
 
     @Test public void testIfDestroyedThrowDestroyedComponentException() {
@@ -141,11 +129,13 @@ public class ComponentSupportTest {
         private boolean destroyed;
 
         /** {@inheritDoc} */
+        @Override
         public void destroy() {
             destroyed = true;
         }
 
         /** {@inheritDoc} */
+        @Override
         public boolean isDestroyed() {
             return destroyed;
         }
@@ -156,32 +146,16 @@ public class ComponentSupportTest {
         private boolean initialized;
 
         /** {@inheritDoc} */
+        @Override
         public void initialize() throws ComponentInitializationException {
             initialized = true;
         }
 
         /** {@inheritDoc} */
+        @Override
         public boolean isInitialized() {
             return initialized;
         }
     }
 
-    private class ValidatabledComponent implements ValidatableComponent {
-
-        private boolean validated;
-
-        /**
-         * Gets whether the component was validated.
-         * 
-         * @return whether the component was validated
-         */
-        public boolean isValidated() {
-            return validated;
-        }
-
-        /** {@inheritDoc} */
-        public void validate() throws ComponentValidationException {
-            validated = true;
-        }
-    }
 }

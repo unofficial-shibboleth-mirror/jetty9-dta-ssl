@@ -65,24 +65,6 @@ public final class ComponentSupport {
     }
 
     /**
-     * If the given object is not null and an instance of {@link ValidatableComponent}, then this method calls the given
-     * object's {@link ValidatableComponent#validate()} method.
-     * 
-     * @param obj object to validate, may be null
-     * 
-     * @throws ComponentValidationException thrown if there is a problem validating the object
-     */
-    public static void validate(@Nullable final Object obj) throws ComponentValidationException {
-        if (obj == null) {
-            return;
-        }
-
-        if (obj instanceof ValidatableComponent) {
-            ((ValidatableComponent) obj).validate();
-        }
-    }
-
-    /**
      * Checks if a component is destroyed and, if so, throws a {@link DestroyedComponentException}. If the component is
      * also an instance of {@link IdentifiableComponent}, the component's ID is included in the error message.
      * 
