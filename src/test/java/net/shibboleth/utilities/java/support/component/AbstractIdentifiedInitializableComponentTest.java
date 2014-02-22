@@ -22,8 +22,8 @@ import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/** Test for {@link AbstractIdentifiableInitializableComponent}. */
-public class AbstractIdentifiableInitializableComponentTest {
+/** Test for {@link AbstractIdentifiedInitializableComponent}. */
+public class AbstractIdentifiedInitializableComponentTest {
 
     /** Test setting and retrieving the component's ID. */
     @Test public void testId() throws Exception {
@@ -82,6 +82,6 @@ public class AbstractIdentifiableInitializableComponentTest {
     }
 
     /** Mock component. */
-    private class MockComponent extends AbstractIdentifiableInitializableComponent {
+    private class MockComponent extends AbstractIdentifiedInitializableComponent {
     }
 }

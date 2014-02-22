@@ -66,7 +66,7 @@ public final class ComponentSupport {
 
     /**
      * Checks if a component is destroyed and, if so, throws a {@link DestroyedComponentException}. If the component is
-     * also an instance of {@link IdentifiableComponent}, the component's ID is included in the error message.
+     * also an instance of {@link IdentifiedComponent}, the component's ID is included in the error message.
      * 
      * @param component component to check
      */
@@ -74,9 +74,9 @@ public final class ComponentSupport {
         Constraint.isNotNull(component, "Component cannot be null");
 
         if (component.isDestroyed()) {
-            if (component instanceof IdentifiableComponent) {
+            if (component instanceof IdentifiedComponent) {
                 throw new DestroyedComponentException("Component '"
-                        + StringSupport.trimOrNull(((IdentifiableComponent) component).getId())
+                        + StringSupport.trimOrNull(((IdentifiedComponent) component).getId())
                         + "' has already been destroyed and can no longer be used.");
             } else {
                 throw new DestroyedComponentException("Component has already been destroyed and can no longer be used");
@@ -87,7 +87,7 @@ public final class ComponentSupport {
 
     /**
      * Checks if a component has not been initialized and, if so, throws a {@link UninitializedComponentException}. If
-     * the component is also an instance of {@link IdentifiableComponent}, the component's ID is included in the error
+     * the component is also an instance of {@link IdentifiedComponent}, the component's ID is included in the error
      * message.
      * 
      * @param component component to check
@@ -96,9 +96,9 @@ public final class ComponentSupport {
         Constraint.isNotNull(component, "Component cannot be null");
 
         if (!component.isInitialized()) {
-            if (component instanceof IdentifiableComponent) {
+            if (component instanceof IdentifiedComponent) {
                 throw new UninitializedComponentException("Component '"
-                        + StringSupport.trimOrNull(((IdentifiableComponent) component).getId())
+                        + StringSupport.trimOrNull(((IdentifiedComponent) component).getId())
                         + "' has not yet been initialized and cannot be used.");
             } else {
                 throw new UninitializedComponentException(
@@ -109,7 +109,7 @@ public final class ComponentSupport {
 
     /**
      * Checks if a component has been initialized and, if so, throws a {@link UnmodifiableComponentException}. If the
-     * component is also an instance of {@link IdentifiableComponent}, the component's ID is included in the error
+     * component is also an instance of {@link IdentifiedComponent}, the component's ID is included in the error
      * message.
      * 
      * @param component component to check
@@ -118,9 +118,9 @@ public final class ComponentSupport {
         Constraint.isNotNull(component, "Component cannot be null");
 
         if (component.isInitialized()) {
-            if (component instanceof IdentifiableComponent) {
+            if (component instanceof IdentifiedComponent) {
                 throw new UnmodifiableComponentException("Component '"
-                        + StringSupport.trimOrNull(((IdentifiableComponent) component).getId())
+                        + StringSupport.trimOrNull(((IdentifiedComponent) component).getId())
                         + "' has already been initialized and can no longer be modified");
             } else {
                 throw new UnmodifiableComponentException(

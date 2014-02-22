@@ -26,11 +26,11 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /**
- * Base class for components implementing {@link DestructableComponent}, {@link IdentifiableComponent} and
+ * Base class for components implementing {@link DestructableComponent}, {@link IdentifiedComponent} and
  * {@link InitializableComponent}.
  */
-public abstract class AbstractDestructableIdentifiableInitializableComponent extends
-        AbstractDestructableInitializableComponent implements IdentifiableComponent {
+public abstract class AbstractDestructableIdentifiedInitializableComponent extends
+        AbstractDestructableInitializableComponent implements IdentifiedComponent {
 
     /** ID of this component. */
     @Nullable @NonnullAfterInit private String id;
