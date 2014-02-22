@@ -39,7 +39,7 @@ import javax.xml.validation.Schema;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
-import net.shibboleth.utilities.java.support.component.AbstractDestructableInitializableComponent;
+import net.shibboleth.utilities.java.support.component.AbstractInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -76,7 +76,7 @@ import com.google.common.collect.Maps;
  * This implementation of {@link ParserPool} does not allow its properties to be modified once it has been initialized.
  */
 @ThreadSafe
-public class BasicParserPool extends AbstractDestructableInitializableComponent implements ParserPool {
+public class BasicParserPool extends AbstractInitializableComponent implements ParserPool {
 
     /** Class logger. */
     private final Logger log = LoggerFactory.getLogger(BasicParserPool.class);
@@ -145,6 +145,7 @@ public class BasicParserPool extends AbstractDestructableInitializableComponent 
     }
 
     /** {@inheritDoc} */
+    @Override
     @Nonnull public DocumentBuilder getBuilder() throws XMLParserException {
         checkInitializedNotDestroyed();
 
@@ -170,6 +171,7 @@ public class BasicParserPool extends AbstractDestructableInitializableComponent 
     }
 
     /** {@inheritDoc} */
+    @Override
     public void returnBuilder(@Nullable final DocumentBuilder builder) {
         checkInitializedNotDestroyed();
 
@@ -206,6 +208,7 @@ public class BasicParserPool extends AbstractDestructableInitializableComponent 
     }
 
     /** {@inheritDoc} */
+    @Override
     @Nonnull public Document newDocument() throws XMLParserException {
         checkInitializedNotDestroyed();
 
@@ -223,6 +226,7 @@ public class BasicParserPool extends AbstractDestructableInitializableComponent 
     }
 
     /** {@inheritDoc} */
+    @Override
     @Nonnull public Document parse(@Nonnull final InputStream input) throws XMLParserException {
         checkInitializedNotDestroyed();
 
@@ -242,6 +246,7 @@ public class BasicParserPool extends AbstractDestructableInitializableComponent 
     }
 
     /** {@inheritDoc} */
+    @Override
     @Nonnull public Document parse(@Nonnull final Reader input) throws XMLParserException {
         checkInitializedNotDestroyed();
 
@@ -633,83 +638,97 @@ public class BasicParserPool extends AbstractDestructableInitializableComponent 
         }
 
         /** {@inheritDoc} */
+        @Override
         public DOMImplementation getDOMImplementation() {
             checkValidState();
             return builder.getDOMImplementation();
         }
 
         /** {@inheritDoc} */
+        @Override
         public Schema getSchema() {
             checkValidState();
             return builder.getSchema();
         }
 
         /** {@inheritDoc} */
+        @Override
         public boolean isNamespaceAware() {
             checkValidState();
             return builder.isNamespaceAware();
         }
 
         /** {@inheritDoc} */
+        @Override
         public boolean isValidating() {
             checkValidState();
             return builder.isValidating();
         }
 
         /** {@inheritDoc} */
+        @Override
         public boolean isXIncludeAware() {
             checkValidState();
             return builder.isXIncludeAware();
         }
 
         /** {@inheritDoc} */
+        @Override
         public Document newDocument() {
             checkValidState();
             return builder.newDocument();
         }
 
         /** {@inheritDoc} */
+        @Override
         public Document parse(final File f) throws SAXException, IOException {
             checkValidState();
             return builder.parse(f);
         }
 
         /** {@inheritDoc} */
+        @Override
         public Document parse(final InputSource is) throws SAXException, IOException {
             checkValidState();
             return builder.parse(is);
         }
 
         /** {@inheritDoc} */
+        @Override
         public Document parse(final InputStream is) throws SAXException, IOException {
             checkValidState();
             return builder.parse(is);
         }
 
         /** {@inheritDoc} */
+        @Override
         public Document parse(final InputStream is, final String systemId) throws SAXException, IOException {
             checkValidState();
             return builder.parse(is, systemId);
         }
 
         /** {@inheritDoc} */
+        @Override
         public Document parse(final String uri) throws SAXException, IOException {
             checkValidState();
             return builder.parse(uri);
         }
 
         /** {@inheritDoc} */
+        @Override
         public void reset() {
             // ignore, entity resolver and error handler can't be changed
         }
 
         /** {@inheritDoc} */
+        @Override
         public void setEntityResolver(final EntityResolver er) {
             checkValidState();
             return;
         }
 
         /** {@inheritDoc} */
+        @Override
         public void setErrorHandler(final ErrorHandler eh) {
             checkValidState();
             return;
@@ -761,6 +780,7 @@ public class BasicParserPool extends AbstractDestructableInitializableComponent 
         }
 
         /** {@inheritDoc} */
+        @Override
         protected void finalize() throws Throwable {
             super.finalize();
             owningPool.returnBuilder(this);

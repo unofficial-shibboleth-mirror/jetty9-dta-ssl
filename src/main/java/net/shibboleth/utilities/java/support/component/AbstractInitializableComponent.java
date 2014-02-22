@@ -17,25 +17,57 @@
 
 package net.shibboleth.utilities.java.support.component;
 
-/** Base class for things that implement {@link InitializableComponent}. */
-public abstract class AbstractInitializableComponent implements InitializableComponent {
+/** Base class for things that implement {@link DestructableComponent} and {@link InitializableComponent}. */
+public abstract class AbstractInitializableComponent implements DestructableComponent,
+        InitializableComponent {
+
+    /** Whether this component has been destroyed. */
+    private boolean isDestroyed;
 
     /** Whether this component has been initialized. */
     private boolean isInitialized;
 
     /** {@inheritDoc} */
+    @Override
+    public final boolean isDestroyed() {
+        return isDestroyed;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public boolean isInitialized() {
         return isInitialized;
     }
 
     /** {@inheritDoc} */
+    @Override
+    public final synchronized void destroy() {
+        if (isDestroyed) {
+            return;
+        }
+
+        doDestroy();
+        isDestroyed = true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public final synchronized void initialize() throws ComponentInitializationException {
+        ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
         if (isInitialized()) {
             return;
         }
-        
+
         doInitialize();
         isInitialized = true;
+    }
+
+    /**
+     * Performs component specific destruction logic. This method is executed within the lock on the object being
+     * destroyed. The default implementation of this method is a no-op.
+     */
+    protected void doDestroy() {
+
     }
 
     /**
