@@ -27,7 +27,7 @@ public interface IdentifiableComponent extends IdentifiedComponent {
     /**
      * Set the ID of this component.
      * 
-     * @param componentId ID of the component
+     * @param componentId ID of this component
      */
     void setId(@Nonnull @NotEmpty final String componentId);
 }
