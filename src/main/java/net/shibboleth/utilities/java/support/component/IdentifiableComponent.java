@@ -21,13 +21,11 @@ import javax.annotation.Nonnull;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 
-/**
- * A {@link Component} which may have its name set.
- */
+/** A {@link Component} whose identifier can be set. */
 public interface IdentifiableComponent extends IdentifiedComponent {
 
     /**
-     * Sets the ID of this component. .
+     * Set the ID of this component.
      * 
      * @param componentId ID of the component
      */

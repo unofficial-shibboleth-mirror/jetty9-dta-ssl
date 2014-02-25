@@ -19,13 +19,13 @@ package net.shibboleth.utilities.java.support.component;
 
 import javax.annotation.Nullable;
 
-/** A {@link Component} which has and identifier. */
+/** A {@link Component} which has an identifier. */
 public interface IdentifiedComponent extends Component {
 
     /**
-     * Gets the ID of this component.
+     * Get the ID of this component.
      * 
-     * @return ID of this component
+     * @return ID of this component or null
      */
-    @Nullable public String getId();
+    @Nullable String getId();
 }
