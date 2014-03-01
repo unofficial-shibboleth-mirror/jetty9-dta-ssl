@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 /**
  * An {@link AbstractIdentifiedInitializableComponent} with a public setter.
  */
-public abstract class AbstractIdentifiableInitializeableComponent extends AbstractIdentifiedInitializableComponent
+public abstract class AbstractIdentifiableInitializableComponent extends AbstractIdentifiedInitializableComponent
         implements IdentifiableComponent {
 
     /** {@inheritDoc} */
