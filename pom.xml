@@ -51,6 +51,22 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
+        
+        <!-- OPTIONAL Compile Dependencies -->
+        <dependency>
+            <!-- Required if you're using classes from the logging package. -->
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>compile</scope><!-- normally runtime -->
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <!-- Required if you're using classes from the logging package. -->
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <scope>compile</scope><!-- normally runtime -->
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <!-- Required if you're using anything in the httpclient package -->
             <groupId>org.apache.httpcomponents</groupId>
@@ -69,8 +85,8 @@
             <artifactId>velocity</artifactId>
             <optional>true</optional>
         </dependency>
-
         <dependency>
+            <!--  Required if you're using classes from the security package. -->
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15</artifactId>
             <optional>true</optional>
@@ -78,16 +94,12 @@
 
         <!-- Provided Dependencies -->
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
         <!-- Runtime Dependencies -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-        </dependency>
 
         <!-- Test Dependencies -->
         <dependency>
@@ -98,11 +110,6 @@
         <dependency>
             <groupId>${spring.groupId}</groupId>
             <artifactId>spring-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>${spring.groupId}</groupId>
-            <artifactId>spring-webmvc</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
