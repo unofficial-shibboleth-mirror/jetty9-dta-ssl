@@ -54,12 +54,16 @@ public final class CookieManager extends AbstractInitializableComponent {
     
     /** Is cookie secure? */
     private boolean secure;
+
+    /** Is cookie marked HttpOnly? */
+    private boolean httpOnly;
     
     /** Maximum age in seconds, or -1 for session. */
     private int maxAge;
     
     /** Constructor. */
     public CookieManager() {
+        httpOnly = true;
         secure = true;
         maxAge = -1;
     }
@@ -119,6 +123,16 @@ public final class CookieManager extends AbstractInitializableComponent {
         secure = flag;
     }
 
+
+    /**
+     * Set the HttpOnly flag.
+     * 
+     * @param flag flag to set
+     */
+    public void setHttpOnly(final boolean flag) {
+        httpOnly = flag;
+    }
+    
     /**
      * Maximum age in seconds, or -1 for per-session.
      * 
@@ -150,6 +164,7 @@ public final class CookieManager extends AbstractInitializableComponent {
             cookie.setDomain(cookieDomain);
         }
         cookie.setSecure(secure);
+        cookie.setHttpOnly(httpOnly);
         cookie.setMaxAge(maxAge);
         
         httpResponse.addCookie(cookie);
@@ -167,6 +182,7 @@ public final class CookieManager extends AbstractInitializableComponent {
             cookie.setDomain(cookieDomain);
         }
         cookie.setSecure(secure);
+        cookie.setHttpOnly(httpOnly);
         cookie.setMaxAge(0);
         
         httpResponse.addCookie(cookie);
