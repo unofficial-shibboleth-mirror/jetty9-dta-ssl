@@ -251,7 +251,18 @@ public class SchemaBuilder {
         final SchemaFactory schemaFactory = schemaLang.getSchemaFactory();
         
         if (features.isEmpty()) {
+            log.info("No SchemaFactory features set, setting FEATURE_SECURE_PROCESSING by default");
             schemaFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            if (resourceResolver != null && !(resourceResolver instanceof ClasspathResolver)) {
+                log.warn("Custom LSResourceResolver supplied, may interact badly with secure processing mode");
+            } else {
+                try {
+                    schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "all");
+                    log.info("Allowing schema and DTD access to non-remote resources (LSResourceResolver unset)");
+                } catch (final SAXException e) {
+                    log.info("Unable to set ACCESS_EXTERNAL_SCHEMA property, classpath schema lookup might fail");
+                }
+            }
         } else {
             for (final Map.Entry<String, Boolean> entry : features.entrySet()) {
                 schemaFactory.setFeature(entry.getKey(), entry.getValue());
