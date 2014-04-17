@@ -40,7 +40,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * An HTML encoder.
+ * An HTML encoder derived from the OWASP ESAPI project. The encoded output will be safe for an HTML interpreter as
+ * unsafe characters are translated into their safe equivalent.
  * 
  * @see <a href="OSJ-69">https://issues.shibboleth.net/jira/browse/OSJ-69</a>
  * 
@@ -69,7 +70,7 @@ public final class HTMLEncoder {
      * Initialize an array to mark which characters are to be encoded. Store the hex string for that character to save
      * time later. If the character shouldn't be encoded, then store null.
      */
-    private static final String[] HEX = new String[256];
+    @Nonnull private static final String[] HEX = new String[256];
 
     static {
         for (char c = 0; c < 0xFF; c++) {
