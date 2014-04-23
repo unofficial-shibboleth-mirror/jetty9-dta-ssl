@@ -30,7 +30,9 @@
  * @created 2007
  */
 
-package net.shibboleth.utilities.java.support.encoder;
+package net.shibboleth.utilities.java.support.codec;
+
+import net.shibboleth.utilities.java.support.codec.HTMLEncoder;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

@@ -30,7 +30,7 @@
  * @created 2007
  */
 
-package net.shibboleth.utilities.java.support.encoder;
+package net.shibboleth.utilities.java.support.codec;
 
 import java.util.Collections;
 import java.util.HashMap;
