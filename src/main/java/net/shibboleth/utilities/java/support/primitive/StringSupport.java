@@ -24,6 +24,8 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -31,7 +33,13 @@ import java.util.StringTokenizer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.base.Predicates;
+import com.google.common.collect.Collections2;
+
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.logic.Constraint;
+import net.shibboleth.utilities.java.support.logic.TrimOrNullStringFunction;
 
 /** String utility methods. */
 public final class StringSupport {
@@ -156,5 +164,26 @@ public final class StringSupport {
         }
 
         return temp;
+    }
+    
+    /**
+     * Normalize a string collection by:
+     * <ol>
+     *   <li>Safely trimming each member.</li>
+     *   <li>Converting all empty members to null.</li>
+     *   <li>Removing any null members.</li>
+     * </ol>
+     * 
+     * @param values the collection of string values
+     * @return the normalized collection of string values
+     */
+    @Nonnull @NonnullElements public static Collection<String> normalizeStringCollection(
+            @Nullable @NullableElements Collection<String> values) {
+        if (values == null) {
+            return Collections.emptySet();
+        }
+        
+        return Collections2.filter(Collections2.transform(values, TrimOrNullStringFunction.INSTANCE),
+                Predicates.notNull());
     }
 }

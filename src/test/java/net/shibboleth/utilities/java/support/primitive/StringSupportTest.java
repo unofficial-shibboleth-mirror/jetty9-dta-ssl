@@ -18,12 +18,16 @@
 package net.shibboleth.utilities.java.support.primitive;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.Sets;
 
 /**
  * test for the various methods inside {@link StringSupport}
@@ -99,6 +103,32 @@ public class StringSupportTest {
 
         Assert.assertEquals(StringSupport.trim(TRIM_TEST1), TRIM_TEST1.trim(), "Trimming a string");
 
+    }
+    
+    @Test public void testNormalizeStringCollection() {
+        Collection<String> output;
+        
+        output = StringSupport.normalizeStringCollection(Sets.newHashSet("foo", "bar", "baz"));
+        Assert.assertEquals(output.size(), 3);
+        Assert.assertTrue(output.contains("foo"));
+        Assert.assertTrue(output.contains("bar"));
+        Assert.assertTrue(output.contains("baz"));
+        
+        output = StringSupport.normalizeStringCollection(Sets.newHashSet(" \t\t foo  ", "  ", "  baz \r\n"));
+        Assert.assertEquals(output.size(), 2);
+        Assert.assertTrue(output.contains("foo"));
+        Assert.assertTrue(output.contains("baz"));
+        
+        output = StringSupport.normalizeStringCollection(Sets.newHashSet("   foo   ", null, "baz"));
+        Assert.assertEquals(output.size(), 2);
+        Assert.assertTrue(output.contains("foo"));
+        Assert.assertTrue(output.contains("baz"));
+        
+        output = StringSupport.normalizeStringCollection(new HashSet<String>());
+        Assert.assertEquals(output.size(), 0);
+        
+        output = StringSupport.normalizeStringCollection(null);
+        Assert.assertEquals(output.size(), 0);
     }
 
 }
