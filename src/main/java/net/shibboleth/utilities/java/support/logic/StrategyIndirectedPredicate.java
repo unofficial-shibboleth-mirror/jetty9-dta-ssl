@@ -22,8 +22,11 @@ import java.util.Collection;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 
 /**
  * Generic predicate that checks a candidate {@link Object} returned by a lookup function
@@ -32,50 +35,43 @@ import com.google.common.base.Predicate;
  * @param <T1> type of object used as the source of the data to compare
  * @param <T2> type of object being compared
  */
-public class CollectionContainmentPredicate<T1,T2> implements Predicate<T1> {
+public class StrategyIndirectedPredicate<T1,T2> implements Predicate<T1> {
 
-    /** Lookup strategy for string. */
+    /** Lookup strategy for object. */
     @Nonnull private final Function<T1,T2> objectLookupStrategy;
     
-    /** Lookup strategy for collection. */
-    @Nonnull private final Function<T1,Collection<T2>> collectionLookupStrategy;
+    /** Predicate to apply to indirected object. */
+    @Nonnull private final Predicate<T2> predicate;
     
     /**
      * Constructor.
      * 
      * @param objectStrategy  lookup strategy for object
-     * @param collectionStrategy    lookup strategy for collection
+     * @param pred the predicate to apply
      */
-    public CollectionContainmentPredicate(@Nonnull final Function<T1,T2> objectStrategy,
-            @Nonnull final Function<T1,Collection<T2>> collectionStrategy) {
+    public StrategyIndirectedPredicate(@Nonnull final Function<T1,T2> objectStrategy,
+            @Nonnull final Predicate<T2> pred) {
         objectLookupStrategy = Constraint.isNotNull(objectStrategy, "Object lookup strategy cannot be null");
-        collectionLookupStrategy =
-                Constraint.isNotNull(collectionStrategy, "Collection lookup strategy cannot be null");
+        predicate = Constraint.isNotNull(pred, "Predicate cannot be null");
     }
 
     /**
-     * Constructor.
+     * Constructor that simplifies constructing a test for containment in a collection, which
+     * is a common use case.
      * 
      * @param objectStrategy  lookup strategy for object
-     * @param collection    collection to check
+     * @param collection a collection to test for containment
      */
-    public CollectionContainmentPredicate(@Nonnull final Function<T1,T2> objectStrategy,
-            @Nonnull final Collection<T2> collection) {
+    public StrategyIndirectedPredicate(@Nonnull final Function<T1,T2> objectStrategy,
+            @Nonnull @NonnullElements final Collection<T2> collection) {
         objectLookupStrategy = Constraint.isNotNull(objectStrategy, "Object lookup strategy cannot be null");
-        collectionLookupStrategy = FunctionSupport.<T1,Collection<T2>>constant(collection);
+        predicate = Predicates.in(collection);
     }
     
     /** {@inheritDoc} */
     @Override
     public boolean apply(@Nullable final T1 input) {
-        final T2 o = objectLookupStrategy.apply(input);
-        final Collection<T2> c = collectionLookupStrategy.apply(input);
-        
-        if (c != null && o != null) {
-            return c.contains(o);
-        }
-        
-        return false;
+        return predicate.apply(objectLookupStrategy.apply(input));
     }
 
 }
