@@ -53,6 +53,18 @@ public class CollectionContainmentPredicate<T1,T2> implements Predicate<T1> {
                 Constraint.isNotNull(collectionStrategy, "Collection lookup strategy cannot be null");
     }
 
+    /**
+     * Constructor.
+     * 
+     * @param objectStrategy  lookup strategy for object
+     * @param collection    collection to check
+     */
+    public CollectionContainmentPredicate(@Nonnull final Function<T1,T2> objectStrategy,
+            @Nonnull final Collection<T2> collection) {
+        objectLookupStrategy = Constraint.isNotNull(objectStrategy, "Object lookup strategy cannot be null");
+        collectionLookupStrategy = FunctionSupport.<T1,Collection<T2>>constant(collection);
+    }
+    
     /** {@inheritDoc} */
     @Override
     public boolean apply(@Nullable final T1 input) {
