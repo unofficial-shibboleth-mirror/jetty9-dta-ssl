@@ -38,6 +38,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpUpgradeHandler;
 import javax.servlet.http.Part;
 
 import net.shibboleth.utilities.java.support.logic.Constraint;
@@ -71,6 +72,11 @@ public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
     /** {@inheritDoc} */
     public int getContentLength() {
         return getCurrent().getContentLength();
+    }
+
+    /** {@inheritDoc} */
+    public long getContentLengthLong() {
+        return getCurrent().getContentLengthLong();
     }
 
     /** {@inheritDoc} */
@@ -300,6 +306,11 @@ public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
     }
 
     /** {@inheritDoc} */
+    public String changeSessionId() {
+       return getCurrent().changeSessionId();
+    }
+
+    /** {@inheritDoc} */
     public boolean isRequestedSessionIdValid() {
         return getCurrent().isRequestedSessionIdValid();
     }
@@ -378,6 +389,11 @@ public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
     /** {@inheritDoc} */
     public Part getPart(String name) throws IOException, ServletException {
         return getCurrent().getPart(name);
+    }
+
+    /** {@inheritDoc} */
+    public <T extends HttpUpgradeHandler> T upgrade(Class<T> handlerClass) throws IOException, ServletException {
+        return getCurrent().upgrade(handlerClass);
     }
 
     /**
