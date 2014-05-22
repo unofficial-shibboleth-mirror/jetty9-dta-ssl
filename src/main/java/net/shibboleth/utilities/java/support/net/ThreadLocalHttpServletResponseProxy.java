@@ -65,11 +65,6 @@ public class ThreadLocalHttpServletResponseProxy implements HttpServletResponse 
     }
 
     /** {@inheritDoc} */
-    public void setContentLengthLong(long len) {
-        getCurrent().setContentLengthLong(len);
-    }
-
-    /** {@inheritDoc} */
     public void setContentType(String type) {
         getCurrent().setContentType(type);
     }
