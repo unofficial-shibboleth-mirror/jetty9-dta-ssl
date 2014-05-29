@@ -30,7 +30,7 @@ import com.google.common.base.Predicates;
 
 /**
  * Generic predicate that checks a candidate {@link Object} returned by a lookup function
- * for containment in a {@link Collection} returned by another lookup function.
+ * against an injected predicate.
  * 
  * @param <T1> type of object used as the source of the data to compare
  * @param <T2> type of object being compared
