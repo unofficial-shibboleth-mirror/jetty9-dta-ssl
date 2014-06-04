@@ -258,9 +258,13 @@ public class SchemaBuilder {
             } else {
                 try {
                     schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "all");
-                    log.info("Allowing schema and DTD access to non-remote resources (LSResourceResolver unset)");
+                    if (resourceResolver == null) {
+                        log.info("Allowing schema and DTD access to non-remote resources (LSResourceResolver unset)");
+                    } else {
+                        log.info("Allowing schema and DTD access to non-remote resources (ClasspathResolver set)");
+                    }
                 } catch (final SAXException e) {
-                    log.info("Unable to set ACCESS_EXTERNAL_SCHEMA property, classpath schema lookup might fail");
+                    log.info("Unable to set ACCESS_EXTERNAL_SCHEMA property, classpath-based schema lookup might fail");
                 }
             }
         } else {
