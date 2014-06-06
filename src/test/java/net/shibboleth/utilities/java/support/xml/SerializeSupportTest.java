@@ -105,8 +105,8 @@ public class SerializeSupportTest {
 
     @Test(dependsOnMethods = {"testNodeToString"}) public void testLSOps() throws XMLParserException {
 
-        DOMImplementationLS domLS = SerializeSupport.getDomLsImplementation(parent);
-        LSSerializer serializer = SerializeSupport.getLsSerializer(domLS, null);
+        DOMImplementationLS domLS = SerializeSupport.getDOMImplementationLS(parent);
+        LSSerializer serializer = SerializeSupport.getLSSerializer(domLS, null);
 
         final LSOutput serializerOut = domLS.createLSOutput();
         ByteArrayOutputStream output = new ByteArrayOutputStream();

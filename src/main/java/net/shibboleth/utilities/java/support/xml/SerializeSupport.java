@@ -128,8 +128,8 @@ public final class SerializeSupport {
         Constraint.isNotNull(node, "Node may not be null");
         Constraint.isNotNull(output, "Outputstream may not be null");
 
-        final DOMImplementationLS domImplLS = getDomLsImplementation(node); 
-        final LSSerializer serializer = getLsSerializer(domImplLS, serializerParams);
+        final DOMImplementationLS domImplLS = getDOMImplementationLS(node); 
+        final LSSerializer serializer = getLSSerializer(domImplLS, serializerParams);
 
         final LSOutput serializerOut = domImplLS.createLSOutput();
         serializerOut.setByteStream(output);
@@ -153,7 +153,7 @@ public final class SerializeSupport {
      * 
      * @return a new LSSerializer instance
      */
-    @Nonnull public static LSSerializer getLsSerializer(@Nonnull final DOMImplementationLS domImplLS,
+    @Nonnull public static LSSerializer getLSSerializer(@Nonnull final DOMImplementationLS domImplLS,
             @Nullable final Map<String, Object> serializerParams) {
         Constraint.isNotNull(domImplLS, "DOM implementation can not be null");
         final LSSerializer serializer = domImplLS.createLSSerializer();
@@ -186,7 +186,7 @@ public final class SerializeSupport {
      * 
      * @return the Load/Store implementation, never null
      */
-    @Nonnull public static DOMImplementationLS getDomLsImplementation(@Nonnull final Node node) {
+    @Nonnull public static DOMImplementationLS getDOMImplementationLS(@Nonnull final Node node) {
         Constraint.isNotNull(node, "DOM node can not be null");
         final DOMImplementation domImpl;
         if (node instanceof Document) {
