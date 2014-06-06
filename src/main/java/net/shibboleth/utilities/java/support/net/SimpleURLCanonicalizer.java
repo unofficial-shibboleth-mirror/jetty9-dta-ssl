@@ -44,13 +44,13 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
  * <p>
  * </p>
  */
-public final class SimpleUrlCanonicalizer {
+public final class SimpleURLCanonicalizer {
     
     /** The scheme-to-port mapping data. */
     private static Map<String, Integer> schemePortMap = new HashMap<String, Integer>();
     
     /** Constructor to prevent instantiation.  */
-    private SimpleUrlCanonicalizer() {}
+    private SimpleURLCanonicalizer() {}
 
     /**
      * Register a new scheme-to-port mapping.
@@ -97,7 +97,7 @@ public final class SimpleUrlCanonicalizer {
      */
     @Nonnull @NotEmpty public static String canonicalize(@Nonnull @NotEmpty String url) throws MalformedURLException {
         Constraint.isFalse(Strings.isNullOrEmpty(url), "URL was null or empty");
-        UrlBuilder urlBuilder = new UrlBuilder(url);
+        URLBuilder urlBuilder = new URLBuilder(url);
         canonicalize(urlBuilder);
         return urlBuilder.buildURL();
     }
@@ -107,7 +107,7 @@ public final class SimpleUrlCanonicalizer {
      * 
      * @param url the URLBuilder to canonicalize
      */
-    private static void canonicalize(@Nonnull final UrlBuilder url) {
+    private static void canonicalize(@Nonnull final URLBuilder url) {
         if (url.getScheme() != null) {
             url.setScheme(url.getScheme().toLowerCase());
             

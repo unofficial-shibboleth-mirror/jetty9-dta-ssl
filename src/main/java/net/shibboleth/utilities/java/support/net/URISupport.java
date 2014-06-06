@@ -33,10 +33,10 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /** Helper methods for building {@link URI}s and parsing some HTTP URL information. */
 @Beta
-public final class UriSupport {
+public final class URISupport {
 
     /** Constructor. */
-    private UriSupport() {
+    private URISupport() {
     }
 
     /**
@@ -115,7 +115,7 @@ public final class UriSupport {
      * (for example because they are already Base64-encoded), then the approach of using {@link URI} 
      * instances to work with the URI/URL may not be appropriate.  Per its documentation, the 
      * {@link URI} constructors always encode '%' characters, which can lead to cases of double-encoding.
-     * For an alternative way of manipulating URL's see {@link UrlBuilder}.
+     * For an alternative way of manipulating URL's see {@link URLBuilder}.
      * </p>
      * 
      * @param prototype prototype URI that provides information other than the query
@@ -140,7 +140,7 @@ public final class UriSupport {
      * (for example because they are already Base64-encoded), then the approach of using {@link URI} 
      * instances to work with the URI/URL may not be appropriate.  Per its documentation, the 
      * {@link URI} constructors always encode '%' characters, which can lead to cases of double-encoding.
-     * For an alternative way of manipulating URL's see {@link UrlBuilder}.
+     * For an alternative way of manipulating URL's see {@link URLBuilder}.
      * </p>
      * 
      * @param prototype prototype URI that provides information other than the query

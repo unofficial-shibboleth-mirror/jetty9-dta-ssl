@@ -17,7 +17,7 @@
 
 package net.shibboleth.utilities.java.support.net;
 
-import net.shibboleth.utilities.java.support.net.SimpleUrlCanonicalizer;
+import net.shibboleth.utilities.java.support.net.SimpleURLCanonicalizer;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -26,28 +26,28 @@ import java.net.MalformedURLException;
 /**
  * Test the simple URL canonicalizer.
  */
-public class SimpleUrlCanonicalizerTest {
+public class SimpleURLCanonicalizerTest {
     
     @Test
     public void testScheme() throws MalformedURLException {
-        Assert.assertEquals(SimpleUrlCanonicalizer.canonicalize("HttPS://www.example.org/Foo/Bar/baz"), "https://www.example.org/Foo/Bar/baz");
+        Assert.assertEquals(SimpleURLCanonicalizer.canonicalize("HttPS://www.example.org/Foo/Bar/baz"), "https://www.example.org/Foo/Bar/baz");
     }
     
     @Test
     public void testHostname() throws MalformedURLException {
-        Assert.assertEquals(SimpleUrlCanonicalizer.canonicalize("https://WWW.eXample.orG/Foo/Bar/baz"), "https://www.example.org/Foo/Bar/baz");
+        Assert.assertEquals(SimpleURLCanonicalizer.canonicalize("https://WWW.eXample.orG/Foo/Bar/baz"), "https://www.example.org/Foo/Bar/baz");
     }
 
     @Test
     public void testPort() throws MalformedURLException {
-        Assert.assertEquals(SimpleUrlCanonicalizer.canonicalize("https://www.example.org:443/Foo/Bar/baz"), "https://www.example.org/Foo/Bar/baz");
-        Assert.assertEquals(SimpleUrlCanonicalizer.canonicalize("https://www.example.org:8443/Foo/Bar/baz"), "https://www.example.org:8443/Foo/Bar/baz");
+        Assert.assertEquals(SimpleURLCanonicalizer.canonicalize("https://www.example.org:443/Foo/Bar/baz"), "https://www.example.org/Foo/Bar/baz");
+        Assert.assertEquals(SimpleURLCanonicalizer.canonicalize("https://www.example.org:8443/Foo/Bar/baz"), "https://www.example.org:8443/Foo/Bar/baz");
         
-        Assert.assertEquals(SimpleUrlCanonicalizer.canonicalize("http://www.example.org:80/Foo/Bar/baz"), "http://www.example.org/Foo/Bar/baz");
-        Assert.assertEquals(SimpleUrlCanonicalizer.canonicalize("http://www.example.org:8080/Foo/Bar/baz"), "http://www.example.org:8080/Foo/Bar/baz");
+        Assert.assertEquals(SimpleURLCanonicalizer.canonicalize("http://www.example.org:80/Foo/Bar/baz"), "http://www.example.org/Foo/Bar/baz");
+        Assert.assertEquals(SimpleURLCanonicalizer.canonicalize("http://www.example.org:8080/Foo/Bar/baz"), "http://www.example.org:8080/Foo/Bar/baz");
         
-        SimpleUrlCanonicalizer.registerSchemePortMapping("myscheme", 1967);
-        Assert.assertEquals(SimpleUrlCanonicalizer.getRegisteredPort("MyScheme"), new Integer(1967));
+        SimpleURLCanonicalizer.registerSchemePortMapping("myscheme", 1967);
+        Assert.assertEquals(SimpleURLCanonicalizer.getRegisteredPort("MyScheme"), new Integer(1967));
     }
 
 }

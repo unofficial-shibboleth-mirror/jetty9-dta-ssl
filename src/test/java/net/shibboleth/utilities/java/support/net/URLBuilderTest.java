@@ -19,7 +19,7 @@ package net.shibboleth.utilities.java.support.net;
 
 import java.net.MalformedURLException;
 
-import net.shibboleth.utilities.java.support.net.UrlBuilder;
+import net.shibboleth.utilities.java.support.net.URLBuilder;
 
 import org.testng.annotations.Test;
 import org.testng.Assert;
@@ -27,7 +27,7 @@ import org.testng.Assert;
 /**
  * Tests building and parsing URLs with the builder.
  */
-public class UrlBuilderTest {
+public class URLBuilderTest {
     
     /**
      * Test with scheme and host.
@@ -36,7 +36,7 @@ public class UrlBuilderTest {
     @Test
     public void testURLBuilder1() throws MalformedURLException{
         String url = "http://www.example.com";
-        UrlBuilder builder1 = new UrlBuilder(url);
+        URLBuilder builder1 = new URLBuilder(url);
         Assert.assertEquals(builder1.getScheme(), "http");
         Assert.assertEquals(builder1.getUsername(), null);
         Assert.assertEquals(builder1.getPassword(), null);
@@ -56,7 +56,7 @@ public class UrlBuilderTest {
     @Test
     public void testURLBuilder2() throws MalformedURLException{
         String url = "https://www.example.com/foo/index.html";
-        UrlBuilder builder1 = new UrlBuilder(url);
+        URLBuilder builder1 = new URLBuilder(url);
         Assert.assertEquals(builder1.getScheme(), "https");
         Assert.assertEquals(builder1.getUsername(), null);
         Assert.assertEquals(builder1.getPassword(), null);
@@ -76,7 +76,7 @@ public class UrlBuilderTest {
     @Test
     public void testURLBuilder3() throws MalformedURLException{
         String url = "http://www.example.com:8080/index.html?attrib1=value1&attrib2=value&attrib3";
-        UrlBuilder builder1 = new UrlBuilder(url);
+        URLBuilder builder1 = new URLBuilder(url);
         Assert.assertEquals(builder1.getScheme(), "http");
         Assert.assertEquals(builder1.getUsername(), null);
         Assert.assertEquals(builder1.getPassword(), null);
@@ -96,7 +96,7 @@ public class UrlBuilderTest {
     @Test
     public void testURLBuilder4() throws MalformedURLException{
         String url = "https://www.example.com#anchor";
-        UrlBuilder builder1 = new UrlBuilder(url);
+        URLBuilder builder1 = new URLBuilder(url);
         Assert.assertEquals(builder1.getScheme(), "https");
         Assert.assertEquals(builder1.getUsername(), null);
         Assert.assertEquals(builder1.getPassword(), null);
@@ -116,7 +116,7 @@ public class UrlBuilderTest {
     @Test
     public void testURLBuilder5() throws MalformedURLException{
         String url = "http://www.example.com/index.html?attrib1=value1&attrib2=value&attrib3#anchor";
-        UrlBuilder builder1 = new UrlBuilder(url);
+        URLBuilder builder1 = new URLBuilder(url);
         Assert.assertEquals(builder1.getScheme(), "http");
         Assert.assertEquals(builder1.getUsername(), null);
         Assert.assertEquals(builder1.getPassword(), null);
@@ -136,7 +136,7 @@ public class UrlBuilderTest {
     @Test
     public void testURLBuilder6() throws MalformedURLException{
         String url = "http://user:pass@www.example.com";
-        UrlBuilder builder1 = new UrlBuilder(url);
+        URLBuilder builder1 = new URLBuilder(url);
         Assert.assertEquals(builder1.getScheme(), "http");
         Assert.assertEquals(builder1.getUsername(), "user");
         Assert.assertEquals(builder1.getPassword(), "pass");
@@ -156,7 +156,7 @@ public class UrlBuilderTest {
     @Test
     public void testURLBuilder7() throws MalformedURLException{
         String url = "http://user@www.example.com";
-        UrlBuilder builder1 = new UrlBuilder(url);
+        URLBuilder builder1 = new URLBuilder(url);
         Assert.assertEquals(builder1.getScheme(), "http");
         Assert.assertEquals(builder1.getUsername(), "user");
         Assert.assertEquals(builder1.getPassword(), null);

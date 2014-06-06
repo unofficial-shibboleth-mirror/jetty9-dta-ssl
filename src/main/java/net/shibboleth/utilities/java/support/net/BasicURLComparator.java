@@ -23,13 +23,13 @@ import javax.annotation.Nullable;
 
 
 /**
- * A basic implementation of {@link UriComparator} that compares
- * URL's by canonicalizing them as per {@link SimpleUrlCanonicalizer},
+ * A basic implementation of {@link URIComparator} that compares
+ * URL's by canonicalizing them as per {@link SimpleURLCanonicalizer},
  * and then compares the resulting string representations for equality 
  * using {@link Object#equals}. If {@link #isCaseInsensitive()} is true,
  * then the equality test is instead performed using {@link String#equalsIgnoreCase(String)}.
  */
-public class BasicUrlComparator implements UriComparator {
+public class BasicURLComparator implements URIComparator {
     
     /** The case-insensitivity flag. */
     private boolean caseInsensitive;
@@ -51,7 +51,7 @@ public class BasicUrlComparator implements UriComparator {
     }
 
     /** {@inheritDoc}.*/
-    public boolean compare(@Nullable final String uri1, @Nullable final String uri2) throws UriException {
+    public boolean compare(@Nullable final String uri1, @Nullable final String uri2) throws URIException {
         if (uri1 == null) {
             return uri2 == null;
         } else if (uri2 == null) {
@@ -60,16 +60,16 @@ public class BasicUrlComparator implements UriComparator {
             String uri1Canon = null;
             
             try {
-                uri1Canon = SimpleUrlCanonicalizer.canonicalize(uri1);
+                uri1Canon = SimpleURLCanonicalizer.canonicalize(uri1);
             } catch (MalformedURLException e) {
-                throw new UriException("URI was invalid: " + uri1Canon);
+                throw new URIException("URI was invalid: " + uri1Canon);
             }
             
             String uri2Canon = null;
             try {
-                uri2Canon = SimpleUrlCanonicalizer.canonicalize(uri2);
+                uri2Canon = SimpleURLCanonicalizer.canonicalize(uri2);
             } catch (MalformedURLException e) {
-                throw new UriException("URI was invalid: " + uri2Canon);
+                throw new URIException("URI was invalid: " + uri2Canon);
             }
             
             if (isCaseInsensitive()) {

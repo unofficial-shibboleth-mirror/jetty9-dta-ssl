@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 /**
  * Component for testing URI's as to equality.
  */
-public interface UriComparator {
+public interface URIComparator {
     
     /**
      * Compare two URI's (represented as strings) for equivalence.
@@ -33,8 +33,8 @@ public interface UriComparator {
      * 
      * @return true if the URI's are equivalent, false otherwise
      * 
-     * @throws UriException if the URI's can not be successfully evaluated
+     * @throws URIException if the URI's can not be successfully evaluated
      */
-    public boolean compare(@Nullable final String uri1, @Nullable final String uri2) throws UriException;
+    public boolean compare(@Nullable final String uri1, @Nullable final String uri2) throws URIException;
 
 }

@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 /**
  * Exception related to processing or using a URI.
  */
-public class UriException extends Exception {
+public class URIException extends Exception {
 
     /** Serial version UID. */
     private static final long serialVersionUID = -1461435058482575852L;
@@ -30,7 +30,7 @@ public class UriException extends Exception {
     /**
      * Constructor.
      */
-    public UriException() {
+    public URIException() {
         super();
     }
     
@@ -39,7 +39,7 @@ public class UriException extends Exception {
      * 
      * @param message exception message
      */
-    public UriException(@Nullable final String message) {
+    public URIException(@Nullable final String message) {
         super(message);
     }
     
@@ -48,7 +48,7 @@ public class UriException extends Exception {
      * 
      * @param wrappedException exception to be wrapped by this one
      */
-    public UriException(@Nullable final Exception wrappedException) {
+    public URIException(@Nullable final Exception wrappedException) {
         super(wrappedException);
     }
     
@@ -58,7 +58,7 @@ public class UriException extends Exception {
      * @param message exception message
      * @param wrappedException exception to be wrapped by this one
      */
-    public UriException(@Nullable final String message, @Nullable final Exception wrappedException) {
+    public URIException(@Nullable final String message, @Nullable final Exception wrappedException) {
         super(message, wrappedException);
     }
 }

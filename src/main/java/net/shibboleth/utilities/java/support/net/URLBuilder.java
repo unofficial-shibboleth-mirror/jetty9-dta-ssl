@@ -37,7 +37,7 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
  * 
  * This class is not thread-safe.
  */
-public class UrlBuilder {
+public class URLBuilder {
 
     /** URL schema (http, https, etc). */
     @Nullable private String scheme;
@@ -66,7 +66,7 @@ public class UrlBuilder {
     /**
      * Constructor.
      */
-    public UrlBuilder() {
+    public URLBuilder() {
         queryParams = new ArrayList<Pair<String, String>>();
     }
 
@@ -78,7 +78,7 @@ public class UrlBuilder {
      * @throws MalformedURLException thrown if the given base URL is not well formed
      * 
      */
-    public UrlBuilder(@Nonnull @NotEmpty final String baseURL) throws MalformedURLException {
+    public URLBuilder(@Nonnull @NotEmpty final String baseURL) throws MalformedURLException {
         URL url = new URL(baseURL);
         
         setScheme(url.getProtocol());
@@ -87,8 +87,8 @@ public class UrlBuilder {
         if (!Strings.isNullOrEmpty(userInfo)) {
             if (userInfo.contains(":")) {
                 String[] userInfoComps = userInfo.split(":");
-                setUsername(UriSupport.urlDecode(userInfoComps[0]));
-                setPassword(UriSupport.urlDecode(userInfoComps[1]));
+                setUsername(URISupport.urlDecode(userInfoComps[0]));
+                setPassword(URISupport.urlDecode(userInfoComps[1]));
             } else {
                 setUsername(userInfo);
             }
@@ -111,12 +111,12 @@ public class UrlBuilder {
             for (int i = 0; i < queryComps.length; i++) {
                 queryComp = queryComps[i];
                 if (!queryComp.contains("=")) {
-                    paramName = UriSupport.urlDecode(queryComp);
+                    paramName = URISupport.urlDecode(queryComp);
                     queryParams.add(new Pair<String, String>(paramName, null));
                 } else {
                     paramComps = queryComp.split("=");
-                    paramName = UriSupport.urlDecode(paramComps[0]);
-                    paramValue = UriSupport.urlDecode(paramComps[1]);
+                    paramName = URISupport.urlDecode(paramComps[0]);
+                    paramValue = URISupport.urlDecode(paramComps[1]);
                     queryParams.add(new Pair<String, String>(paramName, paramValue));
                 }
             }
@@ -334,11 +334,11 @@ public class UrlBuilder {
                 name = StringSupport.trimOrNull(param.getFirst());
 
                 if (name != null) {
-                    builder.append(UriSupport.urlEncode(name));
+                    builder.append(URISupport.urlEncode(name));
                     value = StringSupport.trimOrNull(param.getSecond());
                     if (value != null) {
                         builder.append("=");
-                        builder.append(UriSupport.urlEncode(value));
+                        builder.append(URISupport.urlEncode(value));
                     }
                     if (i < queryParams.size() - 1) {
                         builder.append("&");
