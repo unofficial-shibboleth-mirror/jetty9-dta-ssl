@@ -34,7 +34,7 @@ public class HttpServletSupportTest {
         Assert.assertEquals(response.getHeaderValue("Pragma"), "no-cache");
     }
     
-    @Test public void testGetFullRequestUri(){
+    @Test public void testGetFullRequestURI(){
 //        mock request doesn't do what we want, need to figure out something better
 //        MockHttpServletRequest request = new MockHttpServletRequest();
 //        

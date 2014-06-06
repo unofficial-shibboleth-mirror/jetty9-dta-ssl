@@ -89,7 +89,7 @@ public final class HttpServletSupport {
      * 
      * @return URL that was requested to generate this request
      */
-    public static URI getFullRequestUri(final HttpServletRequest request) {
+    public static URI getFullRequestURI(final HttpServletRequest request) {
         StringBuffer requestUrl = request.getRequestURL();
 
         String encodedQuery = StringSupport.trimOrNull(request.getQueryString());
