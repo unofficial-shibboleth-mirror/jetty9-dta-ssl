@@ -87,8 +87,8 @@ public class URLBuilder {
         if (!Strings.isNullOrEmpty(userInfo)) {
             if (userInfo.contains(":")) {
                 String[] userInfoComps = userInfo.split(":");
-                setUsername(URISupport.urlDecode(userInfoComps[0]));
-                setPassword(URISupport.urlDecode(userInfoComps[1]));
+                setUsername(URISupport.doURLDecode(userInfoComps[0]));
+                setPassword(URISupport.doURLDecode(userInfoComps[1]));
             } else {
                 setUsername(userInfo);
             }
@@ -111,12 +111,12 @@ public class URLBuilder {
             for (int i = 0; i < queryComps.length; i++) {
                 queryComp = queryComps[i];
                 if (!queryComp.contains("=")) {
-                    paramName = URISupport.urlDecode(queryComp);
+                    paramName = URISupport.doURLDecode(queryComp);
                     queryParams.add(new Pair<String, String>(paramName, null));
                 } else {
                     paramComps = queryComp.split("=");
-                    paramName = URISupport.urlDecode(paramComps[0]);
-                    paramValue = URISupport.urlDecode(paramComps[1]);
+                    paramName = URISupport.doURLDecode(paramComps[0]);
+                    paramValue = URISupport.doURLDecode(paramComps[1]);
                     queryParams.add(new Pair<String, String>(paramName, paramValue));
                 }
             }
@@ -334,11 +334,11 @@ public class URLBuilder {
                 name = StringSupport.trimOrNull(param.getFirst());
 
                 if (name != null) {
-                    builder.append(URISupport.urlEncode(name));
+                    builder.append(URISupport.doURLEncode(name));
                     value = StringSupport.trimOrNull(param.getSecond());
                     if (value != null) {
                         builder.append("=");
-                        builder.append(URISupport.urlEncode(value));
+                        builder.append(URISupport.doURLEncode(value));
                     }
                     if (i < queryParams.size() - 1) {
                         builder.append("&");

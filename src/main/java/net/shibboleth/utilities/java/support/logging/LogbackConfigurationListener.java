@@ -68,7 +68,7 @@ public class LogbackConfigurationListener implements ServletContextListener {
             return;
         }
 
-        final URL url = toUrl(servletContext, configPath);
+        final URL url = toURL(servletContext, configPath);
         if (url == null) {
             servletContext.log("Can not configure logback. Could not find logback"
                     + " config neither as servlet context-, nor as" + " classpath-, nor as url-, nor as file system"
@@ -121,7 +121,7 @@ public class LogbackConfigurationListener implements ServletContextListener {
      * 
      * @return the absolute URL representing the logback configuration file
      */
-    protected URL toUrl(final ServletContext servletContext, final String location) {
+    protected URL toURL(final ServletContext servletContext, final String location) {
         if (location.startsWith("/")) {
             final File file = new File(location);
             if (!file.exists()) {

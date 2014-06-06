@@ -218,10 +218,10 @@ public final class URISupport {
                 builder.append("&");
             }
 
-            builder.append(urlEncode(parameter.getFirst()));
+            builder.append(doURLEncode(parameter.getFirst()));
             builder.append("=");
             if (parameter.getSecond() != null) {
-                builder.append(urlEncode(parameter.getSecond()));
+                builder.append(doURLEncode(parameter.getSecond()));
             }
         }
 
@@ -245,7 +245,7 @@ public final class URISupport {
             return null;
         }
 
-        final String encodedName = urlEncode(trimmedName);
+        final String encodedName = doURLEncode(trimmedName);
         
         String[] candidates = trimmedQuery.split("&");
         for (String candidate : candidates) {
@@ -279,9 +279,9 @@ public final class URISupport {
         for (String paramPair : paramPairs) {
             param = paramPair.split("=");
             if (param.length == 1) {
-                queryParams.add(new Pair(urlDecode(param[0]), null));
+                queryParams.add(new Pair(doURLDecode(param[0]), null));
             } else {
-                queryParams.add(new Pair(urlDecode(param[0]), urlDecode(param[1])));
+                queryParams.add(new Pair(doURLDecode(param[0]), doURLDecode(param[1])));
             }
         }
 
@@ -360,12 +360,12 @@ public final class URISupport {
     }
 
     /**
-     * URL Decode the given string.
+     * Perform URL decoding on the given string.
      * 
      * @param value the string to decode
      * @return the decoded string
      */
-    public static String urlDecode(final String value) {
+    public static String doURLDecode(final String value) {
         if (value == null) {
             return null;
         }
@@ -379,12 +379,12 @@ public final class URISupport {
     }
 
     /**
-     * URL Encode the given string.
+     * Perform URL encoding on the given string.
      * 
      * @param value the string to encode
      * @return the encoded string
      */
-    public static String urlEncode(final String value) {
+    public static String doURLEncode(final String value) {
         if (value == null) {
             return null;
         }
