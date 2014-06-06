@@ -24,7 +24,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 /** Generates a type 4 UUID as an identifier. */
 @ThreadSafe
-public class Type4UuidIdentifierGenerationStrategy implements IdentifierGenerationStrategy {
+public class Type4UUIDIdentifierGenerationStrategy implements IdentifierGenerationStrategy {
 
     /** {@inheritDoc} */
     @Nonnull public String generateIdentifier() {

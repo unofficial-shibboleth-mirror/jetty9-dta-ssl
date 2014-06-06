@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class Type4UuidIdentifierGenerationStrategyTest {
+public class Type4UUIDIdentifierGenerationStrategyTest {
 
     /**
      * Test generateIdentifier by generating a large number of identifiers
@@ -18,7 +18,7 @@ public class Type4UuidIdentifierGenerationStrategyTest {
     @Test
     public void testGenerateIdentifier() {
       final Pattern ncNamePattern = Pattern.compile("^[a-zA-Z_][a-zA-Z0-9_\\-\\.]+$");
-      final IdentifierGenerationStrategy strat = new Type4UuidIdentifierGenerationStrategy();
+      final IdentifierGenerationStrategy strat = new Type4UUIDIdentifierGenerationStrategy();
       final int howMany = 1000;
       final Set<String> values = new HashSet<String>(1000);
       for (int iteration = 1; iteration<=howMany; iteration++) {

@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  * </code>
  * </p>
  */
-public class Slf4JLogChute implements LogChute {
+public class SLF4JLogChute implements LogChute {
 
     /** Property key for specifying the name for the log instance. */
     public static final String LOGCHUTE_SLF4J_NAME = "runtime.log.logsystem.slf4j.name";
@@ -58,7 +58,7 @@ public class Slf4JLogChute implements LogChute {
             name = DEFAULT_LOG_NAME;
         }
         log = LoggerFactory.getLogger(name);
-        log(LogChute.DEBUG_ID, "Slf4JLogChute name is '" + name + "'");
+        log(LogChute.DEBUG_ID, "SLF4JLogChute name is '" + name + "'");
     }
 
     /** {@inheritDoc} */
