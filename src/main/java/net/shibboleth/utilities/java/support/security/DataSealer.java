@@ -66,9 +66,6 @@ public class DataSealer extends AbstractInitializableComponent {
     /** Default key used for encryption. */
     @NonnullAfterInit private SecretKey cipherKey;
 
-    /** Default key used for MAC. */
-    @NonnullAfterInit private SecretKey macKey;
-
     /** Source of secure random data. */
     @NonnullAfterInit private SecureRandom random;
 
@@ -130,15 +127,6 @@ public class DataSealer extends AbstractInitializableComponent {
      */
     @NonnullAfterInit public SecretKey getCipherKey() {
         return cipherKey;
-    }
-
-    /**
-     * Returns the MAC key, if different from the encryption key.
-     * 
-     * @return the MAC key
-     */
-    @NonnullAfterInit public SecretKey getMacKey() {
-        return macKey;
     }
 
     /**
