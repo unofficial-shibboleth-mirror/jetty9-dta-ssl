@@ -24,7 +24,6 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
-import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
@@ -87,7 +86,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
 
         String uri = mappings.get(prefix);
         if (uri == null) {
-            return XMLConstants.NULL_NS_URI;
+            return javax.xml.XMLConstants.NULL_NS_URI;
         } else {
             return uri;
         }
@@ -124,8 +123,8 @@ public class SimpleNamespaceContext implements NamespaceContext {
     @Nonnull private Builder<String, String> getMappingsBuilder(){
         Builder mappingBuilder = new Builder<String, String>();
         
-        mappingBuilder.put(XmlConstants.XML_PREFIX, XmlConstants.XML_NS);
-        mappingBuilder.put(XmlConstants.XMLNS_PREFIX, XmlConstants.XMLNS_NS);
+        mappingBuilder.put(XMLConstants.XML_PREFIX, XMLConstants.XML_NS);
+        mappingBuilder.put(XMLConstants.XMLNS_PREFIX, XMLConstants.XMLNS_NS);
         
         return mappingBuilder;
     }

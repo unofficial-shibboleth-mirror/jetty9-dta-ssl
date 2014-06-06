@@ -20,7 +20,6 @@ package net.shibboleth.utilities.java.support.xml;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 
 import org.testng.Assert;
@@ -53,24 +52,24 @@ public class SimpleNamespaceContextTest {
     @Test public void testGetNamespaceURI() {
         Assert.assertEquals(stdContext.getNamespaceURI(PREFIX_A), URI_A);
         Assert.assertEquals(stdContext.getNamespaceURI(PREFIX_B), URI_B);
-        Assert.assertEquals(stdContext.getNamespaceURI(XmlConstants.XML_PREFIX), XmlConstants.XML_NS);
-        Assert.assertEquals(stdContext.getNamespaceURI(XmlConstants.XMLNS_PREFIX), XmlConstants.XMLNS_NS);
-        Assert.assertEquals(stdContext.getNamespaceURI("c"), XMLConstants.NULL_NS_URI);
+        Assert.assertEquals(stdContext.getNamespaceURI(XMLConstants.XML_PREFIX), XMLConstants.XML_NS);
+        Assert.assertEquals(stdContext.getNamespaceURI(XMLConstants.XMLNS_PREFIX), XMLConstants.XMLNS_NS);
+        Assert.assertEquals(stdContext.getNamespaceURI("c"), javax.xml.XMLConstants.NULL_NS_URI);
     }
 
     @Test public void testGetPrefix() {
         Assert.assertEquals(stdContext.getPrefix(URI_A), PREFIX_A);
         Assert.assertEquals(stdContext.getPrefix(URI_B), PREFIX_B);
-        Assert.assertEquals(stdContext.getPrefix(XmlConstants.XML_NS), XmlConstants.XML_PREFIX);
-        Assert.assertEquals(stdContext.getPrefix(XmlConstants.XMLNS_NS), XmlConstants.XMLNS_PREFIX);
+        Assert.assertEquals(stdContext.getPrefix(XMLConstants.XML_NS), XMLConstants.XML_PREFIX);
+        Assert.assertEquals(stdContext.getPrefix(XMLConstants.XMLNS_NS), XMLConstants.XMLNS_PREFIX);
         Assert.assertNull(stdContext.getPrefix("value:of:c"));
     }
 
     @Test public void testGetPrefixes() {
         Assert.assertEquals(stdContext.getPrefixes(URI_A).next(), PREFIX_A);
         Assert.assertEquals(stdContext.getPrefixes(URI_B).next(), PREFIX_B);
-        Assert.assertEquals(stdContext.getPrefixes(XmlConstants.XML_NS).next(), XmlConstants.XML_PREFIX);
-        Assert.assertEquals(stdContext.getPrefixes(XmlConstants.XMLNS_NS).next(), XmlConstants.XMLNS_PREFIX);
+        Assert.assertEquals(stdContext.getPrefixes(XMLConstants.XML_NS).next(), XMLConstants.XML_PREFIX);
+        Assert.assertEquals(stdContext.getPrefixes(XMLConstants.XMLNS_NS).next(), XMLConstants.XMLNS_PREFIX);
         Assert.assertFalse(stdContext.getPrefixes("value:of:c").hasNext());
     }
 }

@@ -18,7 +18,7 @@
 package net.shibboleth.utilities.java.support.xml;
 
 /** Enum representing the allowed values of the xml:space attribute. */
-public enum XmlSpace {
+public enum XMLSpace {
 
     /** xml:space value "default". */
     DEFAULT,
@@ -44,7 +44,7 @@ public enum XmlSpace {
      * @param value the value to parse
      * @return the corresponding XMLSpaceEnum
      */
-    public static XmlSpace parseValue(final String value) {
-        return XmlSpace.valueOf(value.toUpperCase());
+    public static XMLSpace parseValue(final String value) {
+        return XMLSpace.valueOf(value.toUpperCase());
     }
 }

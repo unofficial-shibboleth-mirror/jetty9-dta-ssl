@@ -65,16 +65,16 @@ public final class NamespaceSupport {
                             "Cannot replace an element's default namespace");
                 }
             }
-            attributeName = XmlConstants.XMLNS_PREFIX;
+            attributeName = XMLConstants.XMLNS_PREFIX;
         } else {
             if (nsPrefix.equals(element.getPrefix()) && !namespaceURI.equals(element.getNamespaceURI())) {
                 throw new DOMException(DOMException.INVALID_ACCESS_ERR,
                         "Cannot replace an element's default namespace");
             }
-            attributeName = XmlConstants.XMLNS_PREFIX + ":" + nsPrefix;
+            attributeName = XMLConstants.XMLNS_PREFIX + ":" + nsPrefix;
         }
 
-        element.setAttributeNS(XmlConstants.XMLNS_NS, attributeName, nsURI);
+        element.setAttributeNS(XMLConstants.XMLNS_NS, attributeName, nsURI);
     }
 
     /**
@@ -104,12 +104,12 @@ public final class NamespaceSupport {
             for (int i = 0; i < length; i++) {
                 attr = map.item(i);
                 value = attr.getNodeValue();
-                if (Objects.equal(attr.getNamespaceURI(), XmlConstants.XMLNS_NS)) {
+                if (Objects.equal(attr.getNamespaceURI(), XMLConstants.XMLNS_NS)) {
                     // at this point we are dealing with DOM Level 2 nodes only
-                    if (Objects.equal(attr.getLocalName(), XmlConstants.XMLNS_PREFIX) && prefix == null) {
+                    if (Objects.equal(attr.getLocalName(), XMLConstants.XMLNS_PREFIX) && prefix == null) {
                         // default namespace
                         return value;
-                    } else if (Objects.equal(attr.getPrefix(), XmlConstants.XMLNS_PREFIX)
+                    } else if (Objects.equal(attr.getPrefix(), XMLConstants.XMLNS_PREFIX)
                             && Objects.equal(attr.getLocalName(), prefix)) {
                         // non default namespace
                         return value;
@@ -162,9 +162,9 @@ public final class NamespaceSupport {
             String foundNamespace;
             for (int i = 0; i < length; i++) {
                 attr = map.item(i);
-                if (Objects.equal(attr.getNamespaceURI(), XmlConstants.XMLNS_NS)) {
+                if (Objects.equal(attr.getNamespaceURI(), XMLConstants.XMLNS_NS)) {
                     // DOM Level 2 nodes
-                    if ((Objects.equal(attr.getPrefix(), XmlConstants.XMLNS_PREFIX))
+                    if ((Objects.equal(attr.getPrefix(), XMLConstants.XMLNS_PREFIX))
                             && Objects.equal(attr.getNodeValue(), namespaceURI)) {
 
                         localName = attr.getLocalName();
@@ -221,9 +221,9 @@ public final class NamespaceSupport {
         // Check if the namespace for this element is already declared on this element
         boolean nsDeclaredOnElement = false;
         if (namespacePrefix == null) {
-            nsDeclaredOnElement = domElement.hasAttributeNS(null, XmlConstants.XMLNS_PREFIX);
+            nsDeclaredOnElement = domElement.hasAttributeNS(null, XMLConstants.XMLNS_PREFIX);
         } else {
-            nsDeclaredOnElement = domElement.hasAttributeNS(XmlConstants.XMLNS_NS, namespacePrefix);
+            nsDeclaredOnElement = domElement.hasAttributeNS(XMLConstants.XMLNS_NS, namespacePrefix);
         }
 
         if (!nsDeclaredOnElement) {
@@ -268,8 +268,8 @@ public final class NamespaceSupport {
             if (namespacePrefix != null) {
                 // If it's the "xmlns" prefix then it is the namespace declaration,
                 // don't try to look it up and redeclare it
-                if (namespacePrefix.equals(XmlConstants.XMLNS_PREFIX)
-                        || namespacePrefix.equals(XmlConstants.XML_PREFIX)) {
+                if (namespacePrefix.equals(XMLConstants.XMLNS_PREFIX)
+                        || namespacePrefix.equals(XMLConstants.XML_PREFIX)) {
                     continue;
                 }
 

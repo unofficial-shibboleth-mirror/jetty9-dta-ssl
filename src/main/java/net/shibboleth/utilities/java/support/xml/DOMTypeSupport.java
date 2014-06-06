@@ -36,7 +36,7 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
 /** Set of helper methods for working with DOM data types. */
-public final class DomTypeSupport {
+public final class DOMTypeSupport {
 
     /** JAXP DatatypeFactory. */
     private static DatatypeFactory dataTypeFactory;
@@ -45,7 +45,7 @@ public final class DomTypeSupport {
     private static Calendar baseline;    
     
     /** Constructor. */
-    private DomTypeSupport() {
+    private DOMTypeSupport() {
     }
 
     /**
@@ -103,7 +103,7 @@ public final class DomTypeSupport {
      */
     @Nullable public static QName getXSIType(@Nullable final Element e) {
         if (hasXSIType(e)) {
-            final Attr attribute = e.getAttributeNodeNS(XmlConstants.XSI_NS, "type");
+            final Attr attribute = e.getAttributeNodeNS(XMLConstants.XSI_NS, "type");
             final String attributeValue = attribute.getTextContent().trim();
             return QNameSupport.constructQName(e, attributeValue);
         }
@@ -119,7 +119,7 @@ public final class DomTypeSupport {
      */
     public static boolean hasXSIType(@Nullable final Element e) {
         if (e != null) {
-            if (e.getAttributeNodeNS(XmlConstants.XSI_NS, "type") != null) {
+            if (e.getAttributeNodeNS(XMLConstants.XSI_NS, "type") != null) {
                 return true;
             }
         }

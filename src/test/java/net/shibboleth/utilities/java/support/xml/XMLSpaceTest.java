@@ -21,23 +21,23 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * Tests for {@link XmlSpace};
+ * Tests for {@link XMLSpace};
  */
-public class XmlSpaceTest {
+public class XMLSpaceTest {
 
     @Test
     public void testToString() {
-        Assert.assertEquals(XmlSpace.DEFAULT.toString(), "default", "Default string must be \"default\"");
-        Assert.assertEquals(XmlSpace.PRESERVE.toString(), "preserve", "Preserve string must be \"preserve\"");
+        Assert.assertEquals(XMLSpace.DEFAULT.toString(), "default", "Default string must be \"default\"");
+        Assert.assertEquals(XMLSpace.PRESERVE.toString(), "preserve", "Preserve string must be \"preserve\"");
     }
 
     @Test
     public void testParseValue() {
-        Assert.assertEquals(XmlSpace.parseValue("default"), XmlSpace.DEFAULT, "\"default\" should return a DEFAULT type");
-        Assert.assertEquals(XmlSpace.parseValue("preserve"), XmlSpace.PRESERVE, "\"preserve\" should return a PRESERVE type");
+        Assert.assertEquals(XMLSpace.parseValue("default"), XMLSpace.DEFAULT, "\"default\" should return a DEFAULT type");
+        Assert.assertEquals(XMLSpace.parseValue("preserve"), XMLSpace.PRESERVE, "\"preserve\" should return a PRESERVE type");
         boolean thrown = false;
         try {
-            Assert.assertEquals(XmlSpace.parseValue("wibble"), XmlSpace.PRESERVE, "\"preserve\" should return a PRESERVE type");            
+            Assert.assertEquals(XMLSpace.parseValue("wibble"), XMLSpace.PRESERVE, "\"preserve\" should return a PRESERVE type");            
         } catch (IllegalArgumentException e) {
             thrown = true;
         }

@@ -225,11 +225,11 @@ public class AttributeSupportTest {
     }
 
     @Test public void testXMLSpace() {
-        Assert.assertEquals(AttributeSupport.getXMLSpace(goodBaseIdSpaceLang), XmlSpace.DEFAULT, "xml:space mismatch");
+        Assert.assertEquals(AttributeSupport.getXMLSpace(goodBaseIdSpaceLang), XMLSpace.DEFAULT, "xml:space mismatch");
         Assert.assertNull(AttributeSupport.getXMLSpace(noBaseIdSpaceLang), "xml:space found erroneously");
         Assert.assertNull(AttributeSupport.getXMLSpace(badSpace), "xml:space found erroneously");
 
-        Assert.assertEquals(AttributeSupport.getXMLSpace(preserveSpace), XmlSpace.PRESERVE, "xml:space mismatch");
+        Assert.assertEquals(AttributeSupport.getXMLSpace(preserveSpace), XMLSpace.PRESERVE, "xml:space mismatch");
 
         // test Add
         boolean thrown = false;
@@ -242,7 +242,7 @@ public class AttributeSupportTest {
 
         thrown = false;
         try {
-            AttributeSupport.addXMLSpace(null, XmlSpace.DEFAULT);
+            AttributeSupport.addXMLSpace(null, XMLSpace.DEFAULT);
         } catch (ConstraintViolationException e) {
             thrown = true;
         }
@@ -250,8 +250,8 @@ public class AttributeSupportTest {
 
         Assert.assertNull(AttributeSupport.getXMLSpace(createdElement),
                 "xml:space found erroneously (test setup failure)");
-        AttributeSupport.addXMLSpace(createdElement, XmlSpace.DEFAULT);
-        Assert.assertEquals(AttributeSupport.getXMLSpace(createdElement), XmlSpace.DEFAULT, "addXMLSpace failed");
+        AttributeSupport.addXMLSpace(createdElement, XMLSpace.DEFAULT);
+        Assert.assertEquals(AttributeSupport.getXMLSpace(createdElement), XMLSpace.DEFAULT, "addXMLSpace failed");
     }
 
     @Test public void testXMLLang() {
@@ -311,9 +311,9 @@ public class AttributeSupportTest {
     @Test public void testHasAttribute() {
         Assert.assertFalse(AttributeSupport.hasAttribute(createdElement, idAttrQName), "Attribute lookup by QName");
 
-        Assert.assertTrue(AttributeSupport.hasAttribute(goodBaseIdSpaceLang, XmlConstants.XML_BASE_ATTRIB_NAME),
+        Assert.assertTrue(AttributeSupport.hasAttribute(goodBaseIdSpaceLang, XMLConstants.XML_BASE_ATTRIB_NAME),
                 "attribute lookup by QName from file");
-        Assert.assertFalse(AttributeSupport.hasAttribute(noBaseIdSpaceLang, XmlConstants.XML_BASE_ATTRIB_NAME),
+        Assert.assertFalse(AttributeSupport.hasAttribute(noBaseIdSpaceLang, XMLConstants.XML_BASE_ATTRIB_NAME),
                 "attribute lookup by QName from file");
 
         Element child = (Element) createdElement.getFirstChild();
@@ -350,9 +350,9 @@ public class AttributeSupportTest {
 
     @Test public void testGetAttributeMethods() {
         // getAttribute(Element, QName)
-        Assert.assertNull(AttributeSupport.getAttribute(noBaseIdSpaceLang, XmlConstants.XML_ID_ATTRIB_NAME),
+        Assert.assertNull(AttributeSupport.getAttribute(noBaseIdSpaceLang, XMLConstants.XML_ID_ATTRIB_NAME),
                 "no xml:id (lookup by QName)");
-        Attr attr = AttributeSupport.getAttribute(goodBaseIdSpaceLang, XmlConstants.XML_ID_ATTRIB_NAME);
+        Attr attr = AttributeSupport.getAttribute(goodBaseIdSpaceLang, XMLConstants.XML_ID_ATTRIB_NAME);
         Assert.assertNotNull(attr, "Should have found xml:id attribute");
         Assert.assertEquals(attr.getValue(), "identifierGoodBaseIdSpaceLang",
                 "Should have found correct attribute by value for xml_id attribute");
@@ -360,23 +360,23 @@ public class AttributeSupportTest {
         // getAttributeValue(Element, QName)
         Assert.assertNull(AttributeSupport.getAttributeValue(goodBaseIdSpaceLang, null),
                 "no xml:id (lookup value with null QName)");
-        Assert.assertNull(AttributeSupport.getAttributeValue(null, XmlConstants.XML_ID_ATTRIB_NAME),
+        Assert.assertNull(AttributeSupport.getAttributeValue(null, XMLConstants.XML_ID_ATTRIB_NAME),
                 "no xml:id (lookup value with null element)");
-        Assert.assertNull(AttributeSupport.getAttributeValue(noBaseIdSpaceLang, XmlConstants.XML_ID_ATTRIB_NAME),
+        Assert.assertNull(AttributeSupport.getAttributeValue(noBaseIdSpaceLang, XMLConstants.XML_ID_ATTRIB_NAME),
                 "no xml:id (lookup value by QName)");
-        Assert.assertEquals(AttributeSupport.getAttributeValue(goodBaseIdSpaceLang, XmlConstants.XML_ID_ATTRIB_NAME),
+        Assert.assertEquals(AttributeSupport.getAttributeValue(goodBaseIdSpaceLang, XMLConstants.XML_ID_ATTRIB_NAME),
                 "identifierGoodBaseIdSpaceLang", "Should have found correct value for xml:id attribute by QName");
 
         // getAttributeValue(Element, String, String)
-        Assert.assertNull(AttributeSupport.getAttributeValue(badSpace, XmlConstants.XML_NS, null),
+        Assert.assertNull(AttributeSupport.getAttributeValue(badSpace, XMLConstants.XML_NS, null),
                 "no value lookup with null name)");
-        Assert.assertNull(AttributeSupport.getAttributeValue(badSpace, XmlConstants.XML_NS, ""),
+        Assert.assertNull(AttributeSupport.getAttributeValue(badSpace, XMLConstants.XML_NS, ""),
                 "no value lookup with empty name)");
-        Assert.assertNull(AttributeSupport.getAttributeValue(null, XmlConstants.XML_NS, "space"),
+        Assert.assertNull(AttributeSupport.getAttributeValue(null, XMLConstants.XML_NS, "space"),
                 "no value lookup with null element)");
-        Assert.assertNull(AttributeSupport.getAttributeValue(noBaseIdSpaceLang, XmlConstants.XML_NS, "space"),
+        Assert.assertNull(AttributeSupport.getAttributeValue(noBaseIdSpaceLang, XMLConstants.XML_NS, "space"),
                 "no xml:space (lookup value by name)");
-        Assert.assertEquals(AttributeSupport.getAttributeValue(badSpace, XmlConstants.XML_NS, "space"), "wibble",
+        Assert.assertEquals(AttributeSupport.getAttributeValue(badSpace, XMLConstants.XML_NS, "space"), "wibble",
                 "Should have found correct value for xml:space attribute by name");
 
         // getAttributeValueAsBoolean(Attribute)

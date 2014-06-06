@@ -20,7 +20,7 @@ package net.shibboleth.utilities.java.support.xml;
 import javax.xml.namespace.QName;
 
 /** XML related constants. */
-public final class XmlConstants {
+public final class XMLConstants {
 
     // XML
     /** XML core namespace. */
@@ -81,7 +81,7 @@ public final class XmlConstants {
     public static final QName XSI_NIL_ATTRIB_NAME = new QName(XSI_NS, "nil", XSI_PREFIX);
 
     /** Constructor. */
-    private XmlConstants() {
+    private XMLConstants() {
     }
 
 }

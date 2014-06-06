@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 /**
- * Tests for {@link DomTypeSupport};
+ * Tests for {@link DOMTypeSupport};
  */
 public class DomTypeSupportTest {
 
@@ -61,43 +61,43 @@ public class DomTypeSupportTest {
     
     
     @Test public void testDateTimeToLong() {
-        Assert.assertEquals(DomTypeSupport.dateTimeToLong("1970-01-01T00:00:01Z"), 1000, "Epoch plus one second");
-        Assert.assertEquals(DomTypeSupport.dateTimeToLong("1969-12-31T23:59:59Z"), -1000, "Epoch minus one second");
-        Assert.assertEquals(DomTypeSupport.dateTimeToLong("1970-01-01T00:00:00-05:00"), 5 * 3600 * 1000,
+        Assert.assertEquals(DOMTypeSupport.dateTimeToLong("1970-01-01T00:00:01Z"), 1000, "Epoch plus one second");
+        Assert.assertEquals(DOMTypeSupport.dateTimeToLong("1969-12-31T23:59:59Z"), -1000, "Epoch minus one second");
+        Assert.assertEquals(DOMTypeSupport.dateTimeToLong("1970-01-01T00:00:00-05:00"), 5 * 3600 * 1000,
                 "Epoch minus 5 hours timezone");
     }
 
     @Test public void testLongToDateTime() {
-        Assert.assertEquals(DomTypeSupport.longToDateTime(1000), "1970-01-01T00:00:01.000Z", "Epoch plus one second");
-        Assert.assertEquals(DomTypeSupport.longToDateTime(-1000), "1969-12-31T23:59:59.000Z", "Epoch minus one second");
+        Assert.assertEquals(DOMTypeSupport.longToDateTime(1000), "1970-01-01T00:00:01.000Z", "Epoch plus one second");
+        Assert.assertEquals(DOMTypeSupport.longToDateTime(-1000), "1969-12-31T23:59:59.000Z", "Epoch minus one second");
     }
 
     @Test public void testDurationToLong() {
-        Assert.assertEquals(DomTypeSupport.durationToLong("P0Y0M0DT00H00M01S"), 1000, "One second duration");
-        Assert.assertEquals(DomTypeSupport.durationToLong("-P1D"), -1 * 1000 * 24 * 3600, "Back One day duration");
+        Assert.assertEquals(DOMTypeSupport.durationToLong("P0Y0M0DT00H00M01S"), 1000, "One second duration");
+        Assert.assertEquals(DOMTypeSupport.durationToLong("-P1D"), -1 * 1000 * 24 * 3600, "Back One day duration");
     }
 
     @Test public void testLongToDuration() {
         // We have to check for two different possible return values because Oracle's and Xerces' implementations
         // are different.
         
-        String onesec = DomTypeSupport.longToDuration(1000);
+        String onesec = DOMTypeSupport.longToDuration(1000);
         Assert.assertTrue("P0Y0M0DT0H0M1.000S".equals(onesec) || "PT1.000S".equals(onesec), "One second duration");
 
-        String backday = DomTypeSupport.longToDuration(-1000*24*3600);
+        String backday = DOMTypeSupport.longToDuration(-1000*24*3600);
         Assert.assertTrue("-P0Y0M1DT0H0M0.000S".equals(backday) || "-P1DT0H0M0.000S".equals(backday), "Back one day duration");
     }
     
     @Test public void testGetXSIType() {
-        Assert.assertEquals(DomTypeSupport.getXSIType(xsStringXSITypeElement),
+        Assert.assertEquals(DOMTypeSupport.getXSIType(xsStringXSITypeElement),
                 new QName("http://www.w3.org/2001/XMLSchema", "string", "xs"),
                 "XSI type clash");
-        Assert.assertNull(DomTypeSupport.getXSIType(noXSITypeElement), "No xsiType expected");
+        Assert.assertNull(DOMTypeSupport.getXSIType(noXSITypeElement), "No xsiType expected");
     }
 
     @Test public void testHasXSIType() {
-        Assert.assertTrue(DomTypeSupport.hasXSIType(xsStringXSITypeElement)," Expected xsi:type");
-        Assert.assertFalse(DomTypeSupport.hasXSIType(noXSITypeElement), "No xsiType expected");
+        Assert.assertTrue(DOMTypeSupport.hasXSIType(xsStringXSITypeElement)," Expected xsi:type");
+        Assert.assertFalse(DOMTypeSupport.hasXSIType(noXSITypeElement), "No xsiType expected");
     }
 
 }

@@ -299,7 +299,7 @@ public final class ElementSupport {
                 if (first) {
                     first = false;
                 } else {
-                    builder.append(XmlConstants.LIST_DELIMITERS.charAt(0));
+                    builder.append(XMLConstants.LIST_DELIMITERS.charAt(0));
                 }
                 builder.append(((Text) node).getWholeText());
             }
@@ -320,7 +320,7 @@ public final class ElementSupport {
         if (element == null) {
             return Collections.emptyList();
         }
-        return StringSupport.stringToList(getElementContentAsString(element), XmlConstants.LIST_DELIMITERS);
+        return StringSupport.stringToList(getElementContentAsString(element), XMLConstants.LIST_DELIMITERS);
     }
 
     /**

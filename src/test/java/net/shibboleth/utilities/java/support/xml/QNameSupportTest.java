@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 /**
- * Tests for {@link DomTypeSupport};
+ * Tests for {@link DOMTypeSupport};
  */
 public class QNameSupportTest {
 

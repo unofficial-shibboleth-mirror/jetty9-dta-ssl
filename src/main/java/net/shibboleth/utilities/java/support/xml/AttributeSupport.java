@@ -50,7 +50,7 @@ public final class AttributeSupport {
         Constraint.isNotNull(element, "Element may not be null");
         Constraint.isNotNull(base, "base attribute value may not be null");
 
-        final Attr attr = constructAttribute(element.getOwnerDocument(), XmlConstants.XML_BASE_ATTRIB_NAME);
+        final Attr attr = constructAttribute(element.getOwnerDocument(), XMLConstants.XML_BASE_ATTRIB_NAME);
         attr.setValue(base);
         element.setAttributeNodeNS(attr);
     }
@@ -65,7 +65,7 @@ public final class AttributeSupport {
         Constraint.isNotNull(element, "Element may not be null");
         Constraint.isNotNull(id, "id attribute value may not be null");
 
-        final Attr attr = constructAttribute(element.getOwnerDocument(), XmlConstants.XML_ID_ATTRIB_NAME);
+        final Attr attr = constructAttribute(element.getOwnerDocument(), XMLConstants.XML_ID_ATTRIB_NAME);
         attr.setValue(id);
         element.setAttributeNodeNS(attr);
         element.setIdAttributeNode(attr, true);
@@ -81,7 +81,7 @@ public final class AttributeSupport {
         Constraint.isNotNull(element, "Element may not be null");
         Constraint.isNotNull(lang, "lang attribute value may not be null");
 
-        final Attr attr = constructAttribute(element.getOwnerDocument(), XmlConstants.XML_LANG_ATTRIB_NAME);
+        final Attr attr = constructAttribute(element.getOwnerDocument(), XMLConstants.XML_LANG_ATTRIB_NAME);
         attr.setValue(lang);
         element.setAttributeNodeNS(attr);
     }
@@ -92,11 +92,11 @@ public final class AttributeSupport {
      * @param element the element to which to add the attribute
      * @param space the space value
      */
-    public static void addXMLSpace(@Nonnull final Element element, @Nonnull final XmlSpace space) {
+    public static void addXMLSpace(@Nonnull final Element element, @Nonnull final XMLSpace space) {
         Constraint.isNotNull(element, "Element may not be null");
         Constraint.isNotNull(space, "space attribute value may not be null");
 
-        final Attr attr = constructAttribute(element.getOwnerDocument(), XmlConstants.XML_SPACE_ATTRIB_NAME);
+        final Attr attr = constructAttribute(element.getOwnerDocument(), XMLConstants.XML_SPACE_ATTRIB_NAME);
         attr.setValue(space.toString());
         element.setAttributeNodeNS(attr);
     }
@@ -164,7 +164,7 @@ public final class AttributeSupport {
      */
     public static void appendDateTimeAttribute(@Nonnull final Element element, @Nonnull final QName attributeName,
             long duration) {
-        appendAttribute(element, attributeName, DomTypeSupport.longToDateTime(duration));
+        appendAttribute(element, attributeName, DOMTypeSupport.longToDateTime(duration));
     }
 
     /**
@@ -176,7 +176,7 @@ public final class AttributeSupport {
      */
     public static void appendDurationAttribute(@Nonnull final Element element, @Nonnull final QName attributeName,
             long duration) {
-        appendAttribute(element, attributeName, DomTypeSupport.longToDuration(duration));
+        appendAttribute(element, attributeName, DOMTypeSupport.longToDuration(duration));
     }
 
     /**
@@ -315,7 +315,7 @@ public final class AttributeSupport {
         if (attribute == null) {
             return Collections.emptyList();
         }
-        return StringSupport.stringToList(attribute.getValue(), XmlConstants.LIST_DELIMITERS);
+        return StringSupport.stringToList(attribute.getValue(), XMLConstants.LIST_DELIMITERS);
     }
 
     /**
@@ -356,7 +356,7 @@ public final class AttributeSupport {
             return null;
         }
 
-        return DomTypeSupport.dateTimeToLong(attribute.getValue());
+        return DOMTypeSupport.dateTimeToLong(attribute.getValue());
     }
 
     /**
@@ -371,7 +371,7 @@ public final class AttributeSupport {
             return null;
         }
 
-        return DomTypeSupport.durationToLong(attribute.getValue());
+        return DOMTypeSupport.durationToLong(attribute.getValue());
     }
 
     /**
@@ -406,7 +406,7 @@ public final class AttributeSupport {
      * @return the value of the xml:base attribute, or null if not present
      */
     @Nullable public static String getXMLBase(@Nullable final Element element) {
-        return getAttributeValue(element, XmlConstants.XML_BASE_ATTRIB_NAME);
+        return getAttributeValue(element, XMLConstants.XML_BASE_ATTRIB_NAME);
     }
 
     /**
@@ -417,7 +417,7 @@ public final class AttributeSupport {
      * @return the value of the xml:id attribute, or null if not present
      */
     @Nullable public static String getXMLId(@Nullable final Element element) {
-        return getAttributeValue(element, XmlConstants.XML_ID_ATTRIB_NAME);
+        return getAttributeValue(element, XMLConstants.XML_ID_ATTRIB_NAME);
     }
 
     /**
@@ -428,7 +428,7 @@ public final class AttributeSupport {
      * @return the value of the xml:lang attribute, or null if not present
      */
     @Nullable public static String getXMLLang(@Nullable final Element element) {
-        return getAttributeValue(element, XmlConstants.XML_LANG_ATTRIB_NAME);
+        return getAttributeValue(element, XMLConstants.XML_LANG_ATTRIB_NAME);
     }
 
     /**
@@ -463,16 +463,16 @@ public final class AttributeSupport {
      * 
      * @return the value of the xml:space attribute, or null if not present
      */
-    @Nullable public static XmlSpace getXMLSpace(@Nullable final Element element) {
+    @Nullable public static XMLSpace getXMLSpace(@Nullable final Element element) {
         if (null == element) {
             return null;
         }
-        String value = getAttributeValue(element, XmlConstants.XML_SPACE_ATTRIB_NAME);
+        String value = getAttributeValue(element, XMLConstants.XML_SPACE_ATTRIB_NAME);
         if (null == value) {
             return null;
         }
         try {
-            return XmlSpace.parseValue(value);
+            return XMLSpace.parseValue(value);
         } catch (IllegalArgumentException e) {
             // No match to the type
             return null;
