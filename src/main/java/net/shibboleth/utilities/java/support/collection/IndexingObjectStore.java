@@ -94,11 +94,33 @@ public class IndexingObjectStore<T> {
      * 
      * @return true if an object is associated with the given index, false if not
      */
-    public boolean contains(String index) {
+    public boolean containsIndex(String index) {
         Lock readLock = rwLock.readLock();
         readLock.lock();
         try {
             return objectStore.containsKey(index);
+        } finally {
+            readLock.unlock();
+        }
+    }
+
+    /**
+     * Checks whether the store contains an object instance equal to the specified one.
+     * 
+     * @param instance the object instance to check
+     * 
+     * @return true if an object instance equal to the specified one is stored, false if not
+     */
+    public boolean containsInstance(T instance) {
+        Lock readLock = rwLock.readLock();
+        readLock.lock();
+        try {
+            Integer index = indexStore.get(instance);
+            if (index == null) {
+                return false;
+            } else {
+                return objectStore.containsKey(index.toString());
+            }
         } finally {
             readLock.unlock();
         }
@@ -110,7 +132,13 @@ public class IndexingObjectStore<T> {
      * @return true if the store is empty, false if not
      */
     public boolean isEmpty() {
-        return objectStore.isEmpty();
+        Lock readLock = rwLock.readLock();
+        readLock.lock();
+        try {
+            return objectStore.isEmpty();
+        } finally {
+            readLock.unlock();
+        }
     }
 
     /**
@@ -205,7 +233,13 @@ public class IndexingObjectStore<T> {
      * @return number of items in the store
      */
     public int size() {
-        return objectStore.size();
+        Lock readLock = rwLock.readLock();
+        readLock.lock();
+        try {
+            return objectStore.size();
+        } finally {
+            readLock.unlock();
+        }
     }
     
     /**

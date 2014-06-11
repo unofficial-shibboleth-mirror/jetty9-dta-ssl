@@ -33,41 +33,47 @@ public class IndexingObjectStoreTest {
 
         Assert.assertTrue(store.isEmpty());
         Assert.assertEquals(store.size(), 0);
-        Assert.assertFalse(store.contains("foo"));
+        Assert.assertFalse(store.containsInstance("foo"));
 
         String nullIndex = store.put(null);
         Assert.assertNull(nullIndex);
         Assert.assertTrue(store.isEmpty());
         Assert.assertEquals(store.size(), 0);
+        Assert.assertFalse(store.containsInstance(null));
 
         String str1Index = store.put(str1);
-        Assert.assertTrue(store.contains(str1Index));
+        Assert.assertTrue(store.containsIndex(str1Index));
+        Assert.assertTrue(store.containsInstance("foo"));
         Assert.assertFalse(store.isEmpty());
         Assert.assertEquals(store.size(), 1);
         Assert.assertEquals(store.get(str1Index), str1);
 
         String index1 = store.put("foo");
-        Assert.assertTrue(store.contains(index1));
+        Assert.assertTrue(store.containsIndex(index1));
+        Assert.assertTrue(store.containsInstance("foo"));
         Assert.assertFalse(store.isEmpty());
         Assert.assertEquals(store.size(), 1);
         Assert.assertEquals(index1, str1Index);
         Assert.assertEquals(store.get(index1), str1);
 
         store.remove(str1Index);
-        Assert.assertTrue(store.contains(index1));
+        Assert.assertTrue(store.containsIndex(index1));
+        Assert.assertTrue(store.containsInstance("foo"));
         Assert.assertFalse(store.isEmpty());
         Assert.assertEquals(store.size(), 1);
         Assert.assertEquals(index1, index1);
         Assert.assertEquals(store.get(index1), str1);
 
         String str2Index = store.put(str2);
-        Assert.assertTrue(store.contains(str2Index));
+        Assert.assertTrue(store.containsIndex(str2Index));
+        Assert.assertTrue(store.containsInstance("bar"));
         Assert.assertFalse(store.isEmpty());
         Assert.assertEquals(store.size(), 2);
         Assert.assertEquals(store.get(str2Index), str2);
 
         store.remove(str1Index);
-        Assert.assertFalse(store.contains(str1Index));
+        Assert.assertFalse(store.containsIndex(str1Index));
+        Assert.assertFalse(store.containsInstance("foo"));
         Assert.assertFalse(store.isEmpty());
         Assert.assertEquals(store.size(), 1);
         Assert.assertNull(store.get(str1Index));
@@ -75,6 +81,8 @@ public class IndexingObjectStoreTest {
         store.clear();
         Assert.assertTrue(store.isEmpty());
         Assert.assertEquals(store.size(), 0);
+        Assert.assertFalse(store.containsInstance("foo"));
+        Assert.assertFalse(store.containsInstance("bar"));
     }
     
     @Test
@@ -94,8 +102,8 @@ public class IndexingObjectStoreTest {
         final String s1index = store.put(s1);
         final String s2index = store.put(s2);
         Assert.assertNotEquals(s1index, s2index);
-        Assert.assertTrue(store.contains(s1index));
-        Assert.assertTrue(store.contains(s2index));
+        Assert.assertTrue(store.containsIndex(s1index));
+        Assert.assertTrue(store.containsIndex(s2index));
         Assert.assertEquals(store.get(s1index), s1);
         Assert.assertEquals(store.get(s2index), s2);
     }
