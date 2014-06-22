@@ -21,7 +21,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
@@ -44,6 +43,7 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
+import net.shibboleth.utilities.java.support.resource.Resource;
 
 import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.bouncycastle.crypto.engines.AESEngine;
@@ -72,8 +72,8 @@ public class DataSealer extends AbstractInitializableComponent {
     /** Type of keystore to use for access to keys. */
     @NonnullAfterInit private String keystoreType;
 
-    /** Path to keystore. */
-    @NonnullAfterInit private String keystorePath;
+    /** Keystore resource. */
+    @NonnullAfterInit private Resource keystoreResource;
 
     /** Password for keystore. */
     @NonnullAfterInit private String keystorePassword;
@@ -94,7 +94,7 @@ public class DataSealer extends AbstractInitializableComponent {
         try {
             try {
                 Constraint.isNotNull(keystoreType, "Keystore type cannot be null");
-                Constraint.isNotNull(keystorePath, "Keystore path cannot be null");
+                Constraint.isNotNull(keystoreResource, "Keystore resource cannot be null");
                 Constraint.isNotNull(keystorePassword, "Keystore password cannot be null");
                 Constraint.isNotNull(cipherKeyAlias, "Cipher key alias cannot be null");
                 Constraint.isNotNull(cipherKeyPassword, "Cipher key password cannot be null");
@@ -148,12 +148,12 @@ public class DataSealer extends AbstractInitializableComponent {
     }
 
     /**
-     * Returns the keystore path.
+     * Returns the keystore resource.
      * 
-     * @return the keystore path
+     * @return the keystore keystoreResource
      */
-    @NonnullAfterInit public String getKeystorePath() {
-        return keystorePath;
+    @NonnullAfterInit public Resource getKeystoreResource() {
+        return keystoreResource;
     }
 
     /**
@@ -206,14 +206,14 @@ public class DataSealer extends AbstractInitializableComponent {
     }
 
     /**
-     * Sets the keystore path.
+     * Sets the keystore resource.
      * 
-     * @param path the keystore path to set
+     * @param resource the keystore resource to set
      */
-    public void setKeystorePath(@Nonnull @NotEmpty final String path) {
+    public void setKeystoreResource(@Nonnull @NotEmpty final Resource resource) {
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         
-        keystorePath = Constraint.isNotNull(StringSupport.trimOrNull(path), "Keystore path cannot be null or empty");
+        keystoreResource = Constraint.isNotNull(resource, "Keystore resource cannot be null");
     }
 
     /**
@@ -459,15 +459,8 @@ public class DataSealer extends AbstractInitializableComponent {
             throws GeneralSecurityException, IOException {
  
         final KeyStore ks = KeyStore.getInstance(keystoreType);
-        FileInputStream fis = null;
-        try {
-            fis = new java.io.FileInputStream(keystorePath);
-            ks.load(fis, keystorePassword.toCharArray());
-        } finally {
-            if (fis != null) {
-                fis.close();
-            }
-        }
+        
+        ks.load(keystoreResource.getInputStream(), keystorePassword.toCharArray());
 
         Key loadedKey = ks.getKey(alias, cipherKeyPassword.toCharArray());
         if (loadedKey == null) {
