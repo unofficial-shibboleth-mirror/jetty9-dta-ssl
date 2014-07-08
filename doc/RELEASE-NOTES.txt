@@ -1,5 +1,8 @@
-Changes since Release 2.0.0
-[JSPT-36] -  Cookie filter doesn't catch all the output generating methods
+Changes in Release 3.0.0
+===============================
+[JSPT-25] - xml.SchemaBuilder should allow configuration of a resource resolver
+[JSPT-36] - Cookie filter doesn't catch all the output generating methods
+[JSPT-45] - Implement class and method renames for new naming convention for any remaining components
 
 Changes in Release 2.0.0
 ===============================
