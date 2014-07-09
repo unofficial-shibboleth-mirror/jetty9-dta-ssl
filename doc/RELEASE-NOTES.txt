@@ -1,19 +1,47 @@
-Changes in Release 3.0.0
-===============================
-[JSPT-25] - xml.SchemaBuilder should allow configuration of a resource resolver
+Java Support Release Notes
+https://issues.shibboleth.net/jira/browse/JSPT
+
+Changes in version 3.0.0 - 2014-06-25
+=====================================
+Bug
 [JSPT-36] - Cookie filter doesn't catch all the output generating methods
+
+New Feature
+[JSPT-25] - xml.SchemaBuilder should allow configuration of a resource resolver
+
+Task
 [JSPT-45] - Implement class and method renames for new naming convention for any remaining components
 
-Changes in Release 2.0.0
-===============================
-[JSPT-3] - Providers helpers for dealing with idle connections in HttpClient
-[JSPT-16] - Add a ServletListener that configures logback with a specified configuration file
-[JSPT-18] - Should RandomIdentifierGenerationStrategy have a Secure subclass? 
+Changes in version 2.0.1 - 2013-11-03
+=====================================
+Task
+[JSPT-35] - Release java-support version 2.0.1
+
+Changes in version 2.0.0 - 2013-11-03
+=====================================
+Bug
 [JSPT-23] - SerializeSupport prettyPrintXML has reverted impl to diverge from writeNode and nodeToString
 [JSPT-24] - Type4UuidIdentifier and RandomIdentifier generation strategies do not generate a valid XML ID
-[JSPT-26] - ClassToInstanceMultiMap should ideally support remove() ops rather than being append-only.
 [JSPT-27] - ClassToInstanceMultiMap get() returns duplicate values
 [JSPT-29] - ClassToInstanceMultiMap contains duplicates in value list on multiple insertions of same value
+
+Improvement
+[JSPT-18] - Should RandomIdentifierGenerationStrategy have a Secure subclass?
+[JSPT-26] - ClassToInstanceMultiMap should ideally support remove() ops rather than being append-only.
+
+New Feature
+[JSPT-3] - Providers helpers for dealing with idle connections in HttpClient
+[JSPT-16] - Add a ServletListener that configures logback with a specified configuration file
+
+Task
 [JSPT-30] - Move revamped DataSealer into java-support
 [JSPT-31] - release process for java-support v2.0.0
 [JSPT-32] - Remove deprecated EvaluableCriterion interface and related classes
+
+Changes in version 1.0.0 - 2012-04-02
+=====================================
+Task
+[JSPT-4] - Complete Resource caching mechanism
+[JSPT-6] - Complete unit testing of component package classes
+[JSPT-8] - Complete unit testing of logic package classes
+[JSPT-10] - Complete unit testing of classes in resolver package
