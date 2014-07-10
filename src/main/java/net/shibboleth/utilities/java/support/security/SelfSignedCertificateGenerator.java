@@ -22,7 +22,6 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.nio.file.Files;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
@@ -30,11 +29,18 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
+import net.shibboleth.utilities.java.support.annotation.constraint.Positive;
+import net.shibboleth.utilities.java.support.logic.Constraint;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
@@ -55,57 +61,23 @@ import org.slf4j.LoggerFactory;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.converters.BaseConverter;
+import com.google.common.collect.Lists;
 
 /**
  * A helper class to generate self-signed keypairs.
  */
 public class SelfSignedCertificateGenerator {
 
-    /** Command line argument container. */
-    private static final CommandLineArgs COMMAND_LINE_ARGS = new CommandLineArgs();
-    
     /** Class logger. */
     @Nonnull private Logger log = LoggerFactory.getLogger(SelfSignedCertificateGenerator.class);
+
+    /** Container for options that can be parsed from a command line. */
+    @Nonnull private final CommandLineArgs args;
     
-    /** Type of key to generated. */
-    @Nonnull @NotEmpty private String keyType;
-
-    /** Size of the generated key. */
-    private int keySize;
-
-    /** Number of years before the self-signed certificate expires. */
-    private int certificateLifetime;
-
-    /** Hostname that will appear as the certifcate's DN common name component. */
-    private String hostname;
-
-    /** Optional DNS subject alt names. */
-    private String[] dnsSubjectAltNames;
-
-    /** Optional DNS subject alt names. */
-    private String[] uriSubjectAltNames;
-
-    /** File to which the public key will be written. */
-    private File privateKeyFile;
-
-    /** File to which the certificate will be written. */
-    private File certificateFile;
-
-    /** Type of keystore to create. */
-    private String keystoreType;
-    
-    /** File to which the keystore will be written. */
-    private File keystoreFile;
-
-    /** Password for the generated keystore. */
-    private String keystorePassword;
-
     /** Constructor. */
     public SelfSignedCertificateGenerator() {
-        keyType = "RSA";
-        keySize = 2048;
-        certificateLifetime = 20;
-        keystoreType = "PKCS12";
+        args = new CommandLineArgs();
     }
     
     /**
@@ -113,8 +85,8 @@ public class SelfSignedCertificateGenerator {
      * 
      * @param type type of key that will be generated
      */
-    public void setKeyType(String type) {
-        keyType = type;
+    public void setKeyType(@Nonnull @NotEmpty final String type) {
+        args.keyType = Constraint.isNotNull(StringSupport.trimOrNull(type), "Key type cannot be null or empty");
     }
 
     /**
@@ -122,8 +94,10 @@ public class SelfSignedCertificateGenerator {
      * 
      * @param size size of the generated key
      */
-    public void setKeySize(int size) {
-        keySize = size;
+    public void setKeySize(@Positive final int size) {
+        Constraint.isGreaterThan(0, size, "Key size must be greater than 0");
+        
+        args.keySize = size;
     }
 
     /**
@@ -131,8 +105,10 @@ public class SelfSignedCertificateGenerator {
      * 
      * @param lifetime number of years for which the certificate will be valid
      */
-    public void setCertificateLifetime(int lifetime) {
-        certificateLifetime = lifetime;
+    public void setCertificateLifetime(@Positive final int lifetime) {
+        Constraint.isGreaterThan(0, lifetime, "Certificate lifetime must be greater than 0");
+        
+        args.certificateLifetime = lifetime;
     }
 
     /**
@@ -140,8 +116,8 @@ public class SelfSignedCertificateGenerator {
      * 
      * @param name hostname that will appear in the certificate's DN
      */
-    public void setHostName(String name) {
-        hostname = name;
+    public void setHostName(@Nonnull @NotEmpty final String name) {
+        args.hostname = Constraint.isNotNull(StringSupport.trimOrNull(name), "Hostname cannot be null or empty");
     }
 
     /**
@@ -149,8 +125,8 @@ public class SelfSignedCertificateGenerator {
      * 
      * @param file file to which the private key will be written
      */
-    public void setPrivateKeyFile(File file) {
-        privateKeyFile = file;
+    public void setPrivateKeyFile(@Nullable final File file) {
+        args.privateKeyFile = file;
     }
 
     /**
@@ -158,8 +134,8 @@ public class SelfSignedCertificateGenerator {
      * 
      * @param file file to which the certificate will be written
      */
-    public void setCertificateFile(File file) {
-        certificateFile = file;
+    public void setCertificateFile(@Nullable final File file) {
+        args.certificateFile = file;
     }
 
     /**
@@ -167,8 +143,9 @@ public class SelfSignedCertificateGenerator {
      * 
      * @param type keystore type
      */
-    public void setKeystoreType(String type) {
-        keystoreType = type;
+    public void setKeystoreType(@Nonnull @NotEmpty final String type) {
+        args.keystoreType = Constraint.isNotNull(StringSupport.trimOrNull(type),
+                "Keystore type cannot be null or empty");
     }
 
     /**
@@ -176,8 +153,8 @@ public class SelfSignedCertificateGenerator {
      * 
      * @param file file to which the keystore will be written
      */
-    public void setKeystoreFile(File file) {
-        keystoreFile = file;
+    public void setKeystoreFile(@Nullable final File file) {
+        args.keystoreFile = file;
     }
 
     /**
@@ -185,26 +162,26 @@ public class SelfSignedCertificateGenerator {
      * 
      * @param password password for the generated keystore
      */
-    public void setKeystorePassword(String password) {
-        keystorePassword = password;
+    public void setKeystorePassword(@Nullable final String password) {
+        args.keystorePassword = password;
     }
 
     /**
      * Set the optional DNS subject alt names.
      * 
-     * @param altNames space delimited set of subject alt names.
+     * @param altNames collection of subject alt names.
      */
-    public void setDnsSubjectAltNames(String altNames) {
-        dnsSubjectAltNames = altNames.split(" ");
+    public void setDNSSubjectAltNames(@Nonnull @NonnullElements final Collection<String> altNames) {
+        args.dnsSubjectAltNames = Lists.newArrayList(StringSupport.normalizeStringCollection(altNames));
     }
 
     /**
      * Set the optional URI subject alt names.
      * 
-     * @param altNames space delimited set of subject alt names.
+     * @param altNames collection of subject alt names.
      */
-    public void setURISubjectAltNames(String altNames) {
-        uriSubjectAltNames = altNames.split(" ");
+    public void setURISubjectAltNames(@Nonnull @NonnullElements final Collection<String> altNames) {
+        args.uriSubjectAltNames = Lists.newArrayList(StringSupport.normalizeStringCollection(altNames));
     }
     
     /**
@@ -217,21 +194,21 @@ public class SelfSignedCertificateGenerator {
         
         // Check all the files to prevent overwrite.
         
-        if (privateKeyFile != null) {
-            if (!privateKeyFile.createNewFile()) {
-                throw new IOException("Private key file exists: " + privateKeyFile.getAbsolutePath());
+        if (args.privateKeyFile != null) {
+            if (!args.privateKeyFile.createNewFile()) {
+                throw new IOException("Private key file exists: " + args.privateKeyFile.getAbsolutePath());
             }
         }
 
-        if (certificateFile != null) {
-            if (!certificateFile.createNewFile()) {
-                throw new IOException("Certificate file exists: " + certificateFile.getAbsolutePath());
+        if (args.certificateFile != null) {
+            if (!args.certificateFile.createNewFile()) {
+                throw new IOException("Certificate file exists: " + args.certificateFile.getAbsolutePath());
             }
         }
         
-        if (keystoreFile != null) {
-            if (!keystoreFile.createNewFile()) {
-                throw new IOException("KeyStore file exists: " + keystoreFile.getAbsolutePath());
+        if (args.keystoreFile != null) {
+            if (!args.keystoreFile.createNewFile()) {
+                throw new IOException("KeyStore file exists: " + args.keystoreFile.getAbsolutePath());
             }
         }
         
@@ -242,28 +219,28 @@ public class SelfSignedCertificateGenerator {
         
         // Write the requested files.
         
-        if (privateKeyFile != null) {
-            final PEMWriter keyOut = new PEMWriter(new FileWriter(privateKeyFile));
+        if (args.privateKeyFile != null) {
+            final PEMWriter keyOut = new PEMWriter(new FileWriter(args.privateKeyFile));
             keyOut.writeObject(keypair.getPrivate());
             keyOut.flush();
             keyOut.close();
         }
 
-        if (certificateFile != null) {
-            final PEMWriter certOut = new PEMWriter(new FileWriter(certificateFile));
+        if (args.certificateFile != null) {
+            final PEMWriter certOut = new PEMWriter(new FileWriter(args.certificateFile));
             certOut.writeObject(certificate);
             certOut.flush();
             certOut.close();
         }
 
-        if (keystoreFile != null) {
-            final KeyStore store = KeyStore.getInstance(keystoreType);
+        if (args.keystoreFile != null) {
+            final KeyStore store = KeyStore.getInstance(args.keystoreType);
             store.load(null, null);
-            store.setKeyEntry(hostname, keypair.getPrivate(), keystorePassword.toCharArray(),
+            store.setKeyEntry(args.hostname, keypair.getPrivate(), args.keystorePassword.toCharArray(),
                     new X509Certificate[] {certificate});
 
-            final FileOutputStream keystoreOut = new FileOutputStream(keystoreFile);
-            store.store(keystoreOut, keystorePassword.toCharArray());
+            final FileOutputStream keystoreOut = new FileOutputStream(args.keystoreFile);
+            store.store(keystoreOut, args.keystorePassword.toCharArray());
             keystoreOut.flush();
             keystoreOut.close();
         }
@@ -271,16 +248,16 @@ public class SelfSignedCertificateGenerator {
 
     /** Validates the settings. */
     protected void validate() {
-        if (keySize > 2048) {
+        if (args.keySize > 2048) {
             log.warn("Key size is greater than 2048, this may cause problems with some JVMs");
         }
 
-        if (hostname == null || hostname.length() == 0) {
-            throw new IllegalArgumentException("The hostname attribute is required and may not contain an empty value");
+        if (args.hostname == null || args.hostname.length() == 0) {
+            throw new IllegalArgumentException("A non-empty hostname is required");
         }
 
-        if (keystoreFile != null && (keystorePassword == null || keystorePassword.length() == 0)) {
-            throw new IllegalArgumentException("Keystore password may not be null if a keystore file is given");
+        if (args.keystoreFile != null && (args.keystorePassword == null || args.keystorePassword.length() == 0)) {
+            throw new IllegalArgumentException("Keystore password cannot be null if a keystore file is given");
         }
     }
 
@@ -290,13 +267,13 @@ public class SelfSignedCertificateGenerator {
      * @return key pair for the certificate
      * @throws NoSuchAlgorithmException if there is a problem generating the keys
      */
-    protected KeyPair generateKeyPair() throws NoSuchAlgorithmException {
+    @Nonnull protected KeyPair generateKeyPair() throws NoSuchAlgorithmException {
         try {
-            final KeyPairGenerator generator = KeyPairGenerator.getInstance(keyType);
-            generator.initialize(keySize);
+            final KeyPairGenerator generator = KeyPairGenerator.getInstance(args.keyType);
+            generator.initialize(args.keySize);
             return generator.generateKeyPair();
         } catch (final NoSuchAlgorithmException e) {
-            log.error("The {} key type is not supported by this JVM", keyType);
+            log.error("The {} key type is not supported by this JVM", args.keyType);
             throw e;
         }
     }
@@ -309,25 +286,26 @@ public class SelfSignedCertificateGenerator {
      * @return self-signed certificate
      * @throws Exception if an error occurs
      */
-    protected X509Certificate generateCertificate(KeyPair keypair) throws Exception {
-        X509V3CertificateGenerator certifcateGenerator = new X509V3CertificateGenerator();
+    @Nonnull protected X509Certificate generateCertificate(@Nonnull final KeyPair keypair) throws Exception {
+        
+        final X509V3CertificateGenerator certifcateGenerator = new X509V3CertificateGenerator();
         certifcateGenerator.setPublicKey(keypair.getPublic());
 
-        StringBuffer dnBuffer = new StringBuffer("CN=").append(hostname);
+        final StringBuffer dnBuffer = new StringBuffer("CN=").append(args.hostname);
 
-        X509Name dn = new X509Name(false, dnBuffer.toString(), new RdnConverter());
+        final X509Name dn = new X509Name(false, dnBuffer.toString(), new RdnConverter());
         certifcateGenerator.setIssuerDN(dn);
         certifcateGenerator.setSubjectDN(dn);
 
-        GregorianCalendar date = new GregorianCalendar();
+        final GregorianCalendar date = new GregorianCalendar();
         certifcateGenerator.setNotBefore(date.getTime());
 
-        date.set(GregorianCalendar.YEAR, date.get(GregorianCalendar.YEAR) + certificateLifetime);
+        date.set(GregorianCalendar.YEAR, date.get(GregorianCalendar.YEAR) + args.certificateLifetime);
         certifcateGenerator.setNotAfter(date.getTime());
 
         certifcateGenerator.setSerialNumber(new BigInteger(160, new SecureRandom()));
 
-        certifcateGenerator.setSignatureAlgorithm("SHA1withRSA");
+        certifcateGenerator.setSignatureAlgorithm("SHA256withRSA");
 
         certifcateGenerator.addExtension(X509Extensions.SubjectAlternativeName, false,
                 GeneralNames.getInstance(new DERSequence(buildSubjectAltNames())));
@@ -343,23 +321,24 @@ public class SelfSignedCertificateGenerator {
      * 
      * @return subject alt names for the certificate
      */
-    protected ASN1Encodable[] buildSubjectAltNames() {
-        ArrayList<ASN1Encodable> subjectAltNames = new ArrayList<ASN1Encodable>();
+    @Nonnull @NonnullElements protected ASN1Encodable[] buildSubjectAltNames() {
+        
+        final ArrayList<ASN1Encodable> subjectAltNames = new ArrayList<ASN1Encodable>();
 
-        subjectAltNames.add(new GeneralName(GeneralName.dNSName, hostname));
+        subjectAltNames.add(new GeneralName(GeneralName.dNSName, args.hostname));
 
-        if (dnsSubjectAltNames != null) {
-            for (String subjectAltName : dnsSubjectAltNames) {
+        if (args.dnsSubjectAltNames != null) {
+            for (final String subjectAltName : args.dnsSubjectAltNames) {
                 subjectAltNames.add(new GeneralName(GeneralName.dNSName, subjectAltName));
             }
         }
 
-        if (uriSubjectAltNames != null) {
-            for (String subjectAltName : uriSubjectAltNames) {
+        if (args.uriSubjectAltNames != null) {
+            for (final String subjectAltName : args.uriSubjectAltNames) {
                 subjectAltNames.add(new GeneralName(GeneralName.uniformResourceIdentifier, subjectAltName));
             }
         }
-
+        
         return subjectAltNames.toArray(new ASN1Encodable[0]);
     }
     
@@ -371,33 +350,17 @@ public class SelfSignedCertificateGenerator {
      * @throws Exception 
      */
     public static void main(@Nonnull final String[] args) throws Exception {
-        
+    
+        final SelfSignedCertificateGenerator generator = new SelfSignedCertificateGenerator();
+
         // Parse command line.
-        JCommander jc = new JCommander(COMMAND_LINE_ARGS, args);
-        if (COMMAND_LINE_ARGS.help) {
+        final JCommander jc = new JCommander(generator.args, args);
+        if (generator.args.help) {
             jc.setProgramName("SelfSignedCertificateGenerator");
             jc.usage();
             return;
         }
-    
-        final SelfSignedCertificateGenerator generator = new SelfSignedCertificateGenerator();
-    
-        generator.setKeyType(COMMAND_LINE_ARGS.keyType);
-        generator.setKeySize(COMMAND_LINE_ARGS.keySize);
-        generator.setCertificateLifetime(COMMAND_LINE_ARGS.certificateLifetime);
-        generator.setHostName(COMMAND_LINE_ARGS.hostname);
-        generator.setKeystoreType(COMMAND_LINE_ARGS.keystoreType);
-        if (COMMAND_LINE_ARGS.privateKeyFile != null) {
-            generator.setPrivateKeyFile(new File(COMMAND_LINE_ARGS.privateKeyFile));
-        }
-        if (COMMAND_LINE_ARGS.certificateFile != null) {
-            generator.setCertificateFile(new File(COMMAND_LINE_ARGS.certificateFile));
-        }
-        if (COMMAND_LINE_ARGS.keystoreFile != null) {
-            generator.setKeystoreFile(new File(COMMAND_LINE_ARGS.keystoreFile));
-        }
-        generator.setKeystorePassword(COMMAND_LINE_ARGS.keystorePassword);
-        
+
         generator.generate();
     }
 
@@ -414,39 +377,63 @@ public class SelfSignedCertificateGenerator {
             }
         }
     }
+    
+    /** Command line option conversion from String to File. */
+    public static class FileConverter extends BaseConverter<File> {
+        
+        /**
+         * Constructor.
+         *
+         * @param optionName 
+         */
+        public FileConverter(String optionName) {
+            super(optionName);
+        }
 
-    /** Manages command line parsing for application. */
+        @Override
+        public File convert(String value) {
+            return new File(value);
+        }
+    }
+
+    /** Manages command line parsing for application and the bean properties used by the generator. */
     private static class CommandLineArgs {
 
         /** Display command usage. */
-        public static final String HELP = "--help";
+        @Nonnull @NotEmpty public static final String HELP = "--help";
 
         /** Key algorithm. */
-        public static final String KEY_TYPE = "--type";
+        @Nonnull @NotEmpty public static final String KEY_TYPE = "--type";
         
         /** Key size. */
-        public static final String KEY_SIZE = "--size";
+        @Nonnull @NotEmpty public static final String KEY_SIZE = "--size";
 
         /** Certificate lifetime. */
-        public static final String CERT_LIFETIME = "--lifetime";
+        @Nonnull @NotEmpty public static final String CERT_LIFETIME = "--lifetime";
 
         /** Hostname for cert subject. */
-        public static final String HOSTNAME = "--hostname";
+        @Nonnull @NotEmpty public static final String HOSTNAME = "--hostname";
+        
+        /** DNS subjectAltNames. */
+        @Nonnull @NotEmpty public static final String DNS_ALTNAMES = "--dnsAltName";
 
+        /** URI subjectAltNames. */
+        @Nonnull @NotEmpty public static final String URI_ALTNAMES = "--uriAltName";
+        
         /** Path to private key file to create. */
-        public static final String KEY_FILE = "--keyfile";
+        @Nonnull @NotEmpty public static final String KEY_FILE = "--keyfile";
 
         /** Path to certificate file to create. */
-        public static final String CERT_FILE = "--certfile";
+        @Nonnull @NotEmpty public static final String CERT_FILE = "--certfile";
 
         /** Type of keystore to create. */
-        public static final String STORE_TYPE = "--storetype";
+        @Nonnull @NotEmpty public static final String STORE_TYPE = "--storetype";
         
         /** Path to keystore to create.  */
-        public static final String STORE_FILE = "--storefile";
+        @Nonnull @NotEmpty public static final String STORE_FILE = "--storefile";
 
         /** Keystore password.  */
-        public static final String STORE_PASS = "--storepass";
+        @Nonnull @NotEmpty public static final String STORE_PASS = "--storepass";
         
         /** Display command usage. */
         @Parameter(names = HELP, description = "Display program usage", help = true)
@@ -454,39 +441,47 @@ public class SelfSignedCertificateGenerator {
 
         /** Key algorithm. */
         @Parameter(names = KEY_TYPE, description = "Type of key to generate (default: RSA)")
-        private String keyType = "RSA";
+        @Nonnull @NotEmpty private String keyType = "RSA";
         
         /** Key size. */
         @Parameter(names = KEY_SIZE, description = "Size of key to generate (default: 2048)")
-        private int keySize = 2048;
+        @Positive private int keySize = 2048;
 
         /** Certificate lifetime. */
         @Parameter(names = CERT_LIFETIME, description = "Certificate lifetime in years (default: 20)")
-        private int certificateLifetime = 20;
+        @Positive private int certificateLifetime = 20;
 
         /** Hostname. */
-        @Parameter(names = HOSTNAME, description = "Hostname for certificate subject")
-        private String hostname;
+        @Parameter(names = HOSTNAME, required = true, description = "Hostname for certificate subject")
+        @Nonnull @NotEmpty private String hostname;
+        
+        /** DNS subjectAltNames. */
+        @Parameter(names = DNS_ALTNAMES, description = "DNS subjectAltNames for certificate")
+        @Nullable private List<String> dnsSubjectAltNames;
 
+        /** URI subjectAltNames. */
+        @Parameter(names = URI_ALTNAMES, description = "URI subjectAltNames for certificate")
+        @Nullable private List<String> uriSubjectAltNames;
+        
         /** Private key file. */
-        @Parameter(names = KEY_FILE, description = "Path to private key file")
-        private String privateKeyFile;
+        @Parameter(names = KEY_FILE, converter = FileConverter.class, description = "Path to private key file")
+        @Nullable private File privateKeyFile;
 
         /** Certificate file. */
-        @Parameter(names = CERT_FILE, description = "Path to certificate file")
-        private String certificateFile;
+        @Parameter(names = CERT_FILE, converter = FileConverter.class, description = "Path to certificate file")
+        @Nullable private File certificateFile;
         
         /** Keystore type. */
         @Parameter(names = STORE_TYPE, description = "Type of keystore to generate (default: PKCS12)")
-        private String keystoreType = "PKCS12";
+        @Nonnull @NotEmpty private String keystoreType = "PKCS12";
         
         /** Keystore file. */
-        @Parameter(names = STORE_FILE, description = "Path to keystore")
-        private String keystoreFile;
+        @Parameter(names = STORE_FILE, converter = FileConverter.class, description = "Path to keystore")
+        @Nullable private File keystoreFile;
         
         /** Keystore password. */
-        @Parameter(names = STORE_PASS, description = "Password for keystore")
-        private String keystorePassword;
+        @Parameter(names = STORE_PASS, password = true, description = "Password for keystore")
+        @Nullable private String keystorePassword;
     }
     
 }
