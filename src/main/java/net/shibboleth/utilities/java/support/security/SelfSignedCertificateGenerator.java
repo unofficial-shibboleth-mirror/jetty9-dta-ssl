@@ -496,7 +496,7 @@ public class SelfSignedCertificateGenerator {
         @Nullable private File keystoreFile;
         
         /** Keystore password. */
-        @Parameter(names = STORE_PASS, password = true, description = "Password for keystore")
+        @Parameter(names = STORE_PASS, description = "Password for keystore")
         @Nullable private String keystorePassword;
     }
     
