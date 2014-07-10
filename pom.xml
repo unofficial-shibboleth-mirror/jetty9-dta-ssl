@@ -52,13 +52,6 @@
             <artifactId>guava</artifactId>
         </dependency>
         
-        <dependency>
-            <!-- Required if using classes with command line support. -->
-            <groupId>com.beust</groupId>
-            <artifactId>jcommander</artifactId>
-            <optional>true</optional>
-        </dependency>
-        
         <!-- OPTIONAL Compile Dependencies -->
         <dependency>
             <!-- Required if you're using classes from the logging package. -->
@@ -78,6 +71,12 @@
             <!-- Required if you're using anything in the httpclient package -->
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <!-- Required if using classes with command line support. -->
+            <groupId>com.beust</groupId>
+            <artifactId>jcommander</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
