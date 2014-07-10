@@ -87,7 +87,7 @@ public class SelfSignedCertificateGenerator {
      */
     public void setKeyType(@Nonnull @NotEmpty final String type) {
         args.keyType = Constraint.isNotNull(StringSupport.trimOrNull(type), "Key type cannot be null or empty");
-    }
+    }    
 
     /**
      * Set the size of the generated key. Defaults to 2048
@@ -111,6 +111,15 @@ public class SelfSignedCertificateGenerator {
         args.certificateLifetime = lifetime;
     }
 
+    /**
+     * Set the certificate algorithm that will be used. Defaults to SHA256withRSA.
+     * 
+     * @param alg certificate algorithm
+     */
+    public void setCertificateAlg(@Nonnull @NotEmpty final String alg) {
+        args.certAlg = Constraint.isNotNull(StringSupport.trimOrNull(alg), "Algorithm cannot be null or empty");
+    }    
+    
     /**
      * Set the hostname that will appear in the certificate's DN.
      * 
@@ -305,7 +314,7 @@ public class SelfSignedCertificateGenerator {
 
         certifcateGenerator.setSerialNumber(new BigInteger(160, new SecureRandom()));
 
-        certifcateGenerator.setSignatureAlgorithm("SHA256withRSA");
+        certifcateGenerator.setSignatureAlgorithm(args.certAlg);
 
         certifcateGenerator.addExtension(X509Extensions.SubjectAlternativeName, false,
                 GeneralNames.getInstance(new DERSequence(buildSubjectAltNames())));
@@ -411,6 +420,9 @@ public class SelfSignedCertificateGenerator {
         /** Certificate lifetime. */
         @Nonnull @NotEmpty public static final String CERT_LIFETIME = "--lifetime";
 
+        /** Certificate algorithm. */
+        @Nonnull @NotEmpty public static final String CERT_ALG = "--certAlg";
+
         /** Hostname for cert subject. */
         @Nonnull @NotEmpty public static final String HOSTNAME = "--hostname";
         
@@ -450,6 +462,10 @@ public class SelfSignedCertificateGenerator {
         /** Certificate lifetime. */
         @Parameter(names = CERT_LIFETIME, description = "Certificate lifetime in years (default: 20)")
         @Positive private int certificateLifetime = 20;
+
+        /** Certificate algorithm. */
+        @Parameter(names = CERT_ALG, description = "Certificate algorithm (default: SHA256withRSA)")
+        @Nonnull @NotEmpty private String certAlg = "SHA256withRSA";
 
         /** Hostname. */
         @Parameter(names = HOSTNAME, required = true, description = "Hostname for certificate subject")
