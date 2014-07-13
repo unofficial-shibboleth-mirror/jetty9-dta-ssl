@@ -206,13 +206,13 @@ public class ClassToInstanceMultiMap<B> {
 
         putAll(map.values());
     }
-    
+
     /**
      * Remove the specified value from the map and from the value list of all indexes.
      * 
      * <p>
-     * If the value list for a type index becomes empty due to the value removal, the entire type 
-     * index will be removed and {@link #containsKey(Class)} for that type will then return <code>false</code>.
+     * If the value list for a type index becomes empty due to the value removal, the entire type index will be removed
+     * and {@link #containsKey(Class)} for that type will then return <code>false</code>.
      * </p>
      * 
      * @param value the value to remove
@@ -221,9 +221,9 @@ public class ClassToInstanceMultiMap<B> {
         if (value == null) {
             return;
         }
-        
+
         values.remove(value);
-        
+
         List<B> indexValues;
         for (Class<?> indexKey : getIndexTypes(value)) {
             indexValues = backingMap.get(indexKey);
@@ -235,13 +235,13 @@ public class ClassToInstanceMultiMap<B> {
             }
         }
     }
-    
+
     /**
      * Remove the specified values from the map and from the value list of all indexes.
      * 
      * <p>
-     * If the value list for a type index becomes empty due to a value removal, the entire type 
-     * index will be removed and {@link #containsKey(Class)} for that type will then return <code>false</code>.
+     * If the value list for a type index becomes empty due to a value removal, the entire type index will be removed
+     * and {@link #containsKey(Class)} for that type will then return <code>false</code>.
      * </p>
      * 
      * @param removeValues the values to remove
@@ -250,18 +250,18 @@ public class ClassToInstanceMultiMap<B> {
         if (removeValues == null) {
             return;
         }
-        
+
         for (B value : removeValues) {
             remove(value);
         }
     }
-    
+
     /**
      * Remove the values contained in the specified map from this map and from the value list of all indexes.
      * 
      * <p>
-     * If the value list for a type index becomes empty due to a value removal, the entire type 
-     * index will be removed and {@link #containsKey(Class)} for that type will then return <code>false</code>.
+     * If the value list for a type index becomes empty due to a value removal, the entire type index will be removed
+     * and {@link #containsKey(Class)} for that type will then return <code>false</code>.
      * </p>
      * 
      * @param map the map containing the values to remove
@@ -270,21 +270,21 @@ public class ClassToInstanceMultiMap<B> {
         if (map == null) {
             return;
         }
-        
+
         removeAll(map.values());
     }
-    
+
     /**
      * Remove from the map all values which have the specified type.
      * 
      * <p>
-     * Note that when a value was indexed by multiple superclass and/or interface types,
-     * it will be removed from all those type indexes, not just the specified one.  
+     * Note that when a value was indexed by multiple superclass and/or interface types, it will be removed from all
+     * those type indexes, not just the specified one.
      * </p>
      * 
      * <p>
-     * If the value list for a type index becomes empty due to a value removal, the entire type 
-     * index will be removed and {@link #containsKey(Class)} for that type will then return <code>false</code>.
+     * If the value list for a type index becomes empty due to a value removal, the entire type index will be removed
+     * and {@link #containsKey(Class)} for that type will then return <code>false</code>.
      * </p>
      * 
      * @param type the type of values to remove
@@ -293,9 +293,9 @@ public class ClassToInstanceMultiMap<B> {
         if (type == null) {
             return;
         }
-        
+
         List<B> indexValues = backingMap.remove(type);
-        
+
         if (indexValues != null) {
             for (B value : indexValues) {
                 remove(value);
@@ -313,10 +313,9 @@ public class ClassToInstanceMultiMap<B> {
     public Collection<? extends B> values() {
         return Collections.unmodifiableList(values);
     }
-    
+
     /**
-     * Get the effective set of all class types via which the specified value
-     * should be indexed.
+     * Get the effective set of all class types via which the specified value should be indexed.
      * 
      * @param value the value to index
      * @return the set of classes by which to index the value
@@ -328,7 +327,7 @@ public class ClassToInstanceMultiMap<B> {
         if (indexSupertypes) {
             getSuperTypes(value.getClass(), indexTypes);
         }
-        
+
         return indexTypes;
     }
 
@@ -355,14 +354,20 @@ public class ClassToInstanceMultiMap<B> {
     }
 
     /** {@inheritDoc} */
-    public int hashCode() {
-        // TODO
-        return super.hashCode();
+    @Override public int hashCode() {
+        return backingMap.hashCode() + values.hashCode();
     }
 
     /** {@inheritDoc} */
-    public boolean equals(Object obj) {
-        // TODO
-        return super.equals(obj);
+    @Override public boolean equals(Object obj) {
+        if (null == obj) {
+            return false;
+        }
+        if (obj instanceof ClassToInstanceMultiMap<?>) {
+            ClassToInstanceMultiMap<?> cast = (ClassToInstanceMultiMap<?>) obj;
+
+            return backingMap.equals(cast.backingMap) && values.equals(cast.values);
+        }
+        return false;
     }
 }
