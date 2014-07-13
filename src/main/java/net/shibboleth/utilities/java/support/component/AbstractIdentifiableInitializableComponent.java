@@ -26,7 +26,7 @@ public abstract class AbstractIdentifiableInitializableComponent extends Abstrac
         implements IdentifiableComponent {
 
     /** {@inheritDoc} */
-    @Override public synchronized void setId(@Nonnull String componentId) {
+    @Override public void setId(@Nonnull String componentId) {
         super.setId(componentId);
     }
 }
