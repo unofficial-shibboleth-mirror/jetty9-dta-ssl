@@ -85,7 +85,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
     private DocumentBuilderFactory builderFactory;
 
     /** Cache of document builders. */
-    private Stack<SoftReference<DocumentBuilder>> builderPool;
+    private final Stack<SoftReference<DocumentBuilder>> builderPool;
 
     /** Max number of builders allowed in the pool. Default value: 5 */
     private int maxPoolSize;
@@ -124,7 +124,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
     private EntityResolver entityResolver;
 
     /** Error handler used by builders. */
-    private ErrorHandler errorHandler;
+    private final ErrorHandler errorHandler;
 
     /** Constructor. */
     public BasicParserPool() {
@@ -279,7 +279,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
      * 
      * @param newSize max number of builders the pool will hold
      */
-    public synchronized void setMaxPoolSize(final int newSize) {
+    public void setMaxPoolSize(final int newSize) {
         checkNotInitializedNotDestroyed();
 
         maxPoolSize = (int) Constraint.isGreaterThan(0, newSize, "New maximum pool size must be greater than 0");
@@ -299,7 +299,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
      * 
      * @param newAttributes builder attributes used when creating builders
      */
-    public synchronized void setBuilderAttributes(@Nullable @NullableElements final Map<String, Object> newAttributes) {
+    public void setBuilderAttributes(@Nullable @NullableElements final Map<String, Object> newAttributes) {
         checkNotInitializedNotDestroyed();
 
         if (newAttributes == null) {
@@ -323,7 +323,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
      * 
      * @param isCoalescing whether the builders are coalescing
      */
-    public synchronized void setCoalescing(final boolean isCoalescing) {
+    public void setCoalescing(final boolean isCoalescing) {
         checkNotInitializedNotDestroyed();
 
         coalescing = isCoalescing;
@@ -343,7 +343,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
      * 
      * @param expand whether builders expand entity references
      */
-    public synchronized void setExpandEntityReferences(final boolean expand) {
+    public void setExpandEntityReferences(final boolean expand) {
         checkNotInitializedNotDestroyed();
 
         expandEntityReferences = expand;
@@ -363,7 +363,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
      * 
      * @param newFeatures the builders' features
      */
-    public synchronized void setBuilderFeatures(@Nullable @NullableElements final Map<String, Boolean> newFeatures) {
+    public void setBuilderFeatures(@Nullable @NullableElements final Map<String, Boolean> newFeatures) {
         checkNotInitializedNotDestroyed();
 
         if (newFeatures == null) {
@@ -387,7 +387,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
      * 
      * @param ignore The ignoreComments to set.
      */
-    public synchronized void setIgnoreComments(final boolean ignore) {
+    public void setIgnoreComments(final boolean ignore) {
         checkNotInitializedNotDestroyed();
 
         ignoreComments = ignore;
@@ -407,7 +407,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
      * 
      * @param ignore whether the builders ignore element content whitespace
      */
-    public synchronized void setIgnoreElementContentWhitespace(final boolean ignore) {
+    public void setIgnoreElementContentWhitespace(final boolean ignore) {
         checkNotInitializedNotDestroyed();
 
         ignoreElementContentWhitespace = ignore;
@@ -427,7 +427,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
      * 
      * @param isNamespaceAware whether the builders are namespace aware
      */
-    public synchronized void setNamespaceAware(final boolean isNamespaceAware) {
+    public void setNamespaceAware(final boolean isNamespaceAware) {
         checkNotInitializedNotDestroyed();
 
         namespaceAware = isNamespaceAware;
@@ -447,7 +447,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
      * 
      * @param newSchema schema used to validate the XML document during the parsing process
      */
-    public synchronized void setSchema(@Nullable final Schema newSchema) {
+    public void setSchema(@Nullable final Schema newSchema) {
         checkNotInitializedNotDestroyed();
 
         schema = newSchema;
@@ -472,7 +472,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
      * 
      * @param isValidating whether the builders are validating
      */
-    public synchronized void setDTDValidating(final boolean isValidating) {
+    public void setDTDValidating(final boolean isValidating) {
         checkNotInitializedNotDestroyed();
 
         dtdValidating = isValidating;
@@ -492,7 +492,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
      * 
      * @param isXIncludeAware whether the builders are XInclude aware
      */
-    public synchronized void setXincludeAware(final boolean isXIncludeAware) {
+    public void setXincludeAware(final boolean isXIncludeAware) {
         checkNotInitializedNotDestroyed();
 
         xincludeAware = isXIncludeAware;
@@ -541,6 +541,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
      * @throws ComponentInitializationException thrown if pool can not be initialized, or if it is already initialized
      *             {@inheritDoc}
      */
+    @Override
     protected void doInitialize() throws ComponentInitializationException {
         super.doInitialize();
 
@@ -574,6 +575,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
     }
 
     /** {@inheritDoc} */
+    @Override
     protected void doDestroy() {
         builderPool.clear();
         super.doDestroy();
