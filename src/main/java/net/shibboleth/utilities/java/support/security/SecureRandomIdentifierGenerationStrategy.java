@@ -34,7 +34,7 @@ public class SecureRandomIdentifierGenerationStrategy extends RandomIdentifierGe
      * bytes, and the encoder is set to a {@link org.apache.commons.codec.binary.Hex}.
      */
     public SecureRandomIdentifierGenerationStrategy() {
-        super();
+        
     }
 
     /**

@@ -31,7 +31,6 @@ public class DataSealerException extends Exception {
      * Constructor.
      */
     public DataSealerException() {
-        super();
     }
 
     /**
