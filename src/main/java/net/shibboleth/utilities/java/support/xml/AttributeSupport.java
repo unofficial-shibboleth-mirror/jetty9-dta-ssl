@@ -288,10 +288,9 @@ public final class AttributeSupport {
      * @param attribute attribute whose value will be converted to a boolean
      * 
      * @return boolean value of the attribute or null
-     * @deprecated Spring parsers should rely on translation since this happens
      * late enough to allow property replacement.
      */
-    @Nullable @Deprecated public static Boolean getAttributeValueAsBoolean(@Nullable final Attr attribute) {
+    @Nullable public static Boolean getAttributeValueAsBoolean(@Nullable final Attr attribute) {
         if (attribute == null) {
             return null;
         }
