@@ -59,7 +59,9 @@ public interface ReloadableService<T> extends InitializableComponent {
     
     /** Get the serviceable component that this service supports .  If
      * The component hasn't been successfully loaded yet or if this service
-     * does not support a ServiceableComponent return null
+     * does not support a ServiceableComponent return null.  If it is non-null,
+     * the returned component will be is pinned and <em>MUST</em> be unpinned by a call to
+     * {@link ServiceableComponent#unpinComponent()}.
      * @return the component, if appropriate.
      */
     @Nullable public ServiceableComponent<T> getServiceableComponent();

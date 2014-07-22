@@ -34,8 +34,8 @@ import javax.annotation.Nonnull;
 public interface ServiceableComponent<T> {
 
     /**
-     * Extract the component that does the actual work.  When this returns the component is pinned<br/>
-     * <em>Every call to {@link #getComponent()} must be matched by a call to {@link #unpinComponent()}</em>. 
+     * Extract the component that does the actual work.  Callers <em>MUST</em> have the ServiceableComponent
+     * pinned at this stage.
      *
      * @return the component.       
      */
