@@ -1,5 +1,15 @@
 Java Support Release Notes
-https://issues.shibboleth.net/jira/browse/JSPT
+
+Release notes for all versions may be found at
+https://issues.shibboleth.net/jira/secure/ReleaseNote.jspa?projectId=10052
+
+Changes in version 4.0.0 - 2014-07-24
+=====================================
+[JSPT-46] - Move services from the IdP
+[IDP-445] - Pluggable access control for administrative functions
+[IDP-410] - Port self signed certificate creation to v3
+[IDP-408] - Explicitly remove synchronization from methods that do not need it
+[IDP-379] - Deprecate getAttributeValueAsBoolean
 
 Changes in version 3.0.0 - 2014-06-25
 =====================================
