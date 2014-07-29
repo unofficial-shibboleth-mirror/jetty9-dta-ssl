@@ -17,8 +17,6 @@
 
 package net.shibboleth.utilities.java.support.security;
 
-import java.security.SecureRandom;
-
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.resource.Resource;
 import net.shibboleth.utilities.java.support.resource.TestResourceConverter;
@@ -34,6 +32,8 @@ import org.testng.annotations.Test;
 public class DataSealerTest {
 
     private Resource keystoreResource;
+    private Resource versionResource;
+    private Resource version2Resource;
 
     final private String THE_DATA = "THIS IS SOME TEST DATA THIS IS SOME TEST DATA THIS IS SOME TEST DATA THIS IS SOME TEST DATA THIS IS SOME TEST DATA"
             + "THIS IS SOME TEST DATA THIS IS SOME TEST DATA THIS IS SOME TEST DATA THIS IS SOME TEST DATA THIS IS SOME TEST DATA THIS IS SOME TEST DATA"
@@ -42,69 +42,57 @@ public class DataSealerTest {
     final private long THE_DELAY = 500;
 
     @BeforeClass public void initializeKeystoreResource() {
-        final ClassPathResource resource =
+        ClassPathResource resource =
                 new ClassPathResource("/data/net/shibboleth/utilities/java/support/security/SealerKeyStore.jks");
         Assert.assertTrue(resource.exists());
         keystoreResource = TestResourceConverter.of(resource);
-    }
 
-    @Test public void defaults() {
-        DataSealer sealer = new DataSealer();
-        Assert.assertEquals(sealer.getKeystoreType(), "JCEKS");
-    }
+        resource =
+                new ClassPathResource("/data/net/shibboleth/utilities/java/support/security/SealerKeyStore.kver");
+        Assert.assertTrue(resource.exists());
+        versionResource = TestResourceConverter.of(resource);
 
-    @Test public void setterGetters() {
-        final SecureRandom random = new SecureRandom();
-        final String CIPHER_KEY_ALIIAS = "CipherAlias";
-        final String CIPHER_KEY_PASSWORD = "Cpassword";
-        final String KEYSTORE_PASSWORD = "Kpassword";
-        final String KEYSTORE_TYPE = "KType";
-
-        DataSealer sealer = new DataSealer();
-
-        sealer.setKeystoreType(KEYSTORE_TYPE);
-        sealer.setKeystoreResource(keystoreResource);
-        sealer.setKeystorePassword(KEYSTORE_PASSWORD);
-
-        sealer.setCipherKeyAlias(CIPHER_KEY_ALIIAS);
-        sealer.setCipherKeyPassword(CIPHER_KEY_PASSWORD);
-
-        sealer.setRandom(random);
-
-        Assert.assertEquals(sealer.getKeystoreType(), KEYSTORE_TYPE);
-        Assert.assertEquals(sealer.getKeystoreResource(), keystoreResource);
-        Assert.assertEquals(sealer.getKeystorePassword(), KEYSTORE_PASSWORD);
-
-        Assert.assertEquals(sealer.getCipherKeyAlias(), CIPHER_KEY_ALIIAS);
-        Assert.assertEquals(sealer.getCipherKeyPassword(), CIPHER_KEY_PASSWORD);
-
-        Assert.assertEquals(sealer.getRandom(), random);
-
+        resource =
+                new ClassPathResource("/data/net/shibboleth/utilities/java/support/security/SealerKeyStore.kver2");
+        Assert.assertTrue(resource.exists());
+        version2Resource = TestResourceConverter.of(resource);
     }
 
     private DataSealer createDataSealer() throws DataSealerException, ComponentInitializationException {
-        DataSealer sealer = new DataSealer();
-        sealer.setCipherKeyAlias("secret");
-        sealer.setCipherKeyPassword("kpassword");
+        final BasicKeystoreKeyStrategy strategy = new BasicKeystoreKeyStrategy();
+        
+        strategy.setKeyAlias("secret");
+        strategy.setKeyPassword("kpassword");
 
-        sealer.setKeystorePassword("password");
-        sealer.setKeystoreResource(keystoreResource);
+        strategy.setKeystorePassword("password");
+        strategy.setKeystoreResource(keystoreResource);
+        
+        strategy.setKeyVersionResource(versionResource);
 
+        strategy.initialize();
+        
+        final DataSealer sealer = new DataSealer();
+        sealer.setKeyStrategy(strategy);
         sealer.initialize();
-
         return sealer;
     }
 
     private DataSealer createDataSealer2() throws DataSealerException, ComponentInitializationException {
-        DataSealer sealer = new DataSealer();
-        sealer.setCipherKeyAlias("secret2");
-        sealer.setCipherKeyPassword("kpassword");
+        final BasicKeystoreKeyStrategy strategy = new BasicKeystoreKeyStrategy();
+        
+        strategy.setKeyAlias("secret");
+        strategy.setKeyPassword("kpassword");
 
-        sealer.setKeystorePassword("password");
-        sealer.setKeystoreResource(keystoreResource);
+        strategy.setKeystorePassword("password");
+        strategy.setKeystoreResource(keystoreResource);
+        
+        strategy.setKeyVersionResource(version2Resource);
 
+        strategy.initialize();
+        
+        final DataSealer sealer = new DataSealer();
+        sealer.setKeyStrategy(strategy);
         sealer.initialize();
-
         return sealer;
     }
     
@@ -142,28 +130,23 @@ public class DataSealerTest {
 
         try {
             sealer.initialize();
-            Assert.fail("no keys");
+            Assert.fail("no strategy");
         } catch (ComponentInitializationException e) {
 
         }
-        sealer.setCipherKeyAlias("secret");
-        sealer.setCipherKeyPassword("kpassword");
 
-        sealer.setKeystorePassword("password");
-        sealer.setKeystoreResource(keystoreResource);
-
-        sealer.initialize();
+        sealer = createDataSealer();
 
         try {
             sealer.unwrap("");
-            Assert.fail("no keys");
+            Assert.fail("no data");
         } catch (DataSealerException e) {
             // OK
         }
 
         try {
             sealer.unwrap("RandomGarbage");
-            Assert.fail("no keys");
+            Assert.fail("random data");
         } catch (DataSealerException e) {
             // OK
         }
@@ -174,14 +157,14 @@ public class DataSealerTest {
 
         try {
             sealer.unwrap(corrupted);
-            Assert.fail("no keys");
+            Assert.fail("corrupted data");
         } catch (DataSealerException e) {
             // OK
         }
 
         try {
             sealer.wrap(null, 10);
-            Assert.fail("no keys");
+            Assert.fail("no data");
         } catch (IllegalArgumentException e) {
             // OK
         }

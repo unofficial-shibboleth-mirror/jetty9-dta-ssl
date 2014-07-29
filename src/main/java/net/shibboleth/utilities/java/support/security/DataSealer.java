@@ -23,10 +23,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.security.GeneralSecurityException;
-import java.security.Key;
 import java.security.KeyException;
-import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -37,13 +34,12 @@ import javax.crypto.SecretKey;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.codec.Base64Support;
+import net.shibboleth.utilities.java.support.collection.Pair;
 import net.shibboleth.utilities.java.support.component.AbstractInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
-import net.shibboleth.utilities.java.support.primitive.StringSupport;
-import net.shibboleth.utilities.java.support.resource.Resource;
 
 import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.bouncycastle.crypto.engines.AESEngine;
@@ -63,128 +59,25 @@ public class DataSealer extends AbstractInitializableComponent {
     /** Class logger. */
     @Nonnull private Logger log = LoggerFactory.getLogger(DataSealer.class);
 
-    /** Default key used for encryption. */
-    @NonnullAfterInit private SecretKey cipherKey;
+    /** Source of keys. */
+    @NonnullAfterInit private DataSealerKeyStrategy keyStrategy;
 
     /** Source of secure random data. */
     @NonnullAfterInit private SecureRandom random;
-
-    /** Type of keystore to use for access to keys. */
-    @NonnullAfterInit private String keystoreType;
-
-    /** Keystore resource. */
-    @NonnullAfterInit private Resource keystoreResource;
-
-    /** Password for keystore. */
-    @NonnullAfterInit private String keystorePassword;
-
-    /** Keystore alias for the default encryption key. */
-    @NonnullAfterInit private String cipherKeyAlias;
-
-    /** Password for encryption key(s). */
-    @NonnullAfterInit private String cipherKeyPassword;
-
-    /** Constructor. */
-    public DataSealer() {
-        keystoreType = "JCEKS";
+    
+    /**
+     * Set the key strategy.
+     * 
+     * @param strategy key strategy
+     */
+    public void setKeyStrategy(@Nonnull final DataSealerKeyStrategy strategy) {
+        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
+        
+        keyStrategy = Constraint.isNotNull(strategy, "DataSealerKeyStrategy cannot be null");
     }
     
-    /** {@inheritDoc} */
-    public void doInitialize() throws ComponentInitializationException {
-        try {
-            try {
-                Constraint.isNotNull(keystoreType, "Keystore type cannot be null");
-                Constraint.isNotNull(keystoreResource, "Keystore resource cannot be null");
-                Constraint.isNotNull(keystorePassword, "Keystore password cannot be null");
-                Constraint.isNotNull(cipherKeyAlias, "Cipher key alias cannot be null");
-                Constraint.isNotNull(cipherKeyPassword, "Cipher key password cannot be null");
-            } catch (ConstraintViolationException e) {
-                throw new ComponentInitializationException(e);
-            }
-            
-            if (random == null) {
-                random = new SecureRandom();
-            }
-
-            cipherKey = loadKey(cipherKeyAlias);
-
-            // Before we finish initialization, make sure that things are working.
-            testEncryption();
-
-        } catch (GeneralSecurityException|IOException e) {
-            log.error(e.getMessage());
-            throw new ComponentInitializationException("Exception loading the keystore", e);
-        } catch (DataSealerException e) {
-            log.error(e.getMessage());
-            throw new ComponentInitializationException("Exception testing the encryption settings used", e);
-        }
-    }
-
     /**
-     * Returns the encryption key.
-     * 
-     * @return the encryption key
-     */
-    @NonnullAfterInit public SecretKey getCipherKey() {
-        return cipherKey;
-    }
-
-    /**
-     * Returns the pseudorandom generator.
-     * 
-     * @return the pseudorandom generator
-     */
-    @NonnullAfterInit public SecureRandom getRandom() {
-        return random;
-    }
-
-    /**
-     * Returns the keystore type.
-     * 
-     * @return the keystore type.
-     */
-    @NonnullAfterInit public String getKeystoreType() {
-        return keystoreType;
-    }
-
-    /**
-     * Returns the keystore resource.
-     * 
-     * @return the keystore keystoreResource
-     */
-    @NonnullAfterInit public Resource getKeystoreResource() {
-        return keystoreResource;
-    }
-
-    /**
-     * Returns the keystore password.
-     * 
-     * @return the keystore password
-     */
-    @NonnullAfterInit public String getKeystorePassword() {
-        return keystorePassword;
-    }
-
-    /**
-     * Returns the encryption key alias.
-     * 
-     * @return the encryption key alias
-     */
-    @NonnullAfterInit public String getCipherKeyAlias() {
-        return cipherKeyAlias;
-    }
-
-    /**
-     * Returns the encryption key password.
-     * 
-     * @return the encryption key password
-     */
-    @NonnullAfterInit public String getCipherKeyPassword() {
-        return cipherKeyPassword;
-    }
-
-    /**
-     * Sets the pseudorandom generator.
+     * Set the pseudorandom generator.
      * 
      * @param r the pseudorandom generator to set
      */
@@ -194,67 +87,35 @@ public class DataSealer extends AbstractInitializableComponent {
         random = Constraint.isNotNull(r, "SecureRandom cannot be null");
     }
 
-    /**
-     * Sets the keystore type.
-     * 
-     * @param type the keystore type to set
-     */
-    public void setKeystoreType(@Nonnull @NotEmpty final String type) {
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
-        keystoreType = Constraint.isNotNull(StringSupport.trimOrNull(type), "Keystore type cannot be null or empty");
-    }
+    /** {@inheritDoc} */
+    public void doInitialize() throws ComponentInitializationException {
+        try {
+            try {
+                Constraint.isNotNull(keyStrategy, "Keystore type cannot be null");
+            } catch (ConstraintViolationException e) {
+                throw new ComponentInitializationException(e);
+            }
+            
+            if (random == null) {
+                random = new SecureRandom();
+            }
 
-    /**
-     * Sets the keystore resource.
-     * 
-     * @param resource the keystore resource to set
-     */
-    public void setKeystoreResource(@Nonnull @NotEmpty final Resource resource) {
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
-        keystoreResource = Constraint.isNotNull(resource, "Keystore resource cannot be null");
-    }
+            final SecretKey initialKey = keyStrategy.getDefaultKey().getSecond();
 
-    /**
-     * Sets the keystore password.
-     * 
-     * @param password the keystore password to set
-     */
-    public void setKeystorePassword(@Nonnull @NotEmpty final String password) {
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
-        keystorePassword = Constraint.isNotNull(password, "Keystore password cannot be null");
-    }
+            // Before we finish initialization, make sure that things are working.
+            testEncryption(initialKey);
 
-    /**
-     * Sets the default encryption key alias.
-     * 
-     * @param alias the encryption key alias to set
-     */
-    public void setCipherKeyAlias(@Nonnull @NotEmpty final String alias) {
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
-        cipherKeyAlias = Constraint.isNotNull(StringSupport.trimOrNull(alias),
-                "Cipher key alias cannot be null or empty");
-    }
-
-    /**
-     * Sets the encryption key password.
-     * 
-     * @param password the encryption key password to set
-     */
-    public void setCipherKeyPassword(@Nonnull @NotEmpty final String password) {
-        ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
-        
-        cipherKeyPassword = Constraint.isNotNull(password, "Cipher key password cannot be null");
+        } catch (final KeyException e) {
+            log.error(e.getMessage());
+            throw new ComponentInitializationException("Exception loading the keystore", e);
+        } catch (final DataSealerException e) {
+            log.error(e.getMessage());
+            throw new ComponentInitializationException("Exception testing the encryption settings used", e);
+        }
     }
 
     /**
      * Decrypts and verifies an encrypted bundle created with {@link #wrap(String, long)}.
-     * 
-     * <p>If the data indicates that a non-default key was used, an attempt to load this key
-     * from the keystore will be made.</p>
      * 
      * @param wrapped the encoded blob
      * @return the decrypted data, if it's unexpired
@@ -269,15 +130,9 @@ public class DataSealer extends AbstractInitializableComponent {
             final DataInputStream inputDataStream = new DataInputStream(inputByteStream);
             
             // Extract alias of key, and load if necessary.
-            SecretKey keyUsed;
-            String keyAlias = inputDataStream.readUTF();
-            log.trace("Data was encrypted by key '{}'", keyAlias);
-            if (keyAlias.equals(cipherKeyAlias)) {
-                keyUsed = cipherKey;
-            } else {
-                keyUsed = loadKey(keyAlias);
-                log.trace("Loaded older key '{}' from keystore", keyAlias);
-            }
+            final String keyAlias = inputDataStream.readUTF();
+            log.trace("Data was encrypted by key named '{}'", keyAlias);
+            final SecretKey keyUsed = keyStrategy.getKey(keyAlias);
             
             final GCMBlockCipher cipher = new GCMBlockCipher(new AESEngine());
             
@@ -301,12 +156,12 @@ public class DataSealer extends AbstractInitializableComponent {
             // Pass the plaintext into the subroutine for processing.
             return extractAndCheckDecryptedData(plaintext);
 
-        } catch (IllegalStateException | InvalidCipherTextException| IOException e) {
+        } catch (final IllegalStateException | InvalidCipherTextException| IOException e) {
             log.error(e.getMessage());
             throw new DataSealerException("Exception unwrapping data", e);
-        } catch (GeneralSecurityException e) {
+        } catch (final KeyException e) {
             log.error(e.getMessage());
-            throw new DataSealerException("Exception loading legacy key", e);
+            throw new DataSealerException("Exception loading key", e);
         }
     }
 
@@ -370,8 +225,11 @@ public class DataSealer extends AbstractInitializableComponent {
             final byte[] iv = new byte[cipher.getUnderlyingCipher().getBlockSize()];
             random.nextBytes(iv);
             
+            final Pair<String,SecretKey> defaultKey = keyStrategy.getDefaultKey();
+            
             final AEADParameters aeadParams =
-                    new AEADParameters(new KeyParameter(cipherKey.getEncoded()), 128, iv, cipherKeyAlias.getBytes());
+                    new AEADParameters(new KeyParameter(defaultKey.getSecond().getEncoded()), 128, iv,
+                            defaultKey.getFirst().getBytes());
             cipher.init(true, aeadParams);
 
             final ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
@@ -394,7 +252,7 @@ public class DataSealer extends AbstractInitializableComponent {
 
             final ByteArrayOutputStream finalByteStream = new ByteArrayOutputStream();
             final DataOutputStream finalDataStream = new DataOutputStream(finalByteStream);
-            finalDataStream.writeUTF(cipherKeyAlias);
+            finalDataStream.writeUTF(defaultKey.getFirst());
             finalDataStream.write(iv);
             finalDataStream.write(encryptedData, 0, outputLen);
             finalDataStream.flush();
@@ -402,7 +260,7 @@ public class DataSealer extends AbstractInitializableComponent {
             
             return Base64Support.encode(finalByteStream.toByteArray(), false);
 
-        } catch (IOException | IllegalStateException | InvalidCipherTextException e) {
+        } catch (final IOException | IllegalStateException | InvalidCipherTextException | KeyException e) {
             log.error(e.getMessage());
             throw new DataSealerException("Exception wrapping data", e);
         }
@@ -412,9 +270,11 @@ public class DataSealer extends AbstractInitializableComponent {
     /**
      * Run a test over the configured bean properties.
      * 
+     * @param key   key to test
+     * 
      * @throws DataSealerException if the test fails
      */
-    private void testEncryption() throws DataSealerException {
+    private void testEncryption(@Nonnull final SecretKey key) throws DataSealerException {
 
         String decrypted;
         try {
@@ -422,7 +282,8 @@ public class DataSealer extends AbstractInitializableComponent {
             final byte[] iv = new byte[cipher.getUnderlyingCipher().getBlockSize()];
             random.nextBytes(iv);
             final AEADParameters aeadParams = new AEADParameters(
-                    new KeyParameter(cipherKey.getEncoded()), 128, iv, "aad".getBytes(StandardCharsets.UTF_8));
+                    new KeyParameter(key.getEncoded()), 128, iv, "aad".getBytes(StandardCharsets.UTF_8));
+            
             cipher.init(true, aeadParams);
             byte[] plaintext = "test".getBytes(StandardCharsets.UTF_8);
             final byte[] encryptedData = new byte[cipher.getOutputSize(plaintext.length)];
@@ -446,31 +307,4 @@ public class DataSealer extends AbstractInitializableComponent {
         }
     }
 
-    /**
-     * Load a particular key from the keystore designated by the bean's properties.
-     * 
-     * @param alias alias of the key to load
-     * 
-     * @return  the loaded key
-     * @throws GeneralSecurityException if the load fails due to a security-related issue
-     * @throws IOException if the load process fails
-     */
-    @Nonnull private SecretKey loadKey(@Nonnull @NotEmpty final String alias)
-            throws GeneralSecurityException, IOException {
- 
-        final KeyStore ks = KeyStore.getInstance(keystoreType);
-        
-        ks.load(keystoreResource.getInputStream(), keystorePassword.toCharArray());
-
-        Key loadedKey = ks.getKey(alias, cipherKeyPassword.toCharArray());
-        if (loadedKey == null) {
-            log.error("Key '{}' not found", alias);
-            throw new KeyException("Key was not found in keystore");
-        } else if (!(loadedKey instanceof SecretKey)) {
-            log.error("Key '{}' is not a symmetric key", alias);
-            throw new KeyException("Key was of incorrect type");
-        }
-        return (SecretKey) loadedKey;
-    }
-    
 }
