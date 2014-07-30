@@ -168,7 +168,7 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
             if (isFailFast()) {
                 throw new ComponentInitializationException(getLogPrefix() + " could not perform initial load", e);
             }
-            log.error("{} initial load failed {}", getLogPrefix(), e);
+            log.error(getLogPrefix() + " initial load failed", e);
             if (reloadCheckDelay > 0) {
                 log.info("{} Continuing to poll configuration", getLogPrefix());
             } else {
@@ -212,7 +212,7 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
 
             lastSuccessfulReleaseIntant = now;
         } catch (ServiceException e) {
-            log.error("Reload for {} failed: {}", getId(), e);
+            log.error(getLogPrefix() + " Reload for " + getId() + " failed", e);
             reloadFailureCause = e;
         }
     }
