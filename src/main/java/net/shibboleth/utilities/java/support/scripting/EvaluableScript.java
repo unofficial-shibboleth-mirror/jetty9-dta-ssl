@@ -72,6 +72,18 @@ public class EvaluableScript {
     /**
      * Constructor.
      * 
+     * @param scriptSource the script source
+     * 
+     * @throws ScriptException thrown if the scripting engine supports compilation and the script does not compile
+     */
+    public EvaluableScript(@Nonnull @NotEmpty String scriptSource)
+            throws ScriptException {
+        this("javascript", scriptSource);
+    }
+
+    /**
+     * Constructor.
+     * 
      * @param engineName the JSR-223 scripting engine name
      * @param scriptSource the script source
      * 
