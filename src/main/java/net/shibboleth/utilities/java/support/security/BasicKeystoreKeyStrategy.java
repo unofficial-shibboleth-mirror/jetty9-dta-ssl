@@ -211,7 +211,7 @@ public class BasicKeystoreKeyStrategy extends AbstractInitializableComponent imp
             try {
                 Constraint.isNotNull(keystoreType, "Keystore type cannot be null");
                 Constraint.isNotNull(keystoreResource, "Keystore resource cannot be null");
-                Constraint.isNotNull(keyVersionResource, "Keystore resource cannot be null");
+                Constraint.isNotNull(keyVersionResource, "Key version resource cannot be null");
                 Constraint.isNotNull(keystorePassword, "Keystore password cannot be null");
                 Constraint.isNotNull(keyAlias, "Key alias base cannot be null");
                 Constraint.isNotNull(keyPassword, "Key password cannot be null");
