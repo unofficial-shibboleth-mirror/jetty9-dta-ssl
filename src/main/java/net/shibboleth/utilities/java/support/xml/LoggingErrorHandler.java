@@ -41,7 +41,7 @@ public final class LoggingErrorHandler implements ErrorHandler {
 
     /** {@inheritDoc} */
     public void error(final SAXParseException exception) throws SAXException {
-        log.error("XML Parsing Error:", exception);
+        log.error("XML Parsing Error", exception);
         throw exception;
     }
 

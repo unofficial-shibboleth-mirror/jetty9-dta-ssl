@@ -47,7 +47,7 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
         ReloadableService<T>, UnmodifiableComponent {
 
     /** Class logger. */
-    private final Logger log = LoggerFactory.getLogger(AbstractReloadableService.class);
+    @Nonnull private final Logger log = LoggerFactory.getLogger(AbstractReloadableService.class);
 
     /**
      * Number of milliseconds between one reload check and another. A value of 0 or less indicates that no reloading
@@ -56,25 +56,25 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
     @Duration private long reloadCheckDelay = 300000;
 
     /** Timer used to schedule configuration reload tasks. */
-    private Timer reloadTaskTimer;
+    @Nullable private Timer reloadTaskTimer;
 
     /** Watcher that monitors the set of configuration resources for this service for changes. */
-    private ServiceReloadTask reloadTask;
+    @Nullable private ServiceReloadTask reloadTask;
 
     /** The last time time the service was reloaded, whether successful or not. */
-    private DateTime lastReloadInstant;
+    @Nullable private DateTime lastReloadInstant;
 
     /** The last time the service was reloaded successfully. */
-    private DateTime lastSuccessfulReleaseIntant;
+    @Nullable private DateTime lastSuccessfulReleaseIntant;
 
     /** The cause of the last reload failure, if the last reload failed. */
-    private Throwable reloadFailureCause;
+    @Nullable private Throwable reloadFailureCause;
 
     /** Do we fail immediately if the config is bogus? */
     private boolean failFast;
 
     /** The log prefix. */
-    private String logPrefix;
+    @Nullable private String logPrefix;
 
     /**
      * Gets the number of milliseconds between one reload check and another. A value of 0 or less indicates that no
@@ -94,7 +94,7 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
      * 
      * @param delay number of milliseconds between one reload check and another
      */
-    public void setReloadCheckDelay(@Duration long delay) {
+    public void setReloadCheckDelay(@Duration final long delay) {
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         reloadCheckDelay = delay;
@@ -151,7 +151,7 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
      * 
      * @param value what to set.
      */
-    public void setFailFast(boolean value) {
+    public void setFailFast(final boolean value) {
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         failFast = value;
     }
@@ -164,11 +164,11 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
         try {
             doReload();
             lastSuccessfulReleaseIntant = new DateTime(ISOChronology.getInstanceUTC());
-        } catch (ServiceException e) {
+        } catch (final ServiceException e) {
             if (isFailFast()) {
                 throw new ComponentInitializationException(getLogPrefix() + " could not perform initial load", e);
             }
-            log.error(getLogPrefix() + " initial load failed", e);
+            log.error("{} Initial load failed", getLogPrefix(), e);
             if (reloadCheckDelay > 0) {
                 log.info("{} Continuing to poll configuration", getLogPrefix());
             } else {
@@ -178,10 +178,10 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
 
         if (reloadCheckDelay > 0) {
             if (null == reloadTaskTimer) {
-                log.info("{} no reload task timer specified, creating default", getLogPrefix());
+                log.info("{} No reload task timer specified, creating default", getLogPrefix());
                 reloadTaskTimer = new Timer("Timer for " + getId());
             }
-            log.info("{} reload time set to: {}, starting refresh thread", getLogPrefix(), reloadCheckDelay);
+            log.info("{} Reload time set to: {}, starting refresh thread", getLogPrefix(), reloadCheckDelay);
             reloadTask = new ServiceReloadTask();
             reloadTaskTimer.schedule(reloadTask, reloadCheckDelay, reloadCheckDelay);
         }
@@ -211,8 +211,8 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
             doReload();
 
             lastSuccessfulReleaseIntant = now;
-        } catch (ServiceException e) {
-            log.error(getLogPrefix() + " Reload for " + getId() + " failed", e);
+        } catch (final ServiceException e) {
+            log.error("{} Reload for {} failed", getLogPrefix(), getId(), e);
             reloadFailureCause = e;
         }
     }
