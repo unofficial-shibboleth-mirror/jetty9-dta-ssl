@@ -30,6 +30,7 @@ import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -43,19 +44,18 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.bouncycastle.asn1.ASN1Encodable;
-import org.bouncycastle.asn1.ASN1ObjectIdentifier;
-import org.bouncycastle.asn1.ASN1Primitive;
-import org.bouncycastle.asn1.DERPrintableString;
 import org.bouncycastle.asn1.DERSequence;
-import org.bouncycastle.asn1.DERUTF8String;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x509.Extension;
 import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.GeneralNames;
-import org.bouncycastle.asn1.x509.X509Extensions;
-import org.bouncycastle.asn1.x509.X509Name;
-import org.bouncycastle.asn1.x509.X509NameEntryConverter;
-import org.bouncycastle.openssl.PEMWriter;
-import org.bouncycastle.x509.X509V3CertificateGenerator;
-import org.bouncycastle.x509.extension.SubjectKeyIdentifierStructure;
+import org.bouncycastle.cert.X509CertificateHolder;
+import org.bouncycastle.cert.X509v3CertificateBuilder;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
+import org.bouncycastle.cert.jcajce.JcaX509ExtensionUtils;
+import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
+import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -229,14 +229,14 @@ public class SelfSignedCertificateGenerator {
         // Write the requested files.
         
         if (args.privateKeyFile != null) {
-            final PEMWriter keyOut = new PEMWriter(new FileWriter(args.privateKeyFile));
+            final JcaPEMWriter keyOut = new JcaPEMWriter(new FileWriter(args.privateKeyFile));
             keyOut.writeObject(keypair.getPrivate());
             keyOut.flush();
             keyOut.close();
         }
 
         if (args.certificateFile != null) {
-            final PEMWriter certOut = new PEMWriter(new FileWriter(args.certificateFile));
+            final JcaPEMWriter certOut = new JcaPEMWriter(new FileWriter(args.certificateFile));
             certOut.writeObject(certificate);
             certOut.flush();
             certOut.close();
@@ -297,32 +297,36 @@ public class SelfSignedCertificateGenerator {
      */
     @Nonnull protected X509Certificate generateCertificate(@Nonnull final KeyPair keypair) throws Exception {
         
-        final X509V3CertificateGenerator certifcateGenerator = new X509V3CertificateGenerator();
-        certifcateGenerator.setPublicKey(keypair.getPublic());
+        final X500Name dn = new X500Name("CN=" + args.hostname);
+        final GregorianCalendar notBefore = new GregorianCalendar();
+        final GregorianCalendar notOnOrAfter = new GregorianCalendar();
+        notOnOrAfter.set(GregorianCalendar.YEAR, notOnOrAfter.get(GregorianCalendar.YEAR) + args.certificateLifetime);
+        
+        final X509v3CertificateBuilder builder = new JcaX509v3CertificateBuilder(
+                dn,
+                new BigInteger(160, new SecureRandom()),
+                notBefore.getTime(),
+                notOnOrAfter.getTime(),
+                dn,
+                keypair.getPublic()
+                );
+        
+        final JcaX509ExtensionUtils extUtils = new JcaX509ExtensionUtils();
+        
+        builder.addExtension(Extension.subjectKeyIdentifier, false,
+                extUtils.createSubjectKeyIdentifier(keypair.getPublic()));
 
-        final StringBuffer dnBuffer = new StringBuffer("CN=").append(args.hostname);
-
-        final X509Name dn = new X509Name(false, dnBuffer.toString(), new RdnConverter());
-        certifcateGenerator.setIssuerDN(dn);
-        certifcateGenerator.setSubjectDN(dn);
-
-        final GregorianCalendar date = new GregorianCalendar();
-        certifcateGenerator.setNotBefore(date.getTime());
-
-        date.set(GregorianCalendar.YEAR, date.get(GregorianCalendar.YEAR) + args.certificateLifetime);
-        certifcateGenerator.setNotAfter(date.getTime());
-
-        certifcateGenerator.setSerialNumber(new BigInteger(160, new SecureRandom()));
-
-        certifcateGenerator.setSignatureAlgorithm(args.certAlg);
-
-        certifcateGenerator.addExtension(X509Extensions.SubjectAlternativeName, false,
+        builder.addExtension(Extension.subjectAlternativeName, false,
                 GeneralNames.getInstance(new DERSequence(buildSubjectAltNames())));
 
-        certifcateGenerator.addExtension(X509Extensions.SubjectKeyIdentifier, false,
-                new SubjectKeyIdentifierStructure(keypair.getPublic()));
-
-        return certifcateGenerator.generate(keypair.getPrivate());
+        final X509CertificateHolder certHldr = builder.build(
+                new JcaContentSignerBuilder(args.certAlg).build(keypair.getPrivate()));
+        final X509Certificate cert = new JcaX509CertificateConverter().getCertificate(certHldr);
+        
+        cert.checkValidity(new Date());
+        cert.verify(keypair.getPublic());
+        
+        return cert;
     }
 
     /**
@@ -371,20 +375,6 @@ public class SelfSignedCertificateGenerator {
         }
 
         generator.generate();
-    }
-
-    /** Callback that renders a string as either a DER printable string or DER UTF-8 string. */
-    private class RdnConverter extends X509NameEntryConverter {
-
-        /** {@inheritDoc} */
-        @Override
-        public ASN1Primitive getConvertedValue(ASN1ObjectIdentifier oid, String value) {
-            if (canBePrintable(value)) {
-                return new DERPrintableString(value);
-            } else {
-                return new DERUTF8String(value);
-            }
-        }
     }
     
     /** Command line option conversion from String to File. */
