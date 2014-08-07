@@ -43,12 +43,7 @@ import com.beust.jcommander.converters.BaseConverter;
 
 
 /**
- * Implements a strategy for access to versioned symmetric keys using a keystore, and a standalone file
- * for tracking the latest key version, to compensate for the lack of extensible attribute support in the
- * pre-Java 8 KeyStore API.
- * 
- * <p>The separate resource must be a Java properties file containing a {@link #CURRENT_VERSION_PROP}
- * property pointing to the latest key version.</p> 
+ * Implements a tool for managing secret keys in accordance with the {@link BasicKeystoreKeyStrategy}. 
  */
 public class BasicKeystoreKeyStrategyTool {
     
