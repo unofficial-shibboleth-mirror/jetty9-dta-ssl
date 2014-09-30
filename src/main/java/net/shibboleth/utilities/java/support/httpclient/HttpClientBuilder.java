@@ -21,6 +21,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
@@ -157,22 +158,25 @@ public class HttpClientBuilder {
     private boolean connectionStalecheck;
 
     /** Host name of the HTTP proxy server through which connections will be made. Default value: null. */
-    private String connectionProxyHost;
+    @Nullable private String connectionProxyHost;
+    
+    /** Apache UserAgent. */
+    @Nullable private String userAgent;
 
     /** Port number of the HTTP proxy server through which connections will be made. Default value: 8080. */
     private int connectionProxyPort;
 
     /** Username used to connect to the HTTP proxy server. Default value: null. */
-    private String connectionProxyUsername;
+    @Nullable private String connectionProxyUsername;
 
     /** Password used to connect to the HTTP proxy server. Default value: null. */
-    private String connectionProxyPassword;
+    @Nullable private String connectionProxyPassword;
 
     /** Whether to follow HTTP redirects. Default value: true */
     private boolean httpFollowRedirects;
 
     /** Character set used for HTTP entity content. Default value: UTF-8 */
-    private String httpContentCharSet;
+    @Nullable private String httpContentCharSet;
 
     /** The Apache HttpClientBuilder 4.3+ instance over which to layer this builder. */
     private org.apache.http.impl.client.HttpClientBuilder apacheBuilder;
@@ -208,6 +212,7 @@ public class HttpClientBuilder {
         connectionProxyPassword = null;
         httpFollowRedirects = true;
         httpContentCharSet = "UTF-8";
+        userAgent = null;
     }
 
     /**
@@ -359,7 +364,7 @@ public class HttpClientBuilder {
      * 
      * @return hostname of the default proxy used when making connection
      */
-    public String getConnectionProxyHost() {
+    @Nullable public String getConnectionProxyHost() {
         return connectionProxyHost;
     }
 
@@ -368,7 +373,7 @@ public class HttpClientBuilder {
      * 
      * @param host hostname of the default proxy used when making connection
      */
-    public void setConnectionProxyHost(final String host) {
+    public void setConnectionProxyHost(@Nullable final String host) {
         connectionProxyHost = StringSupport.trimOrNull(host);
     }
 
@@ -397,7 +402,7 @@ public class HttpClientBuilder {
      * 
      * @return username to use when authenticating to the proxy
      */
-    public String getConnectionProxyUsername() {
+    @Nullable public String getConnectionProxyUsername() {
         return connectionProxyUsername;
     }
 
@@ -406,7 +411,7 @@ public class HttpClientBuilder {
      * 
      * @param usename username to use when authenticating to the proxy; may be null
      */
-    public void setConnectionProxyUsername(final String usename) {
+    public void setConnectionProxyUsername(@Nullable final String usename) {
         connectionProxyUsername = usename;
     }
 
@@ -415,7 +420,7 @@ public class HttpClientBuilder {
      * 
      * @return password used when authenticating to the proxy
      */
-    public String getConnectionProxyPassword() {
+    @Nullable public String getConnectionProxyPassword() {
         return connectionProxyPassword;
     }
 
@@ -424,7 +429,7 @@ public class HttpClientBuilder {
      * 
      * @param password password used when authenticating to the proxy; may be null
      */
-    public void setConnectionProxyPassword(final String password) {
+    public void setConnectionProxyPassword(@Nullable final String password) {
         connectionProxyPassword = password;
     }
 
@@ -451,7 +456,7 @@ public class HttpClientBuilder {
      * 
      * @return character set used with the HTTP entity (body)
      */
-    public String getHttpContentCharSet() {
+    @Nullable public String getHttpContentCharSet() {
         return httpContentCharSet;
     }
 
@@ -460,8 +465,26 @@ public class HttpClientBuilder {
      * 
      * @param charSet character set used with the HTTP entity (body)
      */
-    public void setHttpContentCharSet(final String charSet) {
+    public void setHttpContentCharSet(@Nullable final String charSet) {
         httpContentCharSet = charSet;
+    }
+
+    /**
+     * Gets user agent.
+     * 
+     * @return The user agent.
+     */
+    @Nullable public String getUserAgent() {
+        return userAgent;
+    }
+
+    /**
+     * Sets user agent.
+     * 
+     * @param what what to set.  If this is null Apache will use the default.
+     */
+    public void setUserAgent(@Nullable final String what) {
+        userAgent = what;
     }
 
     /**
@@ -482,9 +505,10 @@ public class HttpClientBuilder {
      * 
      * @throws Exception if there is a problem decorating the Apache builder
      */
+    // Checkstyle: CyclomaticComplexity OFF
     protected void decorateApacheBuilder() throws Exception {
         org.apache.http.impl.client.HttpClientBuilder builder = getApacheBuilder();
-
+        
         if (connectionDisregardSslCertificate) {
             builder.setSSLSocketFactory(HttpClientSupport.buildNoTrustSSLConnectionSocketFactory());
         }
@@ -535,7 +559,12 @@ public class HttpClientBuilder {
 
         builder.setDefaultRequestConfig(requestConfigBuilder.build());
         builder.setDefaultConnectionConfig(connectionConfigBuilder.build());
+        
+        if (null != userAgent) {
+            builder.setUserAgent(userAgent);
+        }
     }
+    // Checkstyle: CyclomaticComplexity ON
 
     /**
      * Get the Apache {@link org.apache.http.impl.client.HttpClientBuilder} instance over which this builder will be
