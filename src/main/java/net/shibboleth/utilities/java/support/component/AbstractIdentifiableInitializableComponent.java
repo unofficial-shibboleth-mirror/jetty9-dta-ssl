@@ -19,6 +19,8 @@ package net.shibboleth.utilities.java.support.component;
 
 import javax.annotation.Nonnull;
 
+import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
+
 /**
  * An {@link AbstractIdentifiedInitializableComponent} with a public setter.
  */
@@ -26,7 +28,7 @@ public abstract class AbstractIdentifiableInitializableComponent extends Abstrac
         implements IdentifiableComponent {
 
     /** {@inheritDoc} */
-    @Override public void setId(@Nonnull String componentId) {
+    @Override public void setId(@Nonnull @NotEmpty final String componentId) {
         super.setId(componentId);
     }
 }
