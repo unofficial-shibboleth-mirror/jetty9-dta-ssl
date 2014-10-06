@@ -23,8 +23,11 @@ import net.shibboleth.utilities.java.support.component.InitializableComponent;
 
 import org.joda.time.DateTime;
 
-/** A service that supports reloading its configuration. 
- * @param <T> The sort of service that this implements */
+/**
+ * A service that supports reloading its configuration.
+ *  
+ * @param <T> The sort of service that this implements
+ */
 public interface ReloadableService<T> extends InitializableComponent {
     
     /**
@@ -57,11 +60,12 @@ public interface ReloadableService<T> extends InitializableComponent {
      */
     public void reload() ;
     
-    /** Get the serviceable component that this service supports .  If
-     * The component hasn't been successfully loaded yet or if this service
-     * does not support a ServiceableComponent return null.  If it is non-null,
-     * the returned component will be is pinned and <em>MUST</em> be unpinned by a call to
+    /**
+     * Get the serviceable component that this service supports. If the component hasn't been successfully
+     * loaded yet or if this service does not support a ServiceableComponent, null is returned. On a non-null
+     * value, the returned component will be pinned and <em>MUST</em> be unpinned by a call to
      * {@link ServiceableComponent#unpinComponent()}.
+     * 
      * @return the component, if appropriate.
      */
     @Nullable public ServiceableComponent<T> getServiceableComponent();
