@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 
 import net.shibboleth.utilities.java.support.logic.Constraint;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -109,7 +110,8 @@ public class Pair<T1, T2> {
 
         if (o instanceof Pair) {
             final Pair<?,?> otherPair = (Pair<?,?>) o;
-            return Objects.equal(getFirst(), otherPair.getFirst()) && Objects.equal(getSecond(), otherPair.getSecond());
+            return java.util.Objects.equals(getFirst(), otherPair.getFirst())
+                    && java.util.Objects.equals(getSecond(), otherPair.getSecond());
         }
 
         return false;
@@ -122,6 +124,6 @@ public class Pair<T1, T2> {
 
     /** {@inheritDoc} */
     @Nonnull public String toString() {
-        return Objects.toStringHelper(this).add("first", first).add("second", second).toString();
+        return MoreObjects.toStringHelper(this).add("first", first).add("second", second).toString();
     }
 }

@@ -17,6 +17,8 @@
 
 package net.shibboleth.utilities.java.support.xml;
 
+import java.util.Objects;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -27,8 +29,6 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-
-import com.google.common.base.Objects;
 
 /** Set of helper methods for working with DOM namespaces. */
 public final class NamespaceSupport {
@@ -104,13 +104,13 @@ public final class NamespaceSupport {
             for (int i = 0; i < length; i++) {
                 attr = map.item(i);
                 value = attr.getNodeValue();
-                if (Objects.equal(attr.getNamespaceURI(), XMLConstants.XMLNS_NS)) {
+                if (Objects.equals(attr.getNamespaceURI(), XMLConstants.XMLNS_NS)) {
                     // at this point we are dealing with DOM Level 2 nodes only
-                    if (Objects.equal(attr.getLocalName(), XMLConstants.XMLNS_PREFIX) && prefix == null) {
+                    if (Objects.equals(attr.getLocalName(), XMLConstants.XMLNS_PREFIX) && prefix == null) {
                         // default namespace
                         return value;
-                    } else if (Objects.equal(attr.getPrefix(), XMLConstants.XMLNS_PREFIX)
-                            && Objects.equal(attr.getLocalName(), prefix)) {
+                    } else if (Objects.equals(attr.getPrefix(), XMLConstants.XMLNS_PREFIX)
+                            && Objects.equals(attr.getLocalName(), prefix)) {
                         // non default namespace
                         return value;
                     }
@@ -162,14 +162,14 @@ public final class NamespaceSupport {
             String foundNamespace;
             for (int i = 0; i < length; i++) {
                 attr = map.item(i);
-                if (Objects.equal(attr.getNamespaceURI(), XMLConstants.XMLNS_NS)) {
+                if (Objects.equals(attr.getNamespaceURI(), XMLConstants.XMLNS_NS)) {
                     // DOM Level 2 nodes
-                    if ((Objects.equal(attr.getPrefix(), XMLConstants.XMLNS_PREFIX))
-                            && Objects.equal(attr.getNodeValue(), namespaceURI)) {
+                    if ((Objects.equals(attr.getPrefix(), XMLConstants.XMLNS_PREFIX))
+                            && Objects.equals(attr.getNodeValue(), namespaceURI)) {
 
                         localName = attr.getLocalName();
                         foundNamespace = startingElement.lookupNamespaceURI(localName);
-                        if (Objects.equal(foundNamespace, namespaceURI)) {
+                        if (Objects.equals(foundNamespace, namespaceURI)) {
                             return localName;
                         }
                     }

@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,8 +35,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
-
-import com.google.common.base.Objects;
 
 /** Set of helper methods for working with DOM Elements. */
 public final class ElementSupport {
@@ -218,7 +217,7 @@ public final class ElementSupport {
 
         Element childNode = getFirstChildElement(root);
         while (childNode != null) {
-            if (Objects.equal(childNode.getLocalName(), localName)) {
+            if (Objects.equals(childNode.getLocalName(), localName)) {
                 children.add(childNode);
             }
             childNode = getNextSiblingElement(childNode);
@@ -455,7 +454,7 @@ public final class ElementSupport {
      */
     public static boolean isElementNamed(@Nullable final Element e, @Nullable final String ns,
             @Nullable final String localName) {
-        return e != null && Objects.equal(ns, e.getNamespaceURI()) && Objects.equal(localName, e.getLocalName());
+        return e != null && Objects.equals(ns, e.getNamespaceURI()) && Objects.equals(localName, e.getLocalName());
     }
 
     /**

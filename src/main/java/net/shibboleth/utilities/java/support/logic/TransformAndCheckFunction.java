@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import com.google.common.base.Function;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
@@ -88,9 +89,10 @@ public class TransformAndCheckFunction<T> implements Function<T, Optional<? exte
         }
 
         if (obj instanceof TransformAndCheckFunction) {
-            TransformAndCheckFunction<T> other = (TransformAndCheckFunction<T>) obj;
-            return Objects.equal(preprocessor, other.preprocessor) && Objects.equal(constraint, other.constraint)
-                    && Objects.equal(failOnConstraintViolation, other.failOnConstraintViolation);
+            final TransformAndCheckFunction<T> other = (TransformAndCheckFunction<T>) obj;
+            return java.util.Objects.equals(preprocessor, other.preprocessor)
+                    && java.util.Objects.equals(constraint, other.constraint)
+                    && java.util.Objects.equals(failOnConstraintViolation, other.failOnConstraintViolation);
         }
 
         return false;
@@ -103,7 +105,7 @@ public class TransformAndCheckFunction<T> implements Function<T, Optional<? exte
 
     /** {@inheritDoc} */
     public String toString() {
-        return Objects.toStringHelper(this).add("preprocessor", preprocessor).add("constraint", constraint)
+        return MoreObjects.toStringHelper(this).add("preprocessor", preprocessor).add("constraint", constraint)
                 .add("failOnConstraintViolation", failOnConstraintViolation).toString();
     }
 }

@@ -24,7 +24,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import com.google.common.base.Function;
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 /** A {@link Function} that applies {@link StringSupport#trimOrNull(String)} to a given input string. */
 @ThreadSafe
@@ -58,6 +58,6 @@ public class TrimOrNullStringFunction implements Function<String, String> {
 
     /** {@inheritDoc} */
     public String toString() {
-        return Objects.toStringHelper(this).toString();
+        return MoreObjects.toStringHelper(this).toString();
     }
 }

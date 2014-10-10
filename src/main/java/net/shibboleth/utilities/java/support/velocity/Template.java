@@ -36,6 +36,7 @@ import org.apache.velocity.runtime.resource.loader.StringResourceLoader;
 import org.apache.velocity.runtime.resource.util.StringResourceRepository;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -258,6 +259,6 @@ public final class Template {
 
     /** {@inheritDoc} */
     public String toString() {
-        return Objects.toStringHelper(this).add("templateName", templateName).toString();
+        return MoreObjects.toStringHelper(this).add("templateName", templateName).toString();
     }
 }
