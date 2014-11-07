@@ -29,6 +29,7 @@ import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
@@ -52,19 +53,22 @@ public class StringDigester implements Function<String, String> {
     };
     
     /** The default input character set.*/
-    public static final Charset DEFAULT_INPUT_CHARSET = Charsets.UTF_8;
+    @Nonnull public static final Charset DEFAULT_INPUT_CHARSET = Charsets.UTF_8;
     
     /** Logger. */
-    private final Logger log = LoggerFactory.getLogger(StringDigester.class);
+    @Nonnull private final Logger log = LoggerFactory.getLogger(StringDigester.class);
     
     /** The message digest algorithm to use. */
-    private String digestAlgorithm;
+    @Nonnull @NotEmpty private String digestAlgorithm;
     
     /** The output format instance used to determine how the digested byte[] is converted to the output String. */
-    private OutputFormat outputFormat;
+    @Nonnull private OutputFormat outputFormat;
     
     /** The Charset instance used in converting the input String to a byte[]. */
-    private Charset inputCharset;
+    @Nonnull private Charset inputCharset;
+    
+    /** Optional salt to add into the digest. */
+    @Nullable private String salt;
     
     /**
      * Constructor.
@@ -75,7 +79,7 @@ public class StringDigester implements Function<String, String> {
      * @param format the output format used to convert the digested[] to the output string
      * @throws NoSuchAlgorithmException thrown if the digestAlgorithm is not invalid or unsupported
      */
-    public StringDigester(@Nonnull final String algorithm, @Nonnull final OutputFormat format) 
+    public StringDigester(@Nonnull @NotEmpty final String algorithm, @Nonnull final OutputFormat format) 
             throws NoSuchAlgorithmException {
        this(algorithm, format, DEFAULT_INPUT_CHARSET); 
     }
@@ -88,7 +92,7 @@ public class StringDigester implements Function<String, String> {
      * @param charset the character set to use in converting the input string to a byte[] prior to digesting
      * @throws NoSuchAlgorithmException thrown if the digestAlgorithm is not invalid or unsupported
      */
-    public StringDigester(@Nonnull final String algorithm, @Nonnull final OutputFormat format, 
+    public StringDigester(@Nonnull @NotEmpty final String algorithm, @Nonnull final OutputFormat format, 
             @Nullable final Charset charset) throws NoSuchAlgorithmException {
         
         digestAlgorithm = Constraint.isNotNull(StringSupport.trimOrNull(algorithm), 
@@ -105,21 +109,34 @@ public class StringDigester implements Function<String, String> {
         }
         
     }
+    
+    /**
+     * Set a salt to add to the digest input for obfuscation.
+     * 
+     * @param s salt value
+     */
+    public void setSalt(@Nullable final String s) {
+        salt = s;
+    }
 
     /** {@inheritDoc} */
-    @Nullable public String apply(@Nullable String input) {
+    @Nullable public String apply(@Nullable final String input) {
         String trimmed = StringSupport.trimOrNull(input);
         if (trimmed == null) {
             log.debug("Trimmed input was null, returning null");
             return null;
         }
         
+        if (salt != null) {
+            trimmed = salt + trimmed;
+        }
+        
         log.debug("Digesting input '{}' as charset '{}' with digest algorithm '{}' and output format '{}'", 
                 trimmed, inputCharset.displayName(), digestAlgorithm, outputFormat);
         
-        byte[] inputBytes = trimmed.getBytes(inputCharset);
+        final byte[] inputBytes = trimmed.getBytes(inputCharset);
         
-        MessageDigest digest = null;
+        final MessageDigest digest;
         try {
             digest = MessageDigest.getInstance(digestAlgorithm);
         } catch (NoSuchAlgorithmException e) {
@@ -128,7 +145,7 @@ public class StringDigester implements Function<String, String> {
             return null;
         }
         
-        byte[] digestedBytes = digest.digest(inputBytes);
+        final byte[] digestedBytes = digest.digest(inputBytes);
         
         if (digestedBytes == null) {
             log.debug("Digested output was null, returning null");
