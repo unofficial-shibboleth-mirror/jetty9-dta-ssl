@@ -49,11 +49,8 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
     /** Class logger. */
     @Nonnull private final Logger log = LoggerFactory.getLogger(AbstractReloadableService.class);
 
-    /**
-     * Number of milliseconds between one reload check and another. A value of 0 or less indicates that no reloading
-     * will be performed. Default value: 300,000 (5*60*1000, or 5 minutes)
-     */
-    @Duration private long reloadCheckDelay = 300000;
+    /** Number of milliseconds between one reload check and another. */
+    @Duration private long reloadCheckDelay;
 
     /** Timer used to schedule configuration reload tasks. */
     @Nullable private Timer reloadTaskTimer;
@@ -75,10 +72,17 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
 
     /** The log prefix. */
     @Nullable private String logPrefix;
+    
+    /** Constructor. */
+    public AbstractReloadableService() {
+        reloadCheckDelay = 0;
+    }
 
     /**
      * Gets the number of milliseconds between one reload check and another. A value of 0 or less indicates that no
      * reloading will be performed.
+     * 
+     * <p>Default value: 0</p>
      * 
      * @return number of milliseconds between one reload check and another
      */
