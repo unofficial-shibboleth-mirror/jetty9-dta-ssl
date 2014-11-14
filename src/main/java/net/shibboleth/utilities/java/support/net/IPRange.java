@@ -173,6 +173,9 @@ public class IPRange {
         }
 
         String[] blockParts = block.split("/");
+        if (blockParts.length != 2) {
+            throw new IllegalArgumentException("CIDR block definition is invalid, check for missing or extra slash");
+        }
         try {
             validateIPAddress(blockParts[0]);
             InetAddress address = InetAddress.getByName(blockParts[0]);

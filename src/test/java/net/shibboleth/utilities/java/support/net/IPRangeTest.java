@@ -31,6 +31,8 @@ public class IPRangeTest {
         testInvalid("1234:5678:90ab:cdef:FfFf:AaAa:BBBB:GHIJ/128");
         testInvalid("/32");
         testInvalid("f/32");
+        testInvalid("1.2.3.4");
+        testInvalid("1.2.3.4/32/1");
         
         try{
             new IPRange(new byte[]{1, 2 ,3}, 32);
