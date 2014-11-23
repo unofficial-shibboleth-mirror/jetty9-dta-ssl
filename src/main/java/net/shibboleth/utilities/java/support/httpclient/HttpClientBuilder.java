@@ -200,9 +200,9 @@ public class HttpClientBuilder {
     /** Resets all builder parameters to their defaults. */
     public void resetDefaults() {
         socketLocalAddress = null;
-        socketTimeout = 5000;
+        socketTimeout = -1;
         socketBufferSize = 8192;
-        connectionTimeout = 5000;
+        connectionTimeout = -1;
         connectionDisregardSslCertificate = false;
         connectionCloseAfterResponse = true;
         connectionStalecheck = false;
