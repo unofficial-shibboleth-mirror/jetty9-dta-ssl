@@ -601,7 +601,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
      * <p>
      * The default features set are:
      * <ul>
-     * <li>{@link XMLConstants#FEATURE_SECURE_PROCESSING} = true</li>
+     * <li>{@link javax.xml.XMLConstants#FEATURE_SECURE_PROCESSING} = true</li>
      * <li>http://apache.org/xml/features/disallow-doctype-decl = true</li>
      * </ul>
      * </p>
