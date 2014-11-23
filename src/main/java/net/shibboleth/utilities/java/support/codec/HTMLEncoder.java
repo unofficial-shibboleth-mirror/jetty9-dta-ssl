@@ -43,11 +43,13 @@ import javax.annotation.Nullable;
  * An HTML encoder derived from the OWASP ESAPI project. The encoded output will be safe for an HTML interpreter as
  * unsafe characters are translated into their safe equivalent.
  * 
- * @see <a href="OSJ-69">https://issues.shibboleth.net/jira/browse/OSJ-69</a>
  * 
- * @see org.owasp.esapi.Encoder
- * @see org.owasp.esapi.reference.DefaultEncoder
- * @see org.owasp.esapi.codecs.HTMLEntityCodec
+ * 
+ * @see <a href="https://issues.shibboleth.net/jira/browse/OSJ-69">OSJ-69</a>
+ * 
+ * @see <code>org.owasp.esapi.Encoder</code>
+ * @see <code>org.owasp.esapi.reference.DefaultEncoder</code>
+ * @see <code>org.owasp.esapi.codecs.HTMLEntityCodec</code>
  */
 public final class HTMLEncoder {
 
