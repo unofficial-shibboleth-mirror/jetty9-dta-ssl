@@ -24,12 +24,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.xml.parsers.DocumentBuilder;
 
-import net.shibboleth.utilities.java.support.component.DestructableComponent;
-
 import org.w3c.dom.Document;
 
 /** A pool of XML parsers. */
-public interface ParserPool extends DestructableComponent {
+public interface ParserPool {
 
     /**
      * Gets a builder from the pool.
