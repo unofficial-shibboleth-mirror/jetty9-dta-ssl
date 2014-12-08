@@ -25,6 +25,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.google.common.annotations.Beta;
 
 import net.shibboleth.utilities.java.support.collection.LazyList;
@@ -238,7 +240,8 @@ public final class URISupport {
      * @param paramName the URL decoded name of the parameter to find
      * @return the found component, or null if query string or param name is null/empty or the parameter is not found
      */
-    public static String getRawQueryStringParameter(final String queryString, final String paramName) {
+    @Nullable public static String getRawQueryStringParameter(@Nullable final String queryString,
+            @Nullable final String paramName) {
         final String trimmedQuery = trimOrNullQuery(queryString);
         final String trimmedName = StringSupport.trimOrNull(paramName);
         if (trimmedQuery == null || trimmedName == null) {
@@ -247,8 +250,8 @@ public final class URISupport {
 
         final String encodedName = doURLEncode(trimmedName);
         
-        String[] candidates = trimmedQuery.split("&");
-        for (String candidate : candidates) {
+        final String[] candidates = trimmedQuery.split("&");
+        for (final String candidate : candidates) {
             if (candidate.startsWith(encodedName+"=") || candidate.equals(encodedName)) {
                 return candidate;
             }
