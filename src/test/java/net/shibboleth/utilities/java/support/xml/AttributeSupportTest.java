@@ -348,7 +348,6 @@ public class AttributeSupportTest {
                 "attribute lookup by QName after it has been removed");
     }
 
-    @SuppressWarnings("deprecation")
     @Test public void testGetAttributeMethods() {
         // getAttribute(Element, QName)
         Assert.assertNull(AttributeSupport.getAttribute(noBaseIdSpaceLang, XMLConstants.XML_ID_ATTRIB_NAME),
