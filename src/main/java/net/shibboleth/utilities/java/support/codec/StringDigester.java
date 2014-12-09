@@ -24,14 +24,14 @@ import java.security.NoSuchAlgorithmException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.apache.commons.codec.Charsets;
-import org.apache.commons.codec.binary.Hex;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
+
+import org.apache.commons.codec.CharEncoding;
+import org.apache.commons.codec.binary.Hex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Function;
 
@@ -53,7 +53,7 @@ public class StringDigester implements Function<String, String> {
     };
     
     /** The default input character set.*/
-    @Nonnull public static final Charset DEFAULT_INPUT_CHARSET = Charsets.UTF_8;
+    @Nonnull public static final Charset DEFAULT_INPUT_CHARSET = Charset.forName(CharEncoding.UTF_8);
     
     /** Logger. */
     @Nonnull private final Logger log = LoggerFactory.getLogger(StringDigester.class);
@@ -98,7 +98,7 @@ public class StringDigester implements Function<String, String> {
         digestAlgorithm = Constraint.isNotNull(StringSupport.trimOrNull(algorithm), 
                 "Digest algorithm was null or empty");
         
-        // Test the digest algorithm upfront to make sure it's valid. If not, it will throw.
+        // Test the digest algorithm up front to make sure it's valid. If not, it will throw.
         MessageDigest.getInstance(digestAlgorithm);
         
         outputFormat = format;
@@ -140,7 +140,7 @@ public class StringDigester implements Function<String, String> {
         try {
             digest = MessageDigest.getInstance(digestAlgorithm);
         } catch (NoSuchAlgorithmException e) {
-            // This shouldn't happen, b/c we tested it earlier in the ctor, so just log and return null.
+            // This shouldn't happen, because we tested it earlier in the constructor, so just log and return null.
             log.error("Digest algorithm '{}' was invalid", digestAlgorithm, e);
             return null;
         }
