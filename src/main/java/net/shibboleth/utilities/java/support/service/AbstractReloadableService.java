@@ -55,6 +55,9 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
     /** Timer used to schedule configuration reload tasks. */
     @Nullable private Timer reloadTaskTimer;
 
+    /** Timer used to schedule reload tasks if no external one set. */
+    @Nullable private Timer internalTaskTimer;
+
     /** Watcher that monitors the set of configuration resources for this service for changes. */
     @Nullable private ServiceReloadTask reloadTask;
 
@@ -182,12 +185,14 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
 
         if (reloadCheckDelay > 0) {
             if (null == reloadTaskTimer) {
-                log.info("{} No reload task timer specified, creating default", getLogPrefix());
-                reloadTaskTimer = new Timer("Timer for " + getId());
+                log.debug("{} No reload task timer specified, creating default", getLogPrefix());
+                internalTaskTimer = new Timer("Timer for " + getId());
+            } else {
+                internalTaskTimer = reloadTaskTimer;
             }
             log.info("{} Reload time set to: {}, starting refresh thread", getLogPrefix(), reloadCheckDelay);
             reloadTask = new ServiceReloadTask();
-            reloadTaskTimer.schedule(reloadTask, reloadCheckDelay, reloadCheckDelay);
+            internalTaskTimer.schedule(reloadTask, reloadCheckDelay, reloadCheckDelay);
         }
     }
 
@@ -195,11 +200,16 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
     @Override
     protected void doDestroy() {
         log.info("{} Starting shutdown", getLogPrefix());
-        super.doDestroy();
         if (reloadTask != null) {
             reloadTask.cancel();
+            reloadTask = null;
         }
+        if (reloadTaskTimer == null) {
+            internalTaskTimer.cancel();
+        }
+        internalTaskTimer = null;
         log.info("{} Completing shutdown", getLogPrefix());
+        super.doDestroy();
     }
 
     /**
