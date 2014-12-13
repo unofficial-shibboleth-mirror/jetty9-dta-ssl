@@ -494,7 +494,7 @@ public class HttpClientBuilder {
      * 
      * @throws Exception if there is any problem building the new client instance
      */
-    public final HttpClient buildClient() throws Exception {
+    public HttpClient buildClient() throws Exception {
         decorateApacheBuilder();
         return getApacheBuilder().build();
     }
