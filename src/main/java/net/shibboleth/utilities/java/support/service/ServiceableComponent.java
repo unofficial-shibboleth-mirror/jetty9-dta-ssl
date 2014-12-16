@@ -39,19 +39,19 @@ public interface ServiceableComponent<T> {
      *
      * @return the component.       
      */
-    @Nonnull public T getComponent();
+    @Nonnull T getComponent();
     
     /**
      * This function takes a lock on the component which guarantees that it will not be disposed until the unpin call
      * is made.<br/> This method is typically <em>only</em> used during intialization of the component.<br/> 
      * <em>Every call to {@link #pinComponent()} must be matched by a call to {@link #unpinComponent()}</em>. 
      */
-    public void pinComponent();
+    void pinComponent();
 
     /**
      * This undoes the work that is done by {@link #pinComponent()}.
      */
-    public void unpinComponent();
+    void unpinComponent();
     
 
     /**
@@ -59,5 +59,5 @@ public interface ServiceableComponent<T> {
      * calls dispose on the components.  <br/>Implementations should avoid calling
      * this with locks held.
      */
-    public void unloadComponent();
+    void unloadComponent();
 }

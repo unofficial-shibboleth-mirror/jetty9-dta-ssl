@@ -35,7 +35,7 @@ public interface ReloadableService<T> extends InitializableComponent {
      * 
      * @return time when the service was last successfully reloaded
      */
-    @Nullable public DateTime getLastSuccessfulReloadInstant();
+    @Nullable DateTime getLastSuccessfulReloadInstant();
 
     /**
      * Gets the time when the service last attempted to reload. If the reload was successful this time should match the
@@ -43,14 +43,14 @@ public interface ReloadableService<T> extends InitializableComponent {
      * 
      * @return time when the service last attempted to reload
      */
-    @Nullable public DateTime getLastReloadAttemptInstant();
+    @Nullable DateTime getLastReloadAttemptInstant();
 
     /**
      * Gets the reason the last reload failed.
      * 
      * @return reason the last reload failed or null if the last reload was successful
      */
-    @Nullable public Throwable getReloadFailureCause();
+    @Nullable Throwable getReloadFailureCause();
 
     /**
      * Reloads the configuration of the service. Whether internal state is maintained between reloads is implementation
@@ -58,7 +58,7 @@ public interface ReloadableService<T> extends InitializableComponent {
      * 
      * @throws ServiceException thrown if there is a problem reloading the service
      */
-    public void reload() ;
+    void reload() ;
     
     /**
      * Get the serviceable component that this service supports. If the component hasn't been successfully
@@ -68,6 +68,6 @@ public interface ReloadableService<T> extends InitializableComponent {
      * 
      * @return the component, if appropriate.
      */
-    @Nullable public ServiceableComponent<T> getServiceableComponent();
+    @Nullable ServiceableComponent<T> getServiceableComponent();
 
 }
