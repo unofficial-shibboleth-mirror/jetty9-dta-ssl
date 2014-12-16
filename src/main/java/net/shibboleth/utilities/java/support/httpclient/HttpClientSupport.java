@@ -28,7 +28,6 @@ import javax.net.ssl.X509TrustManager;
 
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContexts;
-import org.apache.http.conn.ssl.StrictHostnameVerifier;
 
 /**
  * Support class for using {@link org.apache.http.client.HttpClient} and related components.
@@ -41,14 +40,14 @@ public final class HttpClientSupport {
     /**
      * Build an instance of {@link SSLConnectionSocketFactory} which uses
      * the standard HttpClient default {@link SSLContext} and which uses
-     * a strict hostname verifier {@link StrictHostnameVerifier}.
+     * a strict hostname verifier {@link SSLConnectionSocketFactory#STRICT_HOSTNAME_VERIFIER}.
      * 
      * @return a new instance of HttpClient SSL connection socket factory
      */
     public static SSLConnectionSocketFactory buildStrictSSLConnectionSocketFactory() {
         return new SSLConnectionSocketFactory(
                 SSLContexts.createDefault(), 
-                new StrictHostnameVerifier());
+                SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER);
     }
     
     /**
