@@ -66,7 +66,7 @@ import org.apache.http.util.CharsetUtils;
  * </li>
  * 
  * <li>
- * If this builder's <code>connectionDisregardSslCertificate</code> is set to <code>true</code>, then any value
+ * If this builder's <code>connectionDisregardTLSCertificate</code> is set to <code>true</code>, then any value
  * previously set via the Apache builder's
  * {@link org.apache.http.impl.client.HttpClientBuilder#setSSLSocketFactory} will be
  * unconditionally overwritten.</li>
@@ -100,7 +100,7 @@ import org.apache.http.util.CharsetUtils;
  * </p>
  * 
  * <ul>
- * <li>{@link #setConnectionDisregardSslCertificate(boolean)}</li>
+ * <li>{@link #setConnectionDisregardTLSCertificate(boolean)}</li>
  * <li>{@link #setSocketBufferSize(int)}</li>
  * <li>{@link #setHttpContentCharSet(String)}</li>
  * </ul>
@@ -306,40 +306,6 @@ public class HttpClientBuilder {
         connectionTimeout = timeout;
     }
 
-    /**
-     * Gets whether the responder's SSL/TLS certificate should be ignored.
-     * 
-     * <p>
-     * This flag is overridden and ignored if a custom TLS socket factory is specified via
-     * {@link #setTLSSocketFactory}.
-     * </p>
-     * 
-     * @return whether the responder's SSL/TLS certificate should be ignored
-     * 
-     * @deprecated use {@link #isConnectionDisregardTLSCertificate()}
-     */
-    @Deprecated
-    public boolean isConnectionDisregardSslCertificate() {
-        return isConnectionDisregardTLSCertificate();
-    }
-
-    /**
-     * Sets whether the responder's SSL/TLS certificate should be ignored.
-     * 
-     * <p>
-     * This flag is overridden and ignored if a custom TLS socket factory is specified via
-     * {@link #setTLSSocketFactory}.
-     * </p>
-     * 
-     * @param disregard whether the responder's SSL/TLS certificate should be ignored
-     * 
-     * @deprecated use {@link #setConnectionDisregardTLSCertificate(boolean)}
-     */
-    @Deprecated
-    public void setConnectionDisregardSslCertificate(final boolean disregard) {
-        setConnectionDisregardTLSCertificate(disregard);
-    }
-    
     /**
      * Gets whether the responder's SSL/TLS certificate should be ignored.
      * 
