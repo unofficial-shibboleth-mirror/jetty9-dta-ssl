@@ -33,6 +33,7 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.ConnectionConfig;
+import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.util.CharsetUtils;
 
@@ -147,6 +148,9 @@ public class HttpClientBuilder {
 
     /** Whether the SSL/TLS certificates used by the responder should be ignored. Default value: false */
     private boolean connectionDisregardTLSCertificate;
+    
+    /** The TLS socket factory to use.  Optional, defaults to null. */
+    @Nullable private LayeredConnectionSocketFactory tlsSocketFactory;
 
     /** Whether to instruct the server to close the connection after it has sent its response. Default value: true */
     private boolean connectionCloseAfterResponse;
@@ -305,6 +309,11 @@ public class HttpClientBuilder {
     /**
      * Gets whether the responder's SSL/TLS certificate should be ignored.
      * 
+     * <p>
+     * This flag is overridden and ignored if a custom TLS socket factory is specified via
+     * {@link #setTLSSocketFactory}.
+     * </p>
+     * 
      * @return whether the responder's SSL/TLS certificate should be ignored
      * 
      * @deprecated use {@link #isConnectionDisregardTLSCertificate()}
@@ -316,6 +325,11 @@ public class HttpClientBuilder {
 
     /**
      * Sets whether the responder's SSL/TLS certificate should be ignored.
+     * 
+     * <p>
+     * This flag is overridden and ignored if a custom TLS socket factory is specified via
+     * {@link #setTLSSocketFactory}.
+     * </p>
      * 
      * @param disregard whether the responder's SSL/TLS certificate should be ignored
      * 
@@ -329,6 +343,11 @@ public class HttpClientBuilder {
     /**
      * Gets whether the responder's SSL/TLS certificate should be ignored.
      * 
+     * <p>
+     * This flag is overridden and ignored if a custom TLS socket factory is specified via
+     * {@link #setTLSSocketFactory}.
+     * </p>
+     * 
      * @return whether the responder's SSL/TLS certificate should be ignored
      */
     public boolean isConnectionDisregardTLSCertificate() {
@@ -338,10 +357,33 @@ public class HttpClientBuilder {
     /**
      * Sets whether the responder's SSL/TLS certificate should be ignored.
      * 
+     * <p>
+     * This flag is overridden and ignored if a custom TLS socket factory is specified via
+     * {@link #setTLSSocketFactory}.
+     * </p>
+     * 
      * @param disregard whether the responder's SSL/TLS certificate should be ignored
      */
     public void setConnectionDisregardTLSCertificate(final boolean disregard) {
         connectionDisregardTLSCertificate = disregard;
+    }
+
+    /**
+     * Get the TLS socket factory to use.
+     * 
+     * @return the socket factory, or null.
+     */
+    @Nullable public LayeredConnectionSocketFactory getTLSSocketFactory() {
+        return tlsSocketFactory;
+    }
+
+    /**
+     * Set the TLS socket factory to use.
+     * 
+     * @param factory the new socket factory, may be null
+     */
+    public void setTLSSocketFactory(@Nullable final LayeredConnectionSocketFactory factory) {
+        tlsSocketFactory = factory;
     }
 
     /**
@@ -533,8 +575,12 @@ public class HttpClientBuilder {
     protected void decorateApacheBuilder() throws Exception {
         org.apache.http.impl.client.HttpClientBuilder builder = getApacheBuilder();
         
-        if (connectionDisregardTLSCertificate) {
+        if (getTLSSocketFactory() != null) {
+            builder.setSSLSocketFactory(getTLSSocketFactory());
+        } else if (connectionDisregardTLSCertificate) {
             builder.setSSLSocketFactory(HttpClientSupport.buildNoTrustSSLConnectionSocketFactory());
+        } else {
+            builder.setSSLSocketFactory(HttpClientSupport.buildStrictSSLConnectionSocketFactory());
         }
 
         if (connectionCloseAfterResponse) {
