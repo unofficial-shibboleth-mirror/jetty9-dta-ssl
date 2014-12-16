@@ -145,8 +145,8 @@ public class HttpClientBuilder {
      */
     private int connectionTimeout;
 
-    /** Whether the SSL certificates used by the responder should be ignored. Default value: false */
-    private boolean connectionDisregardSslCertificate;
+    /** Whether the SSL/TLS certificates used by the responder should be ignored. Default value: false */
+    private boolean connectionDisregardTLSCertificate;
 
     /** Whether to instruct the server to close the connection after it has sent its response. Default value: true */
     private boolean connectionCloseAfterResponse;
@@ -203,7 +203,7 @@ public class HttpClientBuilder {
         socketTimeout = -1;
         socketBufferSize = 8192;
         connectionTimeout = -1;
-        connectionDisregardSslCertificate = false;
+        connectionDisregardTLSCertificate = false;
         connectionCloseAfterResponse = true;
         connectionStalecheck = false;
         connectionProxyHost = null;
@@ -303,21 +303,45 @@ public class HttpClientBuilder {
     }
 
     /**
-     * Gets whether the responder's SSL certificate should be ignored.
+     * Gets whether the responder's SSL/TLS certificate should be ignored.
      * 
-     * @return whether the responder's SSL certificate should be ignored
+     * @return whether the responder's SSL/TLS certificate should be ignored
+     * 
+     * @deprecated use {@link #isConnectionDisregardTLSCertificate()}
      */
+    @Deprecated
     public boolean isConnectionDisregardSslCertificate() {
-        return connectionDisregardSslCertificate;
+        return isConnectionDisregardTLSCertificate();
     }
 
     /**
-     * Sets whether the responder's SSL certificate should be ignored.
+     * Sets whether the responder's SSL/TLS certificate should be ignored.
      * 
-     * @param disregard whether the responder's SSL certificate should be ignored
+     * @param disregard whether the responder's SSL/TLS certificate should be ignored
+     * 
+     * @deprecated use {@link #setConnectionDisregardTLSCertificate(boolean)}
      */
+    @Deprecated
     public void setConnectionDisregardSslCertificate(final boolean disregard) {
-        connectionDisregardSslCertificate = disregard;
+        setConnectionDisregardTLSCertificate(disregard);
+    }
+    
+    /**
+     * Gets whether the responder's SSL/TLS certificate should be ignored.
+     * 
+     * @return whether the responder's SSL/TLS certificate should be ignored
+     */
+    public boolean isConnectionDisregardTLSCertificate() {
+        return connectionDisregardTLSCertificate;
+    }
+
+    /**
+     * Sets whether the responder's SSL/TLS certificate should be ignored.
+     * 
+     * @param disregard whether the responder's SSL/TLS certificate should be ignored
+     */
+    public void setConnectionDisregardTLSCertificate(final boolean disregard) {
+        connectionDisregardTLSCertificate = disregard;
     }
 
     /**
@@ -509,7 +533,7 @@ public class HttpClientBuilder {
     protected void decorateApacheBuilder() throws Exception {
         org.apache.http.impl.client.HttpClientBuilder builder = getApacheBuilder();
         
-        if (connectionDisregardSslCertificate) {
+        if (connectionDisregardTLSCertificate) {
             builder.setSSLSocketFactory(HttpClientSupport.buildNoTrustSSLConnectionSocketFactory());
         }
 
