@@ -42,7 +42,10 @@ public final class ComponentSupport {
         }
 
         if (obj instanceof DestructableComponent) {
-            ((DestructableComponent) obj).destroy();
+            final DestructableComponent destructable = (DestructableComponent) obj;
+            if (!destructable.isDestroyed()) {
+                destructable.destroy();
+            }
         }
     }
 
@@ -60,7 +63,10 @@ public final class ComponentSupport {
         }
 
         if (obj instanceof InitializableComponent) {
-            ((InitializableComponent) obj).initialize();
+            final InitializableComponent initializable = (InitializableComponent) obj;
+            if (!initializable.isInitialized()) {
+                initializable.initialize();
+            }
         }
     }
 
@@ -86,7 +92,7 @@ public final class ComponentSupport {
     }
 
     /**
-     * Checks if a component has not been initialized and, if so, throws a {@link UninitializedComponentException}. If
+     * Checks if a component has not been initialized and, if so, throw)s a {@link UninitializedComponentException}. If
      * the component is also an instance of {@link IdentifiedComponent}, the component's ID is included in the error
      * message.
      * 
