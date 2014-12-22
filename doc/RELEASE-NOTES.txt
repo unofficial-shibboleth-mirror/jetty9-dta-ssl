@@ -3,6 +3,21 @@ Java Support Release Notes
 Release notes for all versions may be found at
 https://issues.shibboleth.net/jira/secure/ReleaseNote.jspa?projectId=10052
 
+Changes in version 7.0.0 - 2014-12-21
+=====================================
+[IDP-543] - Our Bean Factories should implement destroyInstance
+[IDP-472] - Configure the "StrictHostnameVerifier" as the default verifier for the Apache HttpClient TLS connections
+[IDP-539] - Fix AbstractReloadableService to create its own Timer, and pull dependency on TaskTimer bean.
+
+Changes in version 6.0.0 - 2014-11-26
+=====================================
+[JSPT-49] - Array bounds exception in IPRange parser
+[JSPT-48] - Don't impose default timeouts in HttpClientBuilder
+
+Changes in version 5.0.0 - 2014-10-28
+=====================================
+[JSPT-47] - Enhance DataSealer to make key versioning usable
+
 Changes in version 4.0.0 - 2014-07-24
 =====================================
 [JSPT-46] - Move services from the IdP
