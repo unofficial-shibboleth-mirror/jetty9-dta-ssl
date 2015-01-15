@@ -34,8 +34,8 @@ public class Base64SupportTest {
                     + "IHZlbGl0IGlhY3VsaXMgbWV0dXMsIHF1aXMgdnVscHV0YXRlIGRpYW0gcXVhbQ==";
 
     private final static String CHUNCKED_ENCODED_TEXT =
-            "TG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNlY3RldHVyIGFkaXBpc2NpbmcgZWxpdC4g\r\n"
-                    + "QWVuZWFuIG1hbGVzdWFkYSwgZXJvcyB0ZW1wb3IgYWxpcXVhbSB1bGxhbWNvcnBlciwgbWF1cmlz\r\n"
+            "TG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNlY3RldHVyIGFkaXBpc2NpbmcgZWxpdC4g\n"
+                    + "QWVuZWFuIG1hbGVzdWFkYSwgZXJvcyB0ZW1wb3IgYWxpcXVhbSB1bGxhbWNvcnBlciwgbWF1cmlz\n"
                     + "IHZlbGl0IGlhY3VsaXMgbWV0dXMsIHF1aXMgdnVscHV0YXRlIGRpYW0gcXVhbQ==";
 
     /** Test Base64 encoding content. */

@@ -44,10 +44,10 @@ public final class Base64Support {
     public static final boolean UNCHUNKED = false;
 
     /** Encoder used to produce chunked output. */
-    private static final Base64 CHUNKED_ENCODER = new Base64(76);
+    private static final Base64 CHUNKED_ENCODER = new Base64(76, new byte[] { '\n' });
 
     /** Encoder used to produce unchunked output. */
-    private static final Base64 UNCHUNKED_ENCODER = new Base64(0);
+    private static final Base64 UNCHUNKED_ENCODER = new Base64(0, new byte[] { '\n' });
 
     /** Constructor. */
     private Base64Support() {
