@@ -31,6 +31,7 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.ConnectionConfig;
 import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
@@ -181,6 +182,9 @@ public class HttpClientBuilder {
 
     /** Character set used for HTTP entity content. Default value: UTF-8 */
     @Nullable private String httpContentCharSet;
+    
+    /** Handler which determines if a request should be retried. */
+    @Nullable private HttpRequestRetryHandler retryHandler;
 
     /** The Apache HttpClientBuilder 4.3+ instance over which to layer this builder. */
     private org.apache.http.impl.client.HttpClientBuilder apacheBuilder;
@@ -518,6 +522,24 @@ public class HttpClientBuilder {
     public void setUserAgent(@Nullable final String what) {
         userAgent = what;
     }
+    
+    /**
+     * Get the handler which determines if a request should be retried.
+     * 
+     * @return handler which determines if a request should be retried
+     */
+    @Nullable public HttpRequestRetryHandler getHttpRequestRetryHandler() {
+        return retryHandler;
+    }
+    
+    /**
+     * Set the handler which determines if a request should be retried.
+     * 
+     * @param handler handler which determines if a request should be retried
+     */
+    public void setHttpRequestRetryHandler(@Nullable final HttpRequestRetryHandler handler) {
+        retryHandler = handler;
+    }
 
     /**
      * Constructs an {@link HttpClient} using the settings of this builder.
@@ -551,6 +573,10 @@ public class HttpClientBuilder {
 
         if (connectionCloseAfterResponse) {
             builder.addInterceptorLast(new RequestConnectionClose());
+        }
+        
+        if (retryHandler != null) {
+            builder.setRetryHandler(retryHandler);
         }
 
         // RequestConfig params
