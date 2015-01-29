@@ -176,7 +176,6 @@ public final class Constraint {
         return array;
     }
 
-
     /**
      * Checks that the given byte array is not empty. If the array is empty an {@link ConstraintViolationException}
      * is thrown.
@@ -195,6 +194,24 @@ public final class Constraint {
         return array;
     }    
     
+    /**
+     * Checks that the given string is not empty. If the string is empty a {@link ConstraintViolationException}
+     * is thrown.
+     * 
+     * @param string string to check
+     * @param message message used in the {@link ConstraintViolationException}
+     * 
+     * @return the checked input
+     */
+    @Nonnull public static String isNotEmpty(@Nonnull final String string,
+            @Nonnull final String message) {
+        if (string == null || string.length() == 0) {
+            throw new ConstraintViolationException(message);
+        }
+
+        return string;
+    }
+
     /**
      * Checks that the given object is not null. If the object is null an {@link ConstraintViolationException} is
      * thrown.
