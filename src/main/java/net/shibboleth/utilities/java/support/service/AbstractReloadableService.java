@@ -221,6 +221,7 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
         try {
             doReload();
             lastSuccessfulReleaseIntant = now;
+            reloadFailureCause = null;
         } catch (final ServiceException e) {
             log.error("{} Reload for {} failed", getLogPrefix(), getId(), e);
             reloadFailureCause = e;
