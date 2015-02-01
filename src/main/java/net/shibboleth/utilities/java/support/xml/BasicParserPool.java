@@ -130,7 +130,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
     public BasicParserPool() {
         super();
         maxPoolSize = 5;
-        builderPool = new Stack<SoftReference<DocumentBuilder>>();
+        builderPool = new Stack<>();
         builderAttributes = Collections.emptyMap();
         coalescing = true;
         expandEntityReferences = false;
@@ -198,7 +198,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
 
         final DocumentBuilder unwrappedBuilder = proxiedBuilder.getProxiedBuilder();
         unwrappedBuilder.reset();
-        final SoftReference<DocumentBuilder> builderReference = new SoftReference<DocumentBuilder>(unwrappedBuilder);
+        final SoftReference<DocumentBuilder> builderReference = new SoftReference<>(unwrappedBuilder);
 
         synchronized (builderPool) {
             if (builderPool.size() < maxPoolSize) {
@@ -305,7 +305,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
         if (newAttributes == null) {
             builderAttributes = Collections.emptyMap();
         } else {
-            builderAttributes = new HashMap<String, Object>(Maps.filterKeys(newAttributes, Predicates.notNull()));
+            builderAttributes = new HashMap<>(Maps.filterKeys(newAttributes, Predicates.notNull()));
         }
     }
 
@@ -609,7 +609,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
      * @return the default features map
      */
     protected Map<String, Boolean> buildDefaultFeatures() {
-        HashMap<String, Boolean> features = new HashMap<String, Boolean>();
+        HashMap<String, Boolean> features = new HashMap<>();
         features.put(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         features.put("http://apache.org/xml/features/disallow-doctype-decl", true);
         return features;

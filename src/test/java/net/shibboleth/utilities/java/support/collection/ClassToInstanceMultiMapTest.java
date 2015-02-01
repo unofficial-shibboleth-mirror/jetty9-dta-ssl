@@ -36,7 +36,7 @@ import org.testng.annotations.Test;
 public class ClassToInstanceMultiMapTest {
 
     @Test public void testClearIsEmpty() {
-        ClassToInstanceMultiMap<Object> map = new ClassToInstanceMultiMap<Object>();
+        ClassToInstanceMultiMap<Object> map = new ClassToInstanceMultiMap<>();
 
         map.clear();
         Assert.assertTrue(map.isEmpty());
@@ -49,7 +49,7 @@ public class ClassToInstanceMultiMapTest {
     }
 
     @Test public void testKeysAndContainsKey() {
-        ClassToInstanceMultiMap<AbstractInstant> map = new ClassToInstanceMultiMap<AbstractInstant>();
+        ClassToInstanceMultiMap<AbstractInstant> map = new ClassToInstanceMultiMap<>();
         populate(map);
         Assert.assertEquals(map.keys().size(), 2);
         Assert.assertFalse(map.containsKey(null));
@@ -64,7 +64,7 @@ public class ClassToInstanceMultiMapTest {
         Assert.assertFalse(map.containsKey(Serializable.class));
         Assert.assertTrue(map.containsKey(Instant.class));
 
-        map = new ClassToInstanceMultiMap<AbstractInstant>(true);
+        map = new ClassToInstanceMultiMap<>(true);
         populate(map);
         Assert.assertEquals(map.keys().size(), 9);
         Assert.assertFalse(map.containsKey(null));
@@ -81,7 +81,7 @@ public class ClassToInstanceMultiMapTest {
     }
 
     @Test public void testValuesAndContainsValues() {
-        ClassToInstanceMultiMap<AbstractInstant> map = new ClassToInstanceMultiMap<AbstractInstant>();
+        ClassToInstanceMultiMap<AbstractInstant> map = new ClassToInstanceMultiMap<>();
 
         DateTime now = new DateTime();
         map.put(now);
@@ -102,9 +102,9 @@ public class ClassToInstanceMultiMapTest {
     }
 
     @Test public void testEquals() {
-        final ClassToInstanceMultiMap<AbstractInstant> map = new ClassToInstanceMultiMap<AbstractInstant>();
-        final ClassToInstanceMultiMap<AbstractInstant> map2 = new ClassToInstanceMultiMap<AbstractInstant>();
-        final ClassToInstanceMultiMap<AbstractInstant> map3 = new ClassToInstanceMultiMap<AbstractInstant>();
+        final ClassToInstanceMultiMap<AbstractInstant> map = new ClassToInstanceMultiMap<>();
+        final ClassToInstanceMultiMap<AbstractInstant> map2 = new ClassToInstanceMultiMap<>();
+        final ClassToInstanceMultiMap<AbstractInstant> map3 = new ClassToInstanceMultiMap<>();
 
         final DateTime now = new DateTime();
         map.put(now);
@@ -129,7 +129,7 @@ public class ClassToInstanceMultiMapTest {
     }
 
     @Test public void testGet() {
-        ClassToInstanceMultiMap<AbstractInstant> map = new ClassToInstanceMultiMap<AbstractInstant>();
+        ClassToInstanceMultiMap<AbstractInstant> map = new ClassToInstanceMultiMap<>();
         populate(map);
 
         List<?> values = map.get(null);
@@ -143,7 +143,7 @@ public class ClassToInstanceMultiMapTest {
     }
 
     @Test public void testNoIndexedDuplicateValues() {
-        ClassToInstanceMultiMap<Object> map = new ClassToInstanceMultiMap<Object>(true);
+        ClassToInstanceMultiMap<Object> map = new ClassToInstanceMultiMap<>(true);
 
         map.put(new FooBarImpl());
 
@@ -155,7 +155,7 @@ public class ClassToInstanceMultiMapTest {
     }
 
     @Test public void testDuplicateInsertions() {
-        ClassToInstanceMultiMap<Object> map = new ClassToInstanceMultiMap<Object>(true);
+        ClassToInstanceMultiMap<Object> map = new ClassToInstanceMultiMap<>(true);
 
         FooBarImpl fb = new FooBarImpl();
 
@@ -172,7 +172,7 @@ public class ClassToInstanceMultiMapTest {
     }
 
     @Test public void testRemoveValue() {
-        ClassToInstanceMultiMap<Object> map = new ClassToInstanceMultiMap<Object>(true);
+        ClassToInstanceMultiMap<Object> map = new ClassToInstanceMultiMap<>(true);
 
         FooBarImpl fb = new FooBarImpl();
         FooImpl f = new FooImpl();
@@ -222,7 +222,7 @@ public class ClassToInstanceMultiMapTest {
     }
 
     @Test public void testRemoveByType() {
-        ClassToInstanceMultiMap<Object> map = new ClassToInstanceMultiMap<Object>(true);
+        ClassToInstanceMultiMap<Object> map = new ClassToInstanceMultiMap<>(true);
 
         FooBarImpl fb = new FooBarImpl();
         FooImpl f = new FooImpl();
@@ -273,7 +273,7 @@ public class ClassToInstanceMultiMapTest {
     }
 
     @Test public void testRemoveAll() {
-        ClassToInstanceMultiMap<Object> map = new ClassToInstanceMultiMap<Object>(true);
+        ClassToInstanceMultiMap<Object> map = new ClassToInstanceMultiMap<>(true);
 
         FooImpl f1 = new FooImpl();
         FooImpl f2 = new FooImpl();

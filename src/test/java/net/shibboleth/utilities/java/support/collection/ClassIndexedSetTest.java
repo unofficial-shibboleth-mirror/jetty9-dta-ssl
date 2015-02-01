@@ -34,7 +34,7 @@ public class ClassIndexedSetTest {
     private ClassIndexedSet<Member> memberSet;
 
     @BeforeMethod protected void setUp() throws Exception {
-        memberSet = new ClassIndexedSet<Member>();
+        memberSet = new ClassIndexedSet<>();
     }
 
     /** Test failure of adding a duplicate instance. */
@@ -155,7 +155,7 @@ public class ClassIndexedSetTest {
         Assert.assertEquals(memberSet.size(), 3, "Set had unexpected size");
 
         int count = 0;
-        HashSet<Member> unique = new HashSet<Member>();
+        HashSet<Member> unique = new HashSet<>();
         for (Member member : memberSet) {
             count++;
             Assert.assertTrue(unique.add(member), "Duplicate was returned by iterator");
@@ -181,7 +181,7 @@ public class ClassIndexedSetTest {
 
     /** Tests proper iterator remove() behavior. */
     @Test public void testIteratorRemove() {
-        memberSet = new ClassIndexedSet<Member>();
+        memberSet = new ClassIndexedSet<>();
         A memberA = new A("owner");
         memberSet.add(memberA);
         B memberB = new B("algorithm");
@@ -216,7 +216,7 @@ public class ClassIndexedSetTest {
 
     /** Tests proper iterator remove() behavior when called illegally. */
     @Test public void testIteratorRemoveIllegal() {
-        memberSet = new ClassIndexedSet<Member>();
+        memberSet = new ClassIndexedSet<>();
         A memberA = new A("owner");
         memberSet.add(memberA);
         B memberB = new B("algorithm");
@@ -248,8 +248,8 @@ public class ClassIndexedSetTest {
     }
 
     @Test public void testEqualsHash() {
-        memberSet = new ClassIndexedSet<Member>();
-        ClassIndexedSet<Member> other = new ClassIndexedSet<Member>();
+        memberSet = new ClassIndexedSet<>();
+        ClassIndexedSet<Member> other = new ClassIndexedSet<>();
         Assert.assertEquals(memberSet, other, "Empty sets are equal");
         Assert.assertEquals(memberSet.hashCode(), other.hashCode(), "Empty sets have equal hashes");
 

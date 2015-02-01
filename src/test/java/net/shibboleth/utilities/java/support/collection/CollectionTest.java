@@ -198,7 +198,7 @@ public class CollectionTest {
         collection.add(STRING_2);
         collection.add(STRING_3);
 
-        HashSet<String> set = new HashSet<String>(2);
+        HashSet<String> set = new HashSet<>(2);
         set.add(STRING_1);
         set.add(STRING_2);
 

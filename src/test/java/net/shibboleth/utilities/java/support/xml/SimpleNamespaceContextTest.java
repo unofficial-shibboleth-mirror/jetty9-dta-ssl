@@ -42,7 +42,7 @@ public class SimpleNamespaceContextTest {
 
     /** Create standard set of mappings for use by multiple tests. */
     @BeforeClass public void createStandardMappings() {
-        Map<String, String> prefixMappings = new HashMap<String, String>();
+        Map<String, String> prefixMappings = new HashMap<>();
         prefixMappings.put(PREFIX_A, URI_A);
         prefixMappings.put(PREFIX_B, URI_B);
         stdContext = new SimpleNamespaceContext(prefixMappings);

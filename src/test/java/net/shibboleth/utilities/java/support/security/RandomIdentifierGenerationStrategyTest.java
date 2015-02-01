@@ -20,7 +20,7 @@ public class RandomIdentifierGenerationStrategyTest {
       final Pattern ncNamePattern = Pattern.compile("^[a-zA-Z_][a-zA-Z0-9_\\-\\.]+$");
       final IdentifierGenerationStrategy strat = new RandomIdentifierGenerationStrategy();
       final int howMany = 1000;
-      final Set<String> values = new HashSet<String>(1000);
+      final Set<String> values = new HashSet<>(1000);
       for (int iteration = 1; iteration<=howMany; iteration++) {
           final String value = strat.generateIdentifier();
           

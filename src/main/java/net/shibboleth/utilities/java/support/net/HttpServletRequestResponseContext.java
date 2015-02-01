@@ -35,10 +35,10 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 public final class HttpServletRequestResponseContext {
 
     /** ThreadLocal storage for request. */
-    private static ThreadLocal<HttpServletRequest> currentRequest = new ThreadLocal<HttpServletRequest>();
+    private static ThreadLocal<HttpServletRequest> currentRequest = new ThreadLocal<>();
 
     /** ThreadLocal storage for response. */
-    private static ThreadLocal<HttpServletResponse> currentResponse = new ThreadLocal<HttpServletResponse>();
+    private static ThreadLocal<HttpServletResponse> currentResponse = new ThreadLocal<>();
 
     /** Constructor. */
     private HttpServletRequestResponseContext() {

@@ -47,7 +47,7 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
 public final class SimpleURLCanonicalizer {
     
     /** The scheme-to-port mapping data. */
-    private static Map<String, Integer> schemePortMap = new HashMap<String, Integer>();
+    private static Map<String, Integer> schemePortMap = new HashMap<>();
     
     /** Constructor to prevent instantiation.  */
     private SimpleURLCanonicalizer() {}

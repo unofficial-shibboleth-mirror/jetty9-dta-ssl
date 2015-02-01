@@ -67,7 +67,7 @@ public class URLBuilder {
      * Constructor.
      */
     public URLBuilder() {
-        queryParams = new ArrayList<Pair<String, String>>();
+        queryParams = new ArrayList<>();
     }
 
     /**
@@ -100,7 +100,7 @@ public class URLBuilder {
         }
         setPath(url.getPath());
         
-        queryParams = new ArrayList<Pair<String, String>>();
+        queryParams = new ArrayList<>();
         String queryString = url.getQuery();
         if (!Strings.isNullOrEmpty(queryString)) {
             String[] queryComps = queryString.split("&");
@@ -117,7 +117,7 @@ public class URLBuilder {
                     paramComps = queryComp.split("=");
                     paramName = URISupport.doURLDecode(paramComps[0]);
                     paramValue = URISupport.doURLDecode(paramComps[1]);
-                    queryParams.add(new Pair<String, String>(paramName, paramValue));
+                    queryParams.add(new Pair<>(paramName, paramValue));
                 }
             }
         }

@@ -72,15 +72,15 @@ public class BasicParserPoolTest {
     
     @Test public void testParams() throws SAXException, ComponentInitializationException, XMLParserException, IOException {
 
-        Map<String, Object> attributes = new HashMap<String, Object>();
+        Map<String, Object> attributes = new HashMap<>();
         attributes.put("http://apache.org/xml/features/dom/create-entity-ref-nodes", false);
         attributes.put("http://apache.org/xml/properties/input-buffer-size", 2000);
-        Map<String, Object> baseAttributes = new HashMap<String, Object>(attributes);
+        Map<String, Object> baseAttributes = new HashMap<>(attributes);
         attributes.put(null, 99);
 
-        Map<String, Boolean> features = new HashMap<String, Boolean>();
+        Map<String, Boolean> features = new HashMap<>();
         features.put("http://xml.org/sax/features/use-entity-resolver2", false);
-        Map<String, Boolean> baseFeatures = new HashMap<String, Boolean>(features);
+        Map<String, Boolean> baseFeatures = new HashMap<>(features);
         attributes.put(null, true);
 
         basicParserPool.setBuilderAttributes(attributes);
@@ -677,7 +677,7 @@ pool.initialize();
         basicParserPool.initialize();
         Assert.assertEquals(0, basicParserPool.getPoolSize());
         
-        ArrayList<DocumentBuilder> list = new ArrayList<DocumentBuilder>();
+        ArrayList<DocumentBuilder> list = new ArrayList<>();
         
         // Get 3x the maxPoolSize number of builders
         for (int i=0; i < 3*maxPoolSize; i++) {

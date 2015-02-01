@@ -336,7 +336,7 @@ public class SelfSignedCertificateGenerator {
      */
     @Nonnull @NonnullElements protected ASN1Encodable[] buildSubjectAltNames() {
         
-        final ArrayList<ASN1Encodable> subjectAltNames = new ArrayList<ASN1Encodable>();
+        final ArrayList<ASN1Encodable> subjectAltNames = new ArrayList<>();
 
         subjectAltNames.add(new GeneralName(GeneralName.dNSName, args.hostname));
 

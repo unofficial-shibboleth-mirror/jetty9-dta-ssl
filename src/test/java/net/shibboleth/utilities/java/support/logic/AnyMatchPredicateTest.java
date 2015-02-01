@@ -29,7 +29,7 @@ import com.google.common.collect.Lists;
 public class AnyMatchPredicateTest {
 
     @Test public void testApply(){
-        AnyMatchPredicate<String> predicate = new AnyMatchPredicate<String>(Predicates.equalTo("foo"));
+        AnyMatchPredicate<String> predicate = new AnyMatchPredicate<>(Predicates.equalTo("foo"));
         
         if (predicate.apply(null)) {
             Assert.fail();

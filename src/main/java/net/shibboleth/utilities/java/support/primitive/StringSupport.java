@@ -119,7 +119,7 @@ public final class StringSupport {
         Constraint.isNotNull(string, "String data can not be null");
         Constraint.isNotNull(delimiter, "String delimiter may not be null");
 
-        final ArrayList<String> values = new ArrayList<String>();
+        final ArrayList<String> values = new ArrayList<>();
 
         final String trimmedString = trimOrNull(string);
         if (trimmedString != null) {

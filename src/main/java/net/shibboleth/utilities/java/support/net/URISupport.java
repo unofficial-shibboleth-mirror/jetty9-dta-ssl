@@ -273,10 +273,10 @@ public final class URISupport {
     public static List<Pair<String, String>> parseQueryString(final String queryString) {
         final String trimmedQuery = trimOrNullQuery(queryString);
         if (trimmedQuery == null) {
-            return new LazyList<Pair<String,String>>();
+            return new LazyList<>();
         }
 
-        final ArrayList<Pair<String, String>> queryParams = new ArrayList<Pair<String, String>>();
+        final ArrayList<Pair<String, String>> queryParams = new ArrayList<>();
         final String[] paramPairs = trimmedQuery.split("&");
         String[] param;
         for (String paramPair : paramPairs) {

@@ -216,7 +216,7 @@ public final class HTMLEncoder {
      */
     // Checkstyle: MethodLength|TrailingComment OFF -- copied from OWASP ESAPI.
     @Nonnull private static synchronized Map<Character, String> mkCharacterToEntityMap() {
-        final Map<Character, String> map = new HashMap<Character, String>(252);
+        final Map<Character, String> map = new HashMap<>(252);
 
         map.put((char) 34, "quot"); /* quotation mark */
         map.put((char) 38, "amp"); /* ampersand */

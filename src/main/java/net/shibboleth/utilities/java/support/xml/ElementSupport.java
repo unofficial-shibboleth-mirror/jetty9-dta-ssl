@@ -153,7 +153,7 @@ public final class ElementSupport {
             return Collections.emptyList();
         }
 
-        final ArrayList<Element> children = new ArrayList<Element>();
+        final ArrayList<Element> children = new ArrayList<>();
 
         Element childNode = getFirstChildElement(root);
         while (childNode != null) {
@@ -213,7 +213,7 @@ public final class ElementSupport {
             return Collections.emptyList();
         }
 
-        final ArrayList<Element> children = new ArrayList<Element>();
+        final ArrayList<Element> children = new ArrayList<>();
 
         Element childNode = getFirstChildElement(root);
         while (childNode != null) {
@@ -242,7 +242,7 @@ public final class ElementSupport {
             return Collections.emptyList();
         }
 
-        final ArrayList<Element> children = new ArrayList<Element>();
+        final ArrayList<Element> children = new ArrayList<>();
 
         Element childNode = getFirstChildElement(root);
         while (childNode != null) {
@@ -386,14 +386,14 @@ public final class ElementSupport {
             return Collections.emptyMap();
         }
 
-        final Map<QName, List<Element>> children = new HashMap<QName, List<Element>>();
+        final Map<QName, List<Element>> children = new HashMap<>();
 
         Element e = getFirstChildElement(root);
         while (e != null) {
             QName qname = QNameSupport.getNodeQName(e);
             List<Element> elements = children.get(qname);
             if (elements == null) {
-                elements = new ArrayList<Element>();
+                elements = new ArrayList<>();
                 children.put(qname, elements);
             }
 

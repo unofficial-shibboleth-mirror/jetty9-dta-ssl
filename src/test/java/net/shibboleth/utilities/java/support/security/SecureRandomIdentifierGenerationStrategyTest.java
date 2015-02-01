@@ -22,7 +22,7 @@ public class SecureRandomIdentifierGenerationStrategyTest {
         final Pattern ncNamePattern = Pattern.compile("^[a-zA-Z_][a-zA-Z0-9_\\-\\.]+$");
         final IdentifierGenerationStrategy strat = new SecureRandomIdentifierGenerationStrategy();
         final int howMany = 1000;
-        final Set<String> values = new HashSet<String>(1000);
+        final Set<String> values = new HashSet<>(1000);
         for (int iteration = 1; iteration <= howMany; iteration++) {
             final String value = strat.generateIdentifier();
 
@@ -51,7 +51,7 @@ public class SecureRandomIdentifierGenerationStrategyTest {
         final IdentifierGenerationStrategy strat =
                 new SecureRandomIdentifierGenerationStrategy(SecureRandom.getInstance("SHA1PRNG"), 16, new Hex());
         final int howMany = 1000;
-        final Set<String> values = new HashSet<String>(1000);
+        final Set<String> values = new HashSet<>(1000);
         for (int iteration = 1; iteration <= howMany; iteration++) {
             final String value = strat.generateIdentifier();
 

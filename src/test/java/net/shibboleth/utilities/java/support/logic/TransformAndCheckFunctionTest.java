@@ -37,7 +37,7 @@ public class TransformAndCheckFunctionTest {
         Function<String, Optional<? extends String>> f = null;
         boolean thrown = false;
         try {
-            f = new TransformAndCheckFunction<String>(null, new MyPredicate(), true);
+            f = new TransformAndCheckFunction<>(null, new MyPredicate(), true);
         } catch (ConstraintViolationException e) {
             thrown = true;
         }
@@ -45,7 +45,7 @@ public class TransformAndCheckFunctionTest {
 
         thrown = false;
         try {
-            f = new TransformAndCheckFunction<String>(TrimOrNullStringFunction.INSTANCE, null, true);
+            f = new TransformAndCheckFunction<>(TrimOrNullStringFunction.INSTANCE, null, true);
         } catch (ConstraintViolationException e) {
             thrown = true;
         }
@@ -55,12 +55,12 @@ public class TransformAndCheckFunctionTest {
 
     @Test public void testApply() {
         Function<String, Optional<? extends String>> f =
-                new TransformAndCheckFunction<String>(TrimOrNullStringFunction.INSTANCE, new MyPredicate(), false);
+                new TransformAndCheckFunction<>(TrimOrNullStringFunction.INSTANCE, new MyPredicate(), false);
 
         org.testng.Assert.assertFalse(f.apply(" two").isPresent(), "Should not be present since the predicate failed");
         org.testng.Assert.assertEquals(f.apply(" iii ").get(), "iii", "present and trimmed");
 
-        f = new TransformAndCheckFunction<String>(TrimOrNullStringFunction.INSTANCE, new MyPredicate(), true);
+        f = new TransformAndCheckFunction<>(TrimOrNullStringFunction.INSTANCE, new MyPredicate(), true);
         org.testng.Assert.assertEquals(f.apply(" iii ").get(), "iii", "present and trimmed");
         boolean thrown = false;
         try {

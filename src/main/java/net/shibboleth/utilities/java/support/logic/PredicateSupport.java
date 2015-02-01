@@ -40,7 +40,7 @@ public final class PredicateSupport {
      * @return the constructed predicate
      */
     @Nonnull public static <T> Predicate<Iterable<T>> allMatch(@Nonnull Predicate<T> target) {
-        return new AllMatchPredicate<T>(target);
+        return new AllMatchPredicate<>(target);
     }
 
     /**
@@ -52,7 +52,7 @@ public final class PredicateSupport {
      * @return the constructed predicate
      */
     @Nonnull public static <T> Predicate<Iterable<T>> anyMatch(@Nonnull Predicate<T> target) {
-        return new AnyMatchPredicate<T>(target);
+        return new AnyMatchPredicate<>(target);
     }
 
     /**

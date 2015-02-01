@@ -199,7 +199,7 @@ public final class SerializeSupport {
     }
     
     static {
-        prettyPrintParams = new LazyMap<String, Object>();
+        prettyPrintParams = new LazyMap<>();
         prettyPrintParams.put("format-pretty-print", Boolean.TRUE);
     }
 
