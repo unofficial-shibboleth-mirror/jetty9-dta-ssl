@@ -212,10 +212,7 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
         super.doDestroy();
     }
 
-    /**
-     * {@inheritDoc}
-     * 
-     */
+    /** {@inheritDoc} */
     @Override public final void reload() {
 
         final DateTime now = new DateTime(ISOChronology.getInstanceUTC());
@@ -223,11 +220,11 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
 
         try {
             doReload();
-
             lastSuccessfulReleaseIntant = now;
         } catch (final ServiceException e) {
             log.error("{} Reload for {} failed", getLogPrefix(), getId(), e);
             reloadFailureCause = e;
+            throw e;
         }
     }
 
@@ -261,7 +258,7 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
      * @return "Service '<definitionID>' :"
      */
     @Nonnull @NotEmpty protected String getLogPrefix() {
-        // local cache of cached entry to allow unsynchronised clearing of per class cache.
+        // local cache of cached entry to allow unsynchronized clearing of per class cache.
         String prefix = logPrefix;
         if (null == prefix) {
             StringBuilder builder = new StringBuilder("Service '").append(getId()).append("':");
@@ -282,8 +279,13 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
         @Override public void run() {
 
             if (shouldReload()) {
-                reload();
+                try {
+                    reload();
+                } catch (final ServiceException e) {
+                    
+                }
             }
         }
     }
+    
 }
