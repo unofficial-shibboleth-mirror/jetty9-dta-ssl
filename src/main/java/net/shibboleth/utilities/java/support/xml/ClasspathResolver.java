@@ -94,7 +94,7 @@ public class ClasspathResolver implements EntityResolver, LSResourceResolver {
         }
 
         if (resourceIns == null) {
-            log.trace("Entity was not resolved from classpath");
+            log.trace("Entity was not resolved from classpath, public id ({}), system id({})", publicId, systemId);
             return null;
         } else {
             log.trace("Entity resolved from classpath");
