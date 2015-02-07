@@ -17,6 +17,7 @@
 
 package net.shibboleth.utilities.java.support.security;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -35,7 +36,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
-import com.google.common.collect.Lists;
 import com.google.common.net.InetAddresses;
 
 /**
@@ -66,7 +66,7 @@ public class IPRangeAccessControl extends AbstractIdentifiableInitializableCompo
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         Constraint.isNotNull(ranges, "IPRange collection cannot be null");
         
-        allowedRanges = Lists.newArrayList(Collections2.filter(ranges, Predicates.notNull()));
+        allowedRanges = new ArrayList<>(Collections2.filter(ranges, Predicates.notNull()));
     }
 
     /** {@inheritDoc} */

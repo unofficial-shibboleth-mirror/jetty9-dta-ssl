@@ -62,7 +62,6 @@ import org.slf4j.LoggerFactory;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.converters.BaseConverter;
-import com.google.common.collect.Lists;
 
 /**
  * A helper class to generate self-signed keypairs.
@@ -181,7 +180,7 @@ public class SelfSignedCertificateGenerator {
      * @param altNames collection of subject alt names.
      */
     public void setDNSSubjectAltNames(@Nonnull @NonnullElements final Collection<String> altNames) {
-        args.dnsSubjectAltNames = Lists.newArrayList(StringSupport.normalizeStringCollection(altNames));
+        args.dnsSubjectAltNames = new ArrayList<>(StringSupport.normalizeStringCollection(altNames));
     }
 
     /**
@@ -190,7 +189,7 @@ public class SelfSignedCertificateGenerator {
      * @param altNames collection of subject alt names.
      */
     public void setURISubjectAltNames(@Nonnull @NonnullElements final Collection<String> altNames) {
-        args.uriSubjectAltNames = Lists.newArrayList(StringSupport.normalizeStringCollection(altNames));
+        args.uriSubjectAltNames = new ArrayList<>(StringSupport.normalizeStringCollection(altNames));
     }
     
     /**

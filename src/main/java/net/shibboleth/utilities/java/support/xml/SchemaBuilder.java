@@ -18,7 +18,9 @@
 package net.shibboleth.utilities.java.support.xml;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,9 +44,6 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * A class for building a {@link Schema} from a set of inputs, allowing for
@@ -108,9 +107,9 @@ public class SchemaBuilder {
     /** Constructor. */
     public SchemaBuilder() {
         schemaLang = SchemaLanguage.XML;
-        sources = Lists.newArrayList();
-        features = Maps.newHashMap();
-        properties = Maps.newHashMap();
+        sources = new ArrayList<>();
+        features = new HashMap<>();
+        properties = new HashMap<>();
         errorHandler = new LoggingErrorHandler(log);
     }
     

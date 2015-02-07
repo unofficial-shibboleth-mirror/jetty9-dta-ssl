@@ -17,13 +17,13 @@
 
 package net.shibboleth.utilities.java.support.logic;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicates;
-import com.google.common.collect.Lists;
 
 /** {@link AllMatchPredicate} unit test. */
 public class AllMatchPredicateTest {
@@ -39,20 +39,21 @@ public class AllMatchPredicateTest {
             Assert.fail();
         }
 
-        if (!predicate.apply(Lists.newArrayList("foo"))) {
+        if (!predicate.apply(Collections.singletonList("foo"))) {
             Assert.fail();
         }
 
-        if (!predicate.apply(Lists.newArrayList("foo", "foo"))) {
+        if (!predicate.apply(Arrays.asList("foo", "foo"))) {
             Assert.fail();
         }
 
-        if (predicate.apply(Lists.newArrayList("foo", "bar", "foo"))) {
+        if (predicate.apply(Arrays.asList("foo", "bar", "foo"))) {
             Assert.fail();
         }
         
-        if (predicate.apply(Lists.newArrayList("bar", "baz"))) {
+        if (predicate.apply(Arrays.asList("bar", "baz"))) {
             Assert.fail();
         }
     }
+    
 }
