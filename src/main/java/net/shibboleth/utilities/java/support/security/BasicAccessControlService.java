@@ -17,6 +17,8 @@
 
 package net.shibboleth.utilities.java.support.security;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -24,8 +26,6 @@ import javax.servlet.ServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.Maps;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
 import net.shibboleth.utilities.java.support.component.AbstractIdentifiableInitializableComponent;
@@ -45,7 +45,7 @@ public class BasicAccessControlService extends AbstractIdentifiableInitializable
     
     /** Constructor. */
     public BasicAccessControlService() {
-        policyMap = Maps.newHashMap();
+        policyMap = Collections.emptyMap();
     }
     
     /**
@@ -57,7 +57,7 @@ public class BasicAccessControlService extends AbstractIdentifiableInitializable
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         Constraint.isNotNull(map, "Policy map cannot be null");
         
-        policyMap = Maps.newHashMapWithExpectedSize(map.size());
+        policyMap = new HashMap<>(map.size());
         
         for (final Map.Entry<String,AccessControl> entry : map.entrySet()) {
             final String trimmed = StringSupport.trimOrNull(entry.getKey());

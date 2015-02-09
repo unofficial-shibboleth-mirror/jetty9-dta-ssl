@@ -19,6 +19,7 @@ package net.shibboleth.utilities.java.support.net;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -33,8 +34,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
-
-import com.google.common.collect.Maps;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.Live;
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
@@ -84,7 +83,7 @@ public class CookieBufferingFilter implements Filter {
          */
         public CookieBufferingHttpServletResponseProxy(@Nonnull final HttpServletResponse response) {
             super(response);
-            cookieMap = Maps.newHashMap();
+            cookieMap = new HashMap<>();
         }
     
         /** {@inheritDoc} */

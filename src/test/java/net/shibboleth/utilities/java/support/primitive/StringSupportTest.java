@@ -27,8 +27,6 @@ import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.Sets;
-
 /**
  * test for the various methods inside {@link StringSupport}
  */
@@ -108,18 +106,18 @@ public class StringSupportTest {
     @Test public void testNormalizeStringCollection() {
         Collection<String> output;
         
-        output = StringSupport.normalizeStringCollection(Sets.newHashSet("foo", "bar", "baz"));
+        output = StringSupport.normalizeStringCollection(new HashSet<>(Arrays.asList("foo", "bar", "baz")));
         Assert.assertEquals(output.size(), 3);
         Assert.assertTrue(output.contains("foo"));
         Assert.assertTrue(output.contains("bar"));
         Assert.assertTrue(output.contains("baz"));
         
-        output = StringSupport.normalizeStringCollection(Sets.newHashSet(" \t\t foo  ", "  ", "  baz \r\n"));
+        output = StringSupport.normalizeStringCollection(new HashSet<>(Arrays.asList(" \t\t foo  ", "  ", "  baz \r\n")));
         Assert.assertEquals(output.size(), 2);
         Assert.assertTrue(output.contains("foo"));
         Assert.assertTrue(output.contains("baz"));
         
-        output = StringSupport.normalizeStringCollection(Sets.newHashSet("   foo   ", null, "baz"));
+        output = StringSupport.normalizeStringCollection(new HashSet<>(Arrays.asList("   foo   ", null, "baz")));
         Assert.assertEquals(output.size(), 2);
         Assert.assertTrue(output.contains("foo"));
         Assert.assertTrue(output.contains("baz"));
