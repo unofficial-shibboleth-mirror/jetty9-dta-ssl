@@ -65,7 +65,7 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
     @Nullable private DateTime lastReloadInstant;
 
     /** The last time the service was reloaded successfully. */
-    @Nullable private DateTime lastSuccessfulReleaseIntant;
+    @Nullable private DateTime lastSuccessfulReleaseInstant;
 
     /** The cause of the last reload failure, if the last reload failed. */
     @Nullable private Throwable reloadFailureCause;
@@ -136,7 +136,7 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
 
     /** {@inheritDoc} */
     @Override @Nullable public DateTime getLastSuccessfulReloadInstant() {
-        return lastSuccessfulReleaseIntant;
+        return lastSuccessfulReleaseInstant;
     }
 
     /** {@inheritDoc} */
@@ -170,7 +170,8 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
         log.info("{} Performing initial load", getLogPrefix());
         try {
             doReload();
-            lastSuccessfulReleaseIntant = new DateTime(ISOChronology.getInstanceUTC());
+            lastSuccessfulReleaseInstant = new DateTime(ISOChronology.getInstanceUTC());
+            lastReloadInstant = lastSuccessfulReleaseInstant;
         } catch (final ServiceException e) {
             if (isFailFast()) {
                 throw new ComponentInitializationException(getLogPrefix() + " could not perform initial load", e);
@@ -220,7 +221,7 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
 
         try {
             doReload();
-            lastSuccessfulReleaseIntant = now;
+            lastSuccessfulReleaseInstant = now;
             reloadFailureCause = null;
         } catch (final ServiceException e) {
             log.error("{} Reload for {} failed", getLogPrefix(), getId(), e);
