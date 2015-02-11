@@ -169,9 +169,9 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
 
         log.info("{} Performing initial load", getLogPrefix());
         try {
+            lastReloadInstant = new DateTime(ISOChronology.getInstanceUTC());
             doReload();
-            lastSuccessfulReleaseInstant = new DateTime(ISOChronology.getInstanceUTC());
-            lastReloadInstant = lastSuccessfulReleaseInstant;
+            lastSuccessfulReleaseInstant = lastReloadInstant; 
         } catch (final ServiceException e) {
             if (isFailFast()) {
                 throw new ComponentInitializationException(getLogPrefix() + " could not perform initial load", e);

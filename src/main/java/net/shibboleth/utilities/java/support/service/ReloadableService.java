@@ -32,6 +32,7 @@ public interface ReloadableService<T> extends InitializableComponent {
     
     /**
      * Gets the time when the service was last successfully reloaded.
+     * Returns null if the service has never reloaded. 
      * 
      * @return time when the service was last successfully reloaded
      */
