@@ -17,6 +17,7 @@
 
 package net.shibboleth.utilities.java.support.xml;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,6 +39,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.annotation.constraint.NullableElements;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
+import net.shibboleth.utilities.java.support.resource.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -201,10 +203,32 @@ public class SchemaBuilder {
 
         resetSchemas();
         for (final Source schemaSource : schemaSources) {
-            addSchema(schemaSource);
+            if (schemaSource != null) {
+                addSchema(schemaSource);
+            }
         }
     }
     
+    /**
+     * Set the schemas to load from the given schema resources (replaces any previously added).
+     * 
+     * <p>If the caller wishes to ensure the schemas are loaded in a particular order,
+     * the {@link Collection} implementation provided must be one that preserves order.
+     * The method will add the sources in the order returned by the collection.</p>
+     * 
+     * @param schemaResources schema resources
+     */
+    @Nonnull public void setSchemaResources(@Nonnull @NullableElements final Collection<Resource> schemaResources) {
+        Constraint.isNotNull(schemaResources, "Schema resources cannot be null");
+
+        resetSchemas();
+        for (final Resource schemaResource : schemaResources) {
+            if (schemaResource != null) {
+                addSchema(schemaResource);
+            }
+        }
+    }
+
     /**
      * Add schemas from the given schema input streams.
      * 
@@ -212,7 +236,7 @@ public class SchemaBuilder {
      * 
      * @return this builder
      */
-    @Nonnull public SchemaBuilder addSchema(@Nonnull @NullableElements final InputStream schemaSource) {
+    @Nonnull public SchemaBuilder addSchema(@Nonnull final InputStream schemaSource) {
         Constraint.isNotNull(schemaSource, "Schema source input stream cannot be null");
 
         addSchema(new StreamSource(schemaSource));
@@ -227,10 +251,29 @@ public class SchemaBuilder {
      * 
      * @return this builder
      */
-    @Nonnull public SchemaBuilder addSchema(@Nonnull @NullableElements final Source schemaSource) {
+    @Nonnull public SchemaBuilder addSchema(@Nonnull final Source schemaSource) {
         Constraint.isNotNull(schemaSource, "Schema source inputstreams can not be null");
 
         sources.add(schemaSource);
+
+        return this;
+    }
+    
+    /**
+     * Add schemas from the given schema resource.
+     * 
+     * @param resource schema input resource
+     * 
+     * @return this builder
+     */
+    @Nonnull public SchemaBuilder addSchema(@Nonnull final Resource resource) {
+        Constraint.isNotNull(resource, "Schema resource cannot be null");
+
+        try {
+            addSchema(resource.getInputStream());
+        } catch (IOException e) {
+            log.error("IO error adding schema from resource: {}", resource.getDescription(), e);
+        }
 
         return this;
     }
