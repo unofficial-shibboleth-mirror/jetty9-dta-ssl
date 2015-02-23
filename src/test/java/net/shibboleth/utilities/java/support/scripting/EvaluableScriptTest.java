@@ -26,6 +26,7 @@ import javax.script.ScriptException;
 import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 /** Tests for {@link EvaluableScript}.*/
@@ -37,6 +38,14 @@ public class EvaluableScriptTest {
     /** A simple script to set a constant value. */
     private static final String TEST_SIMPLE_SCRIPT = "importPackage(Packages.net.shibboleth.idp.attribute);\n"
             + "foo = res = new Attribute(\"bar\");\n foo.addValue(\"value\");\n";
+    
+    private File theFile;
+    
+    @AfterClass public void deleteFile() {
+        if (null != theFile && theFile.exists()) {
+            theFile.delete();
+        }
+    }
 
     
     @Test public void testEvaluableScript() throws ScriptException, IOException {
@@ -71,16 +80,16 @@ public class EvaluableScriptTest {
             // OK
         }
 
-        File f = File.createTempFile("shibTest", "js");
+        File theFile = File.createTempFile("shibTest", ".js");
 
-        FileWriter s = new FileWriter(f);
+        FileWriter s = new FileWriter(theFile);
         s.write(TEST_SIMPLE_SCRIPT, 0, TEST_SIMPLE_SCRIPT.length());
         s.close();
 
-        Assert.assertEquals((new EvaluableScript(SCRIPT_LANGUAGE, f)).getScriptLanguage(), SCRIPT_LANGUAGE);
+        Assert.assertEquals((new EvaluableScript(SCRIPT_LANGUAGE, theFile)).getScriptLanguage(), SCRIPT_LANGUAGE);
 
         try {
-            new EvaluableScript(null, f);
+            new EvaluableScript(null, theFile);
             Assert.fail();
         } catch (ConstraintViolationException e) {
             // OK
