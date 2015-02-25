@@ -187,7 +187,7 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
         if (reloadCheckDelay > 0) {
             if (null == reloadTaskTimer) {
                 log.debug("{} No reload task timer specified, creating default", getLogPrefix());
-                internalTaskTimer = new Timer("Timer for " + getId());
+                internalTaskTimer = new Timer("Timer for " + getId(), true);
             } else {
                 internalTaskTimer = reloadTaskTimer;
             }

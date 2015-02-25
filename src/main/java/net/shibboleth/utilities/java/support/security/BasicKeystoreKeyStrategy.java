@@ -228,6 +228,7 @@ public class BasicKeystoreKeyStrategy extends AbstractInitializableComponent imp
 
         if (updateInterval > 0) {
             updateTask = new TimerTask() {
+                @Override
                 public void run() {
                     try {
                         updateDefaultKey();
@@ -237,7 +238,7 @@ public class BasicKeystoreKeyStrategy extends AbstractInitializableComponent imp
                 }
             };
             if (updateTaskTimer == null) {
-                internalTaskTimer = new Timer();
+                internalTaskTimer = new Timer(true);
             } else {
                 internalTaskTimer = updateTaskTimer;
             }
