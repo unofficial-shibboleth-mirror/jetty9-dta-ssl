@@ -25,7 +25,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
 
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
-import net.shibboleth.utilities.java.support.resource.ResourceTestHelper;
+import net.shibboleth.utilities.java.support.resource.TestResourceConverter;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -111,8 +111,8 @@ public class SchemaBuilderTest {
     }
     
     @Test public void testResource() throws SAXException, IOException, ComponentInitializationException {
-        net.shibboleth.utilities.java.support.resource.Resource first = ResourceTestHelper.of(new ClassPathResource(TEST_DIR + FIRST_SCHEMA_FILE));
-        net.shibboleth.utilities.java.support.resource.Resource second = ResourceTestHelper.of(new ClassPathResource(TEST_DIR + SECOND_SCHEMA_FILE));
+        net.shibboleth.utilities.java.support.resource.Resource first = TestResourceConverter.of(new ClassPathResource(TEST_DIR + FIRST_SCHEMA_FILE));
+        net.shibboleth.utilities.java.support.resource.Resource second = TestResourceConverter.of(new ClassPathResource(TEST_DIR + SECOND_SCHEMA_FILE));
 
         final SchemaBuilder builder = new SchemaBuilder();
         builder.addSchema(first);
