@@ -99,17 +99,23 @@ public class DataSealerTest {
     @Test public void encodeDecode() throws DataSealerException, ComponentInitializationException {
         final DataSealer sealer = createDataSealer();
 
-        String encoded = sealer.wrap(THE_DATA, System.currentTimeMillis() + 50000);
-        Assert.assertEquals(sealer.unwrap(encoded), THE_DATA);
+        final String encoded = sealer.wrap(THE_DATA, System.currentTimeMillis() + 50000);
+        final StringBuffer alias = new StringBuffer(); 
+        Assert.assertEquals(sealer.unwrap(encoded, alias), THE_DATA);
+        Assert.assertEquals(alias.toString(), "secret1");
     }
 
     @Test public void encodeDecodeSecondKey() throws DataSealerException, ComponentInitializationException {
         final DataSealer sealer = createDataSealer();
         final DataSealer sealer2 = createDataSealer2();
 
-        String encoded = sealer.wrap(THE_DATA, System.currentTimeMillis() + 50000);
-        Assert.assertEquals(sealer.unwrap(encoded), THE_DATA);
-        Assert.assertEquals(sealer2.unwrap(encoded), THE_DATA);
+        final StringBuffer alias = new StringBuffer(); 
+        final String encoded = sealer.wrap(THE_DATA, System.currentTimeMillis() + 50000);
+        Assert.assertEquals(sealer.unwrap(encoded, alias), THE_DATA);
+        Assert.assertEquals(alias.toString(), "secret1");
+        alias.setLength(0);
+        Assert.assertEquals(sealer2.unwrap(encoded, alias), THE_DATA);
+        Assert.assertEquals(alias.toString(), "secret1");
     }
     
     @Test public void timeOut() throws DataSealerException, InterruptedException, ComponentInitializationException {

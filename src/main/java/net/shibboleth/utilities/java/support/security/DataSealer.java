@@ -29,6 +29,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.crypto.SecretKey;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
@@ -118,10 +119,27 @@ public class DataSealer extends AbstractInitializableComponent {
      * Decrypts and verifies an encrypted bundle created with {@link #wrap(String, long)}.
      * 
      * @param wrapped the encoded blob
+     * 
      * @return the decrypted data, if it's unexpired
      * @throws DataSealerException if the data cannot be unwrapped and verified
      */
     @Nonnull public String unwrap(@Nonnull @NotEmpty final String wrapped) throws DataSealerException {
+
+        return unwrap(wrapped, null);
+    }
+    
+    /**
+     * Decrypts and verifies an encrypted bundle created with {@link #wrap(String, long)}, optionally
+     * returning the label of the key used to encrypt the data.
+     * 
+     * @param wrapped the encoded blob
+     * @param keyUsed a buffer to receive the alias of the key used to encrypt the data
+     * 
+     * @return the decrypted data, if it's unexpired
+     * @throws DataSealerException if the data cannot be unwrapped and verified
+     */
+    @Nonnull public String unwrap(@Nonnull @NotEmpty final String wrapped, @Nullable final StringBuffer keyUsed)
+            throws DataSealerException {
 
         try {
             final byte[] in = Base64Support.decode(wrapped);
@@ -132,7 +150,10 @@ public class DataSealer extends AbstractInitializableComponent {
             // Extract alias of key, and load if necessary.
             final String keyAlias = inputDataStream.readUTF();
             log.trace("Data was encrypted by key named '{}'", keyAlias);
-            final SecretKey keyUsed = keyStrategy.getKey(keyAlias);
+            if (keyUsed != null) {
+                keyUsed.append(keyAlias);
+            }
+            final SecretKey key = keyStrategy.getKey(keyAlias);
             
             final GCMBlockCipher cipher = new GCMBlockCipher(new AESEngine());
             
@@ -142,7 +163,7 @@ public class DataSealer extends AbstractInitializableComponent {
             inputDataStream.readFully(iv);
 
             final AEADParameters aeadParams =
-                    new AEADParameters(new KeyParameter(keyUsed.getEncoded()), 128, iv, keyAlias.getBytes());
+                    new AEADParameters(new KeyParameter(key.getEncoded()), 128, iv, keyAlias.getBytes());
             cipher.init(false, aeadParams);
 
             // Data can't be any bigger than the original minus IV.
