@@ -42,6 +42,7 @@ public class BasicKeystoreKeyStrategyTest {
         tool.setKeystorePassword("password");
         tool.setKeystoreFile(keystoreFile);
         tool.setVersionFile(versionFile);
+        tool.setKeyCount(3);
         tool.changeKey();
         
         final BasicKeystoreKeyStrategy strategy = new BasicKeystoreKeyStrategy();
