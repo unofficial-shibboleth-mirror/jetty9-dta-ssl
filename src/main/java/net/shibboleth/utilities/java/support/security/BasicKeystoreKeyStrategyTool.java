@@ -90,7 +90,7 @@ public class BasicKeystoreKeyStrategyTool {
     }
 
     /**
-     * Set the number of keys to maintain. Defaults to 3.
+     * Set the number of keys to maintain. Defaults to 30.
      * 
      * @param count number of keys to maintain
      */
@@ -292,8 +292,8 @@ public class BasicKeystoreKeyStrategyTool {
         @Nullable private String keyAlias;
 
         /** Key count. */
-        @Parameter(names = KEY_COUNT, description = "Number of keys to maintain (default: 3)")
-        @Positive private int keyCount = 3;
+        @Parameter(names = KEY_COUNT, description = "Number of keys to maintain (default: 30)")
+        @Positive private int keyCount = 30;
         
         /** Keystore type. */
         @Parameter(names = STORE_TYPE, description = "Type of keystore to generate (default: JCEKS)")
