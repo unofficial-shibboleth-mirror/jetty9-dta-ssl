@@ -286,8 +286,8 @@ public class BasicKeystoreKeyStrategy extends AbstractInitializableComponent imp
 
             final Key loadedKey = ks.getKey(name, keyPassword.toCharArray());
             if (loadedKey == null) {
-                log.error("Key '{}' not found", name);
-                throw new KeyException("Key was not found in keystore");
+                log.info("Key '{}' not found", name);
+                throw new KeyNotFoundException("Key was not present in keystore");
             } else if (!(loadedKey instanceof SecretKey)) {
                 log.error("Key '{}' is not a symmetric key", name);
                 throw new KeyException("Key was of incorrect type");

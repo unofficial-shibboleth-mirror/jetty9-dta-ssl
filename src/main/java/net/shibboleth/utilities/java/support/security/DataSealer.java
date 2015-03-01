@@ -180,6 +180,13 @@ public class DataSealer extends AbstractInitializableComponent {
         } catch (final IllegalStateException | InvalidCipherTextException| IOException e) {
             log.error(e.getMessage());
             throw new DataSealerException("Exception unwrapping data", e);
+        } catch (final KeyNotFoundException e) {
+            if (keyUsed != null) {
+                log.info("Data was wrapped with a key ({}) no longer available", keyUsed.toString());
+            } else {
+                log.info("Data was wrapped with a key no longer available");
+            }
+            throw new DataExpiredException("Data wrapped with expired key");
         } catch (final KeyException e) {
             log.error(e.getMessage());
             throw new DataSealerException("Exception loading key", e);
