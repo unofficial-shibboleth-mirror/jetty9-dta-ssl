@@ -46,7 +46,6 @@ public class EvaluableScriptTest {
             theFile.delete();
         }
     }
-
     
     @Test public void testEvaluableScript() throws ScriptException, IOException {
        
@@ -80,9 +79,9 @@ public class EvaluableScriptTest {
             // OK
         }
 
-        File theFile = File.createTempFile("shibTest", ".js");
+        theFile = File.createTempFile("EvaluableScriptTest", ".js");
 
-        FileWriter s = new FileWriter(theFile);
+        final FileWriter s = new FileWriter(theFile);
         s.write(TEST_SIMPLE_SCRIPT, 0, TEST_SIMPLE_SCRIPT.length());
         s.close();
 
