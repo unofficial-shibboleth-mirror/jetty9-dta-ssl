@@ -164,6 +164,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
         }
 
         if (builder != null) {
+            prepareBuilder(builder);
             return new DocumentBuilderProxy(builder, this);
         }
 
@@ -520,18 +521,25 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
         try {
             final DocumentBuilder builder = builderFactory.newDocumentBuilder();
 
-            if (entityResolver != null) {
-                builder.setEntityResolver(entityResolver);
-            }
-
-            if (errorHandler != null) {
-                builder.setErrorHandler(errorHandler);
-            }
-
             return builder;
         } catch (ParserConfigurationException e) {
             log.debug("Unable to create new document builder", e);
             throw new XMLParserException("Unable to create new document builder", e);
+        }
+    }
+    
+    /**
+     * Prepare a document builder instance for use, before returning it from a checkout call.
+     * 
+     * @param builder the document builder to prepare
+     */
+    private void prepareBuilder(@Nonnull final DocumentBuilder builder) {
+        if (entityResolver != null) {
+            builder.setEntityResolver(entityResolver);
+        }
+        
+        if (errorHandler != null) {
+            builder.setErrorHandler(errorHandler);
         }
     }
 
