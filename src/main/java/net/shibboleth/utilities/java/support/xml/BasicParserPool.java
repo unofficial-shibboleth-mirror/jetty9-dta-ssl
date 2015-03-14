@@ -168,7 +168,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
             return new DocumentBuilderProxy(builder, this);
         }
 
-        return null;
+        throw new XMLParserException("Unable to obtain a DocumentBuilder");
     }
 
     /** {@inheritDoc} */
@@ -222,6 +222,10 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
         } finally {
             returnBuilder(builder);
         }
+        
+        if (document == null) {
+            throw new XMLParserException("DocumentBuilder returned a null Document");
+        }
 
         return document;
     }
@@ -236,6 +240,9 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
         final DocumentBuilder builder = getBuilder();
         try {
             final Document document = builder.parse(input);
+            if (document == null) {
+                throw new XMLParserException("DocumentBuilder parsed a null Document");
+            }
             return document;
         } catch (SAXException e) {
             throw new XMLParserException("Unable to parse inputstream, it contained invalid XML", e);
@@ -256,6 +263,9 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
         final DocumentBuilder builder = getBuilder();
         try {
             final Document document = builder.parse(new InputSource(input));
+            if (document == null) {
+                throw new XMLParserException("DocumentBuilder parsed a null Document");
+            }
             return document;
         } catch (SAXException e) {
             throw new XMLParserException("Invalid XML", e);
