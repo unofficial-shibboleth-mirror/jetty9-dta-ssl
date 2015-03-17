@@ -53,7 +53,7 @@ import org.xml.sax.SAXException;
  */
 @NotThreadSafe
 public class SchemaBuilder {
-
+    
     /** Language of the schema files. */
     public static enum SchemaLanguage {
 
@@ -106,6 +106,9 @@ public class SchemaBuilder {
     /** Properties to set on factory. */
     @Nonnull private Map<String,Object> properties;
     
+    /** One time-init flag. */
+    private boolean alreadyBuilt;
+    
     /** Constructor. */
     public SchemaBuilder() {
         schemaLang = SchemaLanguage.XML;
@@ -113,6 +116,7 @@ public class SchemaBuilder {
         features = new HashMap<>();
         properties = new HashMap<>();
         errorHandler = new LoggingErrorHandler(log);
+        alreadyBuilt = false;
     }
     
     /**
@@ -287,7 +291,11 @@ public class SchemaBuilder {
      * @return the constructed schema
      * @throws SAXException thrown if there is a problem converting the schema sources into a schema
      */
-    @Nonnull public Schema buildSchema() throws SAXException {
+    @Nonnull public synchronized Schema buildSchema() throws SAXException {
+        if (alreadyBuilt) {
+            throw new IllegalStateException("Schema already built, cannot build a second time");
+        }
+        
         Constraint.isNotEmpty(sources, "No schema sources specified");
 
         final SchemaFactory schemaFactory = schemaLang.getSchemaFactory();
@@ -323,6 +331,7 @@ public class SchemaBuilder {
         if (resourceResolver != null) {
             schemaFactory.setResourceResolver(resourceResolver);
         }
+        alreadyBuilt = true;
         return schemaFactory.newSchema(sources.toArray(new Source[sources.size()]));
     }
 
