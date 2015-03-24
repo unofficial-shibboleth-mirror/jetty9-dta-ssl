@@ -75,7 +75,7 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
 
     /** The log prefix. */
     @Nullable private String logPrefix;
-    
+
     /** Constructor. */
     public AbstractReloadableService() {
         reloadCheckDelay = 0;
@@ -85,7 +85,9 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
      * Gets the number of milliseconds between one reload check and another. A value of 0 or less indicates that no
      * reloading will be performed.
      * 
-     * <p>Default value: 0</p>
+     * <p>
+     * Default value: 0
+     * </p>
      * 
      * @return number of milliseconds between one reload check and another
      */
@@ -171,7 +173,7 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
         try {
             lastReloadInstant = new DateTime(ISOChronology.getInstanceUTC());
             doReload();
-            lastSuccessfulReleaseInstant = lastReloadInstant; 
+            lastSuccessfulReleaseInstant = lastReloadInstant;
         } catch (final ServiceException e) {
             if (isFailFast()) {
                 throw new ComponentInitializationException(getLogPrefix() + " could not perform initial load", e);
@@ -182,6 +184,9 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
             } else {
                 log.error("{} No further attempts will be made to reload", getLogPrefix());
             }
+        } catch (final Exception e) {
+            log.error("{} Unexpected error during initial load {}", getLogPrefix(), e);
+            throw new ComponentInitializationException(getLogPrefix() + " Unexpected error during initial load", e);
         }
 
         if (reloadCheckDelay > 0) {
@@ -198,14 +203,13 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
     }
 
     /** {@inheritDoc} */
-    @Override
-    protected void doDestroy() {
+    @Override protected void doDestroy() {
         log.info("{} Starting shutdown", getLogPrefix());
         if (reloadTask != null) {
             reloadTask.cancel();
             reloadTask = null;
         }
-        if (reloadTaskTimer == null) {
+        if (reloadTaskTimer == null && internalTaskTimer != null) {
             internalTaskTimer.cancel();
         }
         internalTaskTimer = null;
@@ -283,11 +287,13 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
             if (shouldReload()) {
                 try {
                     reload();
-                } catch (final ServiceException e) {
-                    
+                } catch (final ServiceException se) {
+                    log.debug("{} Previously logged error during reload", getLogPrefix(), se);
+                } catch (final Throwable t) {
+                    log.warn("{} Unexpected error during reload", getLogPrefix(), t);
                 }
             }
         }
     }
-    
+
 }
