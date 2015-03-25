@@ -3,6 +3,7 @@ Java Support Release Notes
 Release notes for all versions may be found at
 https://issues.shibboleth.net/jira/secure/ReleaseNote.jspa?projectId=10052
 
+
 Changes in version 7.0.0 - 2014-12-21
 =====================================
 [IDP-543] - Our Bean Factories should implement destroyInstance
