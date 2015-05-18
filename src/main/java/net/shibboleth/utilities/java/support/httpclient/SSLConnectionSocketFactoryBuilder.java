@@ -21,6 +21,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -29,8 +30,13 @@ import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
+
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
+
+import com.google.common.base.Predicates;
+import com.google.common.collect.Collections2;
 
 /**
  * A builder for instances of {@link SSLConnectionSocketFactory} which allows easy specification
@@ -90,7 +96,7 @@ public class SSLConnectionSocketFactoryBuilder {
      * @param protocol the protocol, may be null
      */
     public void setSSLContextProtocol(@Nullable final String protocol) {
-        sslContextProtocol = protocol;
+        sslContextProtocol = StringSupport.trimOrNull(protocol);
     }
 
     /**
@@ -110,7 +116,7 @@ public class SSLConnectionSocketFactoryBuilder {
      * @param provider the provider name, may be null
      */
     public void setSSLContextProvider(@Nullable final String provider) {
-        sslContextProvider = provider;
+        sslContextProvider = StringSupport.trimOrNull(provider);
     }
 
     /**
@@ -130,7 +136,14 @@ public class SSLConnectionSocketFactoryBuilder {
      * @param managers the list of key managers, or null
      */
     public void setKeyManagers(@Nullable final List<KeyManager> managers) {
-        keyManagers = managers;
+        if (managers == null) {
+            keyManagers = null;
+        } else {
+            keyManagers = new ArrayList<>(Collections2.filter(managers, Predicates.notNull()));
+            if (keyManagers.isEmpty()) {
+                keyManagers = null;
+            }
+        }
     }
 
     /**
@@ -150,7 +163,14 @@ public class SSLConnectionSocketFactoryBuilder {
      * @param managers the list of trust managers, or null
      */
     public void setTrustManagers(@Nullable final List<TrustManager> managers) {
-        trustManagers = managers;
+        if (managers == null) {
+            trustManagers = null;
+        } else {
+            trustManagers = new ArrayList<>(Collections2.filter(managers, Predicates.notNull()));
+            if (trustManagers.isEmpty()) {
+                trustManagers = null;
+            }
+        }
     }
 
     /**
@@ -210,7 +230,10 @@ public class SSLConnectionSocketFactoryBuilder {
      * @param protocols the list of protocols, or null
      */
     public void setEnabledProtocols(@Nullable final List<String> protocols) {
-        enabledProtocols = protocols;
+        enabledProtocols = new ArrayList<>(StringSupport.normalizeStringCollection(protocols));
+        if (enabledProtocols.isEmpty()) {
+            enabledProtocols = null;
+        }
     }
 
     /**
@@ -228,7 +251,10 @@ public class SSLConnectionSocketFactoryBuilder {
      * @param cipherSuites the list of cipher suites, or null
      */
     public void setEnabledCipherSuites(@Nullable final List<String> cipherSuites) {
-        enabledCipherSuites = cipherSuites;
+        enabledCipherSuites = new ArrayList<>(StringSupport.normalizeStringCollection(cipherSuites));
+        if (enabledCipherSuites.isEmpty()) {
+            enabledCipherSuites = null;
+        }
     }
 
     /**
