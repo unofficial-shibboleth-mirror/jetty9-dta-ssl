@@ -68,7 +68,7 @@ public class TLSSocketFactory implements LayeredConnectionSocketFactory {
     
     /** HttpContext key for a a list of TLS cipher suites to enable on the socket.  
      * Must be an instance of {@link List<String>}. */
-    public static final String CONTEXT_KEY_TLS_CIPHER_SUITES = "javasupport.TLSProtocols";
+    public static final String CONTEXT_KEY_TLS_CIPHER_SUITES = "javasupport.TLSCipherSuites";
     
     /** HttpContext key for an instance of {@link X509HostnameVerifier}. */
     public static final String CONTEXT_KEY_HOSTNAME_VERIFIER = "javasupport.HostnameVerifier";
