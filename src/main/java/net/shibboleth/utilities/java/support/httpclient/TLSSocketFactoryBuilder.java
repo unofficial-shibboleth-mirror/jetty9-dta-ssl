@@ -32,24 +32,23 @@ import javax.net.ssl.TrustManager;
 
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
 
 /**
- * A builder for instances of {@link SSLConnectionSocketFactory} which allows easy specification
+ * A builder for instances of {@link TLSSocketFactory} which allows easy specification
  * of the full range of supported factory inputs.
  */
-public class SSLConnectionSocketFactoryBuilder {
+public class TLSSocketFactoryBuilder {
     
     /** The default protocol used when obtaining the SSLContxt instance. */
     private static final String DEFAULT_CONTEXT_PROTOCOL = "TLS";
     
     /** The default hostname verifier used by the socket factory. */
     private static final X509HostnameVerifier DEFAULT_HOSTNAME_VERIFIER = 
-            SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER;
+            TLSSocketFactory.STRICT_HOSTNAME_VERIFIER;
     
     /** The protocol used when obtaining the SSLContext instance. */
     private String sslContextProtocol;
@@ -196,7 +195,7 @@ public class SSLConnectionSocketFactoryBuilder {
     /**
      * Get the {@link X509HostnameVerifier} instance used by the socket factory.
      * 
-     * <p>If not specified, defaults to {@link SSLConnectionSocketFactory#STRICT_HOSTNAME_VERIFIER}.
+     * <p>If not specified, defaults to {@link TLSSocketFactory#STRICT_HOSTNAME_VERIFIER}.
      * 
      * @return the hostname verifier, or null
      */
@@ -207,7 +206,7 @@ public class SSLConnectionSocketFactoryBuilder {
     /**
      * Set the {@link X509HostnameVerifier} instance used by the socket factory.
      * 
-     * <p>If not specified, defaults to {@link SSLConnectionSocketFactory#STRICT_HOSTNAME_VERIFIER}.
+     * <p>If not specified, defaults to {@link TLSSocketFactory#STRICT_HOSTNAME_VERIFIER}.
      * 
      * @param verifier the hostname verifier, or null
      */
@@ -258,19 +257,19 @@ public class SSLConnectionSocketFactoryBuilder {
     }
 
     /**
-     * Build a new instance of {@link SSLConnectionSocketFactory}, based on the properties specified
+     * Build a new instance of {@link TLSSocketFactory}, based on the properties specified
      * to this builder instance.
      * 
      * @return a new socket factory instance
      */
-    @Nonnull public SSLConnectionSocketFactory build() {
+    @Nonnull public TLSSocketFactory build() {
         X509HostnameVerifier verifier = hostnameVerifier;
         if (verifier == null) {
             verifier = DEFAULT_HOSTNAME_VERIFIER;
         }
 
         SSLContext sslcontext = buildSSLContext();
-        return new SSLConnectionSocketFactory(sslcontext, 
+        return new TLSSocketFactory(sslcontext, 
                 enabledProtocols != null ? enabledProtocols.toArray(new String[0]) : null, 
                 enabledCipherSuites != null ? enabledCipherSuites.toArray(new String[0]) : null, 
                 verifier);
@@ -281,7 +280,7 @@ public class SSLConnectionSocketFactoryBuilder {
      * 
      * @return a new SSLContext instance
      */
-    @Nonnull private SSLContext buildSSLContext() {
+    @Nonnull protected SSLContext buildSSLContext() {
         String protocol = sslContextProtocol;
         if (protocol == null) {
             protocol = DEFAULT_CONTEXT_PROTOCOL;
