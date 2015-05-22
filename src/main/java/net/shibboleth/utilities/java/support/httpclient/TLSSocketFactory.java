@@ -27,6 +27,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLPeerUnverifiedException;
+import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
@@ -42,6 +44,8 @@ import org.apache.http.conn.ssl.StrictHostnameVerifier;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.Args;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -90,6 +94,9 @@ public class TLSSocketFactory implements LayeredConnectionSocketFactory {
 
     /** Hostname verifier which implements a strict policy. */
     public static final X509HostnameVerifier STRICT_HOSTNAME_VERIFIER = new StrictHostnameVerifier();
+    
+    /** Logger. */
+    private final Logger log = LoggerFactory.getLogger(TLSSocketFactory.class);
 
     /** Socket factory. */
     private final SSLSocketFactory socketfactory;
@@ -308,10 +315,42 @@ public class TLSSocketFactory implements LayeredConnectionSocketFactory {
         
         prepareSocket(sslsock, context);
         sslsock.startHandshake();
+        logSocketInfo(sslsock);
         verifyHostname(sslsock, target, context);
         return sslsock;
     }
     
+    /**
+     * Log various diagnostic information from the {@link SSLSocket} and {@link SSLSession}.
+     * 
+     * @param socket the SSLSocket instance
+     */
+    private void logSocketInfo(SSLSocket socket) {
+        SSLSession session = socket.getSession();
+        if (log.isDebugEnabled()) {
+            log.debug("Connected to: {}", socket.getRemoteSocketAddress());
+            
+            log.debug("Supported protocols: {}", (Object)socket.getSupportedProtocols());
+            log.debug("Enabled protocols:   {}", (Object)socket.getEnabledProtocols());
+            log.debug("Selected protocol:   {}", session.getProtocol());
+            
+            log.debug("Supported cipher suites: {}", (Object)socket.getSupportedCipherSuites());
+            log.debug("Enabled cipher suites:   {}", (Object)socket.getEnabledCipherSuites());
+            log.debug("Selected cipher suite:   {}", session.getCipherSuite());
+        }
+        
+        if (log.isTraceEnabled()) {
+            try {
+                log.trace("Peer principal: {}", session.getPeerPrincipal());
+                log.trace("Peer certificates: {}", (Object)session.getPeerCertificates());
+                log.trace("Local principal: {}", session.getLocalPrincipal());
+                log.trace("Local certificates: {}", (Object)session.getLocalCertificates());
+            } catch (SSLPeerUnverifiedException e) {
+                log.warn("SSL exception enumerating peer certificates", e);
+            }
+        }
+    }
+
     /**
      * Get a normalized String array from a context attribute holding a {@link List<String>}.
      * 
