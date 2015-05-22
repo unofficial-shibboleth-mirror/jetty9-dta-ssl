@@ -26,8 +26,22 @@ import com.google.common.base.Objects;
  * Test for the remaining method in {@link ObjectSupport}
  */
 public class ObjectSupportTest {
+    
+    @Test public void testFirstNonNull() {
+       Object foo = new Object();
+       Object bar = new Object();
+       Object baz = new Object();
+       
+       Assert.assertSame(ObjectSupport.firstNonNull(foo, bar), foo);
+       Assert.assertSame(ObjectSupport.firstNonNull(foo, bar, baz), foo);
+       Assert.assertSame(ObjectSupport.firstNonNull(null, bar, baz), bar);
+       Assert.assertSame(ObjectSupport.firstNonNull(null, null, baz), baz);
+       
+       Assert.assertNull(ObjectSupport.firstNonNull(null, null, null, null));
+       Assert.assertNull(ObjectSupport.firstNonNull());
+    }
 
-    @Test public void testObjectSupport() {
+    @Test public void testHashCode() {
         ComplexClass c1 = new ComplexClass(new Integer(1), new Double(3.4), "String!");
         ComplexClass c2 = new ComplexClass("String3", new Integer(1243), new Boolean(false));
 

@@ -41,4 +41,34 @@ public final class ObjectSupport {
 
         return o.hashCode();
     }
+    
+    /**
+     * Return the first from a list of arguments that is non-null, or null if all arguments 
+     * are null.
+     * 
+     * <p>
+     * This is similar to Guava's {@link com.google.common.base.MoreObjects#firstNonNull(Object, Object)},
+     * except it takes more than 2 arguments, and also doesn't throw a null pointer exception if 
+     * all arguments are null.
+     * </p>
+     * 
+     * @param <T> the type of arguments being evaluated
+     * 
+     * @param objects the list of object references to evaluate
+     * 
+     * @return the first non-null argument, or null if all arguments are null
+     * 
+     */
+    @Nullable public static <T> T firstNonNull(@Nullable T ... objects) {
+        if (objects == null) {
+            return null;
+        } else {
+            for (T obj : objects) {
+                if (obj != null) {
+                    return obj;
+                }
+            }
+        }
+        return null;
+    }
 }
