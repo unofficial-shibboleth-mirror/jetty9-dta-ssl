@@ -234,6 +234,7 @@ public class TLSSocketFactory implements LayeredConnectionSocketFactory {
 
     /** {@inheritDoc} */
     @Nonnull public Socket createSocket(@Nullable final HttpContext context) throws IOException {
+        log.trace("In createSocket");
         return SocketFactory.getDefault().createSocket();
     }
 
@@ -245,6 +246,8 @@ public class TLSSocketFactory implements LayeredConnectionSocketFactory {
             @Nonnull final InetSocketAddress remoteAddress,
             @Nullable final InetSocketAddress localAddress,
             @Nullable final HttpContext context) throws IOException {
+        
+        log.trace("In connectSocket");
         
         Args.notNull(host, "HTTP host");
         Args.notNull(remoteAddress, "Remote address");
@@ -282,6 +285,8 @@ public class TLSSocketFactory implements LayeredConnectionSocketFactory {
             @Nonnull @NotEmpty final String target,
             final int port,
             @Nullable final HttpContext context) throws IOException {
+        
+        log.trace("In createLayeredSocket");
         
         final SSLSocket sslsock = (SSLSocket) getSocketfactory().createSocket(
                 socket,
