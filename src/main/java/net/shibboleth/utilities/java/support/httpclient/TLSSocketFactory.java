@@ -302,7 +302,7 @@ public class TLSSocketFactory implements LayeredConnectionSocketFactory {
         } else {
             // If supported protocols are not explicitly set, remove all SSL protocol versions
             final String[] allProtocols = sslsock.getSupportedProtocols();
-            final List<String> enabledProtocols = new ArrayList<String>(allProtocols.length);
+            final List<String> enabledProtocols = new ArrayList<>(allProtocols.length);
             for (String protocol: allProtocols) {
                 if (!protocol.startsWith("SSL")) {
                     enabledProtocols.add(protocol);
