@@ -178,7 +178,7 @@ public class DataSealer extends AbstractInitializableComponent {
             return extractAndCheckDecryptedData(plaintext);
 
         } catch (final IllegalStateException | InvalidCipherTextException| IOException e) {
-            log.error(e.getMessage());
+            log.error("Exception unwrapping data", e);
             throw new DataSealerException("Exception unwrapping data", e);
         } catch (final KeyNotFoundException e) {
             if (keyUsed != null) {
@@ -289,7 +289,7 @@ public class DataSealer extends AbstractInitializableComponent {
             return Base64Support.encode(finalByteStream.toByteArray(), false);
 
         } catch (final IOException | IllegalStateException | InvalidCipherTextException | KeyException e) {
-            log.error(e.getMessage());
+            log.error("Exception wrapping data", e);
             throw new DataSealerException("Exception wrapping data", e);
         }
 
