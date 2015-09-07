@@ -295,7 +295,7 @@ public final class AttributeSupport {
             return null;
         }
 
-        final String valueStr = attribute.getValue();
+        final String valueStr = StringSupport.trimOrNull(attribute.getValue());
         if ("0".equals(valueStr) || "false".equals(valueStr)) {
             return Boolean.FALSE;
         } else if ("1".equals(valueStr) || "true".equals(valueStr)) {
@@ -446,7 +446,7 @@ public final class AttributeSupport {
             return null;
         }
 
-        String lang = getXMLLang(element);
+        String lang = StringSupport.trimOrNull(getXMLLang(element));
         if (lang != null) {
             if (lang.contains("-")) {
                 lang = lang.substring(0, lang.indexOf("-"));
