@@ -32,6 +32,7 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpRequestRetryHandler;
+import org.apache.http.client.ServiceUnavailableRetryStrategy;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.ConnectionConfig;
 import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
@@ -182,9 +183,12 @@ public class HttpClientBuilder {
 
     /** Character set used for HTTP entity content. Default value: UTF-8 */
     @Nullable private String httpContentCharSet;
-    
-    /** Handler which determines if a request should be retried. */
+
+    /** Handler which determines if a request should be retried after a recoverable exception during execution. */
     @Nullable private HttpRequestRetryHandler retryHandler;
+
+    /** Strategy which determines if a request should be retried given the response from the target server. */
+    @Nullable private ServiceUnavailableRetryStrategy serviceUnavailStrategy;
 
     /** The Apache HttpClientBuilder 4.3+ instance over which to layer this builder. */
     private org.apache.http.impl.client.HttpClientBuilder apacheBuilder;
@@ -522,23 +526,41 @@ public class HttpClientBuilder {
     public void setUserAgent(@Nullable final String what) {
         userAgent = what;
     }
-    
+
     /**
-     * Get the handler which determines if a request should be retried.
+     * Get the handler which determines if a request should be retried after a recoverable exception during execution.
      * 
      * @return handler which determines if a request should be retried
      */
     @Nullable public HttpRequestRetryHandler getHttpRequestRetryHandler() {
         return retryHandler;
     }
-    
+
     /**
-     * Set the handler which determines if a request should be retried.
+     * Set the handler which determines if a request should be retried after a recoverable exception during execution.
      * 
      * @param handler handler which determines if a request should be retried
      */
     public void setHttpRequestRetryHandler(@Nullable final HttpRequestRetryHandler handler) {
         retryHandler = handler;
+    }
+
+    /**
+     * Get the handler which determines if a request should be retried given the response from the target server.
+     * 
+     * @return handler which determines if a request should be retried
+     */
+    @Nullable public ServiceUnavailableRetryStrategy getServiceUnavailableRetryHandler() {
+        return serviceUnavailStrategy;
+    }
+
+    /**
+     * Set the strategy which determines if a request should be retried given the response from the target server.
+     * 
+     * @param strategy handler which determines if a request should be retried
+     */
+    public void setServiceUnavailableRetryHandler(@Nullable final ServiceUnavailableRetryStrategy strategy) {
+        serviceUnavailStrategy = strategy;
     }
 
     /**
@@ -577,6 +599,10 @@ public class HttpClientBuilder {
         
         if (retryHandler != null) {
             builder.setRetryHandler(retryHandler);
+        }
+        
+        if (serviceUnavailStrategy != null) {
+            builder.setServiceUnavailableRetryStrategy(serviceUnavailStrategy);
         }
 
         // RequestConfig params
