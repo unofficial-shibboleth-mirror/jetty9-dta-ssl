@@ -290,7 +290,7 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
                 } catch (final ServiceException se) {
                     log.debug("{} Previously logged error during reload", getLogPrefix(), se);
                 } catch (final Throwable t) {
-                    log.warn("{} Unexpected error during reload", getLogPrefix(), t);
+                    log.error("{} Unexpected error during reload", getLogPrefix(), t);
                 }
             }
         }
