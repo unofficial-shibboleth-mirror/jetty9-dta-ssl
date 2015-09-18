@@ -187,6 +187,46 @@ public final class CookieManager extends AbstractInitializableComponent {
         
         httpResponse.addCookie(cookie);
     }
+
+    /**
+     * Check whether a cookie has a certain value.
+     * 
+     * @param name name of cookie
+     * @param expectedValue expected value of cookie
+     * 
+     * @return true iff the cookie exists and has the expected value
+     */
+    public boolean cookieHasValue(@Nonnull @NotEmpty final String name, @Nonnull @NotEmpty final String expectedValue) {
+        
+        final String realValue =  getCookieValue(name, null);
+        if (realValue == null) {
+            return false;
+        }
+        
+        return realValue.equals(expectedValue);
+    }
+    
+    /**
+     * Return the first matching cookie's value.
+     * 
+     * @param name cookie name
+     * @param defValue default value to return if the cookie isn't found
+     * 
+     * @return cookie value
+     */
+    @Nullable public String getCookieValue(@Nonnull @NotEmpty final String name, @Nullable final String defValue) {
+        
+        final Cookie[] cookies = httpRequest.getCookies();
+        if (cookies != null) {
+            for (final Cookie cookie : cookies) {
+                if (cookie.getName().equals(name)) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        
+        return defValue;
+    }
     
     /**
      * Turn the servlet context path into an appropriate cookie path.
