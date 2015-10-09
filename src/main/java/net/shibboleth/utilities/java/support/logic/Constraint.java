@@ -289,6 +289,30 @@ public final class Constraint {
     }
 
     /**
+     * Checks that the collection does not contain any null elements.
+     *
+     * @param <T> type of collection to inspect.
+     * @param collection to check.
+     * @param message message used in the {@link ConstraintViolationException}
+     *
+     * @return the given array
+     */
+    @Nonnull public static <T extends Collection<?>> T noNullItems(
+            @Nonnull final T collection, @Nonnull String message) {
+        if (collection == null) {
+            throw new ConstraintViolationException(message);
+        }
+
+        for (Object element : collection) {
+            if (element == null) {
+                throw new ConstraintViolationException(message);
+            }
+        }
+
+        return collection;
+    }
+
+    /**
      * Checks that the given number is in the exclusive range. If the number is not in the range an
      * {@link ConstraintViolationException} is thrown.
      * 
