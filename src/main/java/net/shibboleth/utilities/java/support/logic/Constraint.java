@@ -274,12 +274,12 @@ public final class Constraint {
      * 
      * @return the given array
      */
-    @Nonnull public static <T> T[] noNullItems(@Nonnull final T[] array, @Nonnull String message) {
+    @Nonnull public static <T> T[] noNullItems(@Nonnull final T[] array, @Nonnull final String message) {
         if (array == null) {
             throw new ConstraintViolationException(message);
         }
 
-        for (T element : array) {
+        for (final T element : array) {
             if (element == null) {
                 throw new ConstraintViolationException(message);
             }
@@ -297,13 +297,13 @@ public final class Constraint {
      *
      * @return the given array
      */
-    @Nonnull public static <T extends Collection<?>> T noNullItems(
-            @Nonnull final T collection, @Nonnull String message) {
+    @Nonnull public static <T extends Collection<?>> T noNullItems(@Nonnull final T collection,
+            @Nonnull final String message) {
         if (collection == null) {
             throw new ConstraintViolationException(message);
         }
 
-        for (Object element : collection) {
+        for (final Object element : collection) {
             if (element == null) {
                 throw new ConstraintViolationException(message);
             }
