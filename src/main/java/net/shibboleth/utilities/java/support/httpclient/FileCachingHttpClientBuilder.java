@@ -53,7 +53,7 @@ import org.slf4j.LoggerFactory;
  * An {@link org.apache.http.client.HttpClient} builder that supports RFC 2616 caching.
  * <p>
  * Cached content is written to disk. Special care should be taken so that multiple clients do not share a single cache
- * directory unintentionally. This could result senstive data being available in ways it should not be.
+ * directory unintentionally. This could result in sensitive data being available in ways it should not be.
  * </p>
  * 
  * <p>
@@ -100,7 +100,7 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
     /** The maximum response body size, in bytes, that will be eligible for caching. Default: 10485760 (10 megabytes) */
     private long maxCacheEntrySize;
     
-    /** Interval at which the storage maintenance task whould run. */
+    /** Interval at which the storage maintenance task should run. */
     @Duration private long maintentanceTaskInterval;
     
     /** The current managed storage instance. */
