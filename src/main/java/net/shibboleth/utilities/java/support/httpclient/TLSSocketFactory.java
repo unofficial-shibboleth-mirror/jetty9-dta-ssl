@@ -238,6 +238,7 @@ public class TLSSocketFactory implements LayeredConnectionSocketFactory {
         return SocketFactory.getDefault().createSocket();
     }
 
+    // Checkstyle: ParameterNumber OFF
     /** {@inheritDoc} */
     public Socket connectSocket(
             final int connectTimeout,
@@ -278,6 +279,7 @@ public class TLSSocketFactory implements LayeredConnectionSocketFactory {
             return createLayeredSocket(sock, host.getHostName(), remoteAddress.getPort(), context);
         }
     }
+    // Checkstyle: ParameterNumber ON
 
     /** {@inheritDoc} */
     public Socket createLayeredSocket(
