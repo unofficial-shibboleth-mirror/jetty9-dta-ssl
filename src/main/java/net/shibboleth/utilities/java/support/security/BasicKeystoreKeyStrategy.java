@@ -324,7 +324,7 @@ public class BasicKeystoreKeyStrategy extends AbstractInitializableComponent imp
                 } else if (!currentAlias.equals(newAlias)) {
                     log.info("Updating default key from {} to {}", currentAlias, newAlias);
                 } else {
-                    log.info("Default key version has not changed, still {}", currentAlias);
+                    log.debug("Default key version has not changed, still {}", currentAlias);
                     return;
                 }
                 
