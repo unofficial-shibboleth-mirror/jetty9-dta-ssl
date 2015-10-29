@@ -108,7 +108,7 @@ public class MapTest {
         testMap.put(KEY_1, INTEGER_3);
         testMap.put(KEY_2, INTEGER_3);
         
-        Assert.assertEquals(map, testMap, "test against type changes");
+        Assert.assertTrue(testMap.equals(map), "test against type changes");
         map.putAll(testMap);
         Assert.assertEquals(map.size(), 2, "Two element expected");
         
