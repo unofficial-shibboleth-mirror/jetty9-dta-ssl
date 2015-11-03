@@ -93,9 +93,12 @@ public class TLSSocketFactoryBuilder {
      * <p>If not specified, the value "TLS" will be used.</p>
      * 
      * @param protocol the protocol, may be null
+     * 
+     * @return this builder instance
      */
-    public void setSSLContextProtocol(@Nullable final String protocol) {
+    public TLSSocketFactoryBuilder setSSLContextProtocol(@Nullable final String protocol) {
         sslContextProtocol = StringSupport.trimOrNull(protocol);
+        return this;
     }
 
     /**
@@ -113,9 +116,12 @@ public class TLSSocketFactoryBuilder {
      * via {@link SSLContext#getInstance(String, String)}.
      * 
      * @param provider the provider name, may be null
+     * 
+     * @return this builder instance
      */
-    public void setSSLContextProvider(@Nullable final String provider) {
+    public TLSSocketFactoryBuilder setSSLContextProvider(@Nullable final String provider) {
         sslContextProvider = StringSupport.trimOrNull(provider);
+        return this;
     }
 
     /**
@@ -133,8 +139,10 @@ public class TLSSocketFactoryBuilder {
      * via {@link SSLContext#init(KeyManager[], TrustManager[], SecureRandom)}.
      * 
      * @param managers the list of key managers, or null
+     * 
+     * @return this builder instance
      */
-    public void setKeyManagers(@Nullable final List<KeyManager> managers) {
+    public TLSSocketFactoryBuilder setKeyManagers(@Nullable final List<KeyManager> managers) {
         if (managers == null) {
             keyManagers = null;
         } else {
@@ -143,6 +151,7 @@ public class TLSSocketFactoryBuilder {
                 keyManagers = null;
             }
         }
+        return this;
     }
 
     /**
@@ -160,8 +169,10 @@ public class TLSSocketFactoryBuilder {
      * via {@link SSLContext#init(KeyManager[], TrustManager[], SecureRandom)}.
      * 
      * @param managers the list of trust managers, or null
+     * 
+     * @return this builder instance
      */
-    public void setTrustManagers(@Nullable final List<TrustManager> managers) {
+    public TLSSocketFactoryBuilder setTrustManagers(@Nullable final List<TrustManager> managers) {
         if (managers == null) {
             trustManagers = null;
         } else {
@@ -170,6 +181,7 @@ public class TLSSocketFactoryBuilder {
                 trustManagers = null;
             }
         }
+        return this;
     }
 
     /**
@@ -187,9 +199,12 @@ public class TLSSocketFactoryBuilder {
      * via {@link SSLContext#init(KeyManager[], TrustManager[], SecureRandom)}.
      * 
      * @param random the secure random instance, or null
+     * 
+     * @return this builder instance
      */
-    public void setSecureRandom(@Nullable final SecureRandom random) {
+    public TLSSocketFactoryBuilder setSecureRandom(@Nullable final SecureRandom random) {
         secureRandom = random;
+        return this;
     }
     
     /**
@@ -209,9 +224,12 @@ public class TLSSocketFactoryBuilder {
      * <p>If not specified, defaults to {@link TLSSocketFactory#STRICT_HOSTNAME_VERIFIER}.
      * 
      * @param verifier the hostname verifier, or null
+     * 
+     * @return this builder instance
      */
-    public void setHostnameVerifier(@Nullable final X509HostnameVerifier verifier) {
+    public TLSSocketFactoryBuilder setHostnameVerifier(@Nullable final X509HostnameVerifier verifier) {
         hostnameVerifier = verifier;
+        return this;
     }
 
     /**
@@ -227,12 +245,15 @@ public class TLSSocketFactoryBuilder {
      * Set the list of enabled SSL/TLS protocols on sockets produced by the factory.
      * 
      * @param protocols the list of protocols, or null
+     * 
+     * @return this builder instance
      */
-    public void setEnabledProtocols(@Nullable final List<String> protocols) {
+    public TLSSocketFactoryBuilder setEnabledProtocols(@Nullable final List<String> protocols) {
         enabledProtocols = new ArrayList<>(StringSupport.normalizeStringCollection(protocols));
         if (enabledProtocols.isEmpty()) {
             enabledProtocols = null;
         }
+        return this;
     }
 
     /**
@@ -248,12 +269,15 @@ public class TLSSocketFactoryBuilder {
      * Set the list of enabled SSL/TLS cipher suites on sockets produced by the factory.
      * 
      * @param cipherSuites the list of cipher suites, or null
+     * 
+     * @return this builder instance
      */
-    public void setEnabledCipherSuites(@Nullable final List<String> cipherSuites) {
+    public TLSSocketFactoryBuilder setEnabledCipherSuites(@Nullable final List<String> cipherSuites) {
         enabledCipherSuites = new ArrayList<>(StringSupport.normalizeStringCollection(cipherSuites));
         if (enabledCipherSuites.isEmpty()) {
             enabledCipherSuites = null;
         }
+        return this;
     }
 
     /**
