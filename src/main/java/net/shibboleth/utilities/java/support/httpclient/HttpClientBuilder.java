@@ -588,9 +588,9 @@ public class HttpClientBuilder {
         if (getTLSSocketFactory() != null) {
             builder.setSSLSocketFactory(getTLSSocketFactory());
         } else if (connectionDisregardTLSCertificate) {
-            builder.setSSLSocketFactory(HttpClientSupport.buildNoTrustSSLConnectionSocketFactory());
+            builder.setSSLSocketFactory(HttpClientSupport.buildNoTrustTLSSocketFactory());
         } else {
-            builder.setSSLSocketFactory(HttpClientSupport.buildStrictSSLConnectionSocketFactory());
+            builder.setSSLSocketFactory(HttpClientSupport.buildStrictTLSSocketFactory());
         }
 
         if (connectionCloseAfterResponse) {

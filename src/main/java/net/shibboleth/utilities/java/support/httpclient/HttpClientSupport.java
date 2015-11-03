@@ -21,13 +21,17 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Collections;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.conn.ssl.StrictHostnameVerifier;
 
 /**
  * Support class for using {@link org.apache.http.client.HttpClient} and related components.
@@ -38,24 +42,56 @@ public final class HttpClientSupport {
     private HttpClientSupport() { }
     
     /**
+     * Build an instance of TLS-capable {@link LayeredConnectionSocketFactory} which uses
+     * the standard JSSE default {@link SSLContext} and which performs
+     * strict hostname verification.
+     * 
+     * @return a new instance of HttpClient SSL connection socket factory
+     */
+    public static LayeredConnectionSocketFactory buildStrictTLSSocketFactory() {
+        return new TLSSocketFactoryBuilder()
+            .setHostnameVerifier(new StrictHostnameVerifier())
+            .build();
+    }
+    
+    /**
+     * Build a TLS-capable instance of {@link LayeredConnectionSocketFactory} which accepts all peer certificates
+     * and performs no hostname verification.
+     * 
+     * @return a new instance of HttpClient SSL connection socket factory
+     */
+    public static LayeredConnectionSocketFactory buildNoTrustTLSSocketFactory() {
+        return new TLSSocketFactoryBuilder()
+            .setTrustManagers(Collections.<TrustManager>singletonList(buildNoTrustX509TrustManager()))
+            .setHostnameVerifier(new AllowAllHostnameVerifier())
+            .build();
+    }
+    
+    /**
      * Build an instance of {@link SSLConnectionSocketFactory} which uses
      * the standard HttpClient default {@link SSLContext} and which uses
      * a strict hostname verifier {@link SSLConnectionSocketFactory#STRICT_HOSTNAME_VERIFIER}.
      * 
      * @return a new instance of HttpClient SSL connection socket factory
+     * 
+     * @deprecated use instead {@link #buildStrictTLSSocketFactory()}
      */
+    @Deprecated
     public static SSLConnectionSocketFactory buildStrictSSLConnectionSocketFactory() {
         return new SSLConnectionSocketFactory(
                 SSLContexts.createDefault(), 
                 SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER);
     }
     
-    /**
+     /**
      * Build an instance of {@link SSLConnectionSocketFactory} which accepts all peer certificates
      * and performs no hostname verification.
      * 
      * @return a new instance of HttpClient SSL connection socket factory
+     * 
+     * @deprecated use instead {@link #buildNoTrustTLSSocketFactory()}
      */
+    @Deprecated
     public static SSLConnectionSocketFactory buildNoTrustSSLConnectionSocketFactory() {
         X509TrustManager noTrustManager = buildNoTrustX509TrustManager();
 
