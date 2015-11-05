@@ -70,6 +70,9 @@ public class StringDigester implements Function<String, String> {
     /** Optional salt to add into the digest. */
     @Nullable private String salt;
     
+    /** Whether to require a salt to return any output. */
+    private boolean requireSalt;
+    
     /**
      * Constructor.
      * 
@@ -108,6 +111,7 @@ public class StringDigester implements Function<String, String> {
             inputCharset = DEFAULT_INPUT_CHARSET;
         }
         
+        requireSalt = false;
     }
     
     /**
@@ -115,8 +119,21 @@ public class StringDigester implements Function<String, String> {
      * 
      * @param s salt value
      */
-    public void setSalt(@Nullable final String s) {
-        salt = s;
+    public void setSalt(@Nullable @NotEmpty final String s) {
+        if (s != null && !s.isEmpty()) {
+            salt = s;
+        } else {
+            salt = null;
+        }
+    }
+    
+    /**
+     * Set whether to return any data if no salt is set.
+     * 
+     * @param flag  flag to set
+     */
+    public void setRequireSalt(final boolean flag) {
+        requireSalt = flag;
     }
 
     /** {@inheritDoc} */
@@ -129,6 +146,9 @@ public class StringDigester implements Function<String, String> {
         
         if (salt != null) {
             trimmed = salt + trimmed;
+        } else if (requireSalt) {
+            log.debug("Salt was required but missing, no data returned");
+            return null;
         }
         
         log.debug("Digesting input '{}' as charset '{}' with digest algorithm '{}' and output format '{}'", 
