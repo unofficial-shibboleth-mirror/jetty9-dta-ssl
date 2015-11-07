@@ -124,7 +124,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
     private EntityResolver entityResolver;
 
     /** Error handler used by builders. */
-    private final ErrorHandler errorHandler;
+    private ErrorHandler errorHandler;
 
     /** Constructor. */
     public BasicParserPool() {
@@ -467,6 +467,44 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
             builderAttributes.remove("http://java.sun.com/xml/jaxp/properties/schemaSource");
             builderAttributes.remove("http://java.sun.com/xml/jaxp/properties/schemaLanguage");
         }
+    }
+    
+    /**
+     * Gets the {@link EntityResolver}.
+     * 
+     * @return the configured entity resolver, may be null
+     */
+    @Nullable public EntityResolver getEntityResolver() {
+        return entityResolver;
+    }
+
+    /**
+     * Sets the {@link EntityResolver}.
+     * 
+     * @param resolver the new entity resolver, may be null
+     */
+    public void setEntityResolver(@Nullable final EntityResolver resolver) {
+        checkNotInitializedNotDestroyed();
+        entityResolver = resolver;
+    }
+
+    /**
+     * Gets the {@link ErrorHandler}.
+     * 
+     * @return the configured entity resolver, may be null
+     */
+    @Nonnull public ErrorHandler getErrorHandler() {
+        return errorHandler;
+    }
+
+    /**
+     * Sets the {@link ErrorHandler}.
+     * 
+     * @param handler the new error handler
+     */
+    public void setErrorHandler(@Nonnull final ErrorHandler handler) {
+        checkNotInitializedNotDestroyed();
+        errorHandler = Constraint.isNotNull(handler, "ErrorHandler may not be null");
     }
 
     /**

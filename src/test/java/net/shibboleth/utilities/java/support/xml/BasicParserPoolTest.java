@@ -37,6 +37,7 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
 import net.shibboleth.utilities.java.support.component.DestroyedComponentException;
 import net.shibboleth.utilities.java.support.component.UninitializedComponentException;
 import net.shibboleth.utilities.java.support.component.UnmodifiableComponentException;
+import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 import net.shibboleth.utilities.java.support.xml.BasicParserPool.DocumentBuilderProxy;
 
 import org.springframework.core.io.ClassPathResource;
@@ -46,8 +47,11 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * Tests for {@link NamespaceSupport}
@@ -97,6 +101,11 @@ public class BasicParserPoolTest {
         Schema schema = schemaBuilder.buildSchema();
         basicParserPool.setSchema(schema);
         basicParserPool.setXincludeAware(true);
+        EntityResolver entityResolver = new MockEntityResolver();
+        basicParserPool.setEntityResolver(entityResolver);
+        ErrorHandler errorHandler = new MockErrorHandler();
+        basicParserPool.setErrorHandler(errorHandler);
+        
 
         basicParserPool.initialize();
 
@@ -131,6 +140,10 @@ public class BasicParserPoolTest {
 
         Assert.assertTrue(builder.isXIncludeAware(), "builder isXIncludeAware");
         Assert.assertTrue(basicParserPool.isXincludeAware(), "pool isXIncludeAware");
+        
+        Assert.assertSame(basicParserPool.getEntityResolver(), entityResolver);
+        
+        Assert.assertSame(basicParserPool.getErrorHandler(), errorHandler);
 
         basicParserPool = new BasicParserPool();
 
@@ -142,6 +155,13 @@ public class BasicParserPoolTest {
         basicParserPool.setNamespaceAware(false);
         basicParserPool.setSchema(null);
         basicParserPool.setXincludeAware(false);
+        basicParserPool.setEntityResolver(null);
+        try {
+            basicParserPool.setErrorHandler(null);
+            Assert.fail("Null ErrorHandler should have been rejected");
+        } catch (ConstraintViolationException e) {
+            //Expected
+        }
 
         basicParserPool.initialize();
 
@@ -168,6 +188,10 @@ public class BasicParserPoolTest {
 
         Assert.assertFalse(builder.isXIncludeAware(), "builder isXIncludeAware");
         Assert.assertFalse(basicParserPool.isXincludeAware(), "pool isXIncludeAware");
+        
+        Assert.assertNull(basicParserPool.getEntityResolver(), "EntityResolver is non-null");
+        
+        Assert.assertNotNull(basicParserPool.getErrorHandler(), "ErrorHandler was null");
     }
 
     @Test public void testInit() throws ComponentInitializationException, SAXException, XMLParserException, IOException {
@@ -288,6 +312,22 @@ public class BasicParserPoolTest {
 
         thrown = false;
         try {
+            basicParserPool.setEntityResolver(new MockEntityResolver());
+        } catch (UnmodifiableComponentException e) {
+            thrown = true;
+        }
+        Assert.assertTrue(thrown, "setEntityResolver after init");
+
+        thrown = false;
+        try {
+            basicParserPool.setErrorHandler(new MockErrorHandler());
+        } catch (UnmodifiableComponentException e) {
+            thrown = true;
+        }
+        Assert.assertTrue(thrown, "setErrorHandler after init");
+
+        thrown = false;
+        try {
             basicParserPool.initialize();
         } catch (ComponentInitializationException e) {
             thrown = true;
@@ -395,6 +435,22 @@ public class BasicParserPoolTest {
             thrown = true;
         }
         Assert.assertTrue(thrown, "setXincludeAware after destroy");
+
+        thrown = false;
+        try {
+            pool.setEntityResolver(new MockEntityResolver());
+        } catch (DestroyedComponentException e) {
+            thrown = true;
+        }
+        Assert.assertTrue(thrown, "setEntityResolver after destroy");
+
+        thrown = false;
+        try {
+            pool.setErrorHandler(new MockErrorHandler());
+        } catch (DestroyedComponentException e) {
+            thrown = true;
+        }
+        Assert.assertTrue(thrown, "setErrorHandler after destroy");
 
         thrown = false;
         try {
@@ -695,6 +751,19 @@ pool.initialize();
     }
     
     
-
+    
+    // Helpers
+    
+    public static class MockEntityResolver implements EntityResolver {
+        public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+            return null;
+        }
+    }
+    
+    public static class MockErrorHandler implements ErrorHandler {
+        public void warning(SAXParseException exception) throws SAXException { }
+        public void error(SAXParseException exception) throws SAXException { }
+        public void fatalError(SAXParseException exception) throws SAXException { }
+    }
 
 }
