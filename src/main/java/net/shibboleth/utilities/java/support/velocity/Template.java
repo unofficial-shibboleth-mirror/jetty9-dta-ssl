@@ -231,11 +231,13 @@ public final class Template {
         } catch (ResourceNotFoundException e) {
             throw new VelocityException("Velocity template " + templateName
                     + " has been removed since this object was constructed");
+        } catch (Exception e) {
+            throw new VelocityException("Velocity template " + templateName + " threw an exception", e);
         }
     }
 
     /** {@inheritDoc} */
-    public boolean equals(Object obj) {
+    @Override public boolean equals(Object obj) {
         if (obj == null) {
             return false;
         }
@@ -253,12 +255,12 @@ public final class Template {
     }
 
     /** {@inheritDoc} */
-    public int hashCode() {
+    @Override public int hashCode() {
         return Objects.hashCode(engine, templateName);
     }
 
     /** {@inheritDoc} */
-    public String toString() {
+    @Override public String toString() {
         return MoreObjects.toStringHelper(this).add("templateName", templateName).toString();
     }
 }
