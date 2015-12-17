@@ -19,14 +19,19 @@ package net.shibboleth.utilities.java.support.httpclient;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.shibboleth.utilities.java.support.collection.IterableSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 import org.apache.http.HttpHost;
+import org.apache.http.HttpRequestInterceptor;
+import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -38,6 +43,9 @@ import org.apache.http.config.ConnectionConfig;
 import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.util.CharsetUtils;
+
+import com.google.common.base.Predicates;
+import com.google.common.collect.Collections2;
 
 //TODO retry attempts, keep alive strategy
 
@@ -189,6 +197,39 @@ public class HttpClientBuilder {
 
     /** Strategy which determines if a request should be retried given the response from the target server. */
     @Nullable private ServiceUnavailableRetryStrategy serviceUnavailStrategy;
+    
+    /** Flag for disabling auth caching.*/
+    private boolean disableAuthCaching;
+
+    /** Flag for disabling automatic retries.*/
+    private boolean disableAutomaticRetries;
+
+    /** Flag for disabling connection state.*/
+    private boolean disableConnectionState;
+
+    /** Flag for disabling content compression.*/
+    private boolean disableContentCompression;
+
+    /** Flag for disabling cookie management.*/
+    private boolean disableCookieManagement;
+
+    /** Flag for disabling redirect handling.*/
+    private boolean disableRedirectHandling;
+
+    /** Flag for enabling use of system properties.*/
+    private boolean useSystemProperties;
+
+    /** List of request interceptors to add first. */
+    private List<HttpRequestInterceptor> requestInterceptorsFirst;
+
+    /** List of request interceptors to add last. */
+    private List<HttpRequestInterceptor> requestInterceptorsLast;
+
+    /** List of response interceptors to add first. */
+    private List<HttpResponseInterceptor> responseInterceptorsFirst;
+
+    /** List of response interceptors to add last. */
+    private List<HttpResponseInterceptor> responseInterceptorsLast;
 
     /** The Apache HttpClientBuilder 4.3+ instance over which to layer this builder. */
     private org.apache.http.impl.client.HttpClientBuilder apacheBuilder;
@@ -562,6 +603,220 @@ public class HttpClientBuilder {
     public void setServiceUnavailableRetryHandler(@Nullable final ServiceUnavailableRetryStrategy strategy) {
         serviceUnavailStrategy = strategy;
     }
+    
+    /** 
+     * Get the flag for disabling auth caching.
+     * 
+     * @return true if disabled, false if not
+     */
+    public boolean isDisableAuthCaching() {
+        return disableAuthCaching;
+    }
+
+    /** 
+     * Set the flag for disabling auth caching.
+     * 
+     * @param flag true if disabled, false if not
+     */
+    public void setDisableAuthCaching(boolean flag) {
+        disableAuthCaching = flag;
+    }
+
+    /** 
+     * Get the flag for disabling automatic retries.
+     * 
+     * @return true if disabled, false if not
+     */
+    public boolean isDisableAutomaticRetries() {
+        return disableAutomaticRetries;
+    }
+
+    /** 
+     * Set the flag for disabling automatic retries.
+     * 
+     * @param flag true if disabled, false if not
+     */
+    public void setDisableAutomaticRetries(boolean flag) {
+        disableAutomaticRetries = flag;
+    }
+
+    /** 
+     * Get the flag for disabling connection state.
+     * 
+     * @return true if disabled, false if not
+     */
+    public boolean isDisableConnectionState() {
+        return disableConnectionState;
+    }
+    
+    /** 
+     * Set the flag for disabling connection state.
+     * 
+     * @param flag true if disabled, false if not
+     */
+ 
+    public void setDisableConnectionState(boolean flag) {
+        disableConnectionState = flag;
+    }
+
+    /** 
+     * Get the flag for disabling content compression.
+     * 
+     * @return true if disabled, false if not
+     */
+    public boolean isDisableContentCompression() {
+        return disableContentCompression;
+    }
+
+    /** 
+     * Set the flag for disabling content compression.
+     * 
+     * @param flag true if disabled, false if not
+     */
+    public void setDisableContentCompression(boolean flag) {
+        disableContentCompression = flag;
+    }
+
+    /** 
+     * Get the flag for disabling cookie management.
+     * 
+     * @return true if disabled, false if not
+     */
+    public boolean isDisableCookieManagement() {
+        return disableCookieManagement;
+    }
+
+    /** 
+     * Set the flag for disabling cookie management.
+     * 
+     * @param flag true if disabled, false if not
+     */
+    public void setDisableCookieManagement(boolean flag) {
+        disableCookieManagement = flag;
+    }
+
+    /** 
+     * Get the flag for disabling redirect handling.
+     * 
+     * @return true if disabled, false if not
+     */
+    public boolean isDisableRedirectHandling() {
+        return disableRedirectHandling;
+    }
+
+    /** 
+     * Set the flag for disabling redirect handling.
+     * 
+     * @param flag true if disabled, false if not
+     */
+    public void setDisableRedirectHandling(boolean flag) {
+        disableRedirectHandling = flag;
+    }
+
+    /**
+     * Get the flag enabling use of system properties.
+     * 
+     * @return true if enabled, false if not
+     */
+    public boolean isUseSystemProperties() {
+        return useSystemProperties;
+    }
+
+    /**
+     * Set the flag enabling use of system properties.
+     * 
+     * @param flag true if enabled, false if not
+     */
+    public void setUseSystemProperties(boolean flag) {
+        useSystemProperties = flag;
+    }
+
+    /**
+     * Get the list of request interceptors to add first.
+     * 
+     * @return the list of interceptors, may be null
+     */
+    @Nullable public List<HttpRequestInterceptor> getFirstRequestInterceptors() {
+        return requestInterceptorsFirst;
+    }
+    
+    /**
+     * Set the list of request interceptors to add first.
+     * 
+     * @param interceptors the list of interceptors, may be null
+     */
+    public void setFirstRequestInterceptors(@Nullable final List<HttpRequestInterceptor> interceptors) {
+        requestInterceptorsFirst = (List<HttpRequestInterceptor>) normalizeInterceptors(interceptors);
+    }
+
+    /**
+     * Get the list of request interceptors to add last.
+     * 
+     * @return the list of interceptors, may be null
+     */
+    @Nullable public List<HttpRequestInterceptor> getLastRequestInterceptors() {
+        return requestInterceptorsLast;
+    }
+
+    /**
+     * Set the list of request interceptors to add last.
+     * 
+     * @param interceptors the list of interceptors, may be null
+     */
+    public void setLastRequestInterceptors(List<HttpRequestInterceptor> interceptors) {
+        requestInterceptorsLast = (List<HttpRequestInterceptor>) normalizeInterceptors(interceptors);
+    }
+
+    /**
+     * Get the list of response interceptors to add first.
+     * 
+     * @return the list of interceptors, may be null
+     */
+    @Nullable public List<HttpResponseInterceptor> getFirstResponseInterceptors() {
+        return responseInterceptorsFirst;
+    }
+
+    /**
+     * Set the list of response interceptors to add first.
+     * 
+     * @param interceptors the list of interceptors, may be null
+     */
+    public void setFirstResponseInterceptors(List<HttpResponseInterceptor> interceptors) {
+        responseInterceptorsFirst = (List<HttpResponseInterceptor>) normalizeInterceptors(interceptors);
+    }
+
+    /**
+     * Get the list of response interceptors to add last.
+     * 
+     * @return the list of interceptors, may be null
+     */
+    @Nullable public List<HttpResponseInterceptor> getLastResponseInterceptors() {
+        return responseInterceptorsLast;
+    }
+
+    /**
+     * Set the list of response interceptors to add last.
+     * 
+     * @param interceptors the list of interceptors, may be null
+     */
+    public void setLastResponseInterceptors(List<HttpResponseInterceptor> interceptors) {
+        responseInterceptorsLast = (List<HttpResponseInterceptor>) normalizeInterceptors(interceptors);
+    }
+
+    /**
+     * Normalize and copy the supplied list of interceptors to remove nulls.
+     * 
+     * @param interceptors the list of interceptors to normalize
+     * @return copy of input list without nulls, may be null
+     */
+    @Nullable private List<? extends Object> normalizeInterceptors(
+            @Nullable final List<? extends Object> interceptors) {
+        if (interceptors == null) {
+            return null;
+        } else {
+            return new ArrayList<>(Collections2.filter(interceptors, Predicates.notNull()));
+        }
+    }
 
     /**
      * Constructs an {@link HttpClient} using the settings of this builder.
@@ -581,7 +836,7 @@ public class HttpClientBuilder {
      * 
      * @throws Exception if there is a problem decorating the Apache builder
      */
-    // Checkstyle: CyclomaticComplexity OFF
+    // Checkstyle: CyclomaticComplexity|MethodLength OFF
     protected void decorateApacheBuilder() throws Exception {
         org.apache.http.impl.client.HttpClientBuilder builder = getApacheBuilder();
         
@@ -594,7 +849,14 @@ public class HttpClientBuilder {
         }
 
         if (connectionCloseAfterResponse) {
-            builder.addInterceptorLast(new RequestConnectionClose());
+            if ((getFirstRequestInterceptors() == null 
+                    || !IterableSupport.containsInstance(getFirstRequestInterceptors(), RequestConnectionClose.class)) 
+                    &&
+                (getLastRequestInterceptors() == null 
+                    || !IterableSupport.containsInstance(getLastRequestInterceptors(), RequestConnectionClose.class))) {
+                
+                builder.addInterceptorLast(new RequestConnectionClose());
+            }
         }
         
         if (retryHandler != null) {
@@ -604,6 +866,62 @@ public class HttpClientBuilder {
         if (serviceUnavailStrategy != null) {
             builder.setServiceUnavailableRetryStrategy(serviceUnavailStrategy);
         }
+        
+        // These boolean and interceptor properties can otherwise only be supplied
+        // to the Apache builder via a fluent-style API.
+        
+        if (isDisableAuthCaching()) {
+            builder.disableAuthCaching();
+        }
+
+        if (isDisableAutomaticRetries()) {
+            builder.disableAutomaticRetries();
+        }
+
+        if (isDisableConnectionState()) {
+           builder.disableConnectionState();
+        }
+
+        if (isDisableContentCompression()) {
+            builder.disableContentCompression();
+        }
+
+        if (isDisableCookieManagement()) {
+            builder.disableCookieManagement();
+        }
+
+        if (isDisableRedirectHandling()) {
+            builder.disableRedirectHandling();
+        }
+
+        if (isUseSystemProperties()) {
+            builder.useSystemProperties();
+        }
+
+        if (getFirstRequestInterceptors() != null) {
+            for (HttpRequestInterceptor interceptor : getFirstRequestInterceptors()) {
+                builder.addInterceptorFirst(interceptor);
+            }
+        }
+
+        if (getLastRequestInterceptors() != null) {
+            for (HttpRequestInterceptor interceptor : getLastRequestInterceptors()) {
+                builder.addInterceptorLast(interceptor);
+            }
+        }
+
+        if (getFirstResponseInterceptors() != null) {
+            for (HttpResponseInterceptor interceptor : getFirstResponseInterceptors()) {
+                builder.addInterceptorFirst(interceptor);
+            }
+        }
+
+        if (getLastResponseInterceptors() != null) {
+            for (HttpResponseInterceptor interceptor : getLastResponseInterceptors()) {
+                builder.addInterceptorLast(interceptor);
+            }
+        }
+
 
         // RequestConfig params
         RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
@@ -652,7 +970,7 @@ public class HttpClientBuilder {
             builder.setUserAgent(userAgent);
         }
     }
-    // Checkstyle: CyclomaticComplexity ON
+    // Checkstyle: CyclomaticComplexity|MethodLength ON
 
     /**
      * Get the Apache {@link org.apache.http.impl.client.HttpClientBuilder} instance over which this builder will be
