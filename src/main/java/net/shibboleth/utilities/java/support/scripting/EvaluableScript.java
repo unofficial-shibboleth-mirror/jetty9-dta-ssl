@@ -19,6 +19,7 @@ package net.shibboleth.utilities.java.support.scripting;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 
 import javax.annotation.Nonnull;
@@ -60,10 +61,11 @@ public class EvaluableScript {
      * 
      * @throws ScriptException thrown if the scripting engine supports compilation and the script does not compile
      */
-    public EvaluableScript(@Nonnull @NotEmpty String engineName, @Nonnull @NotEmpty String scriptSource)
+    public EvaluableScript(@Nonnull @NotEmpty final String engineName, @Nonnull @NotEmpty final String scriptSource)
             throws ScriptException {
         scriptLanguage =
-            Constraint.isNotNull(StringSupport.trimOrNull(engineName), "Scripting language can not be null or empty");
+                Constraint.isNotNull(StringSupport.trimOrNull(engineName),
+                        "Scripting language can not be null or empty");
         script = Constraint.isNotNull(StringSupport.trimOrNull(scriptSource), "Script source can not be null or empty");
 
         initialize();
@@ -76,9 +78,34 @@ public class EvaluableScript {
      * 
      * @throws ScriptException thrown if the scripting engine supports compilation and the script does not compile
      */
-    public EvaluableScript(@Nonnull @NotEmpty String scriptSource)
-            throws ScriptException {
+    public EvaluableScript(@Nonnull @NotEmpty final String scriptSource) throws ScriptException {
         this("javascript", scriptSource);
+    }
+
+    /**
+     * Constructor. The provided stream is <strong>not</strong> closed.
+     * 
+     * @param engineName the JSR-223 scripting engine name
+     * @param scriptSource the script source
+     * 
+     * @throws ScriptException thrown if the script source file can not be read or the scripting engine supports
+     *             compilation and the script does not compile
+     * 
+     * 
+     */
+    public EvaluableScript(@Nonnull @NotEmpty final String engineName, @Nonnull final InputStream scriptSource)
+            throws ScriptException {
+        scriptLanguage =
+                Constraint.isNotNull(StringSupport.trimOrNull(engineName),
+                        "Scripting language can not be null or empty");
+        try {
+            script = StringSupport.inputStreamToString(
+                            Constraint.isNotNull(scriptSource, "Script source can not be null or empty"), null);
+        } catch (final IOException e) {
+            throw new ScriptException(e);
+        }
+
+        initialize();
     }
 
     /**
@@ -90,9 +117,11 @@ public class EvaluableScript {
      * @throws ScriptException thrown if the script source file can not be read or the scripting engine supports
      *             compilation and the script does not compile
      */
-    public EvaluableScript(@Nonnull @NotEmpty String engineName, @Nonnull File scriptSource) throws ScriptException {
+    public EvaluableScript(@Nonnull @NotEmpty final String engineName, @Nonnull final File scriptSource)
+            throws ScriptException {
         scriptLanguage =
-            Constraint.isNotNull(StringSupport.trimOrNull(engineName), "Scripting language can not be null or empty");
+                Constraint.isNotNull(StringSupport.trimOrNull(engineName),
+                        "Scripting language can not be null or empty");
 
         Constraint.isNotNull(scriptSource, "Script source file can not be null");
 
@@ -107,9 +136,10 @@ public class EvaluableScript {
 
         try {
             script =
-                Constraint.isNotNull(StringSupport.trimOrNull(Files.toString(scriptSource, Charset.defaultCharset())),
+                    Constraint.isNotNull(
+                            StringSupport.trimOrNull(Files.toString(scriptSource, Charset.defaultCharset())),
                             "Script source can not be empty");
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new ScriptException("Unable to read data from source file " + scriptSource.getAbsolutePath());
         }
 
@@ -143,7 +173,7 @@ public class EvaluableScript {
      * 
      * @throws ScriptException thrown if there was a problem evaluating the script
      */
-    @Nullable public Object eval(Bindings scriptBindings) throws ScriptException {
+    @Nullable public Object eval(final Bindings scriptBindings) throws ScriptException {
         if (compiledScript != null) {
             return compiledScript.eval(scriptBindings);
         } else {
@@ -160,7 +190,7 @@ public class EvaluableScript {
      * 
      * @throws ScriptException thrown if there was a problem evaluating the script
      */
-    @Nullable public Object eval(ScriptContext scriptContext) throws ScriptException {
+    @Nullable public Object eval(final ScriptContext scriptContext) throws ScriptException {
         if (compiledScript != null) {
             return compiledScript.eval(scriptContext);
         } else {
@@ -174,7 +204,7 @@ public class EvaluableScript {
      * @throws ScriptException thrown if the scripting engine supports compilation and the script does not compile
      */
     private void initialize() throws ScriptException {
-        ScriptEngineManager engineManager = new ScriptEngineManager();
+        final ScriptEngineManager engineManager = new ScriptEngineManager();
         scriptEngine = engineManager.getEngineByName(scriptLanguage);
         Constraint.isNotNull(scriptEngine, "No scripting engine associated with scripting language " + scriptLanguage);
 

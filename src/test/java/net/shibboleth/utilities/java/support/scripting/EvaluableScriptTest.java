@@ -18,8 +18,10 @@
 package net.shibboleth.utilities.java.support.scripting;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.script.ScriptException;
 
@@ -54,28 +56,28 @@ public class EvaluableScriptTest {
         try {
             new EvaluableScript(" ", TEST_SIMPLE_SCRIPT);
             Assert.fail();
-        } catch (ConstraintViolationException e) {
+        } catch (final ConstraintViolationException e) {
             // OK
         }
         
         try {
             new EvaluableScript(SCRIPT_LANGUAGE, " ");
             Assert.fail();
-        } catch (ConstraintViolationException e) {
+        } catch (final ConstraintViolationException e) {
             // OK
         }
 
         try {
             new EvaluableScript(null, TEST_SIMPLE_SCRIPT);
             Assert.fail();
-        } catch (ConstraintViolationException e) {
+        } catch (final ConstraintViolationException e) {
             // OK
         }
         
         try {
             new EvaluableScript(SCRIPT_LANGUAGE, (String) null);
             Assert.fail();
-        } catch (ConstraintViolationException e) {
+        } catch (final ConstraintViolationException e) {
             // OK
         }
 
@@ -86,18 +88,22 @@ public class EvaluableScriptTest {
         s.close();
 
         Assert.assertEquals((new EvaluableScript(SCRIPT_LANGUAGE, theFile)).getScriptLanguage(), SCRIPT_LANGUAGE);
+        
+        try (InputStream is = new FileInputStream(theFile)) {
+            Assert.assertEquals((new EvaluableScript(SCRIPT_LANGUAGE, is)).getScriptLanguage(), SCRIPT_LANGUAGE);
+        }
 
         try {
             new EvaluableScript(null, theFile);
             Assert.fail();
-        } catch (ConstraintViolationException e) {
+        } catch (final ConstraintViolationException e) {
             // OK
         }
         
         try {
             new EvaluableScript(SCRIPT_LANGUAGE, (File) null);
             Assert.fail();
-        } catch (ConstraintViolationException e) {
+        } catch (final ConstraintViolationException e) {
             // OK
         }
 
