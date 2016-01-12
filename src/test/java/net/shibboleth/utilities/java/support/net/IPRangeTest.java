@@ -66,7 +66,7 @@ public class IPRangeTest {
 
         // IPRange given a host address
         IPRange hostRange = IPRange.parseCIDRBlock("192.168.117.199/28");
-
+        
         // test for contain
         byte[] bytes = new byte[] {(byte) 192, (byte) 168, 117, (byte) 191};
         Assert.assertFalse(networkRange.contains(bytes));
@@ -87,6 +87,11 @@ public class IPRangeTest {
         
         Assert.assertFalse(networkRange.contains(InetAddress.getLocalHost()));
         Assert.assertFalse(hostRange.contains(InetAddress.getLocalHost()));
+        
+        // IPRange for V6
+        IPRange v6Range = IPRange.parseCIDRBlock("2620:102:c000::1/48");
+        InetAddress v6Addr = InetAddress.getByName("2620:102:c000:f10:d::29c1");
+        Assert.assertTrue(v6Range.contains(v6Addr));
     }
 
     @Test public void testGetNetworkAddress() {
