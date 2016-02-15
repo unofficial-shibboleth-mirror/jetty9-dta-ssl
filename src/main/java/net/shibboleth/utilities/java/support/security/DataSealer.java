@@ -21,6 +21,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyException;
@@ -57,6 +58,9 @@ import org.slf4j.LoggerFactory;
  */
 public class DataSealer extends AbstractInitializableComponent {
 
+    /** Size of UTF-8 data chunks to read/write. */
+    private static final int CHUNK_SIZE = 60000;
+    
     /** Class logger. */
     @Nonnull private Logger log = LoggerFactory.getLogger(DataSealer.class);
 
@@ -210,15 +214,26 @@ public class DataSealer extends AbstractInitializableComponent {
             DataInputStream dataInputStream = new DataInputStream(compressedData);
 
             final long decodedExpirationTime = dataInputStream.readLong();
-            final String decodedData = dataInputStream.readUTF();
-
             if (System.currentTimeMillis() > decodedExpirationTime) {
-                log.info("Unwrapped data has expired");
+                log.debug("Unwrapped data has expired");
                 throw new DataExpiredException("Unwrapped data has expired");
             }
 
-            log.debug("Unwrapped data verified");
-            return decodedData;
+            final StringBuffer accumulator = new StringBuffer();
+            
+            int count = 0;
+            while (true) {
+                try {
+                    final String decodedData = dataInputStream.readUTF();
+                    accumulator.append(decodedData);
+                    log.trace("Read chunk #{} from output stream", ++count);
+                } catch (final EOFException e) {
+                    break;
+                }
+            }
+
+            log.trace("Unwrapped data verified");
+            return accumulator.toString();
         } catch (IOException e) {
             log.error(e.getMessage());
             throw new DataSealerException("Caught IOException unwrapping data", e);
@@ -265,7 +280,15 @@ public class DataSealer extends AbstractInitializableComponent {
             final DataOutputStream dataStream = new DataOutputStream(compressedStream);
 
             dataStream.writeLong(exp);
-            dataStream.writeUTF(data);
+            
+            int count = 0;
+            int start = 0;
+            int dataLength = data.length();
+            while (start < dataLength) {
+                dataStream.writeUTF(data.substring(start, start + Math.min(dataLength - start, CHUNK_SIZE)));
+                start += Math.min(dataLength - start, CHUNK_SIZE);
+                log.trace("Wrote chunk #{} to output stream", ++count);
+            }
 
             dataStream.flush();
             compressedStream.flush();

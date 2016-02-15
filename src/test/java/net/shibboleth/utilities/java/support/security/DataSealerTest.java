@@ -132,7 +132,7 @@ public class DataSealerTest {
         }
     }
 
-    public void encodeDecodeLong() throws DataSealerException, ComponentInitializationException {
+    @Test public void encodeDecodeLong() throws DataSealerException, ComponentInitializationException {
         final DataSealer sealer = createDataSealer();
         
         char[] buffer = new char[1000000];
