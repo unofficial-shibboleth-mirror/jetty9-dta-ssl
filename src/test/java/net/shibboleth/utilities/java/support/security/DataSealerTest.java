@@ -21,6 +21,7 @@ import net.shibboleth.utilities.java.support.component.ComponentInitializationEx
 import net.shibboleth.utilities.java.support.resource.Resource;
 import net.shibboleth.utilities.java.support.resource.TestResourceConverter;
 
+import org.bouncycastle.util.Arrays;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -131,6 +132,18 @@ public class DataSealerTest {
         }
     }
 
+    public void encodeDecodeLong() throws DataSealerException, ComponentInitializationException {
+        final DataSealer sealer = createDataSealer();
+        
+        char[] buffer = new char[1000000];
+        Arrays.fill(buffer, 'x');
+        final String longData = new String(buffer);
+        final String encoded = sealer.wrap(longData, System.currentTimeMillis() + 50000);
+        final StringBuffer alias = new StringBuffer(); 
+        Assert.assertEquals(sealer.unwrap(encoded, alias), longData);
+        Assert.assertEquals(alias.toString(), "secret1");
+    }
+    
     @Test public void badValues() throws DataSealerException, ComponentInitializationException {
         DataSealer sealer = new DataSealer();
 
