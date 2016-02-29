@@ -149,7 +149,7 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
     /**
      * Do we fail fast?
      * 
-     * @return Returns whether we fast.
+     * @return whether we fail fast.
      */
     public boolean isFailFast() {
         return failFast;
