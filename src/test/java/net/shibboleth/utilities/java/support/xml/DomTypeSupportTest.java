@@ -47,10 +47,10 @@ public class DomTypeSupportTest {
         parserPool = pool;
         
         DocumentBuilder builder = parserPool.getBuilder();
-        Resource res = new ClassPathResource("data/net/shibboleth/utilities/java/support/xml/getXSIType.xml");
+        Resource res = new ClassPathResource("/net/shibboleth/utilities/java/support/xml/getXSIType.xml");
         xsStringXSITypeElement = (Element) builder.parse(res.getInputStream()).getFirstChild();
 
-        res = new ClassPathResource("data/net/shibboleth/utilities/java/support/xml/noXSIType.xml");
+        res = new ClassPathResource("/net/shibboleth/utilities/java/support/xml/noXSIType.xml");
         noXSITypeElement = (Element) builder.parse(res.getInputStream()).getFirstChild();
         
         if (null != builder) {

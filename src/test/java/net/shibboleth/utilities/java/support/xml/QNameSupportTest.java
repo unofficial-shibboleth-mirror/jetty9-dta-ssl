@@ -69,7 +69,7 @@ public class QNameSupportTest {
 
         DocumentBuilder builder = parserPool.getBuilder();
         Resource resource =
-                new ClassPathResource("data/net/shibboleth/utilities/java/support/xml/qNameSupportTest.xml");
+                new ClassPathResource("/net/shibboleth/utilities/java/support/xml/qNameSupportTest.xml");
 
         Document testFile = builder.parse(resource.getInputStream());
         parent = (Element) testFile.getFirstChild();

@@ -73,7 +73,7 @@ public class NamespaceSupportTest {
         DocumentBuilder builder = parserPool.getBuilder();
         try {
             Resource resource =
-                    new ClassPathResource("data/net/shibboleth/utilities/java/support/xml/namespaceSupportTest.xml");
+                    new ClassPathResource("/net/shibboleth/utilities/java/support/xml/namespaceSupportTest.xml");
             Document testFile = builder.parse(resource.getInputStream());
 
             parent = (Element) testFile.getFirstChild();

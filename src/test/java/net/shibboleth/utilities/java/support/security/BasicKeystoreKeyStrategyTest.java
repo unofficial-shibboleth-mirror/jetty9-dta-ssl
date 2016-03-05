@@ -32,8 +32,8 @@ import org.testng.annotations.Test;
 public class BasicKeystoreKeyStrategyTest {
     
     @Test public void testBasicKeystoreKeyStrategy() throws Exception {
-        final File keystoreFile = new File("src/test/resources/data/net/shibboleth/utilities/java/support/security/Temp.jks");
-        final File versionFile = new File("src/test/resources/data/net/shibboleth/utilities/java/support/security/Temp.kver");
+        final File keystoreFile = new File("src/test/resources/net/shibboleth/utilities/java/support/security/Temp.jks");
+        final File versionFile = new File("src/test/resources/net/shibboleth/utilities/java/support/security/Temp.kver");
         keystoreFile.deleteOnExit();
         versionFile.deleteOnExit();
         

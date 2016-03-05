@@ -58,7 +58,7 @@ import org.xml.sax.SAXParseException;
  */
 public class BasicParserPoolTest {
 
-    private static final String TEST_DIR = "data/net/shibboleth/utilities/java/support/xml/";
+    private static final String TEST_DIR = "/net/shibboleth/utilities/java/support/xml/";
 
     private static final String SCHEMA_FILE = TEST_DIR + "basicParserPoolTest.xsd";
 
@@ -656,7 +656,7 @@ pool.initialize();
     @Test
     public void testParserUseAfterReturn() throws XMLParserException, URISyntaxException, ComponentInitializationException {
         basicParserPool.initialize();
-        String testPath = "/data/net/shibboleth/utilities/java/support/xml/foo.xml";
+        String testPath = "/net/shibboleth/utilities/java/support/xml/foo.xml";
         InputStream is = BasicParserPoolTest.class.getResourceAsStream(testPath);
         File file = new File(this.getClass().getResource(testPath).toURI());
         

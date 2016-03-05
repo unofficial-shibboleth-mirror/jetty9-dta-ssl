@@ -73,7 +73,7 @@ public class ElementSupportTest {
         try {
 
             Resource resource =
-                    new ClassPathResource("data/net/shibboleth/utilities/java/support/xml/elementSupportTest.xml");
+                    new ClassPathResource("/net/shibboleth/utilities/java/support/xml/elementSupportTest.xml");
             testFileDocument = builder.parse(resource.getInputStream());
             rootElement = (Element) testFileDocument.getFirstChild();
             testerDocument = builder.newDocument();

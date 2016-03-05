@@ -44,17 +44,17 @@ public class DataSealerTest {
 
     @BeforeClass public void initializeKeystoreResource() {
         ClassPathResource resource =
-                new ClassPathResource("/data/net/shibboleth/utilities/java/support/security/SealerKeyStore.jks");
+                new ClassPathResource("/net/shibboleth/utilities/java/support/security/SealerKeyStore.jks");
         Assert.assertTrue(resource.exists());
         keystoreResource = TestResourceConverter.of(resource);
 
         resource =
-                new ClassPathResource("/data/net/shibboleth/utilities/java/support/security/SealerKeyStore.kver");
+                new ClassPathResource("/net/shibboleth/utilities/java/support/security/SealerKeyStore.kver");
         Assert.assertTrue(resource.exists());
         versionResource = TestResourceConverter.of(resource);
 
         resource =
-                new ClassPathResource("/data/net/shibboleth/utilities/java/support/security/SealerKeyStore.kver2");
+                new ClassPathResource("/net/shibboleth/utilities/java/support/security/SealerKeyStore.kver2");
         Assert.assertTrue(resource.exists());
         version2Resource = TestResourceConverter.of(resource);
     }

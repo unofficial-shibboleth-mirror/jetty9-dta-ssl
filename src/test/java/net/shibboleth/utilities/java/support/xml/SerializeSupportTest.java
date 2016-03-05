@@ -54,7 +54,7 @@ public class SerializeSupportTest {
         DocumentBuilder builder = parserPool.getBuilder();
         try {
             Resource resource =
-                    new ClassPathResource("data/net/shibboleth/utilities/java/support/xml/serializeSupportTest.xml");
+                    new ClassPathResource("/net/shibboleth/utilities/java/support/xml/serializeSupportTest.xml");
             Document testFile = builder.parse(resource.getInputStream());
 
             parent = (Element) testFile.getFirstChild();
