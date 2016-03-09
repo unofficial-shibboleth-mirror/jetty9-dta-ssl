@@ -20,6 +20,8 @@ package net.shibboleth.utilities.java.support.collection;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import javax.annotation.Nonnull;
+
 /**
  * A specialization of {@link ClassToInstanceMultiMap} which exposes a map-specific
  * instance of {@link ReadWriteLock}. Callers of the map are responsible for explicitly locking
@@ -31,7 +33,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class LockableClassToInstanceMultiMap<B> extends ClassToInstanceMultiMap<B> {
     
     /** The map's read write lock. */
-    private ReadWriteLock readWriteLock;
+    @Nonnull private final ReadWriteLock readWriteLock;
 
     /**
      * Constructor.
@@ -45,7 +47,7 @@ public class LockableClassToInstanceMultiMap<B> extends ClassToInstanceMultiMap<
      *
      * @param isIndexingSupertypes indicates whether supertypes of a value should be indexed
      */
-    public LockableClassToInstanceMultiMap(boolean isIndexingSupertypes) {
+    public LockableClassToInstanceMultiMap(final boolean isIndexingSupertypes) {
         super(isIndexingSupertypes);
         readWriteLock = new ReentrantReadWriteLock(true);
     }
@@ -60,7 +62,7 @@ public class LockableClassToInstanceMultiMap<B> extends ClassToInstanceMultiMap<
      * 
      * @return Returns the rwlock.
      */
-    public ReadWriteLock getReadWriteLock() {
+    @Nonnull public ReadWriteLock getReadWriteLock() {
         return readWriteLock;
     }
 

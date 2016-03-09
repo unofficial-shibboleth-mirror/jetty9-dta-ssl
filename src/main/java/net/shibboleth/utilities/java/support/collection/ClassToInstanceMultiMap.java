@@ -17,6 +17,10 @@
 
 package net.shibboleth.utilities.java.support.collection;
 
+import net.shibboleth.utilities.java.support.annotation.constraint.Live;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,6 +29,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 /**
@@ -43,10 +49,10 @@ public class ClassToInstanceMultiMap<B> {
     private final boolean indexSupertypes;
 
     /** Map which backs this map. */
-    private final HashMap<Class<?>, List<B>> backingMap;
+    @Nonnull private final HashMap<Class<?>, List<B>> backingMap;
 
     /** List of values that are indexed. */
-    private final List<B> values;
+    @Nonnull private final List<B> values;
 
     /** Constructor. Does not index supertypes. */
     public ClassToInstanceMultiMap() {
@@ -77,7 +83,7 @@ public class ClassToInstanceMultiMap<B> {
      * 
      * @return true if the map contains a mapping for the specified key
      */
-    public boolean containsKey(final Class<?> key) {
+    public boolean containsKey(@Nullable final Class<?> key) {
         if (key == null) {
             return false;
         }
@@ -92,7 +98,7 @@ public class ClassToInstanceMultiMap<B> {
      * 
      * @return true if the map contains a mapping to the specified value
      */
-    public boolean containsValue(final B value) {
+    public boolean containsValue(@Nonnull final B value) {
         if (value == null) {
             return false;
         }
@@ -101,14 +107,14 @@ public class ClassToInstanceMultiMap<B> {
     }
 
     /**
-     * Gets the instances mapped to the given type or an empty list, immutable, list otherwise.
+     * Gets the instances mapped to the given type or an empty list.
      * 
      * @param <T> type identifier
      * @param type map key
      * 
-     * @return instances mapped to the given type or an empty list, immutable, list otherwise
+     * @return instances mapped to the given type or an empty list
      */
-    public <T> List<T> get(final Class<T> type) {
+    @Nonnull @NonnullElements @Unmodifiable @Live public <T> List<T> get(@Nullable final Class<T> type) {
         if (type == null) {
             return Collections.emptyList();
         }
@@ -135,7 +141,7 @@ public class ClassToInstanceMultiMap<B> {
      * 
      * @return set of keys contained in this map
      */
-    public Set<Class<?>> keys() {
+    @Nonnull @NonnullElements @Unmodifiable @Live public Set<Class<?>> keys() {
         return Collections.unmodifiableSet(backingMap.keySet());
     }
 
@@ -149,7 +155,7 @@ public class ClassToInstanceMultiMap<B> {
      * 
      * @param value value to be stored in the map
      */
-    public void put(final B value) {
+    public void put(@Nonnull final B value) {
         if (value == null) {
             return;
         }
@@ -180,7 +186,7 @@ public class ClassToInstanceMultiMap<B> {
      * 
      * @see ClassToInstanceMultiMap#put(Object)
      */
-    public void putAll(final Iterable<? extends B> newValues) {
+    public void putAll(@Nullable @NonnullElements final Iterable<? extends B> newValues) {
         if (newValues == null) {
             return;
         }
@@ -199,7 +205,7 @@ public class ClassToInstanceMultiMap<B> {
      * 
      * @see ClassToInstanceMultiMap#put(Object)
      */
-    public void putAll(final ClassToInstanceMultiMap<? extends B> map) {
+    public void putAll(@Nullable @NonnullElements final ClassToInstanceMultiMap<? extends B> map) {
         if (map == null) {
             return;
         }
@@ -217,7 +223,7 @@ public class ClassToInstanceMultiMap<B> {
      * 
      * @param value the value to remove
      */
-    public void remove(final B value) {
+    public void remove(@Nonnull final B value) {
         if (value == null) {
             return;
         }
@@ -246,7 +252,7 @@ public class ClassToInstanceMultiMap<B> {
      * 
      * @param removeValues the values to remove
      */
-    public void removeAll(final Iterable<? extends B> removeValues) {
+    public void removeAll(@Nullable @NonnullElements final Iterable<? extends B> removeValues) {
         if (removeValues == null) {
             return;
         }
@@ -266,7 +272,7 @@ public class ClassToInstanceMultiMap<B> {
      * 
      * @param map the map containing the values to remove
      */
-    public void removeAll(final ClassToInstanceMultiMap<? extends B> map) {
+    public void removeAll(@Nullable @NonnullElements final ClassToInstanceMultiMap<? extends B> map) {
         if (map == null) {
             return;
         }
@@ -289,7 +295,7 @@ public class ClassToInstanceMultiMap<B> {
      * 
      * @param type the type of values to remove
      */
-    public void remove(final Class<?> type) {
+    public void remove(@Nullable final Class<?> type) {
         if (type == null) {
             return;
         }
@@ -304,13 +310,13 @@ public class ClassToInstanceMultiMap<B> {
     }
 
     /**
-     * The collection of values currently present in the map. This collection is backed by the map so changeds to the
+     * The collection of values currently present in the map. This collection is backed by the map so changes to the
      * map will be reflected in the collection. However the collection does not allow direct modification so any changes
      * must be done through this map.
      * 
      * @return collection of values currently present in the map
      */
-    public Collection<? extends B> values() {
+    @Nonnull @NonnullElements @Unmodifiable @Live public Collection<? extends B> values() {
         return Collections.unmodifiableList(values);
     }
 
@@ -320,7 +326,7 @@ public class ClassToInstanceMultiMap<B> {
      * @param value the value to index
      * @return the set of classes by which to index the value
      */
-    private Set<Class<?>> getIndexTypes(final B value) {
+    @Nonnull @NonnullElements private Set<Class<?>> getIndexTypes(@Nonnull final B value) {
         final HashSet<Class<?>> indexTypes = new HashSet<>();
         indexTypes.add(value.getClass());
 
@@ -337,7 +343,8 @@ public class ClassToInstanceMultiMap<B> {
      * @param clazz class for which supertypes will be determined
      * @param accumulator collection to which supertypes are added as they are determined
      */
-    private void getSuperTypes(final Class<?> clazz, Set<Class<?>> accumulator) {
+    private void getSuperTypes(@Nonnull final Class<?> clazz,
+            @Nonnull @NonnullElements final Set<Class<?>> accumulator) {
         final Class<?> superclass = clazz.getSuperclass();
         if (superclass != null && superclass != Object.class) {
             accumulator.add(superclass);
@@ -370,4 +377,5 @@ public class ClassToInstanceMultiMap<B> {
         }
         return false;
     }
+    
 }
