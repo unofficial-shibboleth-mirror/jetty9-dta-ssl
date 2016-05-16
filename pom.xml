@@ -16,10 +16,6 @@
     <version>7.3.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <properties>
-        <svn.relative.location>utilities/java-support</svn.relative.location>
-    </properties>
-
     <repositories>
         <repository>
             <id>shib-release</id>
