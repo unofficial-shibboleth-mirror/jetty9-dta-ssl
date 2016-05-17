@@ -39,7 +39,7 @@ public final class PredicateSupport {
      * 
      * @return the constructed predicate
      */
-    @Nonnull public static <T> Predicate<Iterable<T>> allMatch(@Nonnull Predicate<T> target) {
+    @Nonnull public static <T> Predicate<Iterable<T>> allMatch(@Nonnull final Predicate<T> target) {
         return new AllMatchPredicate<>(target);
     }
 
@@ -51,7 +51,7 @@ public final class PredicateSupport {
      * 
      * @return the constructed predicate
      */
-    @Nonnull public static <T> Predicate<Iterable<T>> anyMatch(@Nonnull Predicate<T> target) {
+    @Nonnull public static <T> Predicate<Iterable<T>> anyMatch(@Nonnull final Predicate<T> target) {
         return new AnyMatchPredicate<>(target);
     }
 
@@ -62,7 +62,7 @@ public final class PredicateSupport {
      * 
      * @return the constructed predicate
      */
-    @Nonnull public static Predicate<CharSequence> caseInsensitiveMatch(@Nonnull String target) {
+    @Nonnull public static Predicate<CharSequence> caseInsensitiveMatch(@Nonnull final String target) {
         return new CaseInsensitiveStringMatchPredicate(target);
     }
 }

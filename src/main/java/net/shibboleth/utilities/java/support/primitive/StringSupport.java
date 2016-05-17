@@ -178,7 +178,7 @@ public final class StringSupport {
      * @return the normalized collection of string values
      */
     @Nonnull @NonnullElements public static Collection<String> normalizeStringCollection(
-            @Nullable @NullableElements Collection<String> values) {
+            @Nullable @NullableElements final Collection<String> values) {
         if (values == null) {
             return Collections.emptySet();
         }

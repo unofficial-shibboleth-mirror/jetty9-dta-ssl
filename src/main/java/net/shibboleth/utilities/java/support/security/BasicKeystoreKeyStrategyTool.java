@@ -240,7 +240,7 @@ public class BasicKeystoreKeyStrategyTool {
         }
 
         @Override
-        public File convert(String value) {
+        public File convert(final String value) {
             return new File(value);
         }
     }

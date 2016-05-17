@@ -389,7 +389,7 @@ public class SelfSignedCertificateGenerator {
         }
 
         @Override
-        public File convert(String value) {
+        public File convert(final String value) {
             return new File(value);
         }
     }

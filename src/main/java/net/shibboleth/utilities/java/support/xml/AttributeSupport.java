@@ -163,7 +163,7 @@ public final class AttributeSupport {
      * @param duration duration, in milliseconds, must be greater than 0
      */
     public static void appendDateTimeAttribute(@Nonnull final Element element, @Nonnull final QName attributeName,
-            long duration) {
+            final long duration) {
         appendAttribute(element, attributeName, DOMTypeSupport.longToDateTime(duration));
     }
 
@@ -175,7 +175,7 @@ public final class AttributeSupport {
      * @param duration duration, in milliseconds, must be greater than 0
      */
     public static void appendDurationAttribute(@Nonnull final Element element, @Nonnull final QName attributeName,
-            long duration) {
+            final long duration) {
         appendAttribute(element, attributeName, DOMTypeSupport.longToDuration(duration));
     }
 

@@ -62,7 +62,7 @@ public class TransformAndCheckFunction<T> implements Function<T, Optional<? exte
     }
 
     /** {@inheritDoc} */
-    public Optional<? extends T> apply(T input) {
+    public Optional<? extends T> apply(final T input) {
         T processedValue = preprocessor.apply(input);
 
         boolean meetsCriteria = constraint.apply(processedValue);
@@ -79,7 +79,7 @@ public class TransformAndCheckFunction<T> implements Function<T, Optional<? exte
     }
 
     /** {@inheritDoc} */
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }

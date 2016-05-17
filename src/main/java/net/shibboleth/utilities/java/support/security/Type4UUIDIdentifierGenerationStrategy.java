@@ -32,7 +32,7 @@ public class Type4UUIDIdentifierGenerationStrategy implements IdentifierGenerati
     }
 
     /** {@inheritDoc} */
-    public String generateIdentifier(boolean xmlSafe) {
+    public String generateIdentifier(final boolean xmlSafe) {
         if (xmlSafe) {
             return "_" + UUID.randomUUID().toString();
         } else {

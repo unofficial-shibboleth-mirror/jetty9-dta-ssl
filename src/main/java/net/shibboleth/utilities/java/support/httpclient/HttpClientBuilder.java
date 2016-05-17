@@ -415,7 +415,7 @@ public class HttpClientBuilder {
      * 
      * @param close whether to instruct the server to close the connection after it has sent its response
      */
-    public void setConnectionCloseAfterResponse(boolean close) {
+    public void setConnectionCloseAfterResponse(final boolean close) {
         connectionCloseAfterResponse = close;
     }
 
@@ -618,7 +618,7 @@ public class HttpClientBuilder {
      * 
      * @param flag true if disabled, false if not
      */
-    public void setDisableAuthCaching(boolean flag) {
+    public void setDisableAuthCaching(final boolean flag) {
         disableAuthCaching = flag;
     }
 
@@ -636,7 +636,7 @@ public class HttpClientBuilder {
      * 
      * @param flag true if disabled, false if not
      */
-    public void setDisableAutomaticRetries(boolean flag) {
+    public void setDisableAutomaticRetries(final boolean flag) {
         disableAutomaticRetries = flag;
     }
 
@@ -655,7 +655,7 @@ public class HttpClientBuilder {
      * @param flag true if disabled, false if not
      */
  
-    public void setDisableConnectionState(boolean flag) {
+    public void setDisableConnectionState(final boolean flag) {
         disableConnectionState = flag;
     }
 
@@ -673,7 +673,7 @@ public class HttpClientBuilder {
      * 
      * @param flag true if disabled, false if not
      */
-    public void setDisableContentCompression(boolean flag) {
+    public void setDisableContentCompression(final boolean flag) {
         disableContentCompression = flag;
     }
 
@@ -691,7 +691,7 @@ public class HttpClientBuilder {
      * 
      * @param flag true if disabled, false if not
      */
-    public void setDisableCookieManagement(boolean flag) {
+    public void setDisableCookieManagement(final boolean flag) {
         disableCookieManagement = flag;
     }
 
@@ -709,7 +709,7 @@ public class HttpClientBuilder {
      * 
      * @param flag true if disabled, false if not
      */
-    public void setDisableRedirectHandling(boolean flag) {
+    public void setDisableRedirectHandling(final boolean flag) {
         disableRedirectHandling = flag;
     }
 
@@ -727,7 +727,7 @@ public class HttpClientBuilder {
      * 
      * @param flag true if enabled, false if not
      */
-    public void setUseSystemProperties(boolean flag) {
+    public void setUseSystemProperties(final boolean flag) {
         useSystemProperties = flag;
     }
 
@@ -763,7 +763,7 @@ public class HttpClientBuilder {
      * 
      * @param interceptors the list of interceptors, may be null
      */
-    public void setLastRequestInterceptors(List<HttpRequestInterceptor> interceptors) {
+    public void setLastRequestInterceptors(final List<HttpRequestInterceptor> interceptors) {
         requestInterceptorsLast = (List<HttpRequestInterceptor>) normalizeInterceptors(interceptors);
     }
 
@@ -781,7 +781,7 @@ public class HttpClientBuilder {
      * 
      * @param interceptors the list of interceptors, may be null
      */
-    public void setFirstResponseInterceptors(List<HttpResponseInterceptor> interceptors) {
+    public void setFirstResponseInterceptors(final List<HttpResponseInterceptor> interceptors) {
         responseInterceptorsFirst = (List<HttpResponseInterceptor>) normalizeInterceptors(interceptors);
     }
 
@@ -799,7 +799,7 @@ public class HttpClientBuilder {
      * 
      * @param interceptors the list of interceptors, may be null
      */
-    public void setLastResponseInterceptors(List<HttpResponseInterceptor> interceptors) {
+    public void setLastResponseInterceptors(final List<HttpResponseInterceptor> interceptors) {
         responseInterceptorsLast = (List<HttpResponseInterceptor>) normalizeInterceptors(interceptors);
     }
 

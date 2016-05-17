@@ -187,7 +187,7 @@ public final class URISupport {
      * @return a suitable URI
      * @throws URISyntaxException if the URI contructor fails
      */
-    public static URI fileURIFromAbsolutePath(String path) throws URISyntaxException {
+    public static URI fileURIFromAbsolutePath(final String path) throws URISyntaxException {
         final StringBuilder uriPath = new StringBuilder(path.length()+8);
         
         uriPath.append("file://");

@@ -205,7 +205,7 @@ public class DataSealer extends AbstractInitializableComponent {
      * @return the decoded data if it is valid and unexpired
      * @throws DataSealerException if the data cannot be unwrapped and verified
      */
-    @Nonnull private String extractAndCheckDecryptedData(@Nonnull @NotEmpty byte[] decryptedBytes)
+    @Nonnull private String extractAndCheckDecryptedData(@Nonnull @NotEmpty final byte[] decryptedBytes)
             throws DataSealerException {
         
         try {
@@ -257,7 +257,7 @@ public class DataSealer extends AbstractInitializableComponent {
      * @return the encoded blob
      * @throws DataSealerException if the wrapping operation fails
      */
-    @Nonnull public String wrap(@Nonnull @NotEmpty final String data, long exp) throws DataSealerException {
+    @Nonnull public String wrap(@Nonnull @NotEmpty final String data, final long exp) throws DataSealerException {
 
         if (data == null || data.length() == 0) {
             throw new IllegalArgumentException("Data must be supplied for the wrapping operation");

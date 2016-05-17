@@ -119,11 +119,13 @@ public final class HttpClientSupport {
                 return null;
             }
 
-            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            public void checkServerTrusted(final X509Certificate[] chain, final String authType)
+                    throws CertificateException {
                 // accept everything
             }
 
-            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            public void checkClientTrusted(final X509Certificate[] chain, final String authType)
+                    throws CertificateException {
                 // accept everything
             }
         };

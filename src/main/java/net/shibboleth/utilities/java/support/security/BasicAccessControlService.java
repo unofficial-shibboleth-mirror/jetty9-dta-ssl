@@ -80,7 +80,7 @@ public class BasicAccessControlService extends AbstractIdentifiableInitializable
                 getId(), name);
         
         return new AccessControl() {
-            public boolean checkAccess(ServletRequest request, String operation, String resource) {
+            public boolean checkAccess(final ServletRequest request, final String operation, final String resource) {
                 return false;
             }
         };

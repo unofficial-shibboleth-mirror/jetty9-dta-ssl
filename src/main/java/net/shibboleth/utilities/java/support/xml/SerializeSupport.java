@@ -160,7 +160,7 @@ public final class SerializeSupport {
 
         serializer.setFilter(new LSSerializerFilter() {
 
-            public short acceptNode(Node arg0) {
+            public short acceptNode(final Node arg0) {
                 return FILTER_ACCEPT;
             }
 

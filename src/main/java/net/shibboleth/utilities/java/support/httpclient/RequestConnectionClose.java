@@ -40,7 +40,7 @@ import org.apache.http.protocol.HttpContext;
 public class RequestConnectionClose implements HttpRequestInterceptor {
 
     /** {@inheritDoc} */
-    public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
+    public void process(final HttpRequest request, final HttpContext context) throws HttpException, IOException {
         if (HttpVersion.HTTP_1_1.equals(request.getProtocolVersion())) {
             request.addHeader(HttpHeaders.CONNECTION, "close");
         }

@@ -141,7 +141,7 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
      * 
      * @param directoryPath filesystem path to the directory
      */
-    public void setCacheDirectory(@Nonnull @NotEmpty String directoryPath) {
+    public void setCacheDirectory(@Nonnull @NotEmpty final String directoryPath) {
         String trimmedPath =
                 Constraint.isNotNull(StringSupport.trimOrNull(directoryPath),
                         "Cache directory path can not be null or empty");
@@ -153,7 +153,7 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
      * 
      * @param directory the directory
      */
-    public void setCacheDirectory(@Nonnull File directory) {
+    public void setCacheDirectory(@Nonnull final File directory) {
         cacheDir = Constraint.isNotNull(directory, "Cache directory can not be null");
     }
 
@@ -171,7 +171,7 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
      * 
      * @param maxEntries maximum number of cached responses, must be greater than zero
      */
-    public void setMaxCacheEntries(int maxEntries) {
+    public void setMaxCacheEntries(final int maxEntries) {
         maxCacheEntries =
                 (int) Constraint.isGreaterThan(0, maxEntries, "Maximum number of cache entries must be greater than 0");
     }
@@ -190,7 +190,7 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
      * 
      * @param size maximum response body size that will be eligible for caching, must be greater than zero
      */
-    public void setMaxCacheEntrySize(long size) {
+    public void setMaxCacheEntrySize(final long size) {
         maxCacheEntrySize = (int) Constraint.isGreaterThan(0, size, "Maximum cache entry size must be greater than 0");
     }
 
@@ -208,7 +208,7 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
      * 
      * @param value the new maintenance task interval, in milliseconds
      */
-    public void setMaintentanceTaskInterval(long value) {
+    public void setMaintentanceTaskInterval(final long value) {
         maintentanceTaskInterval = Constraint.isGreaterThan(0, value, 
                 "Maintenance task interval must be greater than 0");
     }
@@ -304,7 +304,8 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
         }
 
         /** {@inheritDoc} */
-        protected CloseableHttpResponse doExecute(HttpHost target, HttpRequest request, HttpContext context)
+        protected CloseableHttpResponse doExecute(final HttpHost target, final HttpRequest request,
+                final HttpContext context)
                 throws IOException, ClientProtocolException {
             ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
             ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);

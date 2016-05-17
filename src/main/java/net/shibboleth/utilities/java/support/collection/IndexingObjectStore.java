@@ -94,7 +94,7 @@ public class IndexingObjectStore<T> {
      * 
      * @return true if an object is associated with the given index, false if not
      */
-    public boolean containsIndex(String index) {
+    public boolean containsIndex(final String index) {
         Lock readLock = rwLock.readLock();
         readLock.lock();
         try {
@@ -111,7 +111,7 @@ public class IndexingObjectStore<T> {
      * 
      * @return true if an object instance equal to the specified one is stored, false if not
      */
-    public boolean containsInstance(T instance) {
+    public boolean containsInstance(final T instance) {
         Lock readLock = rwLock.readLock();
         readLock.lock();
         try {
@@ -149,7 +149,7 @@ public class IndexingObjectStore<T> {
      * 
      * @return the index that may be used to later retrieve the object or null if the object was null
      */
-    public String put(T object) {
+    public String put(final T object) {
         if (object == null) {
             return null;
         }
@@ -179,7 +179,7 @@ public class IndexingObjectStore<T> {
      * 
      * @return the registered object or null if no object is registered for that index
      */
-    public T get(String index) {
+    public T get(final String index) {
         if (index == null) {
             return null;
         }
@@ -205,7 +205,7 @@ public class IndexingObjectStore<T> {
      * 
      * @param index the index of the object, may be null
      */
-    public void remove(String index) {
+    public void remove(final String index) {
         if (index == null) {
             return;
         }
@@ -248,7 +248,7 @@ public class IndexingObjectStore<T> {
      * @param object the target object
      * @return the object index value
      */
-    protected String getIndex(T object) {
+    protected String getIndex(final T object) {
         Integer index = indexStore.get(object);
         if (index == null) {
             index = ++lastIndex;
@@ -262,7 +262,7 @@ public class IndexingObjectStore<T> {
      * 
      * @param object the target index
      */
-    protected void removeIndex(T object) {
+    protected void removeIndex(final T object) {
         indexStore.remove(object);
     }
 

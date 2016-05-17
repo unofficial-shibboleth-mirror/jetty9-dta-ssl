@@ -49,7 +49,7 @@ import net.shibboleth.utilities.java.support.logic.Constraint;
 public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
 
     /** {@inheritDoc} */
-    public Object getAttribute(String name) {
+    public Object getAttribute(final String name) {
         return getCurrent().getAttribute(name);
     }
 
@@ -64,7 +64,7 @@ public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
     }
 
     /** {@inheritDoc} */
-    public void setCharacterEncoding(String env) throws UnsupportedEncodingException {
+    public void setCharacterEncoding(final String env) throws UnsupportedEncodingException {
         getCurrent().setCharacterEncoding(env);
     }
 
@@ -84,7 +84,7 @@ public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
     }
 
     /** {@inheritDoc} */
-    public String getParameter(String name) {
+    public String getParameter(final String name) {
         return getCurrent().getParameter(name);
     }
 
@@ -94,7 +94,7 @@ public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
     }
 
     /** {@inheritDoc} */
-    public String[] getParameterValues(String name) {
+    public String[] getParameterValues(final String name) {
         return getCurrent().getParameterValues(name);
     }
 
@@ -139,12 +139,12 @@ public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
     }
 
     /** {@inheritDoc} */
-    public void setAttribute(String name, Object o) {
+    public void setAttribute(final String name, final Object o) {
         getCurrent().setAttribute(name, o);
     }
 
     /** {@inheritDoc} */
-    public void removeAttribute(String name) {
+    public void removeAttribute(final String name) {
         getCurrent().removeAttribute(name);
     }
 
@@ -164,13 +164,13 @@ public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
     }
 
     /** {@inheritDoc} */
-    public RequestDispatcher getRequestDispatcher(String path) {
+    public RequestDispatcher getRequestDispatcher(final String path) {
         return getCurrent().getRequestDispatcher(path);
     }
 
     /** {@inheritDoc} */
     @SuppressWarnings("deprecation")
-    public String getRealPath(String path) {
+    public String getRealPath(final String path) {
         return getCurrent().getRealPath(path);
     }
 
@@ -205,17 +205,17 @@ public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
     }
 
     /** {@inheritDoc} */
-    public long getDateHeader(String name) {
+    public long getDateHeader(final String name) {
         return getCurrent().getDateHeader(name);
     }
 
     /** {@inheritDoc} */
-    public String getHeader(String name) {
+    public String getHeader(final String name) {
         return getCurrent().getHeader(name);
     }
 
     /** {@inheritDoc} */
-    public Enumeration getHeaders(String name) {
+    public Enumeration getHeaders(final String name) {
         return getCurrent().getHeaders(name);
     }
 
@@ -225,7 +225,7 @@ public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
     }
 
     /** {@inheritDoc} */
-    public int getIntHeader(String name) {
+    public int getIntHeader(final String name) {
         return getCurrent().getIntHeader(name);
     }
 
@@ -260,7 +260,7 @@ public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
     }
 
     /** {@inheritDoc} */
-    public boolean isUserInRole(String role) {
+    public boolean isUserInRole(final String role) {
         return getCurrent().isUserInRole(role);
     }
 
@@ -290,7 +290,7 @@ public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
     }
 
     /** {@inheritDoc} */
-    public HttpSession getSession(boolean create) {
+    public HttpSession getSession(final boolean create) {
         return getCurrent().getSession(create);
     }
 
@@ -331,7 +331,7 @@ public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
     }
 
     /** {@inheritDoc} */
-    public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse) {
+    public AsyncContext startAsync(final ServletRequest servletRequest, final ServletResponse servletResponse) {
         return getCurrent().startAsync(servletRequest, servletResponse);
     }
 
@@ -356,12 +356,12 @@ public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
     }
 
     /** {@inheritDoc} */
-    public boolean authenticate(HttpServletResponse response) throws IOException, ServletException {
+    public boolean authenticate(final HttpServletResponse response) throws IOException, ServletException {
         return getCurrent().authenticate(response);
     }
 
     /** {@inheritDoc} */
-    public void login(String username, String password) throws ServletException {
+    public void login(final String username, final String password) throws ServletException {
         getCurrent().login(username, password);
     }
 
@@ -376,7 +376,7 @@ public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
     }
 
     /** {@inheritDoc} */
-    public Part getPart(String name) throws IOException, ServletException {
+    public Part getPart(final String name) throws IOException, ServletException {
         return getCurrent().getPart(name);
     }
 

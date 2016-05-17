@@ -34,12 +34,12 @@ public class TrimOrNullStringFunction implements Function<String, String> {
     public static final TrimOrNullStringFunction INSTANCE = new TrimOrNullStringFunction();
 
     /** {@inheritDoc} */
-    @Nullable @NotEmpty public String apply(@Nullable String input) {
+    @Nullable @NotEmpty public String apply(@Nullable final String input) {
         return StringSupport.trimOrNull(input);
     }
 
     /** {@inheritDoc} */
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }

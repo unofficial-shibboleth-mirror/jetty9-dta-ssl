@@ -179,7 +179,7 @@ public class SchemaBuilder {
      * 
      * @see SchemaFactory#setProperty(String, Object)
      */
-    public void setProperty(@Nonnull @NotEmpty final String name, @Nullable Object object) {
+    public void setProperty(@Nonnull @NotEmpty final String name, @Nullable final Object object) {
         properties.put(name, object);
     }
     

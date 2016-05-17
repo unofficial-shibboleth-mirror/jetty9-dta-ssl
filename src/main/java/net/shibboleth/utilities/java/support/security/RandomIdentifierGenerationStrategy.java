@@ -99,7 +99,7 @@ public class RandomIdentifierGenerationStrategy implements IdentifierGenerationS
     }
 
     /** {@inheritDoc} */
-    public String generateIdentifier(boolean xmlSafe) {
+    public String generateIdentifier(final boolean xmlSafe) {
         byte[] buf = new byte[sizeOfIdentifier];
         random.nextBytes(buf);
         try {

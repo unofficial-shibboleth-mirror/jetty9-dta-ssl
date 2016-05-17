@@ -332,7 +332,7 @@ public class TLSSocketFactory implements LayeredConnectionSocketFactory {
      * 
      * @param socket the SSLSocket instance
      */
-    private void logSocketInfo(SSLSocket socket) {
+    private void logSocketInfo(final SSLSocket socket) {
         SSLSession session = socket.getSession();
         if (log.isDebugEnabled()) {
             log.debug("Connected to: {}", socket.getRemoteSocketAddress());
@@ -366,7 +366,8 @@ public class TLSSocketFactory implements LayeredConnectionSocketFactory {
      * 
      * @return a String array, or null
      */
-    @Nullable protected String[] getListAttribute(@Nullable final HttpContext context, @Nonnull String contextKey) {
+    @Nullable protected String[] getListAttribute(@Nullable final HttpContext context,
+            @Nonnull final String contextKey) {
         if (context == null) {
             return null;
         }

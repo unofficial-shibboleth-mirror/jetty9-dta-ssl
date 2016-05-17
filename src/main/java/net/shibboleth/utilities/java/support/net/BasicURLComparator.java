@@ -46,7 +46,7 @@ public class BasicURLComparator implements URIComparator {
      * Set the case-insensitivity flag value.
      * @param flag The caseInsensitive to set.
      */
-    public void setCaseInsensitive(boolean flag) {
+    public void setCaseInsensitive(final boolean flag) {
         caseInsensitive = flag;
     }
 

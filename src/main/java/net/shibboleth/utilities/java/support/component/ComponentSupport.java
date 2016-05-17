@@ -76,7 +76,7 @@ public final class ComponentSupport {
      * 
      * @param component component to check
      */
-    public static void ifDestroyedThrowDestroyedComponentException(@Nonnull DestructableComponent component) {
+    public static void ifDestroyedThrowDestroyedComponentException(@Nonnull final DestructableComponent component) {
         Constraint.isNotNull(component, "Component cannot be null");
 
         if (component.isDestroyed()) {
@@ -98,7 +98,8 @@ public final class ComponentSupport {
      * 
      * @param component component to check
      */
-    public static void ifNotInitializedThrowUninitializedComponentException(@Nonnull InitializableComponent component) {
+    public static void
+            ifNotInitializedThrowUninitializedComponentException(@Nonnull final InitializableComponent component) {
         Constraint.isNotNull(component, "Component cannot be null");
 
         if (!component.isInitialized()) {
@@ -120,7 +121,8 @@ public final class ComponentSupport {
      * 
      * @param component component to check
      */
-    public static void ifInitializedThrowUnmodifiabledComponentException(@Nonnull InitializableComponent component) {
+    public static void
+            ifInitializedThrowUnmodifiabledComponentException(@Nonnull final InitializableComponent component) {
         Constraint.isNotNull(component, "Component cannot be null");
 
         if (component.isInitialized()) {

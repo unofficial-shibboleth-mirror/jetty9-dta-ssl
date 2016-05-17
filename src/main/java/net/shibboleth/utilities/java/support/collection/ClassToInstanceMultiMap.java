@@ -366,7 +366,7 @@ public class ClassToInstanceMultiMap<B> {
     }
 
     /** {@inheritDoc} */
-    @Override public boolean equals(Object obj) {
+    @Override public boolean equals(final Object obj) {
         if (null == obj) {
             return false;
         }

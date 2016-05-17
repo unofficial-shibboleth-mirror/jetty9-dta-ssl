@@ -95,7 +95,8 @@ public final class SimpleURLCanonicalizer {
      * @return the canonicalized URL
      * @throws MalformedURLException  if the URL is not a valid URL
      */
-    @Nonnull @NotEmpty public static String canonicalize(@Nonnull @NotEmpty String url) throws MalformedURLException {
+    @Nonnull @NotEmpty public static String canonicalize(@Nonnull @NotEmpty final String url)
+            throws MalformedURLException {
         Constraint.isFalse(Strings.isNullOrEmpty(url), "URL was null or empty");
         URLBuilder urlBuilder = new URLBuilder(url);
         canonicalize(urlBuilder);

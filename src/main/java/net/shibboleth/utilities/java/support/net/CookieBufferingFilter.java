@@ -45,7 +45,7 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElemen
 public class CookieBufferingFilter implements Filter {
 
     /** {@inheritDoc} */
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(final FilterConfig filterConfig) throws ServletException {
     }
 
     /** {@inheritDoc} */
@@ -53,7 +53,8 @@ public class CookieBufferingFilter implements Filter {
     }
 
     /** {@inheritDoc} */
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+    public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
+            throws IOException,
             ServletException {
 
         if (!(request instanceof HttpServletRequest)) {
@@ -88,7 +89,7 @@ public class CookieBufferingFilter implements Filter {
     
         /** {@inheritDoc} */
         @Override
-        public void addCookie(Cookie cookie) {
+        public void addCookie(final Cookie cookie) {
             // Guarantees any existing cookie by this name is replaced.
             cookieMap.put(cookie.getName(), cookie);
         }
@@ -118,21 +119,21 @@ public class CookieBufferingFilter implements Filter {
 
         /** {@inheritDoc} */
         @Override
-        public void sendError(int sc, String msg) throws IOException {
+        public void sendError(final int sc, final String msg) throws IOException {
             dumpCookies();
             super.sendError(sc, msg);
         }
 
         /** {@inheritDoc} */
         @Override
-        public void sendError(int sc) throws IOException {
+        public void sendError(final int sc) throws IOException {
             dumpCookies();
             super.sendError(sc);
         }
 
         /** {@inheritDoc} */
         @Override
-        public void sendRedirect(String location) throws IOException {
+        public void sendRedirect(final String location) throws IOException {
             dumpCookies();
             super.sendRedirect(location);
         }
