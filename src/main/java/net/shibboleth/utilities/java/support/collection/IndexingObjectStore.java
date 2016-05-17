@@ -280,7 +280,7 @@ public class IndexingObjectStore<T> {
          * 
          * @param wrappedObject the object being wrapped
          */
-        public StoredObjectWrapper(T wrappedObject) {
+        public StoredObjectWrapper(final T wrappedObject) {
             object = wrappedObject;
             referenceCount = 0;
         }

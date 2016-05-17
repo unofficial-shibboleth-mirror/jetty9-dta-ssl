@@ -124,7 +124,7 @@ public class ClasspathResolver implements EntityResolver, LSResourceResolver {
          * @param sysId system id of the resolved resource
          * @param input resolved resource
          */
-        public LSInputImpl(String pubId, String sysId, InputStream input) {
+        public LSInputImpl(final String pubId, final String sysId, final InputStream input) {
             publicId = pubId;
             systemId = sysId;
             buffInput = new BufferedInputStream(input);

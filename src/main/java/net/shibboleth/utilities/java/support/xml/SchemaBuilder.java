@@ -71,7 +71,7 @@ public class SchemaBuilder {
          * 
          * @param uri schema factory identifier
          */
-        private SchemaLanguage(@Nonnull @NotEmpty String uri) {
+        private SchemaLanguage(@Nonnull @NotEmpty final String uri) {
             schemaFactoryURI = Constraint.isNotNull(StringSupport.trimOrNull(uri), "URI cannot be null or empty");
         }
 

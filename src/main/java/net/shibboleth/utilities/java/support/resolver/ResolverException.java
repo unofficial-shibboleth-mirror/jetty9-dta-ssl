@@ -39,7 +39,7 @@ public class ResolverException extends Exception {
      * 
      * @param message exception message
      */
-    public ResolverException(@Nullable String message) {
+    public ResolverException(@Nullable final String message) {
         super(message);
     }
 
@@ -48,7 +48,7 @@ public class ResolverException extends Exception {
      * 
      * @param wrappedException exception to be wrapped by this one
      */
-    public ResolverException(@Nullable Exception wrappedException) {
+    public ResolverException(@Nullable final Exception wrappedException) {
         super(wrappedException);
     }
 
@@ -58,7 +58,7 @@ public class ResolverException extends Exception {
      * @param message exception message
      * @param wrappedException exception to be wrapped by this one
      */
-    public ResolverException(@Nullable String message, @Nullable Exception wrappedException) {
+    public ResolverException(@Nullable final String message, @Nullable final Exception wrappedException) {
         super(message, wrappedException);
     }
 }

@@ -296,7 +296,7 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
          * @param taskInterval the interval at which storage maintenance should run
          */
         public StorageManagingHttpClient(@Nonnull final CloseableHttpClient wrappedClient, 
-                @Nonnull final ManagedHttpCacheStorage managedStorage, long taskInterval)  {
+                @Nonnull final ManagedHttpCacheStorage managedStorage, final long taskInterval)  {
            super(); 
            httpClient = Constraint.isNotNull(wrappedClient, "HttpClient was null");
            storage = Constraint.isNotNull(managedStorage, "ManagedHttpCacheStorage was null");

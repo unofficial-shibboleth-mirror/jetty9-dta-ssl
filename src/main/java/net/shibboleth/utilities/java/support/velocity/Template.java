@@ -70,8 +70,8 @@ public final class Template {
      * @param velocityTemplateName name of the template to be evaluated
      * @param velocityTemplateEncoding encoding used by the template
      */
-    private Template(@Nonnull VelocityEngine velocityEngine, @Nonnull @NotEmpty String velocityTemplateName,
-            @Nonnull String velocityTemplateEncoding) {
+    private Template(@Nonnull final VelocityEngine velocityEngine, @Nonnull @NotEmpty final String velocityTemplateName,
+            @Nonnull final String velocityTemplateEncoding) {
         engine = Constraint.isNotNull(velocityEngine, "Velocity engine can not be null");
         templateName =
                 Constraint.isNotNull(StringSupport.trimOrNull(velocityTemplateName),

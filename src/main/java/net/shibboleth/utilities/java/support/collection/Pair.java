@@ -60,7 +60,7 @@ public class Pair<T1, T2> {
      * 
      * @param pair pair to be copied
      */
-    public Pair(@Nonnull Pair<? extends T1, ? extends T2> pair) {
+    public Pair(@Nonnull final Pair<? extends T1, ? extends T2> pair) {
         Constraint.isNotNull(pair, "Pair to be copied can not be null");
         first = pair.getFirst();
         second = pair.getSecond();

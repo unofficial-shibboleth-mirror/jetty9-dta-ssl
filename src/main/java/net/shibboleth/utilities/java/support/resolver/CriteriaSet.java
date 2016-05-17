@@ -34,7 +34,7 @@ public class CriteriaSet extends ClassIndexedSet<Criterion> implements Criterion
      * 
      * @param criteria criteria to add, may be null or contain null values
      */
-    public CriteriaSet(@Nullable Criterion... criteria) {
+    public CriteriaSet(@Nullable final Criterion... criteria) {
         super();
 
         if (criteria == null || criteria.length == 0) {

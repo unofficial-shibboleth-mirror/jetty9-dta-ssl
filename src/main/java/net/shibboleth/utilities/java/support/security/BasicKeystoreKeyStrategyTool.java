@@ -235,7 +235,7 @@ public class BasicKeystoreKeyStrategyTool {
          *
          * @param optionName 
          */
-        public FileConverter(String optionName) {
+        public FileConverter(final String optionName) {
             super(optionName);
         }
 

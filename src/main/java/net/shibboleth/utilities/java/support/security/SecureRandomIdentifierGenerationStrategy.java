@@ -54,7 +54,7 @@ public class SecureRandomIdentifierGenerationStrategy extends RandomIdentifierGe
      * @param identifierSize number of random bytes in the identifier
      * @param identifierEncoder encoder used to convert random bytes to string identifier
      */
-    public SecureRandomIdentifierGenerationStrategy(@Nonnull final SecureRandom source, int identifierSize,
+    public SecureRandomIdentifierGenerationStrategy(@Nonnull final SecureRandom source, final int identifierSize,
             @Nonnull final BinaryEncoder identifierEncoder) {
         super(source, identifierSize, identifierEncoder);
     }

@@ -244,7 +244,7 @@ public class HttpClientBuilder {
      * 
      * @param builder the Apache HttpClientBuilder 4.3+ instance over which to layer this builder
      */
-    public HttpClientBuilder(@Nonnull org.apache.http.impl.client.HttpClientBuilder builder) {
+    public HttpClientBuilder(@Nonnull final org.apache.http.impl.client.HttpClientBuilder builder) {
         Constraint.isNotNull(builder, "Apache HttpClientBuilder may not be null");
         apacheBuilder = builder;
         resetDefaults();
