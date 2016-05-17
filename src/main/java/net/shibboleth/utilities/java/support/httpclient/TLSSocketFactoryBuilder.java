@@ -292,7 +292,7 @@ public class TLSSocketFactoryBuilder {
             verifier = DEFAULT_HOSTNAME_VERIFIER;
         }
 
-        SSLContext sslcontext = buildSSLContext();
+        final SSLContext sslcontext = buildSSLContext();
         return new TLSSocketFactory(sslcontext, 
                 enabledProtocols != null ? enabledProtocols.toArray(new String[0]) : null, 
                 enabledCipherSuites != null ? enabledCipherSuites.toArray(new String[0]) : null, 
@@ -311,7 +311,7 @@ public class TLSSocketFactoryBuilder {
         }
         
         try {
-            SSLContext sslcontext;
+            final SSLContext sslcontext;
             if (sslContextProvider != null) {
                 sslcontext = SSLContext.getInstance(protocol, sslContextProvider);
             } else {

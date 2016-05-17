@@ -72,7 +72,7 @@ public final class HttpServletSupport {
      * @return constructed URI
      */
     public static String getRequestPathWithoutContext(final HttpServletRequest request) {
-        String servletPath = request.getServletPath();
+        final String servletPath = request.getServletPath();
 
         if (request.getPathInfo() == null) {
             return servletPath;
@@ -90,9 +90,9 @@ public final class HttpServletSupport {
      * @return URL that was requested to generate this request
      */
     public static URI getFullRequestURI(final HttpServletRequest request) {
-        StringBuffer requestUrl = request.getRequestURL();
+        final StringBuffer requestUrl = request.getRequestURL();
 
-        String encodedQuery = StringSupport.trimOrNull(request.getQueryString());
+        final String encodedQuery = StringSupport.trimOrNull(request.getQueryString());
         if (encodedQuery != null) {
             requestUrl.append("?").append(encodedQuery);
         }

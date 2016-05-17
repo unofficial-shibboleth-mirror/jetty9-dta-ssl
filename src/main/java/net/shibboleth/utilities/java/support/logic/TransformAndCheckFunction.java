@@ -63,9 +63,9 @@ public class TransformAndCheckFunction<T> implements Function<T, Optional<? exte
 
     /** {@inheritDoc} */
     public Optional<? extends T> apply(final T input) {
-        T processedValue = preprocessor.apply(input);
+        final T processedValue = preprocessor.apply(input);
 
-        boolean meetsCriteria = constraint.apply(processedValue);
+        final boolean meetsCriteria = constraint.apply(processedValue);
 
         if (meetsCriteria) {
             return Optional.of(processedValue);

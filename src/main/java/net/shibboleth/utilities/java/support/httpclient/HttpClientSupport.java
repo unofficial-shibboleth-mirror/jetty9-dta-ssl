@@ -93,10 +93,10 @@ public final class HttpClientSupport {
      */
     @Deprecated
     public static SSLConnectionSocketFactory buildNoTrustSSLConnectionSocketFactory() {
-        X509TrustManager noTrustManager = buildNoTrustX509TrustManager();
+        final X509TrustManager noTrustManager = buildNoTrustX509TrustManager();
 
         try {
-            SSLContext sslcontext = SSLContext.getInstance("TLS");
+            final SSLContext sslcontext = SSLContext.getInstance("TLS");
             sslcontext.init(null, new TrustManager[] {noTrustManager}, null);
             return new SSLConnectionSocketFactory(sslcontext, SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
         } catch (final NoSuchAlgorithmException e) {

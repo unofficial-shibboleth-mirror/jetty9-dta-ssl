@@ -53,7 +53,7 @@ public final class NamespaceSupport {
         
         Constraint.isNotNull(nsURI, "namespace may not be null or empty");
 
-        String attributeName;
+        final String attributeName;
         if (nsPrefix == null) {
             if (null == element.getPrefix()) {
                 
@@ -252,7 +252,7 @@ public final class NamespaceSupport {
         }
 
         // Make sure all the attribute URIs are rooted here or have been rooted in an ancestor
-        NamedNodeMap attributes = domElement.getAttributes();
+        final NamedNodeMap attributes = domElement.getAttributes();
         Node attributeNode;
         for (int i = 0; i < attributes.getLength(); i++) {
             namespacePrefix = null;

@@ -50,9 +50,9 @@ public class ClasspathResolver implements EntityResolver, LSResourceResolver {
     /** {@inheritDoc} */
     @Override
     public InputSource resolveEntity(final String publicId, final String systemId) throws SAXException, IOException {
-        InputStream resourceStream = resolver(publicId, systemId);
+        final InputStream resourceStream = resolver(publicId, systemId);
         if (resourceStream != null) {
-            InputSource is = new InputSource(resourceStream);
+            final InputSource is = new InputSource(resourceStream);
             is.setSystemId(systemId);
             is.setPublicId(publicId);
             return is;
@@ -172,7 +172,7 @@ public class ClasspathResolver implements EntityResolver, LSResourceResolver {
             synchronized (buffInput) {
                 try {
                     buffInput.reset();
-                    byte[] input = new byte[buffInput.available()];
+                    final byte[] input = new byte[buffInput.available()];
                     buffInput.read(input);
                     return new String(input);
                 } catch (final IOException e) {

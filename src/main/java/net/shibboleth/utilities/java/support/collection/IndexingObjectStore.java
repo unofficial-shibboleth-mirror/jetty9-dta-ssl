@@ -76,7 +76,7 @@ public class IndexingObjectStore<T> {
 
     /** Clears the object store. */
     public void clear() {
-        Lock writeLock = rwLock.writeLock();
+        final Lock writeLock = rwLock.writeLock();
         writeLock.lock();
         try {
             objectStore.clear();
@@ -95,7 +95,7 @@ public class IndexingObjectStore<T> {
      * @return true if an object is associated with the given index, false if not
      */
     public boolean containsIndex(final String index) {
-        Lock readLock = rwLock.readLock();
+        final Lock readLock = rwLock.readLock();
         readLock.lock();
         try {
             return objectStore.containsKey(index);
@@ -112,10 +112,10 @@ public class IndexingObjectStore<T> {
      * @return true if an object instance equal to the specified one is stored, false if not
      */
     public boolean containsInstance(final T instance) {
-        Lock readLock = rwLock.readLock();
+        final Lock readLock = rwLock.readLock();
         readLock.lock();
         try {
-            Integer index = indexStore.get(instance);
+            final Integer index = indexStore.get(instance);
             if (index == null) {
                 return false;
             } else {
@@ -132,7 +132,7 @@ public class IndexingObjectStore<T> {
      * @return true if the store is empty, false if not
      */
     public boolean isEmpty() {
-        Lock readLock = rwLock.readLock();
+        final Lock readLock = rwLock.readLock();
         readLock.lock();
         try {
             return objectStore.isEmpty();
@@ -154,10 +154,10 @@ public class IndexingObjectStore<T> {
             return null;
         }
 
-        Lock writeLock = rwLock.writeLock();
+        final Lock writeLock = rwLock.writeLock();
         writeLock.lock();
         try {
-            String index = getIndex(object);
+            final String index = getIndex(object);
 
             StoredObjectWrapper objectWrapper = objectStore.get(index);
             if (objectWrapper == null) {
@@ -184,10 +184,10 @@ public class IndexingObjectStore<T> {
             return null;
         }
 
-        Lock readLock = rwLock.readLock();
+        final Lock readLock = rwLock.readLock();
         readLock.lock();
         try {
-            StoredObjectWrapper objectWrapper = objectStore.get(index);
+            final StoredObjectWrapper objectWrapper = objectStore.get(index);
             if (objectWrapper != null) {
                 return objectWrapper.getObject();
             }
@@ -210,10 +210,10 @@ public class IndexingObjectStore<T> {
             return;
         }
 
-        Lock writeLock = rwLock.writeLock();
+        final Lock writeLock = rwLock.writeLock();
         writeLock.lock();
         try {
-            StoredObjectWrapper objectWrapper = objectStore.get(index);
+            final StoredObjectWrapper objectWrapper = objectStore.get(index);
             if (objectWrapper != null) {
                 objectWrapper.decremementReferenceCount();
                 if (objectWrapper.getReferenceCount() == 0) {
@@ -233,7 +233,7 @@ public class IndexingObjectStore<T> {
      * @return number of items in the store
      */
     public int size() {
-        Lock readLock = rwLock.readLock();
+        final Lock readLock = rwLock.readLock();
         readLock.lock();
         try {
             return objectStore.size();

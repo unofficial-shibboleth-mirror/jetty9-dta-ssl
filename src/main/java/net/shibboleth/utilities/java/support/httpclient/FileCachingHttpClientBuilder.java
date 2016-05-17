@@ -142,7 +142,7 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
      * @param directoryPath filesystem path to the directory
      */
     public void setCacheDirectory(@Nonnull @NotEmpty final String directoryPath) {
-        String trimmedPath =
+        final String trimmedPath =
                 Constraint.isNotNull(StringSupport.trimOrNull(directoryPath),
                         "Cache directory path can not be null or empty");
         cacheDir = new File(trimmedPath);
@@ -231,14 +231,14 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
             throw new IOException("Cache directory '" + cacheDir.getAbsolutePath() + "' is not writable");
         }
         
-        CachingHttpClientBuilder cachingBuilder = (CachingHttpClientBuilder) getApacheBuilder();
+        final CachingHttpClientBuilder cachingBuilder = (CachingHttpClientBuilder) getApacheBuilder();
 
-        CacheConfig.Builder cacheConfigBuilder = CacheConfig.custom();
+        final CacheConfig.Builder cacheConfigBuilder = CacheConfig.custom();
         cacheConfigBuilder.setMaxCacheEntries(maxCacheEntries);
         cacheConfigBuilder.setMaxObjectSize(maxCacheEntrySize);
         cacheConfigBuilder.setHeuristicCachingEnabled(false);
         cacheConfigBuilder.setSharedCache(false);
-        CacheConfig cacheConfig = cacheConfigBuilder.build();
+        final CacheConfig cacheConfig = cacheConfigBuilder.build();
         
         cachingBuilder.setCacheConfig(cacheConfig);
         cachingBuilder.setResourceFactory(new FileResourceFactory(cacheDir));
@@ -250,8 +250,8 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
 
     /** {@inheritDoc} */
     public synchronized HttpClient buildClient() throws Exception {
-        CloseableHttpClient client = (CloseableHttpClient) super.buildClient();
-        ManagedHttpCacheStorage tempStorage = managedStorage;
+        final CloseableHttpClient client = (CloseableHttpClient) super.buildClient();
+        final ManagedHttpCacheStorage tempStorage = managedStorage;
         // Null this out so we don't keep a reference, inhibiting garbage collection.
         managedStorage = null;
         return new StorageManagingHttpClient(client, tempStorage, getMaintentanceTaskInterval());

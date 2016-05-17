@@ -69,7 +69,7 @@ public class IPRange {
         mask = new BitSet(addressLength);
         mask.set(addressLength - maskSize, addressLength, true);
 
-        BitSet hostAddress = toBitSet(address);
+        final BitSet hostAddress = toBitSet(address);
 
         network = (BitSet)hostAddress.clone();
         network.and(mask);
@@ -109,12 +109,12 @@ public class IPRange {
      * @param address the address to validate
      */
     private static void validateV4Address(final String address) {
-        String[] components = address.split("\\.");
+        final String[] components = address.split("\\.");
         if (components.length != 4) {
             throw new IllegalArgumentException("IPv4 address should have four components");
         }
         for (String component : components) {
-            int value = Integer.parseInt(component, 10);
+            final int value = Integer.parseInt(component, 10);
             if (value < 0 || (value > 255)) {
                 throw new IllegalArgumentException("IPv4 component range error: " + component);
             }
@@ -132,10 +132,10 @@ public class IPRange {
      * @param address the address to validate
      */
     private static void validateV6Address(final String address) {
-        String[] components = address.split(":");
+        final String[] components = address.split(":");
         for (String component : components) {
             if (component.length() != 0) {
-                int value = Integer.parseInt(component, 16);
+                final int value = Integer.parseInt(component, 16);
                 if (value < 0 || (value > 0xFFFF)) {
                     throw new IllegalArgumentException("IPv6 component range error: " + component);
                 }
@@ -167,19 +167,19 @@ public class IPRange {
      * @return the resultant IP range
      */
     public static IPRange parseCIDRBlock(final String cidrBlock) {
-        String block = StringSupport.trimOrNull(cidrBlock);
+        final String block = StringSupport.trimOrNull(cidrBlock);
         if (block == null) {
             throw new IllegalArgumentException("CIDR block definition can not be null or empty");
         }
 
-        String[] blockParts = block.split("/");
+        final String[] blockParts = block.split("/");
         if (blockParts.length != 2) {
             throw new IllegalArgumentException("CIDR block definition is invalid, check for missing or extra slash");
         }
         try {
             validateIPAddress(blockParts[0]);
-            InetAddress address = InetAddress.getByName(blockParts[0]);
-            int maskSize = Integer.parseInt(blockParts[1]);
+            final InetAddress address = InetAddress.getByName(blockParts[0]);
+            final int maskSize = Integer.parseInt(blockParts[1]);
             return new IPRange(address, maskSize);
         } catch (final UnknownHostException e) {
             throw new IllegalArgumentException("Invalid IP address");
@@ -211,7 +211,7 @@ public class IPRange {
             return false;
         }
 
-        BitSet addrNetwork = toBitSet(address);
+        final BitSet addrNetwork = toBitSet(address);
         addrNetwork.and(mask);
 
         return addrNetwork.equals(network);
@@ -227,7 +227,7 @@ public class IPRange {
      * @return the BitSet
      */
     protected BitSet toBitSet(final byte[] bytes) {
-        BitSet bits = new BitSet(bytes.length * 8);
+        final BitSet bits = new BitSet(bytes.length * 8);
 
         for (int i = 0; i < bytes.length * 8; i++) {
             if ((bytes[bytes.length - i / 8 - 1] & (1 << (i % 8))) > 0) {
@@ -247,7 +247,7 @@ public class IPRange {
      * @return array of bytes representing the same address
      */
     private byte[] toByteArray(final BitSet bits) {
-        byte[] bytes = new byte[addressLength / 8];
+        final byte[] bytes = new byte[addressLength / 8];
         for (int i = 0; i < addressLength; i++) {
             if (bits.get(i)) {
                 bytes[bytes.length - i / 8 - 1] |= 1 << (i % 8);

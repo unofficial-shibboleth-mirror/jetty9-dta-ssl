@@ -838,7 +838,7 @@ public class HttpClientBuilder {
      */
     // Checkstyle: CyclomaticComplexity|MethodLength OFF
     protected void decorateApacheBuilder() throws Exception {
-        org.apache.http.impl.client.HttpClientBuilder builder = getApacheBuilder();
+        final org.apache.http.impl.client.HttpClientBuilder builder = getApacheBuilder();
         
         if (getTLSSocketFactory() != null) {
             builder.setSSLSocketFactory(getTLSSocketFactory());
@@ -924,7 +924,7 @@ public class HttpClientBuilder {
 
 
         // RequestConfig params
-        RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
+        final RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
 
         if (socketLocalAddress != null) {
             requestConfigBuilder.setLocalAddress(socketLocalAddress);
@@ -955,7 +955,7 @@ public class HttpClientBuilder {
         }
 
         // ConnectionConfig params
-        ConnectionConfig.Builder connectionConfigBuilder = ConnectionConfig.custom();
+        final ConnectionConfig.Builder connectionConfigBuilder = ConnectionConfig.custom();
 
         connectionConfigBuilder.setBufferSize(socketBufferSize);
 

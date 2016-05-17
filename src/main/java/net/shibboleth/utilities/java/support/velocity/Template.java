@@ -217,7 +217,7 @@ public final class Template {
      * @return the generated output of the template
      */
     public String merge(final Context templateContext) {
-        StringWriter output = new StringWriter();
+        final StringWriter output = new StringWriter();
         merge(templateContext, output);
         return output.toString();
     }
@@ -253,7 +253,7 @@ public final class Template {
             return false;
         }
 
-        Template otherTemplate = (Template) obj;
+        final Template otherTemplate = (Template) obj;
         return engine.equals(otherTemplate.engine) && templateName.equals(otherTemplate.templateName);
     }
 

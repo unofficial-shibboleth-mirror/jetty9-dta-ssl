@@ -296,7 +296,7 @@ public class TLSSocketFactory implements LayeredConnectionSocketFactory {
                 port,
                 true);
         
-        String[] contextProtocols = getListAttribute(context, CONTEXT_KEY_TLS_PROTOCOLS);
+        final String[] contextProtocols = getListAttribute(context, CONTEXT_KEY_TLS_PROTOCOLS);
         if (contextProtocols != null) {
             sslsock.setEnabledProtocols(contextProtocols);
         } else if (getSupportedProtocols() != null) {
@@ -313,7 +313,7 @@ public class TLSSocketFactory implements LayeredConnectionSocketFactory {
             sslsock.setEnabledProtocols(enabledProtocols.toArray(new String[enabledProtocols.size()]));
         }
         
-        String[] contextCipherSuites = getListAttribute(context, CONTEXT_KEY_TLS_CIPHER_SUITES);
+        final String[] contextCipherSuites = getListAttribute(context, CONTEXT_KEY_TLS_CIPHER_SUITES);
         if (contextCipherSuites != null) {
             sslsock.setEnabledCipherSuites(contextCipherSuites);
         } else if (getSupportedCipherSuites() != null) {
@@ -333,7 +333,7 @@ public class TLSSocketFactory implements LayeredConnectionSocketFactory {
      * @param socket the SSLSocket instance
      */
     private void logSocketInfo(final SSLSocket socket) {
-        SSLSession session = socket.getSession();
+        final SSLSession session = socket.getSession();
         if (log.isDebugEnabled()) {
             log.debug("Connected to: {}", socket.getRemoteSocketAddress());
             
@@ -371,7 +371,7 @@ public class TLSSocketFactory implements LayeredConnectionSocketFactory {
         if (context == null) {
             return null;
         }
-        List<String> values = new ArrayList<>(StringSupport.normalizeStringCollection(
+        final List<String> values = new ArrayList<>(StringSupport.normalizeStringCollection(
                 (List<String>) context.getAttribute(contextKey)));
         if (values != null && !values.isEmpty()) {
             return values.toArray(new String[values.size()]);

@@ -300,7 +300,7 @@ public class ClassToInstanceMultiMap<B> {
             return;
         }
 
-        List<B> indexValues = backingMap.remove(type);
+        final List<B> indexValues = backingMap.remove(type);
 
         if (indexValues != null) {
             for (B value : indexValues) {
@@ -371,7 +371,7 @@ public class ClassToInstanceMultiMap<B> {
             return false;
         }
         if (obj instanceof ClassToInstanceMultiMap<?>) {
-            ClassToInstanceMultiMap<?> cast = (ClassToInstanceMultiMap<?>) obj;
+            final ClassToInstanceMultiMap<?> cast = (ClassToInstanceMultiMap<?>) obj;
 
             return backingMap.equals(cast.backingMap) && values.equals(cast.values);
         }

@@ -665,7 +665,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
      * @return the default features map
      */
     protected Map<String, Boolean> buildDefaultFeatures() {
-        HashMap<String, Boolean> features = new HashMap<>();
+        final HashMap<String, Boolean> features = new HashMap<>();
         features.put(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         features.put("http://apache.org/xml/features/disallow-doctype-decl", true);
         return features;

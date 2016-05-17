@@ -133,14 +133,14 @@ public class InMemoryCachingHttpClientBuilder extends HttpClientBuilder {
         super.decorateApacheBuilder();
         
         // Note: This cast is safe because of constructor enforcement.
-        CachingHttpClientBuilder cachingBuilder = (CachingHttpClientBuilder) getApacheBuilder();
+        final CachingHttpClientBuilder cachingBuilder = (CachingHttpClientBuilder) getApacheBuilder();
 
-        CacheConfig.Builder cacheConfigBuilder = CacheConfig.custom();
+        final CacheConfig.Builder cacheConfigBuilder = CacheConfig.custom();
         cacheConfigBuilder.setMaxCacheEntries(maxCacheEntries);
         cacheConfigBuilder.setMaxObjectSize(maxCacheEntrySize);
         cacheConfigBuilder.setHeuristicCachingEnabled(false);
         cacheConfigBuilder.setSharedCache(false);
-        CacheConfig cacheConfig = cacheConfigBuilder.build();
+        final CacheConfig cacheConfig = cacheConfigBuilder.build();
         
         cachingBuilder.setCacheConfig(cacheConfig);
         cachingBuilder.setResourceFactory(new HeapResourceFactory());

@@ -209,9 +209,9 @@ public class DataSealer extends AbstractInitializableComponent {
             throws DataSealerException {
         
         try {
-            ByteArrayInputStream byteStream = new ByteArrayInputStream(decryptedBytes);
-            GZIPInputStream compressedData = new GZIPInputStream(byteStream);
-            DataInputStream dataInputStream = new DataInputStream(compressedData);
+            final ByteArrayInputStream byteStream = new ByteArrayInputStream(decryptedBytes);
+            final GZIPInputStream compressedData = new GZIPInputStream(byteStream);
+            final DataInputStream dataInputStream = new DataInputStream(compressedData);
 
             final long decodedExpirationTime = dataInputStream.readLong();
             if (System.currentTimeMillis() > decodedExpirationTime) {
@@ -283,7 +283,7 @@ public class DataSealer extends AbstractInitializableComponent {
             
             int count = 0;
             int start = 0;
-            int dataLength = data.length();
+            final int dataLength = data.length();
             while (start < dataLength) {
                 dataStream.writeUTF(data.substring(start, start + Math.min(dataLength - start, CHUNK_SIZE)));
                 start += Math.min(dataLength - start, CHUNK_SIZE);
@@ -327,7 +327,7 @@ public class DataSealer extends AbstractInitializableComponent {
      */
     private void testEncryption(@Nonnull final SecretKey key) throws DataSealerException {
 
-        String decrypted;
+        final String decrypted;
         try {
             final GCMBlockCipher cipher = new GCMBlockCipher(new AESEngine());
             final byte[] iv = new byte[cipher.getUnderlyingCipher().getBlockSize()];
