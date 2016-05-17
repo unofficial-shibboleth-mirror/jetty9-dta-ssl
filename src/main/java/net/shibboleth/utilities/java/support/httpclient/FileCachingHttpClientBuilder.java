@@ -362,7 +362,7 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
             try {
                 log.debug("Executing ManagedHttpCacheStorage shutdown()");
                 storage.shutdown();
-            } catch (Throwable t) {
+            } catch (final Throwable t) {
                 log.warn("Error invoking ManagedHttpCacheStorage shutdown()", t);
             }
             storage = null;
@@ -399,7 +399,7 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
             try {
                 log.debug("Executing ManagedHttpCacheStorage cleanResources()");
                 storage.cleanResources();
-            } catch (Throwable t) {
+            } catch (final Throwable t) {
                 log.warn("Error invoking ManagedHttpCacheStorage cleanResources()", t);
             }
         }

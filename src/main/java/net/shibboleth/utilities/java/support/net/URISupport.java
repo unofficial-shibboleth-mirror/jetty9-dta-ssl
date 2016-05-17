@@ -53,7 +53,7 @@ public final class URISupport {
         try {
             return new URI(prototype.getScheme(), prototype.getUserInfo(), prototype.getHost(), prototype.getPort(),
                     prototype.getPath(), prototype.getQuery(), trimOrNullFragment(fragment));
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             throw new IllegalArgumentException("Illegal fragment text", e);
         }
     }
@@ -70,7 +70,7 @@ public final class URISupport {
         try {
             return new URI(prototype.getScheme(), prototype.getUserInfo(), StringSupport.trimOrNull(host),
                     prototype.getPort(), prototype.getPath(), prototype.getQuery(), prototype.getFragment());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             throw new IllegalArgumentException("Illegal host", e);
         }
     }
@@ -87,7 +87,7 @@ public final class URISupport {
         try {
             return new URI(prototype.getScheme(), prototype.getUserInfo(), prototype.getHost(), prototype.getPort(),
                     trimOrNullPath(path), prototype.getQuery(), prototype.getFragment());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             throw new IllegalArgumentException("Illegal path", e);
         }
     }
@@ -104,7 +104,7 @@ public final class URISupport {
         try {
             return new URI(prototype.getScheme(), prototype.getUserInfo(), prototype.getHost(), port,
                     prototype.getPath(), prototype.getQuery(), prototype.getFragment());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             throw new IllegalArgumentException("Illegal port", e);
         }
     }
@@ -129,7 +129,7 @@ public final class URISupport {
         try {
             return new URI(prototype.getScheme(), prototype.getUserInfo(), prototype.getHost(), prototype.getPort(),
                     prototype.getPath(), trimOrNullQuery(query), prototype.getFragment());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             throw new IllegalArgumentException("Illegal query", e);
         }
     }
@@ -154,7 +154,7 @@ public final class URISupport {
         try {
             return new URI(prototype.getScheme(), prototype.getUserInfo(), prototype.getHost(), prototype.getPort(),
                     prototype.getPath(), buildQuery(parameters), prototype.getFragment());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             throw new IllegalArgumentException("Illegal query", e);
         }
     }
@@ -171,7 +171,7 @@ public final class URISupport {
         try {
             return new URI(StringSupport.trimOrNull(scheme), prototype.getUserInfo(), prototype.getHost(),
                     prototype.getPort(), prototype.getPath(), prototype.getQuery(), prototype.getFragment());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             throw new IllegalArgumentException("Illegal scheme", e);
         }
     }
@@ -375,7 +375,7 @@ public final class URISupport {
 
         try {
             return URLDecoder.decode(value, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
+        } catch (final UnsupportedEncodingException e) {
             // UTF-8 encoding is required to be supported by all JVMs
             return null;
         }
@@ -394,7 +394,7 @@ public final class URISupport {
 
         try {
             return URLEncoder.encode(value, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
+        } catch (final UnsupportedEncodingException e) {
             // UTF-8 encoding is required to be supported by all JVMs
             return null;
         }

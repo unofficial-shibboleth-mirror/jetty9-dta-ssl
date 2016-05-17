@@ -244,9 +244,9 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
                 throw new XMLParserException("DocumentBuilder parsed a null Document");
             }
             return document;
-        } catch (SAXException e) {
+        } catch (final SAXException e) {
             throw new XMLParserException("Unable to parse inputstream, it contained invalid XML", e);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new XMLParserException("Unable to read data from input stream", e);
         } finally {
             returnBuilder(builder);
@@ -267,9 +267,9 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
                 throw new XMLParserException("DocumentBuilder parsed a null Document");
             }
             return document;
-        } catch (SAXException e) {
+        } catch (final SAXException e) {
             throw new XMLParserException("Invalid XML", e);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new XMLParserException("Unable to read XML from input stream", e);
         } finally {
             returnBuilder(builder);
@@ -570,7 +570,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
             final DocumentBuilder builder = builderFactory.newDocumentBuilder();
 
             return builder;
-        } catch (ParserConfigurationException e) {
+        } catch (final ParserConfigurationException e) {
             log.debug("Unable to create new document builder", e);
             throw new XMLParserException("Unable to create new document builder", e);
         }
@@ -625,7 +625,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
 
             builderFactory = newFactory;
 
-        } catch (ParserConfigurationException e) {
+        } catch (final ParserConfigurationException e) {
             throw new ComponentInitializationException("Unable to configure builder factory", e);
         }
     }

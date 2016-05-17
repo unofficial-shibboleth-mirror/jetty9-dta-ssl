@@ -99,9 +99,9 @@ public final class HttpClientSupport {
             SSLContext sslcontext = SSLContext.getInstance("TLS");
             sslcontext.init(null, new TrustManager[] {noTrustManager}, null);
             return new SSLConnectionSocketFactory(sslcontext, SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-        } catch (NoSuchAlgorithmException e) {
+        } catch (final NoSuchAlgorithmException e) {
             throw new RuntimeException("TLS SSLContext type is required to be supported by the JVM but is not", e);
-        } catch (KeyManagementException e) {
+        } catch (final KeyManagementException e) {
             throw new RuntimeException("Some how the trust everything trust manager didn't trust everything", e);
         }
         

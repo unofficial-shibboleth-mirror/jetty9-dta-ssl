@@ -175,7 +175,7 @@ public class ClasspathResolver implements EntityResolver, LSResourceResolver {
                     byte[] input = new byte[buffInput.available()];
                     buffInput.read(input);
                     return new String(input);
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     return null;
                 }
             }

@@ -146,7 +146,7 @@ public final class Template {
 
         try {
             engine.getTemplate(templateName);
-        } catch (VelocityException e) {
+        } catch (final VelocityException e) {
             throw new VelocityException("The following template is not valid:\n" + trimmedTemplate, e);
         }
 
@@ -193,7 +193,7 @@ public final class Template {
 
         try {
             engine.getTemplate(trimmedName);
-        } catch (VelocityException e) {
+        } catch (final VelocityException e) {
             throw new VelocityException("Template '" + trimmedName + "' is not a valid template", e);
         }
 
@@ -231,10 +231,10 @@ public final class Template {
     public void merge(final Context templateContext, final Writer output) {
         try {
             engine.mergeTemplate(templateName, templateEncoding, templateContext, output);
-        } catch (ResourceNotFoundException e) {
+        } catch (final ResourceNotFoundException e) {
             throw new VelocityException("Velocity template " + templateName
                     + " has been removed since this object was constructed");
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new VelocityException("Velocity template " + templateName + " threw an exception", e);
         }
     }

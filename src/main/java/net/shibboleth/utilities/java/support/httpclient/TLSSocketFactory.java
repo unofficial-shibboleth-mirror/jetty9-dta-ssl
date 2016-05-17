@@ -352,7 +352,7 @@ public class TLSSocketFactory implements LayeredConnectionSocketFactory {
                 log.trace("Peer certificates: {}", (Object)session.getPeerCertificates());
                 log.trace("Local principal: {}", session.getLocalPrincipal());
                 log.trace("Local certificates: {}", (Object)session.getLocalCertificates());
-            } catch (SSLPeerUnverifiedException e) {
+            } catch (final SSLPeerUnverifiedException e) {
                 log.warn("SSL exception enumerating peer certificates", e);
             }
         }

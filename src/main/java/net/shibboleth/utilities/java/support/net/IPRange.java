@@ -181,9 +181,9 @@ public class IPRange {
             InetAddress address = InetAddress.getByName(blockParts[0]);
             int maskSize = Integer.parseInt(blockParts[1]);
             return new IPRange(address, maskSize);
-        } catch (UnknownHostException e) {
+        } catch (final UnknownHostException e) {
             throw new IllegalArgumentException("Invalid IP address");
-        } catch (NumberFormatException e) {
+        } catch (final NumberFormatException e) {
             throw new IllegalArgumentException("Invalid netmask size");
         }
     }
@@ -272,7 +272,7 @@ public class IPRange {
         }
         try {
             return InetAddress.getByAddress(toByteArray(bits));
-        } catch (UnknownHostException e) {
+        } catch (final UnknownHostException e) {
             // only supposed to happen if the address length is invalid
             return null;
         }

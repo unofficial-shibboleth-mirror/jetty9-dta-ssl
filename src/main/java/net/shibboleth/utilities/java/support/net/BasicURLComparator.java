@@ -61,14 +61,14 @@ public class BasicURLComparator implements URIComparator {
             
             try {
                 uri1Canon = SimpleURLCanonicalizer.canonicalize(uri1);
-            } catch (MalformedURLException e) {
+            } catch (final MalformedURLException e) {
                 throw new URIException("URI was invalid: " + uri1Canon);
             }
             
             String uri2Canon = null;
             try {
                 uri2Canon = SimpleURLCanonicalizer.canonicalize(uri2);
-            } catch (MalformedURLException e) {
+            } catch (final MalformedURLException e) {
                 throw new URIException("URI was invalid: " + uri2Canon);
             }
             

@@ -275,7 +275,7 @@ public class SchemaBuilder {
 
         try {
             addSchema(resource.getInputStream());
-        } catch (IOException e) {
+        } catch (final IOException e) {
             log.error("IO error adding schema from resource: {}", resource.getDescription(), e);
         }
 

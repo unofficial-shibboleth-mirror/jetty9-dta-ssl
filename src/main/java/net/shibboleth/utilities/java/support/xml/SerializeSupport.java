@@ -76,7 +76,7 @@ public final class SerializeSupport {
         writeNode(node, baout, serializerParams);
         try {
             return new String(baout.toByteArray(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
+        } catch (final UnsupportedEncodingException e) {
             // all VMs are required to support UTF-8, if it's not something is really wrong
             throw new RuntimeException(e);
         }
@@ -97,7 +97,7 @@ public final class SerializeSupport {
         writeNode(node, baout, prettyPrintParams);
         try {
             return new String(baout.toByteArray(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
+        } catch (final UnsupportedEncodingException e) {
             // all VMs are required to support UTF-8, if it's not something is really wrong
             throw new RuntimeException(e);
         }

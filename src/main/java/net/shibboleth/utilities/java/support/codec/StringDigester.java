@@ -159,7 +159,7 @@ public class StringDigester implements Function<String, String> {
         final MessageDigest digest;
         try {
             digest = MessageDigest.getInstance(digestAlgorithm);
-        } catch (NoSuchAlgorithmException e) {
+        } catch (final NoSuchAlgorithmException e) {
             // This shouldn't happen, because we tested it earlier in the constructor, so just log and return null.
             log.error("Digest algorithm '{}' was invalid", digestAlgorithm, e);
             return null;

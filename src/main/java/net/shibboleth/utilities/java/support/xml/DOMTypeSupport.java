@@ -158,7 +158,7 @@ public final class DOMTypeSupport {
         try {
             dataTypeFactory = DatatypeFactory.newInstance();
             baseline = new GregorianCalendar(1696, 9, 1, 0, 0, 0);
-        } catch (DatatypeConfigurationException e) {
+        } catch (final DatatypeConfigurationException e) {
             throw new RuntimeException("JVM is required to support XML DatatypeFactory but it does not", e);
         }
     }

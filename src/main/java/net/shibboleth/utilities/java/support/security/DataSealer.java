@@ -97,7 +97,7 @@ public class DataSealer extends AbstractInitializableComponent {
         try {
             try {
                 Constraint.isNotNull(keyStrategy, "Keystore type cannot be null");
-            } catch (ConstraintViolationException e) {
+            } catch (final ConstraintViolationException e) {
                 throw new ComponentInitializationException(e);
             }
             
@@ -234,7 +234,7 @@ public class DataSealer extends AbstractInitializableComponent {
 
             log.trace("Unwrapped data verified");
             return accumulator.toString();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             log.error(e.getMessage());
             throw new DataSealerException("Caught IOException unwrapping data", e);
         }
@@ -347,7 +347,7 @@ public class DataSealer extends AbstractInitializableComponent {
             cipher.doFinal(plaintext, outputLen);
             decrypted = Strings.fromUTF8ByteArray(plaintext);
             
-        } catch (IllegalStateException | InvalidCipherTextException e) {
+        } catch (final IllegalStateException | InvalidCipherTextException e) {
             log.error("Round trip encryption/decryption test unsuccessful", e);
             throw new DataSealerException("Round trip encryption/decryption test unsuccessful", e);
         }

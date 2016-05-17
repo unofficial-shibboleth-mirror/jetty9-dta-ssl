@@ -474,7 +474,7 @@ public final class AttributeSupport {
         }
         try {
             return XMLSpace.parseValue(value);
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             // No match to the type
             return null;
         }
