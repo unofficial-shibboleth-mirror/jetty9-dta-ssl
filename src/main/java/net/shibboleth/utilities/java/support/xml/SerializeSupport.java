@@ -171,7 +171,7 @@ public final class SerializeSupport {
 
         if (serializerParams != null) {
             final DOMConfiguration serializerDOMConfig = serializer.getDomConfig();
-            for (String key : serializerParams.keySet()) {
+            for (final String key : serializerParams.keySet()) {
                 serializerDOMConfig.setParameter(key, serializerParams.get(key));
             }
         }

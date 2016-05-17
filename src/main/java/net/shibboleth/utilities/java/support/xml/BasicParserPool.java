@@ -604,11 +604,11 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
         try {
             final DocumentBuilderFactory newFactory = DocumentBuilderFactory.newInstance();
 
-            for (Map.Entry<String, Object> attribute : builderAttributes.entrySet()) {
+            for (final Map.Entry<String, Object> attribute : builderAttributes.entrySet()) {
                 newFactory.setAttribute(attribute.getKey(), attribute.getValue());
             }
 
-            for (Map.Entry<String, Boolean> feature : builderFeatures.entrySet()) {
+            for (final Map.Entry<String, Boolean> feature : builderFeatures.entrySet()) {
                 if (feature.getKey() != null) {
                     newFactory.setFeature(feature.getKey(), feature.getValue().booleanValue());
                 }

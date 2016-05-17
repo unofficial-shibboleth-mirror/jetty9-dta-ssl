@@ -63,7 +63,7 @@ public final class ObjectSupport {
         if (objects == null) {
             return null;
         } else {
-            for (T obj : objects) {
+            for (final T obj : objects) {
                 if (obj != null) {
                     return obj;
                 }

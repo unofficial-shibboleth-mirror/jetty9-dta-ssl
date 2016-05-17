@@ -899,25 +899,25 @@ public class HttpClientBuilder {
         }
 
         if (getFirstRequestInterceptors() != null) {
-            for (HttpRequestInterceptor interceptor : getFirstRequestInterceptors()) {
+            for (final HttpRequestInterceptor interceptor : getFirstRequestInterceptors()) {
                 builder.addInterceptorFirst(interceptor);
             }
         }
 
         if (getLastRequestInterceptors() != null) {
-            for (HttpRequestInterceptor interceptor : getLastRequestInterceptors()) {
+            for (final HttpRequestInterceptor interceptor : getLastRequestInterceptors()) {
                 builder.addInterceptorLast(interceptor);
             }
         }
 
         if (getFirstResponseInterceptors() != null) {
-            for (HttpResponseInterceptor interceptor : getFirstResponseInterceptors()) {
+            for (final HttpResponseInterceptor interceptor : getFirstResponseInterceptors()) {
                 builder.addInterceptorFirst(interceptor);
             }
         }
 
         if (getLastResponseInterceptors() != null) {
-            for (HttpResponseInterceptor interceptor : getLastResponseInterceptors()) {
+            for (final HttpResponseInterceptor interceptor : getLastResponseInterceptors()) {
                 builder.addInterceptorLast(interceptor);
             }
         }

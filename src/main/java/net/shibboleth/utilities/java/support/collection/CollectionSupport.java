@@ -114,7 +114,7 @@ public final class CollectionSupport {
         }
 
         boolean targetedUpdated = false;
-        for (T element : elements) {
+        for (final T element : elements) {
             if (addIf(target, element, predicate, elementPreprocessor)) {
                 targetedUpdated = true;
             }
@@ -203,7 +203,7 @@ public final class CollectionSupport {
         }
 
         boolean targetedUpdated = false;
-        for (T element : elements) {
+        for (final T element : elements) {
             if (removeIf(target, element, predicate, elementPreprocessor)) {
                 targetedUpdated = true;
             }

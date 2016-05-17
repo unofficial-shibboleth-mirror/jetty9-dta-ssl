@@ -142,7 +142,7 @@ public class CookieBufferingFilter implements Filter {
          * Transfer cookies added into the real response.
          */
         protected void dumpCookies() {
-            for (Cookie cookie : cookieMap.values()) {
+            for (final Cookie cookie : cookieMap.values()) {
                 ((HttpServletResponse) getResponse()).addCookie(cookie);
             }
             cookieMap.clear();

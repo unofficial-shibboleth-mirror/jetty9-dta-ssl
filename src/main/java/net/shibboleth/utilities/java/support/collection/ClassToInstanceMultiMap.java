@@ -165,7 +165,7 @@ public class ClassToInstanceMultiMap<B> {
         }
 
         List<B> indexValues;
-        for (Class<?> indexKey : getIndexTypes(value)) {
+        for (final Class<?> indexKey : getIndexTypes(value)) {
             indexValues = backingMap.get(indexKey);
 
             if (indexValues == null) {
@@ -191,7 +191,7 @@ public class ClassToInstanceMultiMap<B> {
             return;
         }
 
-        for (B value : newValues) {
+        for (final B value : newValues) {
             put(value);
         }
     }
@@ -231,7 +231,7 @@ public class ClassToInstanceMultiMap<B> {
         values.remove(value);
 
         List<B> indexValues;
-        for (Class<?> indexKey : getIndexTypes(value)) {
+        for (final Class<?> indexKey : getIndexTypes(value)) {
             indexValues = backingMap.get(indexKey);
             if (indexValues != null) {
                 indexValues.remove(value);
@@ -257,7 +257,7 @@ public class ClassToInstanceMultiMap<B> {
             return;
         }
 
-        for (B value : removeValues) {
+        for (final B value : removeValues) {
             remove(value);
         }
     }
@@ -303,7 +303,7 @@ public class ClassToInstanceMultiMap<B> {
         final List<B> indexValues = backingMap.remove(type);
 
         if (indexValues != null) {
-            for (B value : indexValues) {
+            for (final B value : indexValues) {
                 remove(value);
             }
         }
@@ -353,7 +353,7 @@ public class ClassToInstanceMultiMap<B> {
 
         final Class<?>[] interfaces = clazz.getInterfaces();
         if (interfaces.length > 0) {
-            for (Class<?> iface : interfaces) {
+            for (final Class<?> iface : interfaces) {
                 accumulator.add(iface);
                 getSuperTypes(iface, accumulator);
             }

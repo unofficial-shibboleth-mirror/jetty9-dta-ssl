@@ -213,7 +213,7 @@ public final class URISupport {
 
         final StringBuilder builder = new StringBuilder();
         boolean firstParam = true;
-        for (Pair<String, String> parameter : parameters) {
+        for (final Pair<String, String> parameter : parameters) {
             if (firstParam) {
                 firstParam = false;
             } else {
@@ -279,7 +279,7 @@ public final class URISupport {
         final ArrayList<Pair<String, String>> queryParams = new ArrayList<>();
         final String[] paramPairs = trimmedQuery.split("&");
         String[] param;
-        for (String paramPair : paramPairs) {
+        for (final String paramPair : paramPairs) {
             param = paramPair.split("=");
             if (param.length == 1) {
                 queryParams.add(new Pair(doURLDecode(param[0]), null));

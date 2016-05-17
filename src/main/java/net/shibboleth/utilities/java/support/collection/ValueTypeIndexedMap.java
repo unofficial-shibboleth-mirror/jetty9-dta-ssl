@@ -134,7 +134,7 @@ public class ValueTypeIndexedMap<KeyType, ValueType> implements Map<KeyType, Val
     public ValueType put(final KeyType key, final ValueType value) {
         final ValueType oldValue = map.put(key, value);
 
-        for (Class<?> clazz : index.keySet()) {
+        for (final Class<?> clazz : index.keySet()) {
             final Class<?> type;
             if (clazz == null) {
                 type = NullValue.class;
@@ -155,7 +155,7 @@ public class ValueTypeIndexedMap<KeyType, ValueType> implements Map<KeyType, Val
     /** {@inheritDoc} */
     public void putAll(final Map<? extends KeyType, ? extends ValueType> t) {
         // this is probably not the most efficient way to do this
-        for (KeyType key : t.keySet()) {
+        for (final KeyType key : t.keySet()) {
             put(key, t.get(key));
         }
     }
@@ -167,7 +167,7 @@ public class ValueTypeIndexedMap<KeyType, ValueType> implements Map<KeyType, Val
         index.clear();
         ValueType value;
 
-        for (Class<?> clazz : types) {
+        for (final Class<?> clazz : types) {
             final Class<?> type;
             if (clazz == null) {
                 type = NullValue.class;
@@ -176,7 +176,7 @@ public class ValueTypeIndexedMap<KeyType, ValueType> implements Map<KeyType, Val
             }
 
             index.put(type, new HashMap<KeyType, ValueType>());
-            for (KeyType key : map.keySet()) {
+            for (final KeyType key : map.keySet()) {
                 value = map.get(key);
                 if (matchType(type, value)) {
                     index.get(type).put(key, value);
@@ -189,7 +189,7 @@ public class ValueTypeIndexedMap<KeyType, ValueType> implements Map<KeyType, Val
     public ValueType remove(final Object key) {
         final ValueType value = map.remove(key);
 
-        for (Class<?> type : index.keySet()) {
+        for (final Class<?> type : index.keySet()) {
             if (type.isInstance(value)) {
                 index.get(type).remove(key);
             }

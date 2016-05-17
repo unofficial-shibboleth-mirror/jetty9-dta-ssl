@@ -41,7 +41,7 @@ public class CriteriaSet extends ClassIndexedSet<Criterion> implements Criterion
             return;
         }
 
-        for (Criterion criterion : criteria) {
+        for (final Criterion criterion : criteria) {
             if (criterion == null) {
                 continue;
             }

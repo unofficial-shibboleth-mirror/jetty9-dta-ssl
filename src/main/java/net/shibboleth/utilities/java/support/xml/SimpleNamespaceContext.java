@@ -63,7 +63,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
 
         String trimmedPrefix;
         String trimmedUri;
-        for (String key : prefixToUriMappings.keySet()) {
+        for (final String key : prefixToUriMappings.keySet()) {
             trimmedPrefix = StringSupport.trimOrNull(key);
             if (trimmedPrefix == null) {
                 continue;

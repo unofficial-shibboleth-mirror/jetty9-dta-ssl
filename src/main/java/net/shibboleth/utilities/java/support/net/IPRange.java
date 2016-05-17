@@ -113,7 +113,7 @@ public class IPRange {
         if (components.length != 4) {
             throw new IllegalArgumentException("IPv4 address should have four components");
         }
-        for (String component : components) {
+        for (final String component : components) {
             final int value = Integer.parseInt(component, 10);
             if (value < 0 || (value > 255)) {
                 throw new IllegalArgumentException("IPv4 component range error: " + component);
@@ -133,7 +133,7 @@ public class IPRange {
      */
     private static void validateV6Address(final String address) {
         final String[] components = address.split(":");
-        for (String component : components) {
+        for (final String component : components) {
             if (component.length() != 0) {
                 final int value = Integer.parseInt(component, 16);
                 if (value < 0 || (value > 0xFFFF)) {

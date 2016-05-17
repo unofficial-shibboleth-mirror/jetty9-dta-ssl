@@ -51,7 +51,7 @@ public class AnyMatchPredicate<T> implements Predicate<Iterable<T>> {
             return false;
         }
 
-        for (T input : inputs) {
+        for (final T input : inputs) {
             if (predicate.apply(input)) {
                 return true;
             }
