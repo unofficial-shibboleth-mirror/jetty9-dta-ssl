@@ -40,7 +40,7 @@ public class CaseInsensitiveStringMatchPredicate implements Predicate<CharSequen
     }
 
     /** {@inheritDoc} */
-    public boolean apply(CharSequence input) {
+    public boolean apply(final CharSequence input) {
         if (input == null) {
             return false;
         }

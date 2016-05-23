@@ -93,15 +93,15 @@ public final class HttpClientSupport {
      */
     @Deprecated
     public static SSLConnectionSocketFactory buildNoTrustSSLConnectionSocketFactory() {
-        X509TrustManager noTrustManager = buildNoTrustX509TrustManager();
+        final X509TrustManager noTrustManager = buildNoTrustX509TrustManager();
 
         try {
-            SSLContext sslcontext = SSLContext.getInstance("TLS");
+            final SSLContext sslcontext = SSLContext.getInstance("TLS");
             sslcontext.init(null, new TrustManager[] {noTrustManager}, null);
             return new SSLConnectionSocketFactory(sslcontext, SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-        } catch (NoSuchAlgorithmException e) {
+        } catch (final NoSuchAlgorithmException e) {
             throw new RuntimeException("TLS SSLContext type is required to be supported by the JVM but is not", e);
-        } catch (KeyManagementException e) {
+        } catch (final KeyManagementException e) {
             throw new RuntimeException("Some how the trust everything trust manager didn't trust everything", e);
         }
         
@@ -119,11 +119,13 @@ public final class HttpClientSupport {
                 return null;
             }
 
-            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            public void checkServerTrusted(final X509Certificate[] chain, final String authType)
+                    throws CertificateException {
                 // accept everything
             }
 
-            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            public void checkClientTrusted(final X509Certificate[] chain, final String authType)
+                    throws CertificateException {
                 // accept everything
             }
         };

@@ -54,18 +54,18 @@ public class TransformAndCheckFunction<T> implements Function<T, Optional<? exte
      * @param failOnInputConstraintViolation whether input that does not meet the constraint should cause an error or
      *            just be ignored
      */
-    public TransformAndCheckFunction(@Nonnull Function<T, ? extends T> inputPreprocessor,
-            @Nonnull Predicate<T> inputConstraint, boolean failOnInputConstraintViolation) {
+    public TransformAndCheckFunction(@Nonnull final Function<T, ? extends T> inputPreprocessor,
+            @Nonnull final Predicate<T> inputConstraint, final boolean failOnInputConstraintViolation) {
         preprocessor = Constraint.isNotNull(inputPreprocessor, "Input preprocessor can not be null");
         constraint = Constraint.isNotNull(inputConstraint, "Input constraint can not be null");
         failOnConstraintViolation = failOnInputConstraintViolation;
     }
 
     /** {@inheritDoc} */
-    public Optional<? extends T> apply(T input) {
-        T processedValue = preprocessor.apply(input);
+    public Optional<? extends T> apply(final T input) {
+        final T processedValue = preprocessor.apply(input);
 
-        boolean meetsCriteria = constraint.apply(processedValue);
+        final boolean meetsCriteria = constraint.apply(processedValue);
 
         if (meetsCriteria) {
             return Optional.of(processedValue);
@@ -79,7 +79,7 @@ public class TransformAndCheckFunction<T> implements Function<T, Optional<? exte
     }
 
     /** {@inheritDoc} */
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }

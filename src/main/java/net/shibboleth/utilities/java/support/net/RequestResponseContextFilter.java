@@ -36,7 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 public class RequestResponseContextFilter implements Filter {
 
     /** {@inheritDoc} */
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(final FilterConfig filterConfig) throws ServletException {
     }
 
     /** {@inheritDoc} */
@@ -44,7 +44,8 @@ public class RequestResponseContextFilter implements Filter {
     }
 
     /** {@inheritDoc} */
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+    public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
+            throws IOException,
             ServletException {
 
         if (!(request instanceof HttpServletRequest)) {

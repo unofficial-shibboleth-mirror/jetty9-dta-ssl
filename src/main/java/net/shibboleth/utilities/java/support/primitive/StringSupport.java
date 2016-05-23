@@ -66,9 +66,9 @@ public final class StringSupport {
             charsetDecoder = Charset.defaultCharset().newDecoder();
         }
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(input, charsetDecoder));
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(input, charsetDecoder));
 
-        StringBuilder stringBuffer = new StringBuilder();
+        final StringBuilder stringBuffer = new StringBuilder();
         String line = reader.readLine();
         while (line != null) {
             stringBuffer.append(line).append("\n");
@@ -178,7 +178,7 @@ public final class StringSupport {
      * @return the normalized collection of string values
      */
     @Nonnull @NonnullElements public static Collection<String> normalizeStringCollection(
-            @Nullable @NullableElements Collection<String> values) {
+            @Nullable @NullableElements final Collection<String> values) {
         if (values == null) {
             return Collections.emptySet();
         }

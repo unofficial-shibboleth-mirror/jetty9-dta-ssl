@@ -59,11 +59,11 @@ public final class ObjectSupport {
      * @return the first non-null argument, or null if all arguments are null
      * 
      */
-    @Nullable public static <T> T firstNonNull(@Nullable T ... objects) {
+    @Nullable public static <T> T firstNonNull(@Nullable final T ... objects) {
         if (objects == null) {
             return null;
         } else {
-            for (T obj : objects) {
+            for (final T obj : objects) {
                 if (obj != null) {
                     return obj;
                 }

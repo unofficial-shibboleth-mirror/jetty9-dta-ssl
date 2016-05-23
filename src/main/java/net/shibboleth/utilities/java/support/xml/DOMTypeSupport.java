@@ -56,10 +56,10 @@ public final class DOMTypeSupport {
      * @return the date/time expressed as milliseconds since the epoch
      */
     public static long dateTimeToLong(@Nonnull final String dateTime) {
-        String trimmedString =
+        final String trimmedString =
                 Constraint.isNotNull(StringSupport.trimOrNull(dateTime), "Lexical dateTime may not be null or empty");
 
-        XMLGregorianCalendar calendar = dataTypeFactory.newXMLGregorianCalendar(trimmedString);
+        final XMLGregorianCalendar calendar = dataTypeFactory.newXMLGregorianCalendar(trimmedString);
         return calendar.toGregorianCalendar().getTimeInMillis();
     }
 
@@ -136,7 +136,7 @@ public final class DOMTypeSupport {
      * @return the lexical representation of the date/time
      */
     @Nonnull public static String longToDateTime(final long dateTime) {
-        GregorianCalendar calendar = new GregorianCalendar();
+        final GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
         calendar.setTimeInMillis(dateTime);
 
@@ -158,7 +158,7 @@ public final class DOMTypeSupport {
         try {
             dataTypeFactory = DatatypeFactory.newInstance();
             baseline = new GregorianCalendar(1696, 9, 1, 0, 0, 0);
-        } catch (DatatypeConfigurationException e) {
+        } catch (final DatatypeConfigurationException e) {
             throw new RuntimeException("JVM is required to support XML DatatypeFactory but it does not", e);
         }
     }

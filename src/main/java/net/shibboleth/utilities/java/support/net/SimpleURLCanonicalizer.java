@@ -59,7 +59,7 @@ public final class SimpleURLCanonicalizer {
      * @param port the default port for that scheme
      */
     public static void registerSchemePortMapping(@Nonnull @NotEmpty final String scheme, @Nonnull final Integer port) {
-        String trimmedScheme = Constraint.isNotNull(StringSupport.trimOrNull(scheme), "Scheme cannot be null");
+        final String trimmedScheme = Constraint.isNotNull(StringSupport.trimOrNull(scheme), "Scheme cannot be null");
         Constraint.isNotNull(port, "Port cannot be null");
         
         schemePortMap.put(trimmedScheme.toLowerCase(), port);
@@ -71,7 +71,7 @@ public final class SimpleURLCanonicalizer {
      * @param scheme the scheme to deregister
      */
     public static void deregisterSchemePortMapping(@Nonnull final String scheme) {
-        String trimmedScheme = Constraint.isNotNull(StringSupport.trimOrNull(scheme), "Scheme cannot be null");
+        final String trimmedScheme = Constraint.isNotNull(StringSupport.trimOrNull(scheme), "Scheme cannot be null");
         
         schemePortMap.remove(trimmedScheme.toLowerCase());
     }
@@ -83,7 +83,7 @@ public final class SimpleURLCanonicalizer {
      * @return the default port registered for the scheme, or null if none registered
      */
     @Nullable public static Integer getRegisteredPort(@Nonnull @NotEmpty final String scheme) {
-        String trimmedScheme = Constraint.isNotNull(StringSupport.trimOrNull(scheme), "Scheme cannot be null");
+        final String trimmedScheme = Constraint.isNotNull(StringSupport.trimOrNull(scheme), "Scheme cannot be null");
         
         return schemePortMap.get(trimmedScheme.toLowerCase());
     }
@@ -95,9 +95,10 @@ public final class SimpleURLCanonicalizer {
      * @return the canonicalized URL
      * @throws MalformedURLException  if the URL is not a valid URL
      */
-    @Nonnull @NotEmpty public static String canonicalize(@Nonnull @NotEmpty String url) throws MalformedURLException {
+    @Nonnull @NotEmpty public static String canonicalize(@Nonnull @NotEmpty final String url)
+            throws MalformedURLException {
         Constraint.isFalse(Strings.isNullOrEmpty(url), "URL was null or empty");
-        URLBuilder urlBuilder = new URLBuilder(url);
+        final URLBuilder urlBuilder = new URLBuilder(url);
         canonicalize(urlBuilder);
         return urlBuilder.buildURL();
     }
@@ -111,8 +112,8 @@ public final class SimpleURLCanonicalizer {
         if (url.getScheme() != null) {
             url.setScheme(url.getScheme().toLowerCase());
             
-            String scheme = url.getScheme();
-            Integer port = getRegisteredPort(scheme);
+            final String scheme = url.getScheme();
+            final Integer port = getRegisteredPort(scheme);
             if (port != null && port.equals(url.getPort())) {
                 url.setPort(null);
             }

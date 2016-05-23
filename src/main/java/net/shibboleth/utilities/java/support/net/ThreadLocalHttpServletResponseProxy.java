@@ -55,22 +55,22 @@ public class ThreadLocalHttpServletResponseProxy implements HttpServletResponse 
     }
 
     /** {@inheritDoc} */
-    public void setCharacterEncoding(String charset) {
+    public void setCharacterEncoding(final String charset) {
         getCurrent().setCharacterEncoding(charset);
     }
 
     /** {@inheritDoc} */
-    public void setContentLength(int len) {
+    public void setContentLength(final int len) {
         getCurrent().setContentLength(len);
     }
 
     /** {@inheritDoc} */
-    public void setContentType(String type) {
+    public void setContentType(final String type) {
         getCurrent().setContentType(type);
     }
 
     /** {@inheritDoc} */
-    public void setBufferSize(int size) {
+    public void setBufferSize(final int size) {
         getCurrent().setBufferSize(size);
     }
 
@@ -100,7 +100,7 @@ public class ThreadLocalHttpServletResponseProxy implements HttpServletResponse 
     }
 
     /** {@inheritDoc} */
-    public void setLocale(Locale loc) {
+    public void setLocale(final Locale loc) {
         getCurrent().setLocale(loc);
     }
 
@@ -110,90 +110,90 @@ public class ThreadLocalHttpServletResponseProxy implements HttpServletResponse 
     }
 
     /** {@inheritDoc} */
-    public void addCookie(Cookie cookie) {
+    public void addCookie(final Cookie cookie) {
         getCurrent().addCookie(cookie);
     }
 
     /** {@inheritDoc} */
-    public boolean containsHeader(String name) {
+    public boolean containsHeader(final String name) {
         return getCurrent().containsHeader(name);
     }
 
     /** {@inheritDoc} */
-    public String encodeURL(String url) {
+    public String encodeURL(final String url) {
         return getCurrent().encodeURL(url);
     }
 
     /** {@inheritDoc} */
-    public String encodeRedirectURL(String url) {
+    public String encodeRedirectURL(final String url) {
         return getCurrent().encodeRedirectURL(url);
     }
 
     /** {@inheritDoc} */
     @SuppressWarnings("deprecation")
-    public String encodeUrl(String url) {
+    public String encodeUrl(final String url) {
         return getCurrent().encodeUrl(url);
     }
 
     /** {@inheritDoc} */
     @SuppressWarnings("deprecation")
-    public String encodeRedirectUrl(String url) {
+    public String encodeRedirectUrl(final String url) {
         return getCurrent().encodeRedirectUrl(url);
     }
 
     /** {@inheritDoc} */
-    public void sendError(int sc, String msg) throws IOException {
+    public void sendError(final int sc, final String msg) throws IOException {
         getCurrent().sendError(sc, msg);
     }
 
     /** {@inheritDoc} */
-    public void sendError(int sc) throws IOException {
+    public void sendError(final int sc) throws IOException {
         getCurrent().sendError(sc);
     }
 
     /** {@inheritDoc} */
-    public void sendRedirect(String location) throws IOException {
+    public void sendRedirect(final String location) throws IOException {
         getCurrent().sendRedirect(location);
     }
 
     /** {@inheritDoc} */
-    public void setDateHeader(String name, long date) {
+    public void setDateHeader(final String name, final long date) {
         getCurrent().setDateHeader(name, date);
     }
 
     /** {@inheritDoc} */
-    public void addDateHeader(String name, long date) {
+    public void addDateHeader(final String name, final long date) {
         getCurrent().addDateHeader(name, date);
     }
 
     /** {@inheritDoc} */
-    public void setHeader(String name, String value) {
+    public void setHeader(final String name, final String value) {
         getCurrent().setHeader(name, value);
     }
 
     /** {@inheritDoc} */
-    public void addHeader(String name, String value) {
+    public void addHeader(final String name, final String value) {
         getCurrent().addHeader(name, value);
     }
 
     /** {@inheritDoc} */
-    public void setIntHeader(String name, int value) {
+    public void setIntHeader(final String name, final int value) {
         getCurrent().setIntHeader(name, value);
     }
 
     /** {@inheritDoc} */
-    public void addIntHeader(String name, int value) {
+    public void addIntHeader(final String name, final int value) {
         getCurrent().addIntHeader(name, value);
     }
 
     /** {@inheritDoc} */
-    public void setStatus(int sc) {
+    public void setStatus(final int sc) {
         getCurrent().setStatus(sc);
     }
 
     /** {@inheritDoc} */
     @SuppressWarnings("deprecation")
-    public void setStatus(int sc, String sm) {
+    public void setStatus(final int sc, final String sm) {
         getCurrent().setStatus(sc, sm);
     }
     
@@ -203,12 +203,12 @@ public class ThreadLocalHttpServletResponseProxy implements HttpServletResponse 
     }
 
     /** {@inheritDoc} */
-    public String getHeader(String name) {
+    public String getHeader(final String name) {
         return getCurrent().getHeader(name);
     }
 
     /** {@inheritDoc} */
-    public Collection<String> getHeaders(String name) {
+    public Collection<String> getHeaders(final String name) {
         return getCurrent().getHeaders(name);
     }
 

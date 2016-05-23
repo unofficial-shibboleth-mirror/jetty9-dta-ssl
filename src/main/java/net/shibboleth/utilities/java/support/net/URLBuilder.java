@@ -79,14 +79,14 @@ public class URLBuilder {
      * 
      */
     public URLBuilder(@Nonnull @NotEmpty final String baseURL) throws MalformedURLException {
-        URL url = new URL(baseURL);
+        final URL url = new URL(baseURL);
         
         setScheme(url.getProtocol());
         
-        String userInfo = url.getUserInfo();
+        final String userInfo = url.getUserInfo();
         if (!Strings.isNullOrEmpty(userInfo)) {
             if (userInfo.contains(":")) {
-                String[] userInfoComps = userInfo.split(":");
+                final String[] userInfoComps = userInfo.split(":");
                 setUsername(URISupport.doURLDecode(userInfoComps[0]));
                 setPassword(URISupport.doURLDecode(userInfoComps[1]));
             } else {
@@ -101,9 +101,9 @@ public class URLBuilder {
         setPath(url.getPath());
         
         queryParams = new ArrayList<>();
-        String queryString = url.getQuery();
+        final String queryString = url.getQuery();
         if (!Strings.isNullOrEmpty(queryString)) {
-            String[] queryComps = queryString.split("&");
+            final String[] queryComps = queryString.split("&");
             String queryComp;
             String[] paramComps;
             String paramName;
@@ -261,7 +261,7 @@ public class URLBuilder {
     }
 
     /**
-     * Builds a URL from the given data. The constructured URL may not be valid if sufficient information is not
+     * Builds a URL from the given data. The constructed URL may not be valid if sufficient information is not
      * provided. The returned URL will be appropriately encoded using application/x-www-form-urlencoded with appropriate
      * encoding of UTF-8 characters.
      * 
@@ -269,7 +269,7 @@ public class URLBuilder {
      */
     // Checkstyle: CyclomaticComplexity OFF
     @Nullable public String buildURL() {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
 
         if (!Strings.isNullOrEmpty(scheme)) {
             builder.append(scheme);
@@ -301,7 +301,7 @@ public class URLBuilder {
             builder.append(path);
         }
 
-        String queryString = buildQueryString();
+        final String queryString = buildQueryString();
         if (!Strings.isNullOrEmpty(queryString)) {
             builder.append("?");
             builder.append(queryString);
@@ -326,7 +326,7 @@ public class URLBuilder {
 
             String name;
             String value;
-            StringBuilder builder = new StringBuilder();
+            final StringBuilder builder = new StringBuilder();
 
             Pair<String, String> param;
             for (int i = 0; i < queryParams.size(); i++) {

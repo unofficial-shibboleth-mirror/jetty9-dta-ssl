@@ -52,7 +52,7 @@ public class SLF4JLogChute implements LogChute {
     private Logger log;
     
     /** {@inheritDoc} */
-    public void init(RuntimeServices rs) throws Exception {
+    public void init(final RuntimeServices rs) throws Exception {
         String name = (String) rs.getProperty(LOGCHUTE_SLF4J_NAME);
         if (name == null) {
             name = DEFAULT_LOG_NAME;
@@ -62,7 +62,7 @@ public class SLF4JLogChute implements LogChute {
     }
 
     /** {@inheritDoc} */
-    public boolean isLevelEnabled(int level) {
+    public boolean isLevelEnabled(final int level) {
         switch (level) {
             case LogChute.DEBUG_ID:
                 return log.isDebugEnabled();
@@ -80,7 +80,7 @@ public class SLF4JLogChute implements LogChute {
     }
 
     /** {@inheritDoc} */
-    public void log(int level, String message) {
+    public void log(final int level, final String message) {
         switch (level) {
             case LogChute.ERROR_ID:
                 log.error(message);
@@ -101,7 +101,7 @@ public class SLF4JLogChute implements LogChute {
     }
 
     /** {@inheritDoc} */
-    public void log(int level, String message, Throwable t) {
+    public void log(final int level, final String message, final Throwable t) {
         switch (level) {
             case LogChute.ERROR_ID:
                 log.error(message, t);

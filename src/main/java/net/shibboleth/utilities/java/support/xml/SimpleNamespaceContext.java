@@ -54,7 +54,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
      * @param prefixToUriMappings Maps prefix values to the corresponding namespace URIs.
      */
     public SimpleNamespaceContext(@Nullable @NullableElements final Map<String, String> prefixToUriMappings) {
-        Builder mappingBuilder = getMappingsBuilder();
+        final Builder mappingBuilder = getMappingsBuilder();
 
         if (prefixToUriMappings == null || prefixToUriMappings.isEmpty()) {
             mappings = mappingBuilder.build();
@@ -63,7 +63,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
 
         String trimmedPrefix;
         String trimmedUri;
-        for (String key : prefixToUriMappings.keySet()) {
+        for (final String key : prefixToUriMappings.keySet()) {
             trimmedPrefix = StringSupport.trimOrNull(key);
             if (trimmedPrefix == null) {
                 continue;
@@ -79,12 +79,12 @@ public class SimpleNamespaceContext implements NamespaceContext {
     }
 
     /** {@inheritDoc} */
-    @Nullable public String getNamespaceURI(@Nonnull String prefix) {
+    @Nullable public String getNamespaceURI(@Nonnull final String prefix) {
         if (prefix == null) {
             throw new IllegalArgumentException("Prefix can not be null");
         }
 
-        String uri = mappings.get(prefix);
+        final String uri = mappings.get(prefix);
         if (uri == null) {
             return javax.xml.XMLConstants.NULL_NS_URI;
         } else {
@@ -93,7 +93,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
     }
 
     /** {@inheritDoc} */
-    @Nullable public String getPrefix(@Nonnull String namespaceURI) {
+    @Nullable public String getPrefix(@Nonnull final String namespaceURI) {
         if (namespaceURI == null) {
             throw new IllegalArgumentException("Namespace URI can not be null");
         }
@@ -102,12 +102,12 @@ public class SimpleNamespaceContext implements NamespaceContext {
     }
 
     /** {@inheritDoc} */
-    @Nonnull public Iterator<String> getPrefixes(String namespaceURI) {
+    @Nonnull public Iterator<String> getPrefixes(final String namespaceURI) {
         if (namespaceURI == null) {
             throw new IllegalArgumentException("Namespace URI can not be null");
         }
 
-        String prefix = mappings.inverse().get(namespaceURI);
+        final String prefix = mappings.inverse().get(namespaceURI);
         if (prefix == null) {
             return Collections.<String> emptyList().iterator();
         } else {
@@ -121,7 +121,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
      * @return initial set of mappings
      */
     @Nonnull private Builder<String, String> getMappingsBuilder(){
-        Builder mappingBuilder = new Builder<String, String>();
+        final Builder mappingBuilder = new Builder<String, String>();
         
         mappingBuilder.put(XMLConstants.XML_PREFIX, XMLConstants.XML_NS);
         mappingBuilder.put(XMLConstants.XMLNS_PREFIX, XMLConstants.XMLNS_NS);

@@ -235,12 +235,12 @@ public class BasicKeystoreKeyStrategyTool {
          *
          * @param optionName 
          */
-        public FileConverter(String optionName) {
+        public FileConverter(final String optionName) {
             super(optionName);
         }
 
         @Override
-        public File convert(String value) {
+        public File convert(final String value) {
             return new File(value);
         }
     }

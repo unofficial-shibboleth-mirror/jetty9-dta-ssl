@@ -49,7 +49,7 @@ public abstract class AbstractTriStatePredicate<T> implements Predicate<T> {
      * 
      * @param flag true if should satisfy, false otherwise
      */
-    public void setNullInputSatisfies(boolean flag) {
+    public void setNullInputSatisfies(final boolean flag) {
         nullInputSatisfies = flag;
     }
 
@@ -67,7 +67,7 @@ public abstract class AbstractTriStatePredicate<T> implements Predicate<T> {
      * 
      * @param flag true if should satisfy, false otherwise
      */
-    public void setUnevaluableSatisfies(boolean flag) {
+    public void setUnevaluableSatisfies(final boolean flag) {
         unevaluableSatisfies = flag;
     }
 

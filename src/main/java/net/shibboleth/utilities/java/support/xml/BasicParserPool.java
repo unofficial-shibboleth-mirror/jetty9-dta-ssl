@@ -244,9 +244,9 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
                 throw new XMLParserException("DocumentBuilder parsed a null Document");
             }
             return document;
-        } catch (SAXException e) {
+        } catch (final SAXException e) {
             throw new XMLParserException("Unable to parse inputstream, it contained invalid XML", e);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new XMLParserException("Unable to read data from input stream", e);
         } finally {
             returnBuilder(builder);
@@ -267,9 +267,9 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
                 throw new XMLParserException("DocumentBuilder parsed a null Document");
             }
             return document;
-        } catch (SAXException e) {
+        } catch (final SAXException e) {
             throw new XMLParserException("Invalid XML", e);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new XMLParserException("Unable to read XML from input stream", e);
         } finally {
             returnBuilder(builder);
@@ -570,7 +570,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
             final DocumentBuilder builder = builderFactory.newDocumentBuilder();
 
             return builder;
-        } catch (ParserConfigurationException e) {
+        } catch (final ParserConfigurationException e) {
             log.debug("Unable to create new document builder", e);
             throw new XMLParserException("Unable to create new document builder", e);
         }
@@ -604,11 +604,11 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
         try {
             final DocumentBuilderFactory newFactory = DocumentBuilderFactory.newInstance();
 
-            for (Map.Entry<String, Object> attribute : builderAttributes.entrySet()) {
+            for (final Map.Entry<String, Object> attribute : builderAttributes.entrySet()) {
                 newFactory.setAttribute(attribute.getKey(), attribute.getValue());
             }
 
-            for (Map.Entry<String, Boolean> feature : builderFeatures.entrySet()) {
+            for (final Map.Entry<String, Boolean> feature : builderFeatures.entrySet()) {
                 if (feature.getKey() != null) {
                     newFactory.setFeature(feature.getKey(), feature.getValue().booleanValue());
                 }
@@ -625,7 +625,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
 
             builderFactory = newFactory;
 
-        } catch (ParserConfigurationException e) {
+        } catch (final ParserConfigurationException e) {
             throw new ComponentInitializationException("Unable to configure builder factory", e);
         }
     }
@@ -665,7 +665,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
      * @return the default features map
      */
     protected Map<String, Boolean> buildDefaultFeatures() {
-        HashMap<String, Boolean> features = new HashMap<>();
+        final HashMap<String, Boolean> features = new HashMap<>();
         features.put(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         features.put("http://apache.org/xml/features/disallow-doctype-decl", true);
         return features;

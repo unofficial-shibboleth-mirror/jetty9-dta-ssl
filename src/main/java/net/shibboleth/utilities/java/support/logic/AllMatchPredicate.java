@@ -46,13 +46,13 @@ public class AllMatchPredicate<T> implements Predicate<Iterable<T>> {
     }
 
     /** {@inheritDoc} */
-    public boolean apply(@Nullable Iterable<T> inputs) {
+    public boolean apply(@Nullable final Iterable<T> inputs) {
         if (inputs == null) {
             return false;
         }
 
         boolean matchedAll = false;
-        for (T input : inputs) {
+        for (final T input : inputs) {
             if (!predicate.apply(input)) {
                 return false;
             } else {

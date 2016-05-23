@@ -105,7 +105,7 @@ public class InMemoryCachingHttpClientBuilder extends HttpClientBuilder {
      * 
      * @param maxEntries maximum number of cached responses, must be greater than zero
      */
-    public void setMaxCacheEntries(int maxEntries) {
+    public void setMaxCacheEntries(final int maxEntries) {
         maxCacheEntries =
                 (int) Constraint.isGreaterThan(0, maxEntries, "Maximum number of cache entries must be greater than 0");
     }
@@ -124,7 +124,7 @@ public class InMemoryCachingHttpClientBuilder extends HttpClientBuilder {
      * 
      * @param size maximum response body size that will be eligible for caching, must be greater than zero
      */
-    public void setMaxCacheEntrySize(long size) {
+    public void setMaxCacheEntrySize(final long size) {
         maxCacheEntrySize = Constraint.isGreaterThan(0, size, "Maximum cache entry size must be greater than 0");
     }
 
@@ -133,14 +133,14 @@ public class InMemoryCachingHttpClientBuilder extends HttpClientBuilder {
         super.decorateApacheBuilder();
         
         // Note: This cast is safe because of constructor enforcement.
-        CachingHttpClientBuilder cachingBuilder = (CachingHttpClientBuilder) getApacheBuilder();
+        final CachingHttpClientBuilder cachingBuilder = (CachingHttpClientBuilder) getApacheBuilder();
 
-        CacheConfig.Builder cacheConfigBuilder = CacheConfig.custom();
+        final CacheConfig.Builder cacheConfigBuilder = CacheConfig.custom();
         cacheConfigBuilder.setMaxCacheEntries(maxCacheEntries);
         cacheConfigBuilder.setMaxObjectSize(maxCacheEntrySize);
         cacheConfigBuilder.setHeuristicCachingEnabled(false);
         cacheConfigBuilder.setSharedCache(false);
-        CacheConfig cacheConfig = cacheConfigBuilder.build();
+        final CacheConfig cacheConfig = cacheConfigBuilder.build();
         
         cachingBuilder.setCacheConfig(cacheConfig);
         cachingBuilder.setResourceFactory(new HeapResourceFactory());

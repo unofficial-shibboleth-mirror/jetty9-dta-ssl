@@ -47,7 +47,7 @@ public final class CollectionSupport {
      * @return true if the given element was added to the given collection
      */
     public static <T> boolean addIf(@Nonnull final Collection<? super T> target, @Nullable final T element,
-            @Nonnull Predicate<? super T> predicate) {
+            @Nonnull final Predicate<? super T> predicate) {
         return addIf(target, element, predicate, Functions.<T> identity());
     }
 
@@ -64,7 +64,7 @@ public final class CollectionSupport {
      * @return true if the given element was added to the given collection
      */
     public static <T> boolean addIf(@Nonnull final Collection<? super T> target, @Nullable final T element,
-            @Nonnull Predicate<? super T> predicate, @Nonnull Function<? super T, T> elementPreprocessor) {
+            @Nonnull final Predicate<? super T> predicate, @Nonnull final Function<? super T, T> elementPreprocessor) {
         Constraint.isNotNull(target, "Target collection can not be null");
         Constraint.isNotNull(predicate, "Element predicate can not be null");
 
@@ -91,7 +91,7 @@ public final class CollectionSupport {
      * @return true if the given target had elements added to it
      */
     public static <T> boolean addIf(@Nonnull final Collection<? super T> target, @Nullable final Collection<T> elements,
-            @Nonnull Predicate<? super T> predicate) {
+            @Nonnull final Predicate<? super T> predicate) {
         return addIf(target, elements, predicate, Functions.<T> identity());
     }
 
@@ -108,13 +108,13 @@ public final class CollectionSupport {
      * @return true if the given target had elements added to it
      */
     public static <T> boolean addIf(@Nonnull final Collection<? super T> target, @Nullable final Collection<T> elements,
-            @Nonnull Predicate<? super T> predicate, @Nonnull Function<? super T, T> elementPreprocessor) {
+            @Nonnull final Predicate<? super T> predicate, @Nonnull final Function<? super T, T> elementPreprocessor) {
         if (elements == null) {
             return false;
         }
 
         boolean targetedUpdated = false;
-        for (T element : elements) {
+        for (final T element : elements) {
             if (addIf(target, element, predicate, elementPreprocessor)) {
                 targetedUpdated = true;
             }
@@ -134,7 +134,7 @@ public final class CollectionSupport {
      * @return true if the given element was removed from the given collection
      */
     public static <T> boolean removeIf(@Nonnull final Collection<T> target, @Nullable final T element,
-            @Nonnull Predicate<? super T> predicate) {
+            @Nonnull final Predicate<? super T> predicate) {
         return removeIf(target, element, predicate, Functions.<T> identity());
     }
 
@@ -151,7 +151,7 @@ public final class CollectionSupport {
      * @return true if the given element was added to the given collection
      */
     public static <T> boolean removeIf(@Nonnull final Collection<T> target, @Nullable final T element,
-            @Nonnull Predicate<? super T> predicate, @Nonnull Function<? super T, T> elementPreprocessor) {
+            @Nonnull final Predicate<? super T> predicate, @Nonnull final Function<? super T, T> elementPreprocessor) {
         Constraint.isNotNull(target, "Target collection can not be null");
         Constraint.isNotNull(predicate, "Element predicate can not be null");
 
@@ -179,7 +179,7 @@ public final class CollectionSupport {
      * @return true if the given target had elements added to it
      */
     public static <T> boolean removeIf(@Nonnull final Collection<T> target, @Nullable final Collection<T> elements,
-            @Nonnull Predicate<? super T> predicate) {
+            @Nonnull final Predicate<? super T> predicate) {
         return removeIf(target, elements, predicate, Functions.<T> identity());
     }
 
@@ -197,13 +197,13 @@ public final class CollectionSupport {
      * @return true if the given target had elements added to it
      */
     public static <T> boolean removeIf(@Nonnull final Collection<T> target, @Nullable final Collection<T> elements,
-            @Nonnull Predicate<? super T> predicate, @Nonnull Function<? super T, T> elementPreprocessor) {
+            @Nonnull final Predicate<? super T> predicate, @Nonnull final Function<? super T, T> elementPreprocessor) {
         if (elements == null) {
             return false;
         }
 
         boolean targetedUpdated = false;
-        for (T element : elements) {
+        for (final T element : elements) {
             if (removeIf(target, element, predicate, elementPreprocessor)) {
                 targetedUpdated = true;
             }

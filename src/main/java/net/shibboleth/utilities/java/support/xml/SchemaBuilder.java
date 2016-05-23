@@ -71,7 +71,7 @@ public class SchemaBuilder {
          * 
          * @param uri schema factory identifier
          */
-        private SchemaLanguage(@Nonnull @NotEmpty String uri) {
+        private SchemaLanguage(@Nonnull @NotEmpty final String uri) {
             schemaFactoryURI = Constraint.isNotNull(StringSupport.trimOrNull(uri), "URI cannot be null or empty");
         }
 
@@ -179,7 +179,7 @@ public class SchemaBuilder {
      * 
      * @see SchemaFactory#setProperty(String, Object)
      */
-    public void setProperty(@Nonnull @NotEmpty final String name, @Nullable Object object) {
+    public void setProperty(@Nonnull @NotEmpty final String name, @Nullable final Object object) {
         properties.put(name, object);
     }
     
@@ -275,7 +275,7 @@ public class SchemaBuilder {
 
         try {
             addSchema(resource.getInputStream());
-        } catch (IOException e) {
+        } catch (final IOException e) {
             log.error("IO error adding schema from resource: {}", resource.getDescription(), e);
         }
 

@@ -129,7 +129,7 @@ public final class ElementSupport {
                 Constraint
                         .isNotNull(StringSupport.trimOrNull(localName), "Element local name may not be null or empty");
 
-        String qualifiedName;
+        final String qualifiedName;
         final String trimmedPrefix = StringSupport.trimOrNull(prefix);
         if (trimmedPrefix != null) {
             qualifiedName = trimmedPrefix + ":" + StringSupport.trimOrNull(trimmedLocalName);
@@ -289,7 +289,7 @@ public final class ElementSupport {
         if (element == null) {
             return "";
         }
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
 
         Node node = element.getFirstChild();
         boolean first = true;
@@ -333,7 +333,7 @@ public final class ElementSupport {
         if (element == null) {
             return null;
         }
-        String elementContent = StringSupport.trimOrNull(getElementContentAsString(element));
+        final String elementContent = StringSupport.trimOrNull(getElementContentAsString(element));
 
         if (elementContent == null) {
             return null;
@@ -390,7 +390,7 @@ public final class ElementSupport {
 
         Element e = getFirstChildElement(root);
         while (e != null) {
-            QName qname = QNameSupport.getNodeQName(e);
+            final QName qname = QNameSupport.getNodeQName(e);
             List<Element> elements = children.get(qname);
             if (elements == null) {
                 elements = new ArrayList<>();

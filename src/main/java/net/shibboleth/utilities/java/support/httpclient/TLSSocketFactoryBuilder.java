@@ -292,7 +292,7 @@ public class TLSSocketFactoryBuilder {
             verifier = DEFAULT_HOSTNAME_VERIFIER;
         }
 
-        SSLContext sslcontext = buildSSLContext();
+        final SSLContext sslcontext = buildSSLContext();
         return new TLSSocketFactory(sslcontext, 
                 enabledProtocols != null ? enabledProtocols.toArray(new String[0]) : null, 
                 enabledCipherSuites != null ? enabledCipherSuites.toArray(new String[0]) : null, 
@@ -311,7 +311,7 @@ public class TLSSocketFactoryBuilder {
         }
         
         try {
-            SSLContext sslcontext;
+            final SSLContext sslcontext;
             if (sslContextProvider != null) {
                 sslcontext = SSLContext.getInstance(protocol, sslContextProvider);
             } else {
@@ -325,11 +325,11 @@ public class TLSSocketFactoryBuilder {
             
             return sslcontext;
             
-        } catch (NoSuchAlgorithmException e) {
+        } catch (final NoSuchAlgorithmException e) {
             throw new RuntimeException("Problem obtaining SSLContext, unsupported protocol: " + sslContextProtocol, e);
-        } catch (NoSuchProviderException e) {
+        } catch (final NoSuchProviderException e) {
             throw new RuntimeException("Problem obtaining SSLContext, invalid provider: " + sslContextProvider, e);
-        } catch (KeyManagementException e) {
+        } catch (final KeyManagementException e) {
             throw new RuntimeException("Key Problem initializing SSLContext", e);
         }
         

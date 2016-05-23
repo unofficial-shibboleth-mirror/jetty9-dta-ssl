@@ -244,7 +244,7 @@ public class HttpClientBuilder {
      * 
      * @param builder the Apache HttpClientBuilder 4.3+ instance over which to layer this builder
      */
-    public HttpClientBuilder(@Nonnull org.apache.http.impl.client.HttpClientBuilder builder) {
+    public HttpClientBuilder(@Nonnull final org.apache.http.impl.client.HttpClientBuilder builder) {
         Constraint.isNotNull(builder, "Apache HttpClientBuilder may not be null");
         apacheBuilder = builder;
         resetDefaults();
@@ -415,7 +415,7 @@ public class HttpClientBuilder {
      * 
      * @param close whether to instruct the server to close the connection after it has sent its response
      */
-    public void setConnectionCloseAfterResponse(boolean close) {
+    public void setConnectionCloseAfterResponse(final boolean close) {
         connectionCloseAfterResponse = close;
     }
 
@@ -618,7 +618,7 @@ public class HttpClientBuilder {
      * 
      * @param flag true if disabled, false if not
      */
-    public void setDisableAuthCaching(boolean flag) {
+    public void setDisableAuthCaching(final boolean flag) {
         disableAuthCaching = flag;
     }
 
@@ -636,7 +636,7 @@ public class HttpClientBuilder {
      * 
      * @param flag true if disabled, false if not
      */
-    public void setDisableAutomaticRetries(boolean flag) {
+    public void setDisableAutomaticRetries(final boolean flag) {
         disableAutomaticRetries = flag;
     }
 
@@ -655,7 +655,7 @@ public class HttpClientBuilder {
      * @param flag true if disabled, false if not
      */
  
-    public void setDisableConnectionState(boolean flag) {
+    public void setDisableConnectionState(final boolean flag) {
         disableConnectionState = flag;
     }
 
@@ -673,7 +673,7 @@ public class HttpClientBuilder {
      * 
      * @param flag true if disabled, false if not
      */
-    public void setDisableContentCompression(boolean flag) {
+    public void setDisableContentCompression(final boolean flag) {
         disableContentCompression = flag;
     }
 
@@ -691,7 +691,7 @@ public class HttpClientBuilder {
      * 
      * @param flag true if disabled, false if not
      */
-    public void setDisableCookieManagement(boolean flag) {
+    public void setDisableCookieManagement(final boolean flag) {
         disableCookieManagement = flag;
     }
 
@@ -709,7 +709,7 @@ public class HttpClientBuilder {
      * 
      * @param flag true if disabled, false if not
      */
-    public void setDisableRedirectHandling(boolean flag) {
+    public void setDisableRedirectHandling(final boolean flag) {
         disableRedirectHandling = flag;
     }
 
@@ -727,7 +727,7 @@ public class HttpClientBuilder {
      * 
      * @param flag true if enabled, false if not
      */
-    public void setUseSystemProperties(boolean flag) {
+    public void setUseSystemProperties(final boolean flag) {
         useSystemProperties = flag;
     }
 
@@ -763,7 +763,7 @@ public class HttpClientBuilder {
      * 
      * @param interceptors the list of interceptors, may be null
      */
-    public void setLastRequestInterceptors(List<HttpRequestInterceptor> interceptors) {
+    public void setLastRequestInterceptors(final List<HttpRequestInterceptor> interceptors) {
         requestInterceptorsLast = (List<HttpRequestInterceptor>) normalizeInterceptors(interceptors);
     }
 
@@ -781,7 +781,7 @@ public class HttpClientBuilder {
      * 
      * @param interceptors the list of interceptors, may be null
      */
-    public void setFirstResponseInterceptors(List<HttpResponseInterceptor> interceptors) {
+    public void setFirstResponseInterceptors(final List<HttpResponseInterceptor> interceptors) {
         responseInterceptorsFirst = (List<HttpResponseInterceptor>) normalizeInterceptors(interceptors);
     }
 
@@ -799,7 +799,7 @@ public class HttpClientBuilder {
      * 
      * @param interceptors the list of interceptors, may be null
      */
-    public void setLastResponseInterceptors(List<HttpResponseInterceptor> interceptors) {
+    public void setLastResponseInterceptors(final List<HttpResponseInterceptor> interceptors) {
         responseInterceptorsLast = (List<HttpResponseInterceptor>) normalizeInterceptors(interceptors);
     }
 
@@ -838,7 +838,7 @@ public class HttpClientBuilder {
      */
     // Checkstyle: CyclomaticComplexity|MethodLength OFF
     protected void decorateApacheBuilder() throws Exception {
-        org.apache.http.impl.client.HttpClientBuilder builder = getApacheBuilder();
+        final org.apache.http.impl.client.HttpClientBuilder builder = getApacheBuilder();
         
         if (getTLSSocketFactory() != null) {
             builder.setSSLSocketFactory(getTLSSocketFactory());
@@ -899,32 +899,32 @@ public class HttpClientBuilder {
         }
 
         if (getFirstRequestInterceptors() != null) {
-            for (HttpRequestInterceptor interceptor : getFirstRequestInterceptors()) {
+            for (final HttpRequestInterceptor interceptor : getFirstRequestInterceptors()) {
                 builder.addInterceptorFirst(interceptor);
             }
         }
 
         if (getLastRequestInterceptors() != null) {
-            for (HttpRequestInterceptor interceptor : getLastRequestInterceptors()) {
+            for (final HttpRequestInterceptor interceptor : getLastRequestInterceptors()) {
                 builder.addInterceptorLast(interceptor);
             }
         }
 
         if (getFirstResponseInterceptors() != null) {
-            for (HttpResponseInterceptor interceptor : getFirstResponseInterceptors()) {
+            for (final HttpResponseInterceptor interceptor : getFirstResponseInterceptors()) {
                 builder.addInterceptorFirst(interceptor);
             }
         }
 
         if (getLastResponseInterceptors() != null) {
-            for (HttpResponseInterceptor interceptor : getLastResponseInterceptors()) {
+            for (final HttpResponseInterceptor interceptor : getLastResponseInterceptors()) {
                 builder.addInterceptorLast(interceptor);
             }
         }
 
 
         // RequestConfig params
-        RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
+        final RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
 
         if (socketLocalAddress != null) {
             requestConfigBuilder.setLocalAddress(socketLocalAddress);
@@ -955,7 +955,7 @@ public class HttpClientBuilder {
         }
 
         // ConnectionConfig params
-        ConnectionConfig.Builder connectionConfigBuilder = ConnectionConfig.custom();
+        final ConnectionConfig.Builder connectionConfigBuilder = ConnectionConfig.custom();
 
         connectionConfigBuilder.setBufferSize(socketBufferSize);
 

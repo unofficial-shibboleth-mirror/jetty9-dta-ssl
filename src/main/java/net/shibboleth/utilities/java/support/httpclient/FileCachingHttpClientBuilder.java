@@ -141,8 +141,8 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
      * 
      * @param directoryPath filesystem path to the directory
      */
-    public void setCacheDirectory(@Nonnull @NotEmpty String directoryPath) {
-        String trimmedPath =
+    public void setCacheDirectory(@Nonnull @NotEmpty final String directoryPath) {
+        final String trimmedPath =
                 Constraint.isNotNull(StringSupport.trimOrNull(directoryPath),
                         "Cache directory path can not be null or empty");
         cacheDir = new File(trimmedPath);
@@ -153,7 +153,7 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
      * 
      * @param directory the directory
      */
-    public void setCacheDirectory(@Nonnull File directory) {
+    public void setCacheDirectory(@Nonnull final File directory) {
         cacheDir = Constraint.isNotNull(directory, "Cache directory can not be null");
     }
 
@@ -171,7 +171,7 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
      * 
      * @param maxEntries maximum number of cached responses, must be greater than zero
      */
-    public void setMaxCacheEntries(int maxEntries) {
+    public void setMaxCacheEntries(final int maxEntries) {
         maxCacheEntries =
                 (int) Constraint.isGreaterThan(0, maxEntries, "Maximum number of cache entries must be greater than 0");
     }
@@ -190,7 +190,7 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
      * 
      * @param size maximum response body size that will be eligible for caching, must be greater than zero
      */
-    public void setMaxCacheEntrySize(long size) {
+    public void setMaxCacheEntrySize(final long size) {
         maxCacheEntrySize = (int) Constraint.isGreaterThan(0, size, "Maximum cache entry size must be greater than 0");
     }
 
@@ -208,7 +208,7 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
      * 
      * @param value the new maintenance task interval, in milliseconds
      */
-    public void setMaintentanceTaskInterval(long value) {
+    public void setMaintentanceTaskInterval(final long value) {
         maintentanceTaskInterval = Constraint.isGreaterThan(0, value, 
                 "Maintenance task interval must be greater than 0");
     }
@@ -231,14 +231,14 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
             throw new IOException("Cache directory '" + cacheDir.getAbsolutePath() + "' is not writable");
         }
         
-        CachingHttpClientBuilder cachingBuilder = (CachingHttpClientBuilder) getApacheBuilder();
+        final CachingHttpClientBuilder cachingBuilder = (CachingHttpClientBuilder) getApacheBuilder();
 
-        CacheConfig.Builder cacheConfigBuilder = CacheConfig.custom();
+        final CacheConfig.Builder cacheConfigBuilder = CacheConfig.custom();
         cacheConfigBuilder.setMaxCacheEntries(maxCacheEntries);
         cacheConfigBuilder.setMaxObjectSize(maxCacheEntrySize);
         cacheConfigBuilder.setHeuristicCachingEnabled(false);
         cacheConfigBuilder.setSharedCache(false);
-        CacheConfig cacheConfig = cacheConfigBuilder.build();
+        final CacheConfig cacheConfig = cacheConfigBuilder.build();
         
         cachingBuilder.setCacheConfig(cacheConfig);
         cachingBuilder.setResourceFactory(new FileResourceFactory(cacheDir));
@@ -250,8 +250,8 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
 
     /** {@inheritDoc} */
     public synchronized HttpClient buildClient() throws Exception {
-        CloseableHttpClient client = (CloseableHttpClient) super.buildClient();
-        ManagedHttpCacheStorage tempStorage = managedStorage;
+        final CloseableHttpClient client = (CloseableHttpClient) super.buildClient();
+        final ManagedHttpCacheStorage tempStorage = managedStorage;
         // Null this out so we don't keep a reference, inhibiting garbage collection.
         managedStorage = null;
         return new StorageManagingHttpClient(client, tempStorage, getMaintentanceTaskInterval());
@@ -296,7 +296,7 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
          * @param taskInterval the interval at which storage maintenance should run
          */
         public StorageManagingHttpClient(@Nonnull final CloseableHttpClient wrappedClient, 
-                @Nonnull final ManagedHttpCacheStorage managedStorage, long taskInterval)  {
+                @Nonnull final ManagedHttpCacheStorage managedStorage, final long taskInterval)  {
            super(); 
            httpClient = Constraint.isNotNull(wrappedClient, "HttpClient was null");
            storage = Constraint.isNotNull(managedStorage, "ManagedHttpCacheStorage was null");
@@ -304,7 +304,8 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
         }
 
         /** {@inheritDoc} */
-        protected CloseableHttpResponse doExecute(HttpHost target, HttpRequest request, HttpContext context)
+        protected CloseableHttpResponse doExecute(final HttpHost target, final HttpRequest request,
+                final HttpContext context)
                 throws IOException, ClientProtocolException {
             ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
             ComponentSupport.ifDestroyedThrowDestroyedComponentException(this);
@@ -361,7 +362,7 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
             try {
                 log.debug("Executing ManagedHttpCacheStorage shutdown()");
                 storage.shutdown();
-            } catch (Throwable t) {
+            } catch (final Throwable t) {
                 log.warn("Error invoking ManagedHttpCacheStorage shutdown()", t);
             }
             storage = null;
@@ -398,7 +399,7 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
             try {
                 log.debug("Executing ManagedHttpCacheStorage cleanResources()");
                 storage.cleanResources();
-            } catch (Throwable t) {
+            } catch (final Throwable t) {
                 log.warn("Error invoking ManagedHttpCacheStorage cleanResources()", t);
             }
         }

@@ -54,7 +54,7 @@ public class RandomIdentifierGenerationStrategy implements IdentifierGenerationS
             random = SecureRandom.getInstance("SHA1PRNG");
             sizeOfIdentifier = 16;
             encoder = new Hex();
-        } catch (NoSuchAlgorithmException e) {
+        } catch (final NoSuchAlgorithmException e) {
             throw new RuntimeException("SHA1PRNG is required to be supported by the JVM but is not", e);
         }
     }
@@ -72,7 +72,7 @@ public class RandomIdentifierGenerationStrategy implements IdentifierGenerationS
                     (int) Constraint.isGreaterThan(0, identifierSize,
                             "Number of bytes in the identifier must be greater than 0");
             encoder = new Hex();
-        } catch (NoSuchAlgorithmException e) {
+        } catch (final NoSuchAlgorithmException e) {
             throw new RuntimeException("SHA1PRNG is required to be supported by the JVM but is not", e);
         }
     }
@@ -99,8 +99,8 @@ public class RandomIdentifierGenerationStrategy implements IdentifierGenerationS
     }
 
     /** {@inheritDoc} */
-    public String generateIdentifier(boolean xmlSafe) {
-        byte[] buf = new byte[sizeOfIdentifier];
+    public String generateIdentifier(final boolean xmlSafe) {
+        final byte[] buf = new byte[sizeOfIdentifier];
         random.nextBytes(buf);
         try {
             if (xmlSafe) {
@@ -108,7 +108,7 @@ public class RandomIdentifierGenerationStrategy implements IdentifierGenerationS
             } else {
                 return StringUtils.newStringUsAscii(encoder.encode(buf));
             }
-        } catch (EncoderException e) {
+        } catch (final EncoderException e) {
             throw new RuntimeException(e);
         }
     }

@@ -44,8 +44,8 @@ public final class IterableSupport {
         Constraint.isNotNull(target, "Target collection can not be null");
         Constraint.isNotNull(clazz, "Class can not be null");
         
-        Predicate<Object> instanceOf = Predicates.instanceOf(clazz);
-        Optional<?> result = Iterables.tryFind(target, instanceOf);
+        final Predicate<Object> instanceOf = Predicates.instanceOf(clazz);
+        final Optional<?> result = Iterables.tryFind(target, instanceOf);
         return result.isPresent();
     }
 

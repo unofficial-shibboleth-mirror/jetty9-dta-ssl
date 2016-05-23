@@ -169,7 +169,7 @@ public class LazyList<ElementType> implements List<ElementType>, Serializable {
     }
 
     /** {@inheritDoc} */
-    public <T> T[] toArray(T[] type) {
+    public <T> T[] toArray(final T[] type) {
         return delegate.toArray(type);
     }
 

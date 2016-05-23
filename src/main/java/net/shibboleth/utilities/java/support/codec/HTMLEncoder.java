@@ -201,7 +201,7 @@ public final class HTMLEncoder {
      * @return whether or not the array contains the char
      */
     private static boolean containsCharacter(@Nonnull final char c, @Nonnull final char[] array) {
-        for (char ch : array) {
+        for (final char ch : array) {
             if (c == ch) {
                 return true;
             }

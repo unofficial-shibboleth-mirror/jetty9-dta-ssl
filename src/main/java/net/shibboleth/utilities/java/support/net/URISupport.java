@@ -53,7 +53,7 @@ public final class URISupport {
         try {
             return new URI(prototype.getScheme(), prototype.getUserInfo(), prototype.getHost(), prototype.getPort(),
                     prototype.getPath(), prototype.getQuery(), trimOrNullFragment(fragment));
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             throw new IllegalArgumentException("Illegal fragment text", e);
         }
     }
@@ -70,7 +70,7 @@ public final class URISupport {
         try {
             return new URI(prototype.getScheme(), prototype.getUserInfo(), StringSupport.trimOrNull(host),
                     prototype.getPort(), prototype.getPath(), prototype.getQuery(), prototype.getFragment());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             throw new IllegalArgumentException("Illegal host", e);
         }
     }
@@ -87,7 +87,7 @@ public final class URISupport {
         try {
             return new URI(prototype.getScheme(), prototype.getUserInfo(), prototype.getHost(), prototype.getPort(),
                     trimOrNullPath(path), prototype.getQuery(), prototype.getFragment());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             throw new IllegalArgumentException("Illegal path", e);
         }
     }
@@ -104,7 +104,7 @@ public final class URISupport {
         try {
             return new URI(prototype.getScheme(), prototype.getUserInfo(), prototype.getHost(), port,
                     prototype.getPath(), prototype.getQuery(), prototype.getFragment());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             throw new IllegalArgumentException("Illegal port", e);
         }
     }
@@ -129,7 +129,7 @@ public final class URISupport {
         try {
             return new URI(prototype.getScheme(), prototype.getUserInfo(), prototype.getHost(), prototype.getPort(),
                     prototype.getPath(), trimOrNullQuery(query), prototype.getFragment());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             throw new IllegalArgumentException("Illegal query", e);
         }
     }
@@ -154,7 +154,7 @@ public final class URISupport {
         try {
             return new URI(prototype.getScheme(), prototype.getUserInfo(), prototype.getHost(), prototype.getPort(),
                     prototype.getPath(), buildQuery(parameters), prototype.getFragment());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             throw new IllegalArgumentException("Illegal query", e);
         }
     }
@@ -171,7 +171,7 @@ public final class URISupport {
         try {
             return new URI(StringSupport.trimOrNull(scheme), prototype.getUserInfo(), prototype.getHost(),
                     prototype.getPort(), prototype.getPath(), prototype.getQuery(), prototype.getFragment());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             throw new IllegalArgumentException("Illegal scheme", e);
         }
     }
@@ -187,7 +187,7 @@ public final class URISupport {
      * @return a suitable URI
      * @throws URISyntaxException if the URI contructor fails
      */
-    public static URI fileURIFromAbsolutePath(String path) throws URISyntaxException {
+    public static URI fileURIFromAbsolutePath(final String path) throws URISyntaxException {
         final StringBuilder uriPath = new StringBuilder(path.length()+8);
         
         uriPath.append("file://");
@@ -213,7 +213,7 @@ public final class URISupport {
 
         final StringBuilder builder = new StringBuilder();
         boolean firstParam = true;
-        for (Pair<String, String> parameter : parameters) {
+        for (final Pair<String, String> parameter : parameters) {
             if (firstParam) {
                 firstParam = false;
             } else {
@@ -279,7 +279,7 @@ public final class URISupport {
         final ArrayList<Pair<String, String>> queryParams = new ArrayList<>();
         final String[] paramPairs = trimmedQuery.split("&");
         String[] param;
-        for (String paramPair : paramPairs) {
+        for (final String paramPair : paramPairs) {
             param = paramPair.split("=");
             if (param.length == 1) {
                 queryParams.add(new Pair(doURLDecode(param[0]), null));
@@ -375,7 +375,7 @@ public final class URISupport {
 
         try {
             return URLDecoder.decode(value, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
+        } catch (final UnsupportedEncodingException e) {
             // UTF-8 encoding is required to be supported by all JVMs
             return null;
         }
@@ -394,7 +394,7 @@ public final class URISupport {
 
         try {
             return URLEncoder.encode(value, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
+        } catch (final UnsupportedEncodingException e) {
             // UTF-8 encoding is required to be supported by all JVMs
             return null;
         }

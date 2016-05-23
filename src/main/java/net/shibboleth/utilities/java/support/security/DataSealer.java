@@ -97,7 +97,7 @@ public class DataSealer extends AbstractInitializableComponent {
         try {
             try {
                 Constraint.isNotNull(keyStrategy, "Keystore type cannot be null");
-            } catch (ConstraintViolationException e) {
+            } catch (final ConstraintViolationException e) {
                 throw new ComponentInitializationException(e);
             }
             
@@ -205,13 +205,13 @@ public class DataSealer extends AbstractInitializableComponent {
      * @return the decoded data if it is valid and unexpired
      * @throws DataSealerException if the data cannot be unwrapped and verified
      */
-    @Nonnull private String extractAndCheckDecryptedData(@Nonnull @NotEmpty byte[] decryptedBytes)
+    @Nonnull private String extractAndCheckDecryptedData(@Nonnull @NotEmpty final byte[] decryptedBytes)
             throws DataSealerException {
         
         try {
-            ByteArrayInputStream byteStream = new ByteArrayInputStream(decryptedBytes);
-            GZIPInputStream compressedData = new GZIPInputStream(byteStream);
-            DataInputStream dataInputStream = new DataInputStream(compressedData);
+            final ByteArrayInputStream byteStream = new ByteArrayInputStream(decryptedBytes);
+            final GZIPInputStream compressedData = new GZIPInputStream(byteStream);
+            final DataInputStream dataInputStream = new DataInputStream(compressedData);
 
             final long decodedExpirationTime = dataInputStream.readLong();
             if (System.currentTimeMillis() > decodedExpirationTime) {
@@ -234,7 +234,7 @@ public class DataSealer extends AbstractInitializableComponent {
 
             log.trace("Unwrapped data verified");
             return accumulator.toString();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             log.error(e.getMessage());
             throw new DataSealerException("Caught IOException unwrapping data", e);
         }
@@ -257,7 +257,7 @@ public class DataSealer extends AbstractInitializableComponent {
      * @return the encoded blob
      * @throws DataSealerException if the wrapping operation fails
      */
-    @Nonnull public String wrap(@Nonnull @NotEmpty final String data, long exp) throws DataSealerException {
+    @Nonnull public String wrap(@Nonnull @NotEmpty final String data, final long exp) throws DataSealerException {
 
         if (data == null || data.length() == 0) {
             throw new IllegalArgumentException("Data must be supplied for the wrapping operation");
@@ -283,7 +283,7 @@ public class DataSealer extends AbstractInitializableComponent {
             
             int count = 0;
             int start = 0;
-            int dataLength = data.length();
+            final int dataLength = data.length();
             while (start < dataLength) {
                 dataStream.writeUTF(data.substring(start, start + Math.min(dataLength - start, CHUNK_SIZE)));
                 start += Math.min(dataLength - start, CHUNK_SIZE);
@@ -327,7 +327,7 @@ public class DataSealer extends AbstractInitializableComponent {
      */
     private void testEncryption(@Nonnull final SecretKey key) throws DataSealerException {
 
-        String decrypted;
+        final String decrypted;
         try {
             final GCMBlockCipher cipher = new GCMBlockCipher(new AESEngine());
             final byte[] iv = new byte[cipher.getUnderlyingCipher().getBlockSize()];
@@ -347,7 +347,7 @@ public class DataSealer extends AbstractInitializableComponent {
             cipher.doFinal(plaintext, outputLen);
             decrypted = Strings.fromUTF8ByteArray(plaintext);
             
-        } catch (IllegalStateException | InvalidCipherTextException e) {
+        } catch (final IllegalStateException | InvalidCipherTextException e) {
             log.error("Round trip encryption/decryption test unsuccessful", e);
             throw new DataSealerException("Round trip encryption/decryption test unsuccessful", e);
         }

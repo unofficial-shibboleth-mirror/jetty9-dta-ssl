@@ -48,10 +48,10 @@ public final class QNameSupport {
     @Nonnull public static QName constructQName(@Nonnull final Element owningElement,
             @Nonnull @NotEmpty final String qname) {
         Constraint.isNotNull(owningElement, "Owning element cannot be null");
-        String trimmedName = Constraint.isNotNull(StringSupport.trimOrNull(qname), "QName cannot be null");
+        final String trimmedName = Constraint.isNotNull(StringSupport.trimOrNull(qname), "QName cannot be null");
 
-        String nsPrefix;
-        String name;
+        final String nsPrefix;
+        final String name;
         if (trimmedName.indexOf(":") > -1) {
             final StringTokenizer qnameTokens = new StringTokenizer(trimmedName, ":");
             nsPrefix = StringSupport.trim(qnameTokens.nextToken());
@@ -76,9 +76,9 @@ public final class QNameSupport {
      */
     @Nonnull public static QName constructQName(@Nullable final String namespaceURI,
             @Nonnull @NotEmpty final String localName, @Nullable final String prefix) {
-        String trimmedLocalName =
+        final String trimmedLocalName =
                 Constraint.isNotNull(StringSupport.trimOrNull(localName), "Local name cannot be null or empty");
-        String trimmedPrefix = StringSupport.trimOrNull(prefix);
+        final String trimmedPrefix = StringSupport.trimOrNull(prefix);
 
         if (trimmedPrefix == null) {
             return new QName(StringSupport.trimOrNull(namespaceURI), trimmedLocalName);

@@ -49,10 +49,10 @@ public class ClasspathResolver implements EntityResolver, LSResourceResolver {
 
     /** {@inheritDoc} */
     @Override
-    public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-        InputStream resourceStream = resolver(publicId, systemId);
+    public InputSource resolveEntity(final String publicId, final String systemId) throws SAXException, IOException {
+        final InputStream resourceStream = resolver(publicId, systemId);
         if (resourceStream != null) {
-            InputSource is = new InputSource(resourceStream);
+            final InputSource is = new InputSource(resourceStream);
             is.setSystemId(systemId);
             is.setPublicId(publicId);
             return is;
@@ -63,7 +63,8 @@ public class ClasspathResolver implements EntityResolver, LSResourceResolver {
 
     /** {@inheritDoc} */
     @Override
-    public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
+ public LSInput resolveResource(final String type, final String namespaceURI, final String publicId,
+            final String systemId, final String baseURI) {
         return new LSInputImpl(publicId, systemId, resolver(publicId, systemId));
     }
 
@@ -75,7 +76,7 @@ public class ClasspathResolver implements EntityResolver, LSResourceResolver {
      * 
      * @return resolved resource or null
      */
-    protected InputStream resolver(String publicId, String systemId) {
+    protected InputStream resolver(final String publicId, final String systemId) {
         String resource = null;
         InputStream resourceIns = null;
 
@@ -123,7 +124,7 @@ public class ClasspathResolver implements EntityResolver, LSResourceResolver {
          * @param sysId system id of the resolved resource
          * @param input resolved resource
          */
-        public LSInputImpl(String pubId, String sysId, InputStream input) {
+        public LSInputImpl(final String pubId, final String sysId, final InputStream input) {
             publicId = pubId;
             systemId = sysId;
             buffInput = new BufferedInputStream(input);
@@ -171,10 +172,10 @@ public class ClasspathResolver implements EntityResolver, LSResourceResolver {
             synchronized (buffInput) {
                 try {
                     buffInput.reset();
-                    byte[] input = new byte[buffInput.available()];
+                    final byte[] input = new byte[buffInput.available()];
                     buffInput.read(input);
                     return new String(input);
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     return null;
                 }
             }
@@ -188,42 +189,42 @@ public class ClasspathResolver implements EntityResolver, LSResourceResolver {
 
         /** {@inheritDoc} */
         @Override
-        public void setBaseURI(String uri) {
+        public void setBaseURI(final String uri) {
         }
 
         /** {@inheritDoc} */
         @Override
-        public void setByteStream(InputStream byteStream) {
+        public void setByteStream(final InputStream byteStream) {
         }
 
         /** {@inheritDoc} */
         @Override
-        public void setCertifiedText(boolean isCertifiedText) {
+        public void setCertifiedText(final boolean isCertifiedText) {
         }
 
         /** {@inheritDoc} */
         @Override
-        public void setCharacterStream(Reader characterStream) {
+        public void setCharacterStream(final Reader characterStream) {
         }
 
         /** {@inheritDoc} */
         @Override
-        public void setEncoding(String encoding) {
+        public void setEncoding(final String encoding) {
         }
 
         /** {@inheritDoc} */
         @Override
-        public void setPublicId(String id) {
+        public void setPublicId(final String id) {
         }
 
         /** {@inheritDoc} */
         @Override
-        public void setStringData(String stringData) {
+        public void setStringData(final String stringData) {
         }
 
         /** {@inheritDoc} */
         @Override
-        public void setSystemId(String id) {
+        public void setSystemId(final String id) {
         }
     }
 }

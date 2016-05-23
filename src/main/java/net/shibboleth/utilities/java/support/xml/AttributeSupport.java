@@ -163,7 +163,7 @@ public final class AttributeSupport {
      * @param duration duration, in milliseconds, must be greater than 0
      */
     public static void appendDateTimeAttribute(@Nonnull final Element element, @Nonnull final QName attributeName,
-            long duration) {
+            final long duration) {
         appendAttribute(element, attributeName, DOMTypeSupport.longToDateTime(duration));
     }
 
@@ -175,7 +175,7 @@ public final class AttributeSupport {
      * @param duration duration, in milliseconds, must be greater than 0
      */
     public static void appendDurationAttribute(@Nonnull final Element element, @Nonnull final QName attributeName,
-            long duration) {
+            final long duration) {
         appendAttribute(element, attributeName, DOMTypeSupport.longToDuration(duration));
     }
 
@@ -211,7 +211,7 @@ public final class AttributeSupport {
         final String trimmedLocalName =
             Constraint.isNotNull(StringSupport.trimOrNull(localName), "Attribute local name may not be null or empty");
 
-        String qualifiedName;
+        final String qualifiedName;
         final String trimmedPrefix = StringSupport.trimOrNull(prefix);
         if (trimmedPrefix != null) {
             qualifiedName = trimmedPrefix + ":" + StringSupport.trimOrNull(trimmedLocalName);
@@ -468,13 +468,13 @@ public final class AttributeSupport {
         if (null == element) {
             return null;
         }
-        String value = getAttributeValue(element, XMLConstants.XML_SPACE_ATTRIB_NAME);
+        final String value = getAttributeValue(element, XMLConstants.XML_SPACE_ATTRIB_NAME);
         if (null == value) {
             return null;
         }
         try {
             return XMLSpace.parseValue(value);
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             // No match to the type
             return null;
         }

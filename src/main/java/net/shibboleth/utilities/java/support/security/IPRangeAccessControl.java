@@ -62,7 +62,7 @@ public class IPRangeAccessControl extends AbstractIdentifiableInitializableCompo
      * 
      * @param ranges ranges to allow
      */
-    public void setAllowedRanges(@Nonnull @NonnullElements Collection<IPRange> ranges) {
+    public void setAllowedRanges(@Nonnull @NonnullElements final Collection<IPRange> ranges) {
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         Constraint.isNotNull(ranges, "IPRange collection cannot be null");
         

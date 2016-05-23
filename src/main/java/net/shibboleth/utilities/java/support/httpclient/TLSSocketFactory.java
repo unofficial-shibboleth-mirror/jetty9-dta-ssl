@@ -296,7 +296,7 @@ public class TLSSocketFactory implements LayeredConnectionSocketFactory {
                 port,
                 true);
         
-        String[] contextProtocols = getListAttribute(context, CONTEXT_KEY_TLS_PROTOCOLS);
+        final String[] contextProtocols = getListAttribute(context, CONTEXT_KEY_TLS_PROTOCOLS);
         if (contextProtocols != null) {
             sslsock.setEnabledProtocols(contextProtocols);
         } else if (getSupportedProtocols() != null) {
@@ -305,7 +305,7 @@ public class TLSSocketFactory implements LayeredConnectionSocketFactory {
             // If supported protocols are not explicitly set, remove all SSL protocol versions
             final String[] allProtocols = sslsock.getSupportedProtocols();
             final List<String> enabledProtocols = new ArrayList<>(allProtocols.length);
-            for (String protocol: allProtocols) {
+            for (final String protocol: allProtocols) {
                 if (!protocol.startsWith("SSL")) {
                     enabledProtocols.add(protocol);
                 }
@@ -313,7 +313,7 @@ public class TLSSocketFactory implements LayeredConnectionSocketFactory {
             sslsock.setEnabledProtocols(enabledProtocols.toArray(new String[enabledProtocols.size()]));
         }
         
-        String[] contextCipherSuites = getListAttribute(context, CONTEXT_KEY_TLS_CIPHER_SUITES);
+        final String[] contextCipherSuites = getListAttribute(context, CONTEXT_KEY_TLS_CIPHER_SUITES);
         if (contextCipherSuites != null) {
             sslsock.setEnabledCipherSuites(contextCipherSuites);
         } else if (getSupportedCipherSuites() != null) {
@@ -332,8 +332,8 @@ public class TLSSocketFactory implements LayeredConnectionSocketFactory {
      * 
      * @param socket the SSLSocket instance
      */
-    private void logSocketInfo(SSLSocket socket) {
-        SSLSession session = socket.getSession();
+    private void logSocketInfo(final SSLSocket socket) {
+        final SSLSession session = socket.getSession();
         if (log.isDebugEnabled()) {
             log.debug("Connected to: {}", socket.getRemoteSocketAddress());
             
@@ -352,7 +352,7 @@ public class TLSSocketFactory implements LayeredConnectionSocketFactory {
                 log.trace("Peer certificates: {}", (Object)session.getPeerCertificates());
                 log.trace("Local principal: {}", session.getLocalPrincipal());
                 log.trace("Local certificates: {}", (Object)session.getLocalCertificates());
-            } catch (SSLPeerUnverifiedException e) {
+            } catch (final SSLPeerUnverifiedException e) {
                 log.warn("SSL exception enumerating peer certificates", e);
             }
         }
@@ -366,11 +366,12 @@ public class TLSSocketFactory implements LayeredConnectionSocketFactory {
      * 
      * @return a String array, or null
      */
-    @Nullable protected String[] getListAttribute(@Nullable final HttpContext context, @Nonnull String contextKey) {
+    @Nullable protected String[] getListAttribute(@Nullable final HttpContext context,
+            @Nonnull final String contextKey) {
         if (context == null) {
             return null;
         }
-        List<String> values = new ArrayList<>(StringSupport.normalizeStringCollection(
+        final List<String> values = new ArrayList<>(StringSupport.normalizeStringCollection(
                 (List<String>) context.getAttribute(contextKey)));
         if (values != null && !values.isEmpty()) {
             return values.toArray(new String[values.size()]);

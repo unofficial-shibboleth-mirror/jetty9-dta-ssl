@@ -158,7 +158,7 @@ public final class CookieManager extends AbstractInitializableComponent {
      * @param value value of cookie
      */
     @Nullable public void addCookie(@Nonnull @NotEmpty final String name, @Nonnull @NotEmpty final String value) {
-        Cookie cookie = new Cookie(name, value);
+        final Cookie cookie = new Cookie(name, value);
         cookie.setPath(cookiePath != null ? cookiePath : contextPathToCookiePath());
         if (cookieDomain != null) {
             cookie.setDomain(cookieDomain);
@@ -176,7 +176,7 @@ public final class CookieManager extends AbstractInitializableComponent {
      * @param name  name of cookie
      */
     @Nullable public void unsetCookie(@Nonnull @NotEmpty final String name) {
-        Cookie cookie = new Cookie(name, null);
+        final Cookie cookie = new Cookie(name, null);
         cookie.setPath(cookiePath != null ? cookiePath : contextPathToCookiePath());
         if (cookieDomain != null) {
             cookie.setDomain(cookieDomain);

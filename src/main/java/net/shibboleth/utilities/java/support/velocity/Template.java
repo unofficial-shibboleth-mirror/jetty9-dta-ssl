@@ -70,8 +70,8 @@ public final class Template {
      * @param velocityTemplateName name of the template to be evaluated
      * @param velocityTemplateEncoding encoding used by the template
      */
-    private Template(@Nonnull VelocityEngine velocityEngine, @Nonnull @NotEmpty String velocityTemplateName,
-            @Nonnull String velocityTemplateEncoding) {
+    private Template(@Nonnull final VelocityEngine velocityEngine, @Nonnull @NotEmpty final String velocityTemplateName,
+            @Nonnull final String velocityTemplateEncoding) {
         engine = Constraint.isNotNull(velocityEngine, "Velocity engine can not be null");
         templateName =
                 Constraint.isNotNull(StringSupport.trimOrNull(velocityTemplateName),
@@ -96,7 +96,8 @@ public final class Template {
      * 
      * @return an instance of this class that can be used to evaluate the given template using the given engine
      */
-    @Nonnull public static Template fromTemplate(@Nonnull VelocityEngine engine, @Nonnull @NotEmpty String template) {
+    @Nonnull public static Template fromTemplate(@Nonnull final VelocityEngine engine,
+            @Nonnull @NotEmpty final String template) {
         return fromTemplate(engine, template, Charsets.US_ASCII);
     }
 
@@ -120,8 +121,9 @@ public final class Template {
      * 
      * @return an instance of this class that can be used to evaluate the given template using the given engine
      */
-    @Nonnull public static Template fromTemplate(@Nonnull VelocityEngine engine, @Nonnull @NotEmpty String template,
-            @Nonnull Charset encoding) {
+    @Nonnull public static Template fromTemplate(@Nonnull final VelocityEngine engine,
+            @Nonnull @NotEmpty final String template,
+            @Nonnull final Charset encoding) {
         final String trimmedTemplate =
                 Constraint.isNotNull(StringSupport.trimOrNull(template), "Velocity template can not be null or empty");
         Constraint.isNotNull(encoding, "Template encoding character set can not be null");
@@ -144,7 +146,7 @@ public final class Template {
 
         try {
             engine.getTemplate(templateName);
-        } catch (VelocityException e) {
+        } catch (final VelocityException e) {
             throw new VelocityException("The following template is not valid:\n" + trimmedTemplate, e);
         }
 
@@ -164,7 +166,8 @@ public final class Template {
      * 
      * @return an instance of this class that can be used to evaluate the named template using the given engine
      */
-    public static Template fromTemplateName(@Nonnull VelocityEngine engine, @Nonnull @NotEmpty String templateName) {
+    public static Template fromTemplateName(@Nonnull final VelocityEngine engine,
+            @Nonnull @NotEmpty final String templateName) {
         return fromTemplateName(engine, templateName, Charsets.US_ASCII);
     }
 
@@ -177,8 +180,8 @@ public final class Template {
      * 
      * @return an instance of this class that can be used to evaluate the named template using the given engine
      */
-    public static Template fromTemplateName(@Nonnull VelocityEngine engine, @Nonnull @NotEmpty String name,
-            @Nonnull Charset encoding) {
+    public static Template fromTemplateName(@Nonnull final VelocityEngine engine, @Nonnull @NotEmpty final String name,
+            @Nonnull final Charset encoding) {
         final String trimmedName =
                 Constraint.isNotNull(StringSupport.trimOrNull(name), "Velocity template name can not be null or empty");
         Constraint.isNotNull(encoding, "Template encoding character set can not be null");
@@ -190,7 +193,7 @@ public final class Template {
 
         try {
             engine.getTemplate(trimmedName);
-        } catch (VelocityException e) {
+        } catch (final VelocityException e) {
             throw new VelocityException("Template '" + trimmedName + "' is not a valid template", e);
         }
 
@@ -213,8 +216,8 @@ public final class Template {
      * 
      * @return the generated output of the template
      */
-    public String merge(Context templateContext) {
-        StringWriter output = new StringWriter();
+    public String merge(final Context templateContext) {
+        final StringWriter output = new StringWriter();
         merge(templateContext, output);
         return output.toString();
     }
@@ -225,19 +228,19 @@ public final class Template {
      * @param templateContext current template context
      * @param output writer that will receive the template output
      */
-    public void merge(Context templateContext, Writer output) {
+    public void merge(final Context templateContext, final Writer output) {
         try {
             engine.mergeTemplate(templateName, templateEncoding, templateContext, output);
-        } catch (ResourceNotFoundException e) {
+        } catch (final ResourceNotFoundException e) {
             throw new VelocityException("Velocity template " + templateName
                     + " has been removed since this object was constructed");
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new VelocityException("Velocity template " + templateName + " threw an exception", e);
         }
     }
 
     /** {@inheritDoc} */
-    @Override public boolean equals(Object obj) {
+    @Override public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }
@@ -250,7 +253,7 @@ public final class Template {
             return false;
         }
 
-        Template otherTemplate = (Template) obj;
+        final Template otherTemplate = (Template) obj;
         return engine.equals(otherTemplate.engine) && templateName.equals(otherTemplate.templateName);
     }
 
