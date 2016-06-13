@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-/** Classes for working with 
- * <a href="http://hc.apache.org/httpcomponents-client-ga/httpclient/index.html" target="_new">Apache HttpClient</a>. 
- */
+/** Classes for working with Apache HttpClient. */
 
 package net.shibboleth.utilities.java.support.httpclient;

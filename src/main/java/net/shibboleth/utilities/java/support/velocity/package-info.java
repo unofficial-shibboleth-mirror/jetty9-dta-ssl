@@ -15,6 +15,6 @@
  * limitations under the License.
  */
 
-/** Classes for working with <a href="http://http://velocity.apache.org target="_new">Apache Velocity</a>. */
+/** Classes for working with Apache Velocity. */
 
 package net.shibboleth.utilities.java.support.velocity;
