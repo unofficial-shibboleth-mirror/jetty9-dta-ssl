@@ -91,7 +91,7 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
      * 
      * @return number of milliseconds between one reload check and another
      */
-    public long getReloadCheckDelay() {
+    @Duration public long getReloadCheckDelay() {
         return reloadCheckDelay;
     }
 
@@ -103,7 +103,7 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
      * 
      * @param delay number of milliseconds between one reload check and another
      */
-    public void setReloadCheckDelay(@Duration final long delay) {
+    @Duration public void setReloadCheckDelay(@Duration final long delay) {
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         reloadCheckDelay = delay;

@@ -184,7 +184,7 @@ public class BasicKeystoreKeyStrategy extends AbstractInitializableComponent imp
      * 
      * @param interval number of milliseconds between key update checks
      */
-    public void setUpdateInterval(@Duration @NonNegative final long interval) {
+    @Duration public void setUpdateInterval(@Duration @NonNegative final long interval) {
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
 
         updateInterval = Constraint.isGreaterThanOrEqual(0, interval,
