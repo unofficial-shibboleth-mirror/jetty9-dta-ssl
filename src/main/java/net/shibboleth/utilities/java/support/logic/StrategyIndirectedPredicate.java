@@ -22,8 +22,6 @@ import java.util.Collection;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
-
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
@@ -63,7 +61,7 @@ public class StrategyIndirectedPredicate<T1,T2> implements Predicate<T1> {
      * @param collection a collection to test for containment
      */
     public StrategyIndirectedPredicate(@Nonnull final Function<T1,T2> objectStrategy,
-            @Nonnull @NonnullElements final Collection<T2> collection) {
+            @Nonnull final Collection<T2> collection) {
         objectLookupStrategy = Constraint.isNotNull(objectStrategy, "Object lookup strategy cannot be null");
         predicate = Predicates.in(collection);
     }
@@ -72,6 +70,36 @@ public class StrategyIndirectedPredicate<T1,T2> implements Predicate<T1> {
     @Override
     public boolean apply(@Nullable final T1 input) {
         return predicate.apply(objectLookupStrategy.apply(input));
+    }
+    
+    /**
+     * Factory method for predicate-based constructor.
+     * 
+     * @param objectStrategy the lookup strategy for object
+     * @param pred the predicate to apply
+     * 
+     * @return a suitably constructed predicate
+     * 
+     * @since 7.3.0
+     */
+    @Nonnull public static StrategyIndirectedPredicate forPredicate(@Nonnull final Function objectStrategy,
+            @Nonnull final Predicate pred) {
+        return new StrategyIndirectedPredicate(objectStrategy, pred);
+    }
+
+    /**
+     * Factory method for collection-based constructor.
+     * 
+     * @param objectStrategy the lookup strategy for object
+     * @param collection a collection to test for containment
+     * 
+     * @return a suitably constructed predicate
+     * 
+     * @since 7.3.0
+     */
+    @Nonnull public static StrategyIndirectedPredicate forCollection(@Nonnull final Function objectStrategy,
+            @Nonnull final Collection collection) {
+        return new StrategyIndirectedPredicate(objectStrategy, collection);
     }
 
 }
