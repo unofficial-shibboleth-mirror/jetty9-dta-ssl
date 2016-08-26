@@ -101,14 +101,12 @@
             <!--  Required if you're using classes from the security package. -->
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
-            <version>1.54</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <!--  Required if you're using classes from the security package. -->
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk15on</artifactId>
-            <version>1.54</version>
             <optional>true</optional>
         </dependency>
 
