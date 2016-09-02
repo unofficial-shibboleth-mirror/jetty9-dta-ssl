@@ -365,6 +365,8 @@ public final class URISupport {
     /**
      * Perform URL decoding on the given string.
      * 
+     * <p>Consider using Guava's UrlEscapers class for any future uses for this functionality.</p>
+     * 
      * @param value the string to decode
      * @return the decoded string
      */
@@ -382,7 +384,12 @@ public final class URISupport {
     }
 
     /**
-     * Perform URL encoding on the given string.
+     * Perform URL encoding on the given string appropriate for form or query string parameters.
+     * 
+     * <p>This method is <strong>not</strong> appropriate for the encoding of data for other
+     * parts of a URL such as a path or fragment.</p>
+     * 
+     * <p>Consider using Guava's UrlEscapers class for any future uses for this functionality.</p>
      * 
      * @param value the string to encode
      * @return the encoded string
