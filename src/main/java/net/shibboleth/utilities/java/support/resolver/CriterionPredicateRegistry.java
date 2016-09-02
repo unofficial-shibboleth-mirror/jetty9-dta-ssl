@@ -28,13 +28,13 @@ import java.util.Properties;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.shibboleth.utilities.java.support.logic.Constraint;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Predicate;
-
-import net.shibboleth.utilities.java.support.logic.Constraint;
-import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /**
  * A registry which manages mappings from types of {@link Criterion} to types of {@link Predicate}
@@ -146,6 +146,7 @@ public class CriterionPredicateRegistry<T> {
         registry.clear();
     }
 
+//CheckStyle: ReturnCount OFF
     /**
      * Load criterion -> predicate mappings from a classpath resource.
      * 
@@ -167,6 +168,7 @@ public class CriterionPredicateRegistry<T> {
             return;
         }
     }
+  //CheckStyle: ReturnCount ON
 
     /**
      * Load a set of criterion -> predicate mappings from the supplied properties set.

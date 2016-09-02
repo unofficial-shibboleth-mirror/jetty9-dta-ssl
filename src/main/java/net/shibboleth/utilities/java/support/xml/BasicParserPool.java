@@ -171,9 +171,9 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
         throw new XMLParserException("Unable to obtain a DocumentBuilder");
     }
 
+//CheckStyle: ReturnCount OFF
     /** {@inheritDoc} */
-    @Override
-    public void returnBuilder(@Nullable final DocumentBuilder builder) {
+    @Override public void returnBuilder(@Nullable final DocumentBuilder builder) {
         checkInitializedNotDestroyed();
 
         if (builder == null || !(builder instanceof DocumentBuilderProxy)) {
@@ -207,6 +207,7 @@ public class BasicParserPool extends AbstractInitializableComponent implements P
             }
         }
     }
+  //CheckStyle: ReturnCount ON
 
     /** {@inheritDoc} */
     @Override

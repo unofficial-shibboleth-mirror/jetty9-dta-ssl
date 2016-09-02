@@ -106,7 +106,7 @@ public final class ResolverSupport {
             }
         }
         
-        Predicate<T> predicate;
+        final Predicate<T> predicate;
         if (satisfyAny) {
             predicate = Predicates.or(predicates);
         } else {
