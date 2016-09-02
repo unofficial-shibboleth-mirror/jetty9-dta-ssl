@@ -157,7 +157,7 @@ public final class ElementSupport {
 
         Element childNode = getFirstChildElement(root);
         while (childNode != null) {
-            children.add((Element) childNode);
+            children.add(childNode);
             childNode = getNextSiblingElement(childNode);
         }
 
@@ -472,14 +472,10 @@ public final class ElementSupport {
         if (rootElement == null) {
             adoptElement(document, element);
             document.appendChild(element);
-            return;
+        } else if (!rootElement.isSameNode(element)) {
+            adoptElement(document, element);
+            document.replaceChild(element, rootElement);
         }
 
-        if (rootElement.isSameNode(element)) {
-            return;
-        }
-
-        adoptElement(document, element);
-        document.replaceChild(element, rootElement);
     }
 }
