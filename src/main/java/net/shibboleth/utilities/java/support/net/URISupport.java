@@ -365,12 +365,8 @@ public final class URISupport {
     /**
      * Perform URL decoding on the given string.
      * 
-     * <p>Consider using Guava's UrlEscapers class for any future uses for this functionality.</p>
-     * 
      * @param value the string to decode
      * @return the decoded string
-     * 
-     * @deprecated
      */
     public static String doURLDecode(final String value) {
         if (value == null) {

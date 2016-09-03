@@ -78,7 +78,6 @@ public class URLBuilder {
      * @throws MalformedURLException thrown if the given base URL is not well formed
      * 
      */
-    @SuppressWarnings("deprecation")
     public URLBuilder(@Nonnull @NotEmpty final String baseURL) throws MalformedURLException {
         final URL url = new URL(baseURL);
         
