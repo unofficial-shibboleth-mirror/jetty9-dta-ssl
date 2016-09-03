@@ -369,6 +369,8 @@ public final class URISupport {
      * 
      * @param value the string to decode
      * @return the decoded string
+     * 
+     * @deprecated
      */
     public static String doURLDecode(final String value) {
         if (value == null) {
@@ -393,6 +395,8 @@ public final class URISupport {
      * 
      * @param value the string to encode
      * @return the encoded string
+     * 
+     * @deprecated
      */
     public static String doURLEncode(final String value) {
         if (value == null) {
