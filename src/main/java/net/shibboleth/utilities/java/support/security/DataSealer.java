@@ -35,7 +35,6 @@ import javax.crypto.SecretKey;
 
 import net.shibboleth.utilities.java.support.annotation.constraint.NonnullAfterInit;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
-import net.shibboleth.utilities.java.support.codec.Base64Support;
 import net.shibboleth.utilities.java.support.collection.Pair;
 import net.shibboleth.utilities.java.support.component.AbstractInitializableComponent;
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
@@ -43,6 +42,10 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 
+import org.apache.commons.codec.BinaryDecoder;
+import org.apache.commons.codec.BinaryEncoder;
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.crypto.modes.GCMBlockCipher;
@@ -69,7 +72,14 @@ public class DataSealer extends AbstractInitializableComponent {
 
     /** Source of secure random data. */
     @NonnullAfterInit private SecureRandom random;
-    
+
+    /** Encodes encrypted bytes to string. */
+    @Nonnull private BinaryEncoder encoder = new Base64(0, new byte[] { '\n' });
+
+    /** Decodes encrypted string to bytes. */
+    @Nonnull private BinaryDecoder decoder = (Base64) encoder;
+
+
     /**
      * Set the key strategy.
      * 
@@ -90,6 +100,25 @@ public class DataSealer extends AbstractInitializableComponent {
         ComponentSupport.ifInitializedThrowUnmodifiabledComponentException(this);
         
         random = Constraint.isNotNull(r, "SecureRandom cannot be null");
+    }
+
+    /**
+     * Sets the encoder to use to produce a ciphertext string from bytes. Default is standard base-64 encoding without
+     * line breaks.
+     *
+     * @param encoder Byte-to-string encoder.
+     */
+    public void setEncoder(@Nonnull final BinaryEncoder encoder) {
+        this.encoder = Constraint.isNotNull(encoder, "Encoder cannot be null");
+    }
+
+    /**
+     * Sets the decoder to use to convert a ciphertext string to bytes. Default is standard base-64 decoding.
+     *
+     * @param decoder String-to-byte decoder.
+     */
+    public void setDecoder(@Nonnull final BinaryDecoder decoder) {
+        this.decoder = Constraint.isNotNull(decoder, "Decoder cannot be null");
     }
 
     /** {@inheritDoc} */
@@ -146,7 +175,7 @@ public class DataSealer extends AbstractInitializableComponent {
             throws DataSealerException {
 
         try {
-            final byte[] in = Base64Support.decode(wrapped);
+            final byte[] in = decoder.decode(wrapped.getBytes(StandardCharsets.UTF_8));
 
             final ByteArrayInputStream inputByteStream = new ByteArrayInputStream(in);
             final DataInputStream inputDataStream = new DataInputStream(inputByteStream);
@@ -181,7 +210,7 @@ public class DataSealer extends AbstractInitializableComponent {
             // Pass the plaintext into the subroutine for processing.
             return extractAndCheckDecryptedData(plaintext);
 
-        } catch (final IllegalStateException | InvalidCipherTextException| IOException e) {
+        } catch (final IllegalStateException | InvalidCipherTextException| IOException | DecoderException e) {
             log.error("Exception unwrapping data", e);
             throw new DataSealerException("Exception unwrapping data", e);
         } catch (final KeyNotFoundException e) {
@@ -308,10 +337,10 @@ public class DataSealer extends AbstractInitializableComponent {
             finalDataStream.write(encryptedData, 0, outputLen);
             finalDataStream.flush();
             finalByteStream.flush();
-            
-            return Base64Support.encode(finalByteStream.toByteArray(), false);
 
-        } catch (final IOException | IllegalStateException | InvalidCipherTextException | KeyException e) {
+            return new String(encoder.encode(finalByteStream.toByteArray()), StandardCharsets.UTF_8);
+
+        } catch (final Exception e) {
             log.error("Exception wrapping data", e);
             throw new DataSealerException("Exception wrapping data", e);
         }
