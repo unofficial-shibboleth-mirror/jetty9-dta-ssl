@@ -125,7 +125,7 @@ public class DataSealer extends AbstractInitializableComponent {
     public void doInitialize() throws ComponentInitializationException {
         try {
             try {
-                Constraint.isNotNull(keyStrategy, "Keystore type cannot be null");
+                Constraint.isNotNull(keyStrategy, "DataSealerKeyStrategy cannot be null");
             } catch (final ConstraintViolationException e) {
                 throw new ComponentInitializationException(e);
             }
