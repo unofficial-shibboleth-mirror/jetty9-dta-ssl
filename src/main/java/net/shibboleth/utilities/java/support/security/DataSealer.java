@@ -106,19 +106,19 @@ public class DataSealer extends AbstractInitializableComponent {
      * Sets the encoder to use to produce a ciphertext string from bytes. Default is standard base-64 encoding without
      * line breaks.
      *
-     * @param encoder Byte-to-string encoder.
+     * @param e Byte-to-string encoder.
      */
-    public void setEncoder(@Nonnull final BinaryEncoder encoder) {
-        this.encoder = Constraint.isNotNull(encoder, "Encoder cannot be null");
+    public void setEncoder(@Nonnull final BinaryEncoder e) {
+        encoder = Constraint.isNotNull(e, "Encoder cannot be null");
     }
 
     /**
      * Sets the decoder to use to convert a ciphertext string to bytes. Default is standard base-64 decoding.
      *
-     * @param decoder String-to-byte decoder.
+     * @param d String-to-byte decoder.
      */
-    public void setDecoder(@Nonnull final BinaryDecoder decoder) {
-        this.decoder = Constraint.isNotNull(decoder, "Decoder cannot be null");
+    public void setDecoder(@Nonnull final BinaryDecoder d) {
+        decoder = Constraint.isNotNull(d, "Decoder cannot be null");
     }
 
     /** {@inheritDoc} */
