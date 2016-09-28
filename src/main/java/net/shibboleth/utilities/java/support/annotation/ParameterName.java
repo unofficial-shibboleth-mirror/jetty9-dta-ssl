@@ -27,15 +27,17 @@ import javax.annotation.Nonnull;
 
 /**
  * The Name of the parameter (aimed at constructors).  This allows IOC frameworks
- * to inject parameters ino the constructor by name without the (java) name itself
- * becoming part of the API (and allowing in Java 7) things to be compiled -nodebug.
+ * to inject parameters into the constructor by name without the (Java) name itself
+ * becoming part of the API (and allowing in Java 8) things to be compiled -parameters.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER, })
 public @interface ParameterName {
 
-    /** The name for this parameter.
+    /**
+     * The name for this parameter.
+     * 
      * @return the name.
      */
     @Nonnull public String name(); 
