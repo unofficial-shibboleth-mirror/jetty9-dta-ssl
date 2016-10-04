@@ -24,6 +24,7 @@ import java.security.NoSuchAlgorithmException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.shibboleth.utilities.java.support.annotation.ParameterName;
 import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
@@ -82,7 +83,8 @@ public class StringDigester implements Function<String, String> {
      * @param format the output format used to convert the digested[] to the output string
      * @throws NoSuchAlgorithmException thrown if the digestAlgorithm is not invalid or unsupported
      */
-    public StringDigester(@Nonnull @NotEmpty final String algorithm, @Nonnull final OutputFormat format) 
+    public StringDigester(@Nonnull @NotEmpty @ParameterName(name="algorithm") final String algorithm, 
+            @Nonnull  @ParameterName(name="format") final OutputFormat format) 
             throws NoSuchAlgorithmException {
        this(algorithm, format, DEFAULT_INPUT_CHARSET); 
     }
@@ -95,8 +97,9 @@ public class StringDigester implements Function<String, String> {
      * @param charset the character set to use in converting the input string to a byte[] prior to digesting
      * @throws NoSuchAlgorithmException thrown if the digestAlgorithm is not invalid or unsupported
      */
-    public StringDigester(@Nonnull @NotEmpty final String algorithm, @Nonnull final OutputFormat format, 
-            @Nullable final Charset charset) throws NoSuchAlgorithmException {
+    public StringDigester(@Nonnull @NotEmpty @ParameterName(name="algorithm") final String algorithm, 
+            @Nonnull @ParameterName(name="format") final OutputFormat format, 
+            @Nullable @ParameterName(name="charset") final Charset charset) throws NoSuchAlgorithmException {
         
         digestAlgorithm = Constraint.isNotNull(StringSupport.trimOrNull(algorithm), 
                 "Digest algorithm was null or empty");
@@ -137,7 +140,7 @@ public class StringDigester implements Function<String, String> {
     }
 
     /** {@inheritDoc} */
-    @Nullable public String apply(@Nullable final String input) {
+    @Override @Nullable public String apply(@Nullable final String input) {
         String trimmed = StringSupport.trimOrNull(input);
         if (trimmed == null) {
             log.debug("Trimmed input was null, returning null");
