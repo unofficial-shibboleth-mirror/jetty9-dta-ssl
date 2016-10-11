@@ -267,10 +267,14 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
         // local cache of cached entry to allow unsynchronized clearing of per class cache.
         String prefix = logPrefix;
         if (null == prefix) {
-            final StringBuilder builder = new StringBuilder("Service '").append(getId()).append("':");
-            prefix = builder.toString();
-            if (null == logPrefix) {
-                logPrefix = prefix;
+            if (getId() != null) {
+                final StringBuilder builder = new StringBuilder("Service '").append(getId()).append("':");
+                prefix = builder.toString();
+                if (null == logPrefix) {
+                    logPrefix = prefix;
+                }
+            } else {
+                prefix = "Service:";
             }
         }
         return prefix;
