@@ -984,15 +984,15 @@ public class HttpClientBuilder {
             requestConfigBuilder.setLocalAddress(socketLocalAddress);
         }
 
-        if (socketTimeout > 0) {
+        if (socketTimeout >= 0) {
             requestConfigBuilder.setSocketTimeout(socketTimeout);
         }
 
-        if (connectionTimeout > 0) {
+        if (connectionTimeout >= 0) {
             requestConfigBuilder.setConnectTimeout(connectionTimeout);
         }
         
-        if (connectionRequestTimeout > 0) {
+        if (connectionRequestTimeout >= 0) {
             requestConfigBuilder.setConnectionRequestTimeout(connectionRequestTimeout);
         }
         
