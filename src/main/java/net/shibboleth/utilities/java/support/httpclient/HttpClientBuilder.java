@@ -110,9 +110,12 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
  * </p>
  * 
  * <ul>
+ * <li>{@link #setTLSSocketFactory(LayeredConnectionSocketFactory)}</li>
  * <li>{@link #setConnectionDisregardTLSCertificate(boolean)}</li>
  * <li>{@link #setSocketBufferSize(int)}</li>
  * <li>{@link #setHttpContentCharSet(String)}</li>
+ * <li>{@link #setMaxConnectionsTotal(int)}</li>
+ * <li>{@link #setMaxConnectionsPerRoute(int)}</li>
  * </ul>
  * 
  * <p>
@@ -161,6 +164,16 @@ public class HttpClientBuilder {
      * manager. Default value: TBD;
      */
     private int connectionRequestTimeout;
+    
+    /**
+     * Max total simultaneous connections allowed by the pooling connection manager.
+     */
+    private int maxConnectionsTotal;
+    
+    /**
+     * Max simultaneous connections per route allowed by the pooling connection manager.
+     */
+    private int maxConnectionsPerRoute;
 
     /** Whether the SSL/TLS certificates used by the responder should be ignored. Default value: false */
     private boolean connectionDisregardTLSCertificate;
@@ -258,6 +271,8 @@ public class HttpClientBuilder {
 
     /** Resets all builder parameters to their defaults. */
     public void resetDefaults() {
+        maxConnectionsTotal = -1;
+        maxConnectionsPerRoute = -1;
         socketLocalAddress = null;
         socketBufferSize = 8192;
         socketTimeout = -1;
@@ -273,6 +288,42 @@ public class HttpClientBuilder {
         httpFollowRedirects = true;
         httpContentCharSet = "UTF-8";
         userAgent = null;
+    }
+
+    /**
+     * Gets the max total simultaneous connections allowed by the pooling connection manager.
+     * 
+     * @return the max total connections
+     */
+    public int getMaxConnectionsTotal() {
+        return maxConnectionsTotal;
+    }
+
+    /**
+     * Sets the max total simultaneous connections allowed by the pooling connection manager.
+     * 
+     * @param max the max total connection
+     */
+    public void setMaxConnectionsTotal(int max) {
+        maxConnectionsTotal = max;
+    }
+
+    /**
+     * Gets the max simultaneous connections per route allowed by the pooling connection manager.
+     * 
+     * @return the max connections per route
+     */
+    public int getMaxConnectionsPerRoute() {
+        return maxConnectionsPerRoute;
+    }
+
+    /**
+     * Sets the max simultaneous connections per route allowed by the pooling connection manager.
+     * 
+     * @param max the max connections per route
+     */
+    public void setMaxConnectionsPerRoute(int max) {
+        maxConnectionsPerRoute = max;
     }
 
     /**
@@ -911,6 +962,14 @@ public class HttpClientBuilder {
                 
                 builder.addInterceptorLast(new RequestConnectionClose());
             }
+        }
+        
+        if (maxConnectionsTotal > 0) {
+            builder.setMaxConnTotal(maxConnectionsTotal);
+        }
+        
+        if (maxConnectionsPerRoute > 0) {
+            builder.setMaxConnPerRoute(maxConnectionsPerRoute);
         }
         
         if (retryHandler != null) {
