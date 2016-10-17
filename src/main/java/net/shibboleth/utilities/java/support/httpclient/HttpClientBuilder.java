@@ -155,6 +155,12 @@ public class HttpClientBuilder {
      * seconds)
      */
     private int connectionTimeout;
+    
+    /**
+     * Maximum length of time in milliseconds to wait for a connection to be returned from the connection
+     * manager. Default value: TBD;
+     */
+    private int connectionRequestTimeout;
 
     /** Whether the SSL/TLS certificates used by the responder should be ignored. Default value: false */
     private boolean connectionDisregardTLSCertificate;
@@ -253,9 +259,10 @@ public class HttpClientBuilder {
     /** Resets all builder parameters to their defaults. */
     public void resetDefaults() {
         socketLocalAddress = null;
-        socketTimeout = -1;
         socketBufferSize = 8192;
+        socketTimeout = -1;
         connectionTimeout = -1;
+        connectionRequestTimeout = -1;
         connectionDisregardTLSCertificate = false;
         connectionCloseAfterResponse = true;
         connectionStaleCheck = false;
@@ -353,6 +360,26 @@ public class HttpClientBuilder {
      */
     public void setConnectionTimeout(final int timeout) {
         connectionTimeout = timeout;
+    }
+    
+    /**
+     * Gets the maximum length of time in milliseconds to wait for a connection to be returned from the connection
+     * manager. A value of less than 1 indicates no timeout.
+     * 
+     * @return maximum length of time in milliseconds to wait for the connection to be established
+     */
+    public int getConnectionRequestTimeout() {
+        return connectionRequestTimeout;
+    }
+
+    /**
+     * Sets the maximum length of time in milliseconds to wait for a connection to be returned from the connection
+     * manager. A value of less than 1 indicates no timeout.
+     * 
+     * @param timeout maximum length of time in milliseconds to wait for the connection to be established
+     */
+    public void setConnectionRequestTimeout(final int timeout) {
+        connectionRequestTimeout = timeout;
     }
 
     /**
@@ -963,6 +990,10 @@ public class HttpClientBuilder {
 
         if (connectionTimeout > 0) {
             requestConfigBuilder.setConnectTimeout(connectionTimeout);
+        }
+        
+        if (connectionRequestTimeout > 0) {
+            requestConfigBuilder.setConnectionRequestTimeout(connectionRequestTimeout);
         }
         
         requestConfigBuilder.setStaleConnectionCheckEnabled(connectionStaleCheck);
