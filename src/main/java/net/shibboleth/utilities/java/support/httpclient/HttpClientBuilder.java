@@ -25,10 +25,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.shibboleth.utilities.java.support.collection.IterableSupport;
-import net.shibboleth.utilities.java.support.logic.Constraint;
-import net.shibboleth.utilities.java.support.primitive.StringSupport;
-
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponseInterceptor;
@@ -46,6 +42,10 @@ import org.apache.http.util.CharsetUtils;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
+
+import net.shibboleth.utilities.java.support.collection.IterableSupport;
+import net.shibboleth.utilities.java.support.logic.Constraint;
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 //TODO retry attempts, keep alive strategy
 
@@ -169,7 +169,7 @@ public class HttpClientBuilder {
      * Whether to check a connection for staleness before using. This can be an expensive operation. Default value:
      * false
      */
-    private boolean connectionStalecheck;
+    private boolean connectionStaleCheck;
 
     /** Host name of the HTTP proxy server through which connections will be made. Default value: null. */
     @Nullable private String connectionProxyHost;
@@ -258,7 +258,7 @@ public class HttpClientBuilder {
         connectionTimeout = -1;
         connectionDisregardTLSCertificate = false;
         connectionCloseAfterResponse = true;
-        connectionStalecheck = false;
+        connectionStaleCheck = false;
         connectionProxyHost = null;
         connectionProxyPort = 8080;
         connectionProxyUsername = null;
@@ -423,9 +423,36 @@ public class HttpClientBuilder {
      * Gets whether reused connections are checked if they are closed before being used by the client.
      * 
      * @return whether reused connections are checked if they are closed before being used by the client
+     * 
+     * @deprecated use {@link #isConnectionStaleCheck()}
      */
     public boolean isConnectionStalecheck() {
-        return connectionStalecheck;
+        return isConnectionStaleCheck();
+    }
+
+    /**
+     * Sets whether reused connections are checked if they are closed before being used by the client. Checking can take
+     * up to 30ms (per request). If checking is turned off an I/O error occurs if the connection is used request. This
+     * should be enabled uncles the code using the client explicitly handles the error case and retries connection as
+     * appropriate.
+     * 
+     * @param check whether reused connections are checked if they are closed before being used by the client
+     * 
+     * @deprecated use {@link #setConnectionStaleCheck(boolean)}
+     */
+    public void setConnectionStalecheck(final boolean check) {
+        setConnectionStaleCheck(check);
+    }
+    
+    /**
+     * Gets whether reused connections are checked if they are closed before being used by the client.
+     * 
+     * @return whether reused connections are checked if they are closed before being used by the client
+     * 
+     * 
+     */
+    public boolean isConnectionStaleCheck() {
+        return connectionStaleCheck;
     }
 
     /**
@@ -436,8 +463,8 @@ public class HttpClientBuilder {
      * 
      * @param check whether reused connections are checked if they are closed before being used by the client
      */
-    public void setConnectionStalecheck(final boolean check) {
-        connectionStalecheck = check;
+    public void setConnectionStaleCheck(final boolean check) {
+        connectionStaleCheck = check;
     }
 
     /**
@@ -937,8 +964,8 @@ public class HttpClientBuilder {
         if (connectionTimeout > 0) {
             requestConfigBuilder.setConnectTimeout(connectionTimeout);
         }
-
-        requestConfigBuilder.setStaleConnectionCheckEnabled(connectionStalecheck);
+        
+        requestConfigBuilder.setStaleConnectionCheckEnabled(connectionStaleCheck);
 
         requestConfigBuilder.setRedirectsEnabled(httpFollowRedirects);
 
