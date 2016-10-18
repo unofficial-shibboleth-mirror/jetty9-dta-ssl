@@ -146,7 +146,7 @@ public class HttpClientBuilder {
     private InetAddress socketLocalAddress;
 
     /**
-     * Maximum period inactivity between two consecutive data packets in milliseconds. Default value: 5000 (5 seconds)
+     * Maximum period inactivity between two consecutive data packets in milliseconds. Default value: 60000 (60 seconds)
      */
     private int socketTimeout;
 
@@ -154,14 +154,14 @@ public class HttpClientBuilder {
     private int socketBufferSize;
 
     /**
-     * Maximum length of time in milliseconds to wait for the connection to be established. Default value: 5000 (5
+     * Maximum length of time in milliseconds to wait for the connection to be established. Default value: 60000 (60
      * seconds)
      */
     private int connectionTimeout;
     
     /**
      * Maximum length of time in milliseconds to wait for a connection to be returned from the connection
-     * manager. Default value: TBD;
+     * manager. Default value: 60000 (60 seconds);
      */
     private int connectionRequestTimeout;
     
@@ -275,9 +275,9 @@ public class HttpClientBuilder {
         maxConnectionsPerRoute = -1;
         socketLocalAddress = null;
         socketBufferSize = 8192;
-        socketTimeout = -1;
-        connectionTimeout = -1;
-        connectionRequestTimeout = -1;
+        socketTimeout = 60*1000;
+        connectionTimeout = 60*1000;
+        connectionRequestTimeout = 60*1000;
         connectionDisregardTLSCertificate = false;
         connectionCloseAfterResponse = true;
         connectionStaleCheck = false;
