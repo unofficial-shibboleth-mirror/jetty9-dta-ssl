@@ -304,7 +304,7 @@ public class HttpClientBuilder {
      * 
      * @param max the max total connection
      */
-    public void setMaxConnectionsTotal(int max) {
+    public void setMaxConnectionsTotal(final int max) {
         maxConnectionsTotal = max;
     }
 
@@ -322,7 +322,7 @@ public class HttpClientBuilder {
      * 
      * @param max the max connections per route
      */
-    public void setMaxConnectionsPerRoute(int max) {
+    public void setMaxConnectionsPerRoute(final int max) {
         maxConnectionsPerRoute = max;
     }
 
