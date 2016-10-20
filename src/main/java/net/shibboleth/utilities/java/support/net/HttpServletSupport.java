@@ -18,17 +18,26 @@
 package net.shibboleth.utilities.java.support.net;
 
 import java.net.URI;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.shibboleth.utilities.java.support.primitive.StringSupport;
-
 import com.google.common.annotations.Beta;
+import com.google.common.base.Function;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Collections2;
+import com.google.common.net.MediaType;
+
+import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
 /** Utilities for working with HTTP Servlet requests and responses. */
 @Beta
 public final class HttpServletSupport {
+    
+    /** Function to strip MediaType parameters. */
+    private static final Function<MediaType, MediaType> STRIP_PARAMS = new StripMediaTypeParametersFunction();
 
     /** Constructor. */
     private HttpServletSupport() {
@@ -99,4 +108,58 @@ public final class HttpServletSupport {
 
         return URI.create(requestUrl.toString());
     }
+    
+    /**
+     * Validate the Content-Type of the specified request.
+     * 
+     * <p>
+     * 2 strategies are supported for evaluating the request's parsed content type:
+     * <ol>
+     * <li>
+     * If isOneOfStrategy is true, then the {@link MediaType} parsed from the request is compared to each 
+     * of the specified valid types via {@link MediaType#is(MediaType)}. If any pass, the type is considered
+     * valid.  This allows use of MediaType's support for wildcard and parameter evaluation.
+     * </li>
+     * <li>
+     * If isOneOfStrategy is false, then the {@link MediaType} parsed from the request is stripped 
+     * of its parameters, as is each of the valid types.  Then a simple evaluation is done that the 
+     * request type is equal to one of the passed types. In this case, only literal types and subtypes 
+     * should be passed as valid types; wildcards should not be used.
+     * </li>
+     * </ol>
+     * </p>
+     * 
+     * @param request the request to be validated
+     * @param validTypes the set of valid media types
+     * @param noContentTypeIsValid flag whether the case of a missing/empty Content-Type header is considered valid
+     * @param isOneOfStrategy flag for the strategy used in the validation (see above for details)
+     * @return true if the content type is valid, false if not
+     */
+    public static boolean validateContentType(final HttpServletRequest request, final Set<MediaType> validTypes, 
+            final boolean noContentTypeIsValid, final boolean isOneOfStrategy) {
+        
+        final String contentType = StringSupport.trimOrNull(request.getContentType());
+        if (contentType != null) {
+            if (isOneOfStrategy) {
+                final MediaType mediaType = MediaType.parse(contentType);
+                for (final MediaType validType : validTypes) {
+                    if (mediaType.is(validType)) {
+                        return true;
+                    }
+                }
+                return false;
+            } else {
+                final MediaType mediaType = MediaType.parse(contentType).withoutParameters();
+                final Set<MediaType> validTypesWithoutParameters = new HashSet<>();
+                validTypesWithoutParameters.addAll(Collections2.filter(
+                        Collections2.transform(validTypes, STRIP_PARAMS), 
+                        Predicates.notNull()));
+                return validTypesWithoutParameters.contains(mediaType);
+            }
+        } else {
+            return noContentTypeIsValid;
+        }
+        
+    }
+    
 }

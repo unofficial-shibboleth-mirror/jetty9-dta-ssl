@@ -17,9 +17,13 @@
 
 package net.shibboleth.utilities.java.support.net;
 
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.Sets;
+import com.google.common.net.MediaType;
 
 /** {@link HttpServletSupport} unit test. */
 public class HttpServletSupportTest {
@@ -59,6 +63,89 @@ public class HttpServletSupportTest {
     }
     
     @Test public void testSetUTF8Encoding(){
+        
+    }
+    
+    @Test public void testValidateContentType() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        
+        // No Content-type
+        Assert.assertTrue(HttpServletSupport.validateContentType(request, 
+                Sets.newHashSet(MediaType.XML_UTF_8), 
+                true, 
+                false));
+        
+        Assert.assertFalse(HttpServletSupport.validateContentType(request, 
+                Sets.newHashSet(MediaType.XML_UTF_8), 
+                false, 
+                false));
+        
+        // With charset parameter
+        request.setContentType("text/xml; charset=utf-8");
+        
+        Assert.assertFalse(HttpServletSupport.validateContentType(request, 
+                Sets.newHashSet(MediaType.create("application", "foobar")), 
+                true, 
+                false));
+        
+        Assert.assertTrue(HttpServletSupport.validateContentType(request, 
+                Sets.newHashSet(MediaType.XML_UTF_8, MediaType.create("application", "foobar")), 
+                true, 
+                false));
+        
+        Assert.assertTrue(HttpServletSupport.validateContentType(request, 
+                Sets.newHashSet(MediaType.XML_UTF_8, MediaType.create("application", "foobar")), 
+                true, 
+                true));
+        
+        Assert.assertTrue(HttpServletSupport.validateContentType(request, 
+                Sets.newHashSet(MediaType.XML_UTF_8.withoutParameters(), MediaType.create("application", "foobar")), 
+                true, 
+                true));
+        
+        Assert.assertTrue(HttpServletSupport.validateContentType(request, 
+                Sets.newHashSet(MediaType.ANY_TEXT_TYPE, MediaType.create("application", "foobar")), 
+                true, 
+                true));
+        
+        Assert.assertTrue(HttpServletSupport.validateContentType(request, 
+                Sets.newHashSet(MediaType.ANY_TYPE, MediaType.create("application", "foobar")), 
+                true, 
+                true));
+        
+        // No parameters
+        request.setContentType("text/xml");
+        
+        Assert.assertFalse(HttpServletSupport.validateContentType(request, 
+                Sets.newHashSet(MediaType.create("application", "foobar")), 
+                true, 
+                false));
+        
+        Assert.assertTrue(HttpServletSupport.validateContentType(request, 
+                Sets.newHashSet(MediaType.XML_UTF_8, MediaType.create("application", "foobar")), 
+                true, 
+                false));
+        
+        // Not valid, because the text/xml valid type includes parameters
+        Assert.assertFalse(HttpServletSupport.validateContentType(request, 
+                Sets.newHashSet(MediaType.XML_UTF_8, MediaType.create("application", "foobar")), 
+                true, 
+                true));
+        
+        Assert.assertTrue(HttpServletSupport.validateContentType(request, 
+                Sets.newHashSet(MediaType.XML_UTF_8.withoutParameters(), MediaType.create("application", "foobar")), 
+                true, 
+                true));
+        
+        Assert.assertTrue(HttpServletSupport.validateContentType(request, 
+                Sets.newHashSet(MediaType.ANY_TEXT_TYPE, MediaType.create("application", "foobar")), 
+                true, 
+                true));
+        
+        Assert.assertTrue(HttpServletSupport.validateContentType(request, 
+                Sets.newHashSet(MediaType.ANY_TYPE, MediaType.create("application", "foobar")), 
+                true, 
+                true));
         
     }
 }
