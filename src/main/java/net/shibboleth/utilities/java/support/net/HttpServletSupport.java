@@ -18,16 +18,12 @@
 package net.shibboleth.utilities.java.support.net;
 
 import java.net.URI;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.common.annotations.Beta;
-import com.google.common.base.Function;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Collections2;
 import com.google.common.net.MediaType;
 
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
@@ -35,9 +31,6 @@ import net.shibboleth.utilities.java.support.primitive.StringSupport;
 /** Utilities for working with HTTP Servlet requests and responses. */
 @Beta
 public final class HttpServletSupport {
-    
-    /** Function to strip MediaType parameters. */
-    private static final Function<MediaType, MediaType> STRIP_PARAMS = new StripMediaTypeParametersFunction();
 
     /** Constructor. */
     private HttpServletSupport() {
@@ -138,28 +131,8 @@ public final class HttpServletSupport {
     public static boolean validateContentType(final HttpServletRequest request, final Set<MediaType> validTypes, 
             final boolean noContentTypeIsValid, final boolean isOneOfStrategy) {
         
-        final String contentType = StringSupport.trimOrNull(request.getContentType());
-        if (contentType != null) {
-            if (isOneOfStrategy) {
-                final MediaType mediaType = MediaType.parse(contentType);
-                for (final MediaType validType : validTypes) {
-                    if (mediaType.is(validType)) {
-                        return true;
-                    }
-                }
-                return false;
-            } else {
-                final MediaType mediaType = MediaType.parse(contentType).withoutParameters();
-                final Set<MediaType> validTypesWithoutParameters = new HashSet<>();
-                validTypesWithoutParameters.addAll(Collections2.filter(
-                        Collections2.transform(validTypes, STRIP_PARAMS), 
-                        Predicates.notNull()));
-                return validTypesWithoutParameters.contains(mediaType);
-            }
-        } else {
-            return noContentTypeIsValid;
-        }
-        
+        return MediaTypeSupport.validateContentType(request.getContentType(), validTypes, 
+                noContentTypeIsValid, isOneOfStrategy);
     }
     
 }
