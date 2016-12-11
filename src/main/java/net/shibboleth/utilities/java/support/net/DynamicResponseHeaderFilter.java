@@ -74,9 +74,10 @@ public class DynamicResponseHeaderFilter implements Filter {
         if (map != null) {
             headers = new HashMap<>(map.size());
             for (final Map.Entry<String,String> entry : map.entrySet()) {
-                final String trimmed = StringSupport.trimOrNull(entry.getKey());
-                if (trimmed != null && entry.getValue() != null) {
-                    headers.put(trimmed, entry.getValue());
+                final String trimmedName = StringSupport.trimOrNull(entry.getKey());
+                final String trimmedValue = StringSupport.trimOrNull(entry.getValue());
+                if (trimmedName != null && trimmedValue != null) {
+                    headers.put(trimmedName, trimmedValue);
                 }
             }
         } else {
