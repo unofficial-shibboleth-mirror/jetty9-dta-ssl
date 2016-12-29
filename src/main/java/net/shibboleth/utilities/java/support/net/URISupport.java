@@ -282,9 +282,9 @@ public final class URISupport {
         for (final String paramPair : paramPairs) {
             param = paramPair.split("=");
             if (param.length == 1) {
-                queryParams.add(new Pair(doURLDecode(param[0]), null));
+                queryParams.add(new Pair<>(doURLDecode(param[0]), (String) null));
             } else {
-                queryParams.add(new Pair(doURLDecode(param[0]), doURLDecode(param[1])));
+                queryParams.add(new Pair<>(doURLDecode(param[0]), doURLDecode(param[1])));
             }
         }
 

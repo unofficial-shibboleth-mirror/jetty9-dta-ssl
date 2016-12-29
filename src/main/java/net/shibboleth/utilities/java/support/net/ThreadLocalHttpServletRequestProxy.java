@@ -54,7 +54,7 @@ public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
     }
 
     /** {@inheritDoc} */
-    public Enumeration getAttributeNames() {
+    public Enumeration<String> getAttributeNames() {
         return getCurrent().getAttributeNames();
     }
 
@@ -89,7 +89,7 @@ public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
     }
 
     /** {@inheritDoc} */
-    public Enumeration getParameterNames() {
+    public Enumeration<String> getParameterNames() {
         return getCurrent().getParameterNames();
     }
 
@@ -99,7 +99,7 @@ public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
     }
 
     /** {@inheritDoc} */
-    public Map getParameterMap() {
+    public Map<String,String[]> getParameterMap() {
         return getCurrent().getParameterMap();
     }
 
@@ -154,7 +154,7 @@ public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
     }
 
     /** {@inheritDoc} */
-    public Enumeration getLocales() {
+    public Enumeration<Locale> getLocales() {
         return getCurrent().getLocales();
     }
 
@@ -215,12 +215,12 @@ public class ThreadLocalHttpServletRequestProxy implements HttpServletRequest {
     }
 
     /** {@inheritDoc} */
-    public Enumeration getHeaders(final String name) {
+    public Enumeration<String> getHeaders(final String name) {
         return getCurrent().getHeaders(name);
     }
 
     /** {@inheritDoc} */
-    public Enumeration getHeaderNames() {
+    public Enumeration<String> getHeaderNames() {
         return getCurrent().getHeaderNames();
     }
 

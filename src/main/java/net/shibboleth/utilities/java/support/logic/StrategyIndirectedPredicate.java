@@ -75,6 +75,9 @@ public class StrategyIndirectedPredicate<T1,T2> implements Predicate<T1> {
     /**
      * Factory method for predicate-based constructor.
      * 
+     * @param <T1> type of object used as the source of the data to compare
+     * @param <T2> type of object being compared
+     * 
      * @param objectStrategy the lookup strategy for object
      * @param pred the predicate to apply
      * 
@@ -82,13 +85,16 @@ public class StrategyIndirectedPredicate<T1,T2> implements Predicate<T1> {
      * 
      * @since 7.3.0
      */
-    @Nonnull public static StrategyIndirectedPredicate forPredicate(@Nonnull final Function objectStrategy,
-            @Nonnull final Predicate pred) {
-        return new StrategyIndirectedPredicate(objectStrategy, pred);
+    @Nonnull public static <T1,T2> StrategyIndirectedPredicate<T1,T2> forPredicate(
+            @Nonnull final Function<T1,T2> objectStrategy, @Nonnull final Predicate<T2> pred) {
+        return new StrategyIndirectedPredicate<>(objectStrategy, pred);
     }
 
     /**
      * Factory method for collection-based constructor.
+     * 
+     * @param <T1> type of object used as the source of the data to compare
+     * @param <T2> type of object being compared
      * 
      * @param objectStrategy the lookup strategy for object
      * @param collection a collection to test for containment
@@ -97,9 +103,9 @@ public class StrategyIndirectedPredicate<T1,T2> implements Predicate<T1> {
      * 
      * @since 7.3.0
      */
-    @Nonnull public static StrategyIndirectedPredicate forCollection(@Nonnull final Function objectStrategy,
-            @Nonnull final Collection collection) {
-        return new StrategyIndirectedPredicate(objectStrategy, collection);
+    @Nonnull public static <T1,T2> StrategyIndirectedPredicate<T1,T2> forCollection(
+            @Nonnull final Function<T1,T2> objectStrategy, @Nonnull final Collection<T2> collection) {
+        return new StrategyIndirectedPredicate<>(objectStrategy, collection);
     }
 
 }

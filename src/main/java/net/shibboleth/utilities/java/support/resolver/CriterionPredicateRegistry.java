@@ -188,17 +188,18 @@ public class CriterionPredicateRegistry<T> {
             final String predicateName = mappings.getProperty(criterionName);
 
             final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            Class criterionClass = null;
+            Class<? extends Criterion> criterionClass = null;
             try {
-                criterionClass = classLoader.loadClass(criterionName);
+                criterionClass = classLoader.loadClass(criterionName).asSubclass(Criterion.class);
             } catch (final ClassNotFoundException e) {
                 log.error("Could not find Criterion class '{}', skipping registration", criterionName);
                 continue;
             }
 
-            Class predicateClass = null;
+            Class<? extends Predicate<T>> predicateClass = null;
             try {
-                predicateClass = classLoader.loadClass(predicateName);
+                predicateClass = (Class<? extends Predicate<T>>) classLoader.loadClass(
+                        predicateName).asSubclass(Predicate.class);
             } catch (final ClassNotFoundException e) {
                 log.error("Could not find Predicate class '{}', skipping registration", criterionName);
                 continue;

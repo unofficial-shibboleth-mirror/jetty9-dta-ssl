@@ -228,17 +228,17 @@ public class SelfSignedCertificateGenerator {
         // Write the requested files.
         
         if (args.privateKeyFile != null) {
-            final JcaPEMWriter keyOut = new JcaPEMWriter(new FileWriter(args.privateKeyFile));
-            keyOut.writeObject(keypair.getPrivate());
-            keyOut.flush();
-            keyOut.close();
+            try (final JcaPEMWriter keyOut = new JcaPEMWriter(new FileWriter(args.privateKeyFile))) {
+                keyOut.writeObject(keypair.getPrivate());
+                keyOut.flush();
+            }
         }
 
         if (args.certificateFile != null) {
-            final JcaPEMWriter certOut = new JcaPEMWriter(new FileWriter(args.certificateFile));
-            certOut.writeObject(certificate);
-            certOut.flush();
-            certOut.close();
+            try (final JcaPEMWriter certOut = new JcaPEMWriter(new FileWriter(args.certificateFile))) {
+                certOut.writeObject(certificate);
+                certOut.flush();
+            }
         }
 
         if (args.keystoreFile != null) {
@@ -247,10 +247,10 @@ public class SelfSignedCertificateGenerator {
             store.setKeyEntry(args.hostname, keypair.getPrivate(), args.keystorePassword.toCharArray(),
                     new X509Certificate[] {certificate});
 
-            final FileOutputStream keystoreOut = new FileOutputStream(args.keystoreFile);
-            store.store(keystoreOut, args.keystorePassword.toCharArray());
-            keystoreOut.flush();
-            keystoreOut.close();
+            try (final FileOutputStream keystoreOut = new FileOutputStream(args.keystoreFile)) {
+                store.store(keystoreOut, args.keystorePassword.toCharArray());
+                keystoreOut.flush();
+            }
         }
     }
 

@@ -266,7 +266,7 @@ public class BasicKeystoreKeyStrategy extends AbstractInitializableComponent imp
         ComponentSupport.ifNotInitializedThrowUninitializedComponentException(this);
         
         synchronized(this) {
-            return new Pair(currentAlias, defaultKey);
+            return new Pair<>(currentAlias, defaultKey);
         }
     }
     

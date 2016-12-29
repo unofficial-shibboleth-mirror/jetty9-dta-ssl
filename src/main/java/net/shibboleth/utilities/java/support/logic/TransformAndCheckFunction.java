@@ -89,7 +89,7 @@ public class TransformAndCheckFunction<T> implements Function<T, Optional<? exte
         }
 
         if (obj instanceof TransformAndCheckFunction) {
-            final TransformAndCheckFunction<T> other = (TransformAndCheckFunction<T>) obj;
+            final TransformAndCheckFunction<?> other = (TransformAndCheckFunction<?>) obj;
             return java.util.Objects.equals(preprocessor, other.preprocessor)
                     && java.util.Objects.equals(constraint, other.constraint)
                     && java.util.Objects.equals(failOnConstraintViolation, other.failOnConstraintViolation);

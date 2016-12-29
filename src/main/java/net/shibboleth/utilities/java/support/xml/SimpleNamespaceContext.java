@@ -54,7 +54,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
      * @param prefixToUriMappings Maps prefix values to the corresponding namespace URIs.
      */
     public SimpleNamespaceContext(@Nullable @NullableElements final Map<String, String> prefixToUriMappings) {
-        final Builder mappingBuilder = getMappingsBuilder();
+        final Builder<String,String> mappingBuilder = getMappingsBuilder();
 
         if (prefixToUriMappings == null || prefixToUriMappings.isEmpty()) {
             mappings = mappingBuilder.build();
@@ -121,7 +121,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
      * @return initial set of mappings
      */
     @Nonnull private Builder<String, String> getMappingsBuilder(){
-        final Builder mappingBuilder = new Builder<String, String>();
+        final Builder<String,String> mappingBuilder = new Builder<>();
         
         mappingBuilder.put(XMLConstants.XML_PREFIX, XMLConstants.XML_NS);
         mappingBuilder.put(XMLConstants.XMLNS_PREFIX, XMLConstants.XMLNS_NS);

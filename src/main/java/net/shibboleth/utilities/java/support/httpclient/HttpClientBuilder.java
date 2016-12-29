@@ -869,7 +869,7 @@ public class HttpClientBuilder {
      * @param interceptors the list of interceptors, may be null
      */
     public void setLastRequestInterceptors(final List<HttpRequestInterceptor> interceptors) {
-        requestInterceptorsLast = (List<HttpRequestInterceptor>) normalizeInterceptors(interceptors);
+        requestInterceptorsLast = normalizeInterceptors(interceptors);
     }
 
     /**
@@ -887,7 +887,7 @@ public class HttpClientBuilder {
      * @param interceptors the list of interceptors, may be null
      */
     public void setFirstResponseInterceptors(final List<HttpResponseInterceptor> interceptors) {
-        responseInterceptorsFirst = (List<HttpResponseInterceptor>) normalizeInterceptors(interceptors);
+        responseInterceptorsFirst = normalizeInterceptors(interceptors);
     }
 
     /**
@@ -905,17 +905,18 @@ public class HttpClientBuilder {
      * @param interceptors the list of interceptors, may be null
      */
     public void setLastResponseInterceptors(final List<HttpResponseInterceptor> interceptors) {
-        responseInterceptorsLast = (List<HttpResponseInterceptor>) normalizeInterceptors(interceptors);
+        responseInterceptorsLast = normalizeInterceptors(interceptors);
     }
 
     /**
      * Normalize and copy the supplied list of interceptors to remove nulls.
      * 
+     * @param <T> type of collection to normalize
+     * 
      * @param interceptors the list of interceptors to normalize
      * @return copy of input list without nulls, may be null
      */
-    @Nullable private List<? extends Object> normalizeInterceptors(
-            @Nullable final List<? extends Object> interceptors) {
+    @Nullable private <T> List<T> normalizeInterceptors(@Nullable final List<T> interceptors) {
         if (interceptors == null) {
             return null;
         } else {

@@ -66,18 +66,15 @@ public final class StringSupport {
             charsetDecoder = Charset.defaultCharset().newDecoder();
         }
 
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(input, charsetDecoder));
-
-        final StringBuilder stringBuffer = new StringBuilder();
-        String line = reader.readLine();
-        while (line != null) {
-            stringBuffer.append(line).append("\n");
-            line = reader.readLine();
+        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(input, charsetDecoder))) {
+            final StringBuilder stringBuffer = new StringBuilder();
+            String line = reader.readLine();
+            while (line != null) {
+                stringBuffer.append(line).append("\n");
+                line = reader.readLine();
+            }
+            return stringBuffer.toString();
         }
-
-        reader.close();
-
-        return stringBuffer.toString();
     }
 
     /**
