@@ -58,7 +58,6 @@ public final class StringSupport {
      * 
      * @throws IOException thrown if there is a problem reading from the stream and decoding it
      */
-    // TODO port from v2, not sure if correct
     @Nonnull public static String inputStreamToString(@Nonnull final InputStream input,
             @Nullable final CharsetDecoder decoder) throws IOException {
         CharsetDecoder charsetDecoder = decoder;
