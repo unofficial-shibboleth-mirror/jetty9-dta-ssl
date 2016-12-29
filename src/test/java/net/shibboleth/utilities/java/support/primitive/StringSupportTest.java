@@ -17,6 +17,8 @@
 
 package net.shibboleth.utilities.java.support.primitive;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -24,6 +26,8 @@ import java.util.List;
 
 import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -42,6 +46,19 @@ public class StringSupportTest {
 
     private static final List<String> TEST_LIST_AS_LIST = Arrays.asList("1", "x2", "y3", "z4", "5", "6", "");
 
+    @Test public void testInputStreamToString() throws IOException {
+        String str = null;
+        final Resource resource = new ClassPathResource("/net/shibboleth/utilities/java/support/primitive/data.txt");
+        try (final InputStream stream = resource.getInputStream()) {
+            str = StringSupport.inputStreamToString(stream, null);
+        }
+        Assert.assertNotNull(str);
+        Assert.assertEquals(str,
+                "The quick, brown lizard jumped over the lazy fish.\n" +
+                "Wait, I mean the slow, blue elephant jumped over the motivated squirrel.\n" +
+                "No, that's wrong too.\n");
+    }
+    
     @Test public void testListToStringValue() {
         Assert.assertEquals(StringSupport.listToStringValue(TEST_LIST_AS_LIST, SEPARATOR), TEST_LIST,
                 "toList<String> fails");
