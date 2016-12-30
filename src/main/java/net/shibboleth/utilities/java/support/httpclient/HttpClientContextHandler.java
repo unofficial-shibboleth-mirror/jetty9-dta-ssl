@@ -27,6 +27,8 @@ import org.apache.http.client.protocol.HttpClientContext;
 
 /**
  * Extension that allows the {@link HttpClientContext} to be externally manipulated before use.
+ * 
+ * @since 7.4.0
  */
 @ThreadSafe
 public interface HttpClientContextHandler {
