@@ -22,18 +22,18 @@ import javax.annotation.Nonnull;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
 
-import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Base32;
 
 /**
- * Helper class for working with {@link Base64}.
+ * Helper class for working with {@link Base32}.
  * 
  * <p>
  * This helper class specifically addresses that waste of the Apache Codec encode/decode static methods creating new
- * instances of the {@link Base64} for every operation. It also provides the helper method to produce both chunked and
+ * instances of the {@link Base32} for every operation. It also provides the helper method to produce both chunked and
  * unchunked encoded content as strings.
  * </p>
  */
-public final class Base64Support {
+public final class Base32Support {
 
     /** Chunk the encoded data into 76-character lines broken by CRLF characters. */
     public static final boolean CHUNKED = true;
@@ -42,23 +42,23 @@ public final class Base64Support {
     public static final boolean UNCHUNKED = false;
 
     /** Encoder used to produce chunked output. */
-    private static final Base64 CHUNKED_ENCODER = new Base64(76, new byte[] { '\n' });
+    private static final Base32 CHUNKED_ENCODER = new Base32(76, new byte[] { '\n' });
 
     /** Encoder used to produce unchunked output. */
-    private static final Base64 UNCHUNKED_ENCODER = new Base64(0, new byte[] { '\n' });
+    private static final Base32 UNCHUNKED_ENCODER = new Base32(0, new byte[] { '\n' });
 
     /** Constructor. */
-    private Base64Support() {
+    private Base32Support() {
 
     }
 
     /**
-     * Base64 encodes the given binary data.
+     * Base32 encodes the given binary data.
      * 
      * @param data data to encode
      * @param chunked whether the encoded data should be chunked or not
      * 
-     * @return the base64 encoded data
+     * @return the base32 encoded data
      */
     @Nonnull public static String encode(@Nonnull final byte[] data, final boolean chunked) {
         Constraint.isNotNull(data, "Binary data to be encoded can not be null");
@@ -70,14 +70,14 @@ public final class Base64Support {
     }
 
     /**
-     * Decodes (un)chunked Base64 encoded data.
+     * Decodes (un)chunked Base32 encoded data.
      * 
-     * @param data Base64 encoded data
+     * @param data Base32 encoded data
      * 
      * @return the decoded data
      */
     @Nonnull public static byte[] decode(@Nonnull final String data) {
-        Constraint.isNotNull(data, "Base64 encoded data can not be null");
+        Constraint.isNotNull(data, "Base32 encoded data cannot be null");
         return CHUNKED_ENCODER.decode(data);
     }
 }
