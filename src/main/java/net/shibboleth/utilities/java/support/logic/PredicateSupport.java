@@ -18,7 +18,9 @@
 package net.shibboleth.utilities.java.support.logic;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
 /**
@@ -65,4 +67,26 @@ public final class PredicateSupport {
     @Nonnull public static Predicate<CharSequence> caseInsensitiveMatch(@Nonnull final String target) {
         return new CaseInsensitiveStringMatchPredicate(target);
     }
+    
+    /**
+     * Creates a predicate that applies a function to an input and returns its result, or a default value
+     * if null.
+     * 
+     * @param <T> type of function input
+     * 
+     * @param function function to apply to input
+     * @param defValue default value if function returns null
+     * 
+     * @return a predicate adapter 
+     */
+    @Nonnull public static <T> Predicate<T> fromFunction(@Nonnull final Function<T,Boolean> function,
+            final boolean defValue) {
+        return new Predicate<T>() {
+            public boolean apply(@Nullable final T input) {
+                final Boolean result = function.apply(input);
+                return result != null ? result : defValue;
+            }
+        };
+    }
+    
 }
