@@ -75,16 +75,18 @@ public final class PredicateSupport {
      * @param <T> type of function input
      * 
      * @param function function to apply to input
-     * @param defValue default value if function returns null
+     * @param defValue default predicate to apply if function returns null
      * 
-     * @return a predicate adapter 
+     * @return a predicate adapter
+     * 
+     *  @since 7.4.0
      */
     @Nonnull public static <T> Predicate<T> fromFunction(@Nonnull final Function<T,Boolean> function,
-            final boolean defValue) {
+            @Nonnull final Predicate<T> defValue) {
         return new Predicate<T>() {
             public boolean apply(@Nullable final T input) {
                 final Boolean result = function.apply(input);
-                return result != null ? result : defValue;
+                return result != null ? result : defValue.apply(input);
             }
         };
     }
