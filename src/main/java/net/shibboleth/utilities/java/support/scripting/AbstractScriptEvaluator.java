@@ -187,6 +187,7 @@ public abstract class AbstractScriptEvaluator {
             
         } catch (final ScriptException e) {
             if (getHideExceptions()) {
+                log.warn("{} Suppressing exception thrown by script", getLogPrefix(), e);
                 return getReturnOnError();
             }
             throw new RuntimeException(e);
