@@ -66,22 +66,9 @@ public abstract class AbstractScriptEvaluator {
      * Constructor.
      * 
      * @param theScript the script we will evaluate.
-     * @param extraInfo debugging information.
-     */
-    public AbstractScriptEvaluator(@Nonnull @ParameterName(name="theScript") final EvaluableScript theScript,
-            @Nullable @NotEmpty @ParameterName(name="extraInfo") final String extraInfo) {
-        script = Constraint.isNotNull(theScript, "Supplied script should not be null");
-        setLogPrefix("Scripted Predicate from " + extraInfo + ":");
-    }
-
-    /**
-     * Constructor.
-     * 
-     * @param theScript the script we will evaluate.
      */
     public AbstractScriptEvaluator(@Nonnull @ParameterName(name="theScript") final EvaluableScript theScript) {
-        script = Constraint.isNotNull(theScript, "Supplied script should not be null");
-        setLogPrefix("Anonymous Scripted Predicate:");
+        script = Constraint.isNotNull(theScript, "Supplied script cannot be null");
     }
 
     /**
