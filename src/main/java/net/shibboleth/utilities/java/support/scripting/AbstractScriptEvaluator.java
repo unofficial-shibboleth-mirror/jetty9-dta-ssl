@@ -168,7 +168,7 @@ public abstract class AbstractScriptEvaluator {
      * 
      * @return script result
      */
-    protected Object evaluate(@Nullable final Object... input) {
+    @Nullable protected Object evaluate(@Nullable final Object... input) {
         final SimpleScriptContext scriptContext = new SimpleScriptContext();
         scriptContext.setAttribute("custom", getCustomObject(), ScriptContext.ENGINE_SCOPE);
         
@@ -183,7 +183,7 @@ public abstract class AbstractScriptEvaluator {
                 return getReturnOnError();
             }
             
-            return result;
+            return finalizeContext(scriptContext, result);
             
         } catch (final ScriptException e) {
             if (getHideExceptions()) {
@@ -202,4 +202,19 @@ public abstract class AbstractScriptEvaluator {
      */
     protected abstract void prepareContext(@Nonnull final ScriptContext scriptContext, @Nullable final Object... input);
 
+    /**
+     * Complete processing by evaluating the result of the script and returning the final result to the caller.
+     * 
+     *  <p>The default implementation just returns the result.</p> 
+     * 
+     * @param scriptContext the context after execution
+     * @param scriptResult the result of script execution
+     * 
+     * @return the final result to return, or null
+     * @throws ScriptException to signal a failure after script execution
+     */
+    @Nullable protected Object finalizeContext(@Nonnull final ScriptContext scriptContext,
+            @Nullable final Object scriptResult) throws ScriptException {
+        return scriptResult;
+    }
 }
