@@ -109,18 +109,18 @@ public final class DeprecationSupport {
             @Nullable final String context, @Nullable final String replacement) {
         
         if (context != null && replacement != null) {
-            LOG.warn("DEPRECATED {} '{}', ({}):"
+            LOG.warn("{} '{}', ({}):"
                         + " This will be removed in the next major version of this software; replacement is {}",
                     type, name, context, replacement);
         } else if (context != null) {
-            LOG.warn("DEPRECATED {} '{}', ({}): This will be removed in the next major version of this software",
+            LOG.warn("{} '{}', ({}): This will be removed in the next major version of this software",
                 type, name, context);
         } else if (replacement != null) {
-            LOG.warn("DEPRECATED {} '{}':"
+            LOG.warn("{} '{}':"
                     + " This will be removed in the next major version of this software; replacement is {}",
                 type, name, replacement);
         } else {
-            LOG.warn("DEPRECATED {} '{}': This will be removed in the next major version of this software.",
+            LOG.warn("{} '{}': This will be removed in the next major version of this software.",
                     type, name);
         }
     }
