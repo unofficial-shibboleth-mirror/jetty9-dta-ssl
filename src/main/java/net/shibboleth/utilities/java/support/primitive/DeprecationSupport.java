@@ -33,8 +33,11 @@ import net.shibboleth.utilities.java.support.annotation.constraint.NotEmpty;
 /** Helper methods for reporting usage of deprecated features. */
 public final class DeprecationSupport {
 
+    /** Log category name for warnings. */
+    @Nonnull @NotEmpty public static final String LOG_CATEGORY = "DEPRECATED";
+    
     /** Class logger. */
-    @Nonnull private static final Logger LOG = LoggerFactory.getLogger(DeprecationSupport.class);
+    @Nonnull private static final Logger LOG = LoggerFactory.getLogger(LOG_CATEGORY);
     
     /** Tracks issued warnings. */
     @Nonnull @NonnullElements private static final Set<String> WARNED_SET = new HashSet<>();
