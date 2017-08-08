@@ -19,7 +19,7 @@ package net.shibboleth.utilities.java.support.resolver;
 
 import java.util.Set;
 
-import org.junit.Assert;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
@@ -29,10 +29,10 @@ public class ResolverSupportTest {
     
     @Test
     public void testGetPredicates() throws ResolverException {
-        CriterionPredicateRegistry<Foo> registry = new CriterionPredicateRegistry<>();
+        final CriterionPredicateRegistry<Foo> registry = new CriterionPredicateRegistry<>();
         registry.register(TestCriterion.class, FooPredicate.class);
         
-        EvaluableTestFooCriterion evaluableCriterion = new EvaluableTestFooCriterion();
+        final EvaluableTestFooCriterion evaluableCriterion = new EvaluableTestFooCriterion();
         
         Set<Predicate<Foo>> predicates;
         
@@ -41,7 +41,7 @@ public class ResolverSupportTest {
         Assert.assertNotNull(predicates);
         Assert.assertEquals(predicates.size(), 0);
         
-        CriteriaSet criteria = new CriteriaSet();
+        final CriteriaSet criteria = new CriteriaSet();
         
         predicates = ResolverSupport.getPredicates(criteria, EvaluableFooCriterion.class, registry);
         Assert.assertNotNull(predicates);
@@ -65,8 +65,8 @@ public class ResolverSupportTest {
     
     @Test
     public void testGetFilteredIterable() {
-        Foo foo1 = new Foo();
-        Foo foo2 = new Foo();
+        final Foo foo1 = new Foo();
+        final Foo foo2 = new Foo();
         
         Iterable<Foo> result;
         Set<Foo> resultSet;

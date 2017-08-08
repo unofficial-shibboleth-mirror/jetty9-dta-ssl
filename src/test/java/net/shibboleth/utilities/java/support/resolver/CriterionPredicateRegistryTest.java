@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.junit.Assert;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -41,7 +41,7 @@ public class CriterionPredicateRegistryTest {
     
     @Test
     public void testExplictRegisterDeregister() throws ResolverException {
-        CriterionPredicateRegistry<Foo> registry = new CriterionPredicateRegistry<>();
+        final CriterionPredicateRegistry<Foo> registry = new CriterionPredicateRegistry<>();
         Predicate<Foo> predicate;
         
         Assert.assertNull(registry.getPredicate(fooCriterion));
@@ -65,43 +65,43 @@ public class CriterionPredicateRegistryTest {
     
     @Test
     public void testRelativeClassPathResourceLoad() throws ResolverException {
-        CriterionPredicateRegistry<Foo> registry = new CriterionPredicateRegistry<>();
+        final CriterionPredicateRegistry<Foo> registry = new CriterionPredicateRegistry<>();
         
         Assert.assertNull(registry.getPredicate(fooCriterion));
         
         registry.loadMappings("test-criterion-predicate-mappings.properties");
         
-        Predicate<Foo> predicate = registry.getPredicate(fooCriterion);
+        final Predicate<Foo> predicate = registry.getPredicate(fooCriterion);
         Assert.assertNotNull(predicate);
         Assert.assertTrue(fooPredicateClass.isInstance(predicate));
     }
     
     @Test
     public void testAbsoluteClassPathResourceLoad() throws ResolverException {
-        CriterionPredicateRegistry<Foo> registry = new CriterionPredicateRegistry<>();
+        final CriterionPredicateRegistry<Foo> registry = new CriterionPredicateRegistry<>();
         
         Assert.assertNull(registry.getPredicate(fooCriterion));
         
         registry.loadMappings("/net/shibboleth/utilities/java/support/resolver/test-criterion-predicate-mappings.properties");
         
-        Predicate<Foo> predicate = registry.getPredicate(fooCriterion);
+        final Predicate<Foo> predicate = registry.getPredicate(fooCriterion);
         Assert.assertNotNull(predicate);
         Assert.assertTrue(fooPredicateClass.isInstance(predicate));
     }
     
     @Test
     public void testPropertiesLoad() throws ResolverException, IOException {
-        CriterionPredicateRegistry<Foo> registry = new CriterionPredicateRegistry<>();
+        final CriterionPredicateRegistry<Foo> registry = new CriterionPredicateRegistry<>();
         
         Assert.assertNull(registry.getPredicate(fooCriterion));
         
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
         try (InputStream is = this.getClass().getResourceAsStream("test-criterion-predicate-mappings.properties")) {
             properties.load(is);;
         }
         registry.loadMappings(properties);
         
-        Predicate<Foo> predicate = registry.getPredicate(fooCriterion);
+        final Predicate<Foo> predicate = registry.getPredicate(fooCriterion);
         Assert.assertNotNull(predicate);
         Assert.assertTrue(fooPredicateClass.isInstance(predicate));
     }
