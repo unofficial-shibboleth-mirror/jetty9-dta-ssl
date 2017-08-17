@@ -29,6 +29,7 @@ import net.shibboleth.utilities.java.support.component.AbstractIdentifiableIniti
 import net.shibboleth.utilities.java.support.component.ComponentInitializationException;
 import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.component.UnmodifiableComponent;
+import net.shibboleth.utilities.java.support.primitive.TimerSupport;
 
 import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;
@@ -192,7 +193,7 @@ public abstract class AbstractReloadableService<T> extends AbstractIdentifiableI
         if (reloadCheckDelay > 0) {
             if (null == reloadTaskTimer) {
                 log.debug("{} No reload task timer specified, creating default", getLogPrefix());
-                internalTaskTimer = new Timer("Timer for " + getId(), true);
+                internalTaskTimer = new Timer(TimerSupport.getTimerName(this), true);
             } else {
                 internalTaskTimer = reloadTaskTimer;
             }

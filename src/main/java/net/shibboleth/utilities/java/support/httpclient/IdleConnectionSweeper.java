@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import net.shibboleth.utilities.java.support.component.DestroyedComponentException;
 import net.shibboleth.utilities.java.support.component.DestructableComponent;
 import net.shibboleth.utilities.java.support.logic.Constraint;
+import net.shibboleth.utilities.java.support.primitive.TimerSupport;
 
 import org.apache.http.conn.HttpClientConnectionManager;
 
@@ -59,7 +60,7 @@ public class IdleConnectionSweeper implements DestructableComponent {
      */
     public IdleConnectionSweeper(@Nonnull final HttpClientConnectionManager manager, final long idleTimeout,
             final long sweepInterval) {
-        this(manager, idleTimeout, sweepInterval, new Timer(true));
+        this(manager, idleTimeout, sweepInterval, new Timer(TimerSupport.getTimerName(IdleConnectionSweeper.class.getName(), null), true));
         createdTimer = true;
     }
 

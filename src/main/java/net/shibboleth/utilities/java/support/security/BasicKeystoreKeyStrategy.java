@@ -45,6 +45,7 @@ import net.shibboleth.utilities.java.support.component.ComponentSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.logic.ConstraintViolationException;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
+import net.shibboleth.utilities.java.support.primitive.TimerSupport;
 import net.shibboleth.utilities.java.support.resource.Resource;
 
 import org.slf4j.Logger;
@@ -238,7 +239,7 @@ public class BasicKeystoreKeyStrategy extends AbstractInitializableComponent imp
                 }
             };
             if (updateTaskTimer == null) {
-                internalTaskTimer = new Timer(true);
+                internalTaskTimer = new Timer(TimerSupport.getTimerName(this), true);
             } else {
                 internalTaskTimer = updateTaskTimer;
             }

@@ -32,6 +32,7 @@ import net.shibboleth.utilities.java.support.component.DestructableComponent;
 import net.shibboleth.utilities.java.support.component.InitializableComponent;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
+import net.shibboleth.utilities.java.support.primitive.TimerSupport;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
@@ -345,7 +346,7 @@ public class FileCachingHttpClientBuilder extends HttpClientBuilder {
 
         /** {@inheritDoc} */
         public void initialize() throws ComponentInitializationException {
-            timer = new Timer(true);
+            timer = new Timer(TimerSupport.getTimerName(this), true);
             maintenanceTask = new StorageMaintenanceTask(storage);
             timer.schedule(maintenanceTask, maintenanceTaskInterval, maintenanceTaskInterval);
             
