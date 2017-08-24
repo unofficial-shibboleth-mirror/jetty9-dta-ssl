@@ -77,7 +77,10 @@ public final class DeprecationSupport {
         ATTRIBUTE("XML Attribute"),
         
         /** Spring web flow. */
-        WEBFLOW("Spring WebFlow");
+        WEBFLOW("Spring WebFlow"),
+
+        /** Spring web flow. */
+        ACTION("Spring WebFlow Action");
         
         /** Printed version. */
         @Nonnull @NotEmpty private final String text;
