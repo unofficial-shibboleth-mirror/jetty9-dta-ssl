@@ -80,7 +80,10 @@ public final class DeprecationSupport {
         WEBFLOW("Spring WebFlow"),
 
         /** Spring web flow. */
-        ACTION("Spring WebFlow Action");
+        ACTION("Spring WebFlow action"),
+        
+        /** Configuration approach. */
+        CONFIGURATION("configuration");
         
         /** Printed version. */
         @Nonnull @NotEmpty private final String text;
