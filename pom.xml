@@ -6,8 +6,8 @@
 
     <parent>
         <groupId>net.shibboleth</groupId>
-        <artifactId>parent-v3</artifactId>
-        <version>TRUNK-SNAPSHOT</version>
+        <artifactId>parent</artifactId>
+        <version>7.11.0-SNAPSHOT</version>
     </parent>
 
     <groupId>net.shibboleth.utilities.jetty9</groupId>
@@ -20,9 +20,9 @@
         This is a simple extension to SslContextFactory that supports
         client cert authentication but delegates all of the trust verification
         of the certificate to the application that received the request.
-        
+
         PLEASE READ THE ABOVE AGAIN. Use of this plugin with an application that does not
-        validate the trustworthiness of a provided client certificate will lead to insecure code. 
+        validate the trustworthiness of a provided client certificate will lead to insecure code.
     </description>
 
     <properties>
