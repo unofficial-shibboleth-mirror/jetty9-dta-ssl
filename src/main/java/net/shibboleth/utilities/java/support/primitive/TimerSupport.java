@@ -37,7 +37,8 @@ public final class TimerSupport {
      * 
      * <p>The base name will constructed as follows:
      * <ul>
-     *  <li>if target is instance of {@link IdentifiedComponent}, use {@link IdentifiedComponent#getId()} if non-empty</li>
+     *  <li>if target is instance of {@link IdentifiedComponent},
+     *  use {@link IdentifiedComponent#getId()} if non-empty</li>
      *  <li>use {@link #toString()} if non-empty</li>
      *  <li>use serialized class name</li>
      * </ul>
@@ -46,7 +47,7 @@ public final class TimerSupport {
      * @param obj the target object instance to evaluate
      * @return an appropriate name for a Timer owned by the specified object
      */
-    @Nonnull @NotEmpty public static String getTimerName(final @Nonnull Object obj) {
+    @Nonnull @NotEmpty public static String getTimerName(@Nonnull final Object obj) {
         return getTimerName(obj, null);
     }
     
@@ -55,7 +56,8 @@ public final class TimerSupport {
      * 
      * <p>The base name will constructed as follows:
      * <ul>
-     *  <li>if target is instance of {@link IdentifiedComponent}, use {@link IdentifiedComponent#getId()} if non-empty</li>
+     *  <li>if target is instance of {@link IdentifiedComponent},
+     *  use {@link IdentifiedComponent#getId()} if non-empty</li>
      *  <li>use {@link #toString()} if non-empty</li>
      *  <li>use serialized class name</li>
      * </ul>
@@ -65,11 +67,13 @@ public final class TimerSupport {
      * @param additionalData additional qualifying data to include in the name
      * @return an appropriate name for a Timer owned by the specified object
      */
-    @Nonnull @NotEmpty public static String getTimerName(final @Nonnull Object obj, final @Nullable String additionalData) {
+    @Nonnull @NotEmpty public static String getTimerName(@Nonnull final Object obj,
+            @Nullable final String additionalData) {
         Constraint.isNotNull(obj, "Target object for Timer was null");
         
         String baseName = null;
-        if (obj instanceof IdentifiedComponent && StringSupport.trimOrNull(((IdentifiedComponent)obj).getId()) != null) {
+        if (obj instanceof IdentifiedComponent
+                && StringSupport.trimOrNull(((IdentifiedComponent)obj).getId()) != null) {
             baseName = StringSupport.trimOrNull(((IdentifiedComponent)obj).getId());
         } else if (StringSupport.trimOrNull(obj.toString()) != null){
             baseName = StringSupport.trimOrNull(obj.toString());
@@ -87,7 +91,8 @@ public final class TimerSupport {
      * @param additionalData additional qualifying data to include in the name
      * @return an appropriate name for a Timer based on the specified base name
      */
-    @Nonnull @NotEmpty public static String getTimerName(final @Nonnull String baseName, final @Nullable String additionalData) {
+    @Nonnull @NotEmpty public static String getTimerName(@Nonnull final String baseName,
+            @Nullable final String additionalData) {
         Constraint.isNotNull(baseName, "Base name for Timer was null");
         if (additionalData != null) {
             return String.format("Timer for %s (%s)", baseName, additionalData);

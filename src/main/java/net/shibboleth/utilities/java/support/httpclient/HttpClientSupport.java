@@ -47,6 +47,9 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.CharArrayBuffer;
 
+import net.shibboleth.utilities.java.support.primitive.DeprecationSupport;
+import net.shibboleth.utilities.java.support.primitive.DeprecationSupport.ObjectType;
+
 /**
  * Support class for using {@link org.apache.http.client.HttpClient} and related components.
  */
@@ -92,6 +95,10 @@ public final class HttpClientSupport {
      */
     @Deprecated
     @Nonnull public static SSLConnectionSocketFactory buildStrictSSLConnectionSocketFactory() {
+        DeprecationSupport.warnOnce(ObjectType.METHOD,
+                "net.shibboleth.utilities.java.support.httpclient.HttpClientSupport" +
+                        ".buildStrictSSLConnectionSocketFactory", null, "buildStrictTLSSocketFactory");
+
         return new SSLConnectionSocketFactory(
                 SSLContexts.createDefault(), 
                 SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER);
@@ -107,6 +114,10 @@ public final class HttpClientSupport {
      */
     @Deprecated
     @Nonnull public static SSLConnectionSocketFactory buildNoTrustSSLConnectionSocketFactory() {
+        DeprecationSupport.warnOnce(ObjectType.METHOD,
+                "net.shibboleth.utilities.java.support.httpclient.HttpClientSupport" +
+                        ".buildNoTrustSSLConnectionSocketFactory", null, "buildNoTrustTLSSocketFactory");
+        
         final X509TrustManager noTrustManager = buildNoTrustX509TrustManager();
 
         try {
@@ -116,7 +127,7 @@ public final class HttpClientSupport {
         } catch (final NoSuchAlgorithmException e) {
             throw new RuntimeException("TLS SSLContext type is required to be supported by the JVM but is not", e);
         } catch (final KeyManagementException e) {
-            throw new RuntimeException("Some how the trust everything trust manager didn't trust everything", e);
+            throw new RuntimeException("Somehow the trust everything trust manager didn't trust everything", e);
         }
         
     }

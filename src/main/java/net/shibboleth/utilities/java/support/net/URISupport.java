@@ -394,6 +394,7 @@ public final class URISupport {
      * 
      * @deprecated
      */
+    @Deprecated
     public static String doURLEncode(final String value) {
         if (value == null) {
             return null;
