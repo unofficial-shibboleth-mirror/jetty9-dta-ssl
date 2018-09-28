@@ -119,14 +119,12 @@ public class ShowAutomaticModuleNames {
         if (!withName.isEmpty()) {
             System.out.println("   with module names:");
             final List<File> withNameFiles = new ArrayList<>(withName.keySet());
-            withNameFiles.sort(null);
             for (File file : withNameFiles) {
                 System.out.println("      " + file.getName() + " --> " + withName.get(file));
             }
         }
         if (!noName.isEmpty()) {
             System.out.println("   with no module name:");
-            noName.sort(null);
             for (File file : noName) {
                 System.out.println("      " + file.getName());
             }
