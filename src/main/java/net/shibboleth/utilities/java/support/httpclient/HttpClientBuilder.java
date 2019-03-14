@@ -20,6 +20,7 @@ package net.shibboleth.utilities.java.support.httpclient;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -42,8 +43,12 @@ import org.apache.http.util.CharsetUtils;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableList;
 
 import net.shibboleth.utilities.java.support.annotation.Duration;
+import net.shibboleth.utilities.java.support.annotation.constraint.NonnullElements;
+import net.shibboleth.utilities.java.support.annotation.constraint.NotLive;
+import net.shibboleth.utilities.java.support.annotation.constraint.Unmodifiable;
 import net.shibboleth.utilities.java.support.collection.IterableSupport;
 import net.shibboleth.utilities.java.support.logic.Constraint;
 import net.shibboleth.utilities.java.support.primitive.StringSupport;
@@ -250,6 +255,9 @@ public class HttpClientBuilder {
 
     /** List of response interceptors to add last. */
     private List<HttpResponseInterceptor> responseInterceptorsLast;
+    
+    /** List of static context handlers. */
+    @Nonnull @NonnullElements private List<HttpClientContextHandler> staticContextHandlers;
 
     /** The Apache HttpClientBuilder 4.3+ instance over which to layer this builder. */
     private org.apache.http.impl.client.HttpClientBuilder apacheBuilder;
@@ -289,6 +297,12 @@ public class HttpClientBuilder {
         httpFollowRedirects = true;
         httpContentCharSet = "UTF-8";
         userAgent = null;
+        
+        requestInterceptorsFirst = Collections.emptyList();
+        requestInterceptorsLast = Collections.emptyList();
+        responseInterceptorsFirst = Collections.emptyList();
+        responseInterceptorsLast = Collections.emptyList();
+        staticContextHandlers = Collections.emptyList();
     }
 
     /**
@@ -861,7 +875,7 @@ public class HttpClientBuilder {
      * @param interceptors the list of interceptors, may be null
      */
     public void setFirstRequestInterceptors(@Nullable final List<HttpRequestInterceptor> interceptors) {
-        requestInterceptorsFirst = (List<HttpRequestInterceptor>) normalizeInterceptors(interceptors);
+        requestInterceptorsFirst = (List<HttpRequestInterceptor>) normalizeList(interceptors);
     }
 
     /**
@@ -878,8 +892,8 @@ public class HttpClientBuilder {
      * 
      * @param interceptors the list of interceptors, may be null
      */
-    public void setLastRequestInterceptors(final List<HttpRequestInterceptor> interceptors) {
-        requestInterceptorsLast = normalizeInterceptors(interceptors);
+    public void setLastRequestInterceptors(@Nullable final List<HttpRequestInterceptor> interceptors) {
+        requestInterceptorsLast = normalizeList(interceptors);
     }
 
     /**
@@ -896,8 +910,8 @@ public class HttpClientBuilder {
      * 
      * @param interceptors the list of interceptors, may be null
      */
-    public void setFirstResponseInterceptors(final List<HttpResponseInterceptor> interceptors) {
-        responseInterceptorsFirst = normalizeInterceptors(interceptors);
+    public void setFirstResponseInterceptors(@Nullable final List<HttpResponseInterceptor> interceptors) {
+        responseInterceptorsFirst = normalizeList(interceptors);
     }
 
     /**
@@ -914,23 +928,42 @@ public class HttpClientBuilder {
      * 
      * @param interceptors the list of interceptors, may be null
      */
-    public void setLastResponseInterceptors(final List<HttpResponseInterceptor> interceptors) {
-        responseInterceptorsLast = normalizeInterceptors(interceptors);
+    public void setLastResponseInterceptors(@Nullable final List<HttpResponseInterceptor> interceptors) {
+        responseInterceptorsLast = normalizeList(interceptors);
     }
 
     /**
-     * Normalize and copy the supplied list of interceptors to remove nulls.
+     * Get the list of static {@link HttpClientContextHandler}.
+     * 
+     * @return the list of handlers
+     */
+    @Nonnull @NonnullElements @NotLive @Unmodifiable
+    public List<HttpClientContextHandler> getStaticContextHandlers() {
+        return ImmutableList.copyOf(staticContextHandlers);
+    }
+
+    /**
+     * Set the list of static {@link HttpClientContextHandler}.
+     * 
+     * @param handlers the list of handlers , may be null
+     */
+    public void setStaticContextHandlers(@Nullable final List<HttpClientContextHandler> handlers) {
+        staticContextHandlers = normalizeList(handlers);
+    }
+
+    /**
+     * Normalize and copy the supplied list to remove nulls.
      * 
      * @param <T> type of collection to normalize
      * 
-     * @param interceptors the list of interceptors to normalize
-     * @return copy of input list without nulls, may be null
+     * @param items the list of items to normalize
+     * @return copy of input list without nulls
      */
-    @Nullable private <T> List<T> normalizeInterceptors(@Nullable final List<T> interceptors) {
-        if (interceptors == null) {
-            return null;
+    @Nonnull @NonnullElements private <T> List<T> normalizeList(@Nullable final List<T> items) {
+        if (items == null) {
+            return Collections.emptyList();
         } else {
-            return new ArrayList<>(Collections2.filter(interceptors, Predicates.notNull()));
+            return new ArrayList<>(Collections2.filter(items, Predicates.notNull()));
         }
     }
 
@@ -943,7 +976,7 @@ public class HttpClientBuilder {
      */
     public HttpClient buildClient() throws Exception {
         decorateApacheBuilder();
-        return getApacheBuilder().build();
+        return new ContextHandlingHttpClient(getApacheBuilder().build(), getStaticContextHandlers());
     }
 
     /**
