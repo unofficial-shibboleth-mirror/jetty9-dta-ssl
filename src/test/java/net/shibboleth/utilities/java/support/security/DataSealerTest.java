@@ -123,7 +123,7 @@ public class DataSealerTest {
         final DataSealer sealer = createDataSealer();
 
         String encoded = sealer.wrap(THE_DATA, System.currentTimeMillis() + THE_DELAY);
-        Thread.sleep(THE_DELAY + 1);
+        Thread.sleep(THE_DELAY + 150);
         try {
             sealer.unwrap(encoded);
             Assert.fail("Should have timed out");
