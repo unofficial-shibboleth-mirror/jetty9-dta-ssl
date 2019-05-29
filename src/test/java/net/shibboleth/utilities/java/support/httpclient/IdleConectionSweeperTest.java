@@ -35,7 +35,7 @@ public class IdleConectionSweeperTest {
 
         IdleConnectionSweeper sweeper = new IdleConnectionSweeper(connectionManager, 30, SWEEP_INTERVAL);
         Thread.sleep(200);
-        Assert.assertTrue(sweeper.scheduledExecutionTime() + SWEEP_INTERVAL > System.currentTimeMillis());
+        Assert.assertTrue(sweeper.scheduledExecutionTime() + SWEEP_INTERVAL >= System.currentTimeMillis());
 
         sweeper.destroy();
         Assert.assertTrue(sweeper.isDestroyed());
@@ -50,7 +50,7 @@ public class IdleConectionSweeperTest {
         Timer timer = new Timer(true);
         sweeper = new IdleConnectionSweeper(connectionManager, 30, SWEEP_INTERVAL, timer);
         Thread.sleep(150);
-        Assert.assertTrue(sweeper.scheduledExecutionTime() + SWEEP_INTERVAL > System.currentTimeMillis());
+        Assert.assertTrue(sweeper.scheduledExecutionTime() + SWEEP_INTERVAL >= System.currentTimeMillis());
 
         sweeper.destroy();
         Assert.assertTrue(sweeper.isDestroyed());
