@@ -34,7 +34,7 @@ public class IdleConectionSweeperTest {
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
 
         IdleConnectionSweeper sweeper = new IdleConnectionSweeper(connectionManager, 30, SWEEP_INTERVAL);
-        Thread.sleep(75);
+        Thread.sleep(200);
         Assert.assertTrue(sweeper.scheduledExecutionTime() + SWEEP_INTERVAL > System.currentTimeMillis());
 
         sweeper.destroy();
@@ -49,7 +49,7 @@ public class IdleConectionSweeperTest {
 
         Timer timer = new Timer(true);
         sweeper = new IdleConnectionSweeper(connectionManager, 30, SWEEP_INTERVAL, timer);
-        Thread.sleep(10);
+        Thread.sleep(150);
         Assert.assertTrue(sweeper.scheduledExecutionTime() + SWEEP_INTERVAL > System.currentTimeMillis());
 
         sweeper.destroy();
